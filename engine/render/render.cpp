@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id: render.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -41,7 +41,17 @@ namespace render {
 	IDirect3DDevice9* device;
 	int bsp_rendermethod;
 	int diffuse;
-	int lighting;
+	int lighting;	
+	
+	int use_scenegraph;
+	unsigned int max_node_level;
+	unsigned int max_node_meshes;
+	unsigned int max_node_vertices;
+	unsigned int max_node_polys;
+	unsigned int max_node_vertsize;
+	unsigned int max_node_indicesize;
+
+	SceneGraph scene;
 };
 
 void render::init()
@@ -78,6 +88,14 @@ void render::init()
 	settings::addsetting("system.render.gamma", settings::TYPE_FLOAT, 0, NULL, NULL, &gamma);
 	settings::addsetting("system.render.lighting", settings::TYPE_INT, 0, NULL, NULL, &lighting);
 
+	settings::addsetting("system.render.use_scenegraph", settings::TYPE_INT, 0, NULL, NULL, &use_scenegraph);
+	settings::addsetting("system.render.scene.max_node_level", settings::TYPE_INT, 0, NULL, NULL, &max_node_level);
+	settings::addsetting("system.render.scene.max_node_meshes", settings::TYPE_INT, 0, NULL, NULL, &max_node_meshes);
+	settings::addsetting("system.render.scene.max_node_vertices", settings::TYPE_INT, 0, NULL, NULL, &max_node_vertices);
+	settings::addsetting("system.render.scene.max_node_polys", settings::TYPE_INT, 0, NULL, NULL, &max_node_polys);
+	settings::addsetting("system.render.scene.max_node_vertsize", settings::TYPE_INT, 0, NULL, NULL, &max_node_vertsize);
+	settings::addsetting("system.render.scene.max_node_indicesize", settings::TYPE_INT, 0, NULL, NULL, &max_node_indicesize);
+
 	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
 	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
 	con::addCommand("toggle_patches", con::toggle_int, &draw_patches);
@@ -112,6 +130,14 @@ void render::init()
 
 	skybox::init();
 	jsskybox::init();
+
+	use_scenegraph = 1;
+	max_node_level = 100;
+	max_node_meshes = 200;
+	max_node_vertices = 1500;
+	max_node_polys = 1200;
+	max_node_vertsize = 128 * 1024;
+	max_node_indicesize = 128 * 1024;
 }
 
 void render::release()

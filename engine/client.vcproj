@@ -319,6 +319,12 @@
 			Name="render"
 			Filter="">
 			<File
+				RelativePath=".\render\aabb.cpp">
+			</File>
+			<File
+				RelativePath=".\render\aabb.h">
+			</File>
+			<File
 				RelativePath="render\d3dfont.cpp">
 			</File>
 			<File
@@ -343,10 +349,22 @@
 				RelativePath="render\marker.h">
 			</File>
 			<File
+				RelativePath=".\render\mesh.cpp">
+			</File>
+			<File
 				RelativePath="render\render.cpp">
 			</File>
 			<File
 				RelativePath="render\render.h">
+			</File>
+			<File
+				RelativePath=".\render\scenegraph.cpp">
+			</File>
+			<File
+				RelativePath=".\render\scenegraph.h">
+			</File>
+			<File
+				RelativePath=".\render\scenenode.cpp">
 			</File>
 		</Filter>
 		<Filter

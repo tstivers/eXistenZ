@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bsprender.h,v 1.2 2003/11/20 03:08:40 tstivers Exp $
+// $Id: bsprender.h,v 1.3 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #pragma once
@@ -28,7 +28,7 @@ namespace q3bsp {
 		texture::DXTexture* lightmap;
 		int num_indices;
 		int num_vertices;
-		BSPVertex* vertices;
+ 		BSPVertex* vertices;
 		unsigned short* indices;
 		IDirect3DVertexBuffer9* vertbuf;
 		IDirect3DIndexBuffer9* indexbuf;

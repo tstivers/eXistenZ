@@ -1,10 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: render.h,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id: render.h,v 1.3 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #pragma once
+
+#include "render/scenegraph.h"
 
 namespace render {
 	extern int xres;
@@ -32,7 +34,16 @@ namespace render {
 	extern bool sky_visible;
 	extern int diffuse;
 	extern int lighting;
-	extern IDirect3DDevice9* device;
+	extern IDirect3DDevice9* device;	
+
+	extern int use_scenegraph;
+	extern unsigned int max_node_level;
+	extern unsigned int max_node_meshes;
+	extern unsigned int max_node_vertices;
+	extern unsigned int max_node_polys;
+	extern unsigned int max_node_vertsize;
+	extern unsigned int max_node_indicesize;
+	extern SceneGraph scene;
 
 	class CFrustum;
 	extern CFrustum frustum;

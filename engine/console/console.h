@@ -1,24 +1,28 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.h
 // console class definition
-// $Id: console.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: console.h,v 1.2 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #pragma once
 
-#define LOG(x) con::log(con::FLAG_INFO, x)
-#define LOG2(x,y) con::log(con::FLAG_INFO, x, y)
-#define LOG3(x,y,z) con::log(con::FLAG_INFO, x, y,z)
+#define LOG(a) con::log(con::FLAG_INFO,a)
+#define LOG1(a) con::log(con::FLAG_INFO,a)
+#define LOG2(a,b) con::log(con::FLAG_INFO,a,b)
+#define LOG3(a,b,c) con::log(con::FLAG_INFO,a,b,c)
 #define LOG4(a,b,c,d) con::log(con::FLAG_INFO,a,b,c,d)
 #define LOG5(a,b,c,d,e) con::log(con::FLAG_INFO,a,b,c,d,e)
+#define LOG6(a,b,c,d,e,f) con::log(con::FLAG_INFO,a,b,c,d,e,f)
+#define LOG7(a,b,c,d,e,f,g) con::log(con::FLAG_INFO,a,b,c,d,e,f,g)
+#define LOG8(a,b,c,d,e,f,g,h) con::log(con::FLAG_INFO,a,b,c,d,e,f,g,h )
 
 #define LOGERROR(x) con::log(con::FLAG_ERROR, x)
 #define LOGERROR2(x,y) con::log(con::FLAG_ERROR, x, y)
-#define LOGERROR3(x,y,z) con::log(con::FLAG_ERROR, x, y,z)
+#define LOGERROR3(x,y,z) con::log(con::FLAG_ERROR, x, y, z)
 
 #define LOGDEBUG(x) con::log(con::FLAG_DEBUG, x)
 #define LOGDEBUG2(x,y) con::log(con::FLAG_DEBUG, x, y)
-#define LOGDEBUG3(x,y,z) con::log(con::FLAG_DEBUG, x, y,z)
+#define LOGDEBUG3(x,y,z) con::log(con::FLAG_DEBUG, x, y, z)
 
 #define FRAMEDO(x) if(con::log_frame)  x 
 

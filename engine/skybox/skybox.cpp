@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: skybox.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id: skybox.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -51,9 +51,9 @@ void skybox::init()
 
 	draw = 1;
 	acquired = false;
-	width = 50000;
-	height = 50000;
-	depth = 50000;
+	width = 1;
+	height = 1;
+	depth = 1;
 	texture[0] = 0;
 
 	ZeroMemory( &mtrl, sizeof(mtrl) );
@@ -303,6 +303,11 @@ void skybox::render()
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
 
+	D3DXMATRIX skybox;
+	D3DXMatrixIdentity(&skybox);
+	D3DXMatrixTranslation(&skybox, render::cam_pos.x, render::cam_pos.y, render::cam_pos.z);
+	render::device->SetTransform( D3DTS_WORLD, &skybox );
+
 	if(render::wireframe) {
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);		
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
@@ -324,6 +329,8 @@ void skybox::render()
 	render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, 16, 2);
 	if(textures[BOX_BOTTOM]) textures[BOX_BOTTOM]->activate();
 	render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
+
+	render::device->SetTransform( D3DTS_WORLD, &render::world );
 }
 
 void skybox::unacquire()

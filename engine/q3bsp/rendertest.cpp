@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: rendertest.cpp,v 1.1 2003/11/20 03:08:40 tstivers Exp $
+// $Id: rendertest.cpp,v 1.2 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -29,11 +29,9 @@ BSPRenderTest::~BSPRenderTest()
 	if(acquired)
 		release();
 
-	for(int i = 0; i < num_meshes; i++)
-	{
-		Mesh& mesh = meshes[i];
-		delete [] mesh.vertices;
-		delete [] mesh.indices;
+	for(int i = 0; i < num_meshes; i++)	{
+		delete [] meshes[i].vertices;
+		delete [] meshes[i].indices;
 	}
 
 	delete [] meshes;
@@ -41,8 +39,7 @@ BSPRenderTest::~BSPRenderTest()
 
 void BSPRenderTest::acquire()
 {
-	for(int i = 0; i < num_meshes; i++)
-	{
+	for(int i = 0; i < num_meshes; i++)	{
 		Mesh& mesh = meshes[i];
 
 		if(FAILED(render::device->CreateVertexBuffer(mesh.num_vertices * sizeof(BSPVertex),
@@ -91,23 +88,20 @@ void BSPRenderTest::acquire()
 
 void BSPRenderTest::release()
 {
-	for(int i = 0; i < num_meshes; i++)
-	{
-		Mesh& mesh = meshes[i];
-		if(mesh.vertbuf) mesh.vertbuf->Release();
-		if(mesh.indexbuf) mesh.indexbuf->Release();
+	for(int i = 0; i < num_meshes; i++)	{		
+		if(meshes[i].vertbuf) meshes[i].vertbuf->Release();
+		if(meshes[i].indexbuf) meshes[i].indexbuf->Release();
 	}
 
 	acquired = false;
 }
-
+ 
 void BSPRenderTest::render()
 {
 	if(!acquired)
 		acquire();
 
-	for(int i = 0; i < num_meshes; i++)
-	{
+	for(int i = 0; i < num_meshes; i++)	{
 		Mesh& mesh = meshes[i];
 		
 		if(!mesh.texture || !mesh.texture->draw || mesh.texture->is_transparent)
@@ -126,8 +120,7 @@ void BSPRenderTest::render()
 		mesh.texture->deactivate();
 	}
 
-	for(int i = 0; i < num_meshes; i++)
-	{
+	for(int i = 0; i < num_meshes; i++)	{
 		Mesh& mesh = meshes[i];
 
 		if(!mesh.texture || !mesh.texture->draw || !mesh.texture->is_transparent)

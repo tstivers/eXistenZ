@@ -1,13 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspconvert.cpp,v 1.1 2003/11/20 03:08:40 tstivers Exp $
+// $Id: bspconvert.cpp,v 1.2 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "q3bsp/bspconvert.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsprender.h"
+#include "render/render.h"
 #include "console/console.h"
 #include "nvtristrip.h"
 
@@ -23,6 +24,43 @@ void q3bsp::convertBSP(BSP& bsp)
 		
 		if((face.type < 0) || (face.type > 3))
 			continue;
+
+		if(render::use_scenegraph) {
+			if((face.texture >= 0) && (face.texture <= bsp.num_textures) && bsp.textures[face.texture] && bsp.textures[face.texture]->draw) {
+				render::Mesh* mesh = new render::Mesh();
+				mesh->texture = bsp.textures[face.texture];
+				mesh->lightmap = (face.lightmap >= 0) && (face.lightmap <= bsp.num_lightmaps) ? bsp.lightmaps[face.lightmap] : NULL;
+				mesh->transform = &render::world;
+				mesh->vertice_format = sizeof(BSPVertex);
+				mesh->vertice_count = face.numverts;
+				mesh->indice_format = D3DPT_TRIANGLELIST;
+				mesh->indice_count = face.nummeshverts;
+				mesh->poly_count = face.nummeshverts / 3;
+				mesh->vertices = new BSPVertex[face.numverts];
+				mesh->indices = new unsigned short[face.nummeshverts];
+				BSPVertex* vertices = (BSPVertex*)mesh->vertices;
+				unsigned short* indices = (unsigned short*)mesh->indices;
+
+				for(int i = 0; i < face.numverts; i++) {
+					vertices[i] = bsp.verts[face.vertex + i];
+					if(vertices[i].pos.x < mesh->bounds[0].x) mesh->bounds[0].x = vertices[i].pos.x;
+					if(vertices[i].pos.y < mesh->bounds[0].y) mesh->bounds[0].y = vertices[i].pos.y;
+					if(vertices[i].pos.z < mesh->bounds[0].z) mesh->bounds[0].z = vertices[i].pos.z;
+					if(vertices[i].pos.x > mesh->bounds[1].x) mesh->bounds[1].x = vertices[i].pos.x;
+					if(vertices[i].pos.y > mesh->bounds[1].y) mesh->bounds[1].y = vertices[i].pos.y;
+					if(vertices[i].pos.z > mesh->bounds[1].z) mesh->bounds[1].z = vertices[i].pos.z;
+				}
+
+				for(int i = 0; i < face.nummeshverts; i++)
+					indices[i] = bsp.indices[face.meshvertex + i];
+
+				//LOG7("[BSP::bspconvert] adding mesh {(%f, %f, %f), (%f, %f, %f)}",
+				//	mesh->bounds[0].x, mesh->bounds[0].y, mesh->bounds[0].z,
+				//	mesh->bounds[1].x, mesh->bounds[1].y, mesh->bounds[1].z);
+
+				render::scene.addStaticMesh(*mesh);
+			}
+		}
 
 		polylist_value* bucket;
 		polylist_hash::iterator it = polyhash.find(polylist_key(face.texture, face.lightmap));
@@ -46,6 +84,8 @@ void q3bsp::convertBSP(BSP& bsp)
 		bucket->vertice_count += face.numverts;
 		bucket->indice_count += face.nummeshverts;
 	}
+
+	render::scene.finalizeStatic();
 
 	int total_verts = 0;
 	int total_indices = 0;

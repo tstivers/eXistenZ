@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.2 2003/11/20 03:08:40 tstivers Exp $
+// $Id: bsprender.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -383,8 +383,10 @@ inline void BSP::renderFace(const int face_index)
 //					frame_polys += face.numverts - 2;
 //					break;
 				case 2:
-					render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, face.vertex, 0, face.numverts, face.meshvertex, face.nummeshverts / 3);
-					frame_polys += face.nummeshverts / 3;
+					if(render::draw_patches) {
+						render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, face.vertex, 0, face.numverts, face.meshvertex, face.nummeshverts / 3);
+						frame_polys += face.nummeshverts / 3;
+					}
 					break;
 				case 3:					
 					render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, face.vertex, 0, face.numverts, face.meshvertex, face.nummeshverts / 3);
