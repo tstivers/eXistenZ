@@ -646,6 +646,74 @@
 				RelativePath=".\common\common.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="mesh"
+			Filter="">
+			<File
+				RelativePath=".\mesh\mesh.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\mesh\mesh.h">
+			</File>
+			<File
+				RelativePath=".\mesh\meshcache.cpp">
+			</File>
+			<File
+				RelativePath=".\mesh\meshcache.h">
+			</File>
+			<File
+				RelativePath=".\mesh\meshload.cpp">
+			</File>
+			<File
+				RelativePath=".\mesh\meshload.h">
+			</File>
+			<File
+				RelativePath=".\mesh\meshsystem.cpp">
+			</File>
+			<File
+				RelativePath=".\mesh\meshsystem.h">
+			</File>
+			<File
+				RelativePath=".\mesh\meshsystemcache.cpp">
+			</File>
+			<File
+				RelativePath=".\mesh\meshsystemcache.h">
+			</File>
+			<File
+				RelativePath=".\mesh\textloader.cpp">
+			</File>
+			<File
+				RelativePath=".\mesh\textloader.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="scene"
+			Filter="">
+			<File
+				RelativePath=".\scene\scene.cpp">
+			</File>
+			<File
+				RelativePath=".\scene\scene.h">
+			</File>
+			<File
+				RelativePath=".\scene\scenebsp.cpp">
+			</File>
+			<File
+				RelativePath=".\scene\scenebsp.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

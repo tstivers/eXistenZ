@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.3 2003/11/25 22:57:23 tstivers Exp $
+// $Id: bleh.h,v 1.4 2003/12/05 08:44:56 tstivers Exp $
 //
 
 #pragma once
@@ -49,8 +49,7 @@ namespace q3bsp {
 		}
 
 		void operator=(const _BSPVertex& rhs)
-		{
-			
+		{			
 			pos = rhs.pos;
 			nrm = rhs.nrm;
 			diffuse = rhs.diffuse;

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: mesh.h,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id: mesh.h,v 1.2 2003/12/05 08:44:56 tstivers Exp $
 //
 
 #pragma once
@@ -32,7 +32,7 @@ namespace mesh {
 		
 		unsigned int vertice_format;
 		unsigned int vertice_count;
-		unsigned int indice_format;
+		unsigned int indice_type;
 		unsigned int indice_count;
 		unsigned int poly_count;
 		void* vertices;

@@ -1,12 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshload.cpp,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id: meshload.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "mesh/meshload.h"
 #include "mesh/textloader.h"
+#include "mesh/mesh.h"
+#include "mesh/meshsystem.h"
 
 namespace mesh {
 };
@@ -20,8 +22,10 @@ Mesh* mesh::loadMesh(const std::string& name)
 
 	// try to load a text mesh;
 	mesh = loadTextMesh(name + EXTENSION_TEXTMESH);
-	if(mesh)
+	if(mesh) {
+		mesh->name = name;
 		return mesh;
+	}
 
 	// TODO: other formats here
 	return NULL;
@@ -34,8 +38,10 @@ MeshSystem* mesh::loadMeshSystem(const std::string& name)
 
 	// try to load a text mesh;
 	meshsys = loadTextMeshSystem(name + EXTENSION_TEXTMESHSYSTEM);
-	if(meshsys)
+	if(meshsys) {
+		meshsys->name = name;
 		return meshsys;
+	}
 
 	// TODO: other formats here
 	return NULL;

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: meshsystem.h,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id: meshsystem.h,v 1.2 2003/12/05 08:44:56 tstivers Exp $
 //
 
 #pragma once
@@ -14,10 +14,13 @@ namespace mesh {
 
 	class Mesh;
 
-	typedef struct {
+	class MeshEntry {
+	public:
+		MeshEntry() {};
+		MeshEntry(D3DXMATRIX& transform, Mesh* mesh) { this->transform = transform ; this->mesh = mesh; };
 		D3DXMATRIX transform;
 		Mesh* mesh;
-	} MeshEntry;
+	};
 
 	typedef std::vector<MeshEntry> MeshList;
 

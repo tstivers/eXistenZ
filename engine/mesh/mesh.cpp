@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: mesh.cpp,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id: mesh.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -14,9 +14,7 @@ using namespace mesh;
 
 Mesh::Mesh()
 {
-	vertices = NULL;
-	indices = NULL;
-	refcount = 0;
+	ZeroMemory(this, sizeof(Mesh));
 }
 
 Mesh::~Mesh()

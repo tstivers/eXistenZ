@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.3 2003/11/18 18:39:42 tstivers Exp $
+// $Id: main.cpp,v 1.4 2003/12/05 08:44:56 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -26,6 +26,8 @@
 #include "texture/texturecache.h"
 #include "texture/jstexture.h"
 #include "shader/shadercache.h"
+#include "mesh/meshcache.h"
+#include "mesh/meshsystemcache.h"
 
 //extern unsigned long  _build_num;
 
