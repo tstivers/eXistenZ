@@ -66,10 +66,10 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)\bin"
-			IntermediateDirectory="$(ProjectDir)\client\release"
+			IntermediateDirectory="$(SolutionDir)\bin"
 			ConfigurationType="1"
 			CharacterSet="2"
-			WholeProgramOptimization="TRUE">
+			WholeProgramOptimization="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
@@ -83,14 +83,14 @@
 				EnableFiberSafeOptimizations="TRUE"
 				OptimizeForProcessor="2"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="D:\Projects\eXistenZ\engine;D:\Projects\eXistenZ\engine\client;D:\Projects\js\include;&quot;D:\Projects\STLport-4.5.3\stlport&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="FALSE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -104,7 +104,7 @@
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="D:\Projects\eXistenZ\lib;D:\Projects\js\release"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -155,7 +155,8 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalOptions=""/>
+						AdditionalOptions=""
+						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
 			</File>
 			<File
