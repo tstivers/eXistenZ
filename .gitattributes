@@ -130,6 +130,9 @@ engine/vfs/file.cpp -text svneol=native#unset
 engine/vfs/file.h -text svneol=native#unset
 engine/vfs/vfs.cpp -text svneol=native#unset
 engine/vfs/vfs.h -text svneol=native#unset
+lib/NvTriStrip/debug/NvTriStrip.lib -text
+lib/NvTriStrip/include/NvTriStrip.h -text svneol=native#unset
+lib/NvTriStrip/release/NvTriStrip.lib -text
 lib/buildnum.lib -text
 lib/js/debug/fdlibm.lib -text
 lib/js/debug/js32.exp -text
