@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspconvert.cpp,v 1.4 2003/12/13 17:37:14 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

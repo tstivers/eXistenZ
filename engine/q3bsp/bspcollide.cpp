@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspcollide.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: shapes.h,v 1.1 2003/11/25 22:57:23 tstivers Exp $
+// $Id$
 //
 
 #pragma once

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: uiconsole.cpp,v 1.3 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

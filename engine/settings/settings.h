@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.h
 // console class definition
-// $Id: settings.h,v 1.3 2003/10/08 16:38:58 tstivers Exp $
+// $Id$
 //
 
 #pragma once

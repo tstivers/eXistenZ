@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.8 2003/12/13 17:37:14 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

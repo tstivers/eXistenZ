@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: rendertest.cpp,v 1.2 2003/11/24 00:16:13 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

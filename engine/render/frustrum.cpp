@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: frustrum.cpp,v 1.3 2003/12/13 17:37:14 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

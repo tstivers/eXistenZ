@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: texturecache.h,v 1.4 2003/10/09 02:47:03 tstivers Exp $
+// $Id$
 //
 
 #pragma once

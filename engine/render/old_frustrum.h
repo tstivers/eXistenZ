@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: old_frustrum.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id$
 //
 
 #pragma once

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.h
 // contains main function prototypes
-// $Id: main.h,v 1.1 2003/10/07 20:17:44 tstivers Exp $
+// $Id$
 //
 // zacslinker@hotmail.com
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // shader.h
 // shader base class
-// $Id: simpleshader.h,v 1.1 2003/10/09 02:47:03 tstivers Exp $
+// $Id$
 //
 
 #pragma once

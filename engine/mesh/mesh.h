@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: mesh.h,v 1.3 2003/12/24 01:45:45 tstivers Exp $
+// $Id$
 //
 
 #pragma once

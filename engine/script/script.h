@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.h
 // script engine class definition
-// $Id: script.h,v 1.3 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #pragma once

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: rendergroup.h,v 1.1 2003/12/13 02:58:04 tstivers Exp $
+// $Id$
 //
 
 #pragma once

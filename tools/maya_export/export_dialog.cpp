@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "export_dialog.h"
 #include "exportstatic.h"
+#include "tinyxml/tinyxml.h"
 
 static ExportDialog* dialog;
 
@@ -24,7 +25,7 @@ void ExportDialog::setObjectName(std::string name)
 std::string ExportDialog::getObjectName()
 {
 	char buf[MAX_PATH];
-	GetDlgItemText(hwnd, IDC_OBJECTNAME, buf, MAX_PATH);
+	GetDlgItemText(hwnd, IDC_OBJECTNAME, buf, MAX_PATH);	
 	return std::string(buf);
 }
 

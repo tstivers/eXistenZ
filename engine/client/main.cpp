@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.8 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 #include "precompiled.h"
 #include "client/main.h"

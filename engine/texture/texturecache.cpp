@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: texturecache.cpp,v 1.3 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

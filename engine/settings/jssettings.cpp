@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: jssettings.cpp,v 1.3 2003/12/05 15:43:31 tstivers Exp $
+// $Id$
 //
 #include "precompiled.h"
 #include "console/console.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: settings.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

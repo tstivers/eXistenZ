@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bspcache.h,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id$
 //
 
 #pragma once

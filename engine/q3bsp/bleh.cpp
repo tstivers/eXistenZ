@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bleh.cpp,v 1.2 2003/11/20 03:08:39 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

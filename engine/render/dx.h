@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // dx.h
 // rendering system directx functions interface
-// $Id: dx.h,v 1.2 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #pragma once

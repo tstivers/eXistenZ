@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshsystem.cpp,v 1.3 2003/12/24 01:45:45 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

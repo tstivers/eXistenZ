@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: simpleshader.cpp,v 1.1 2003/10/09 02:47:03 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // appwindow.cpp
 // main application window
-// $Id: appwindow.cpp,v 1.3 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

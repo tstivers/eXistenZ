@@ -15,19 +15,20 @@
 			OutputDirectory="$(SolutionDir)../bin"
 			IntermediateDirectory="$(SolutionDir)../bin/maya_debug"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;;&quot;$(SolutionDir)../lib&quot;"
 				PreprocessorDefinitions="REQUIRE_IOSTREAM;NT_PLUGIN"
-				MinimalRebuild="TRUE"
-				BasicRuntimeChecks="3"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -67,10 +68,11 @@
 			OutputDirectory="$(SolutionDir)../bin"
 			IntermediateDirectory="$(SolutionDir)../bin/maya_release"
 			ConfigurationType="2"
-			CharacterSet="2">
+			CharacterSet="2"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;;&quot;$(SolutionDir)../lib&quot;"
 				PreprocessorDefinitions="REQUIRE_IOSTREAM;NT_PLUGIN"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"

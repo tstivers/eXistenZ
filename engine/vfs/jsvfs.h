@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.h
 // console class definition
-// $Id: jsvfs.h,v 1.1 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #pragma once

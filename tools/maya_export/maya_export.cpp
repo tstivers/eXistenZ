@@ -15,7 +15,7 @@ MStatus initializePlugin( MObject obj )
 	plugin.setName("eXistenZ Engine Plugin");
 	plugin.registerCommand("exScanDag", scanDag::creator);
 	plugin.registerCommand("exExportStatic", exportStatic::creator);
-	plugin.registerCommand("exOptions", optionsCmd::creator);
+	plugin.registerCommand("exOptions", optionsCmd::creator);	
 	options.loadOptions();
 
 	// set up menu
@@ -33,8 +33,9 @@ MStatus uninitializePlugin( MObject obj )
 	MStatus status;
 
 	MFnPlugin plugin(obj);
-	plugin.deregisterCommand("scanDag");
-	plugin.deregisterCommand("exportStatic");
+	plugin.deregisterCommand("exScanDag");
+	plugin.deregisterCommand("exExportStatic");
+	plugin.deregisterCommand("exOptions");
 	options.saveOptions();
 
 	MString result;	

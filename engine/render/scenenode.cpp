@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: scenenode.cpp,v 1.3 2003/12/13 02:58:04 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

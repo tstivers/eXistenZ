@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: dx.cpp,v 1.2 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

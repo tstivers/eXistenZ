@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshoptimize.cpp,v 1.1 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

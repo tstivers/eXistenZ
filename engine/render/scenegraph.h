@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: scenegraph.h,v 1.3 2003/12/13 02:58:04 tstivers Exp $
+// $Id$
 //
 
 #pragma once

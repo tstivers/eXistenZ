@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: marker.cpp,v 1.3 2004/07/09 17:48:56 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

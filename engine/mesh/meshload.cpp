@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshload.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

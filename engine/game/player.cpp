@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: player.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: shader.cpp,v 1.3 2004/07/09 16:04:56 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: input.cpp,v 1.2 2004/07/09 16:04:56 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

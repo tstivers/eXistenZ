@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.7 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #pragma once

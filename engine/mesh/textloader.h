@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: textloader.h,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id$
 //
 
 #pragma once

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: shapes.cpp,v 1.2 2003/12/24 01:45:45 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

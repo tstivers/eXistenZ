@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: scenegraph.cpp,v 1.2 2003/11/25 22:57:23 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

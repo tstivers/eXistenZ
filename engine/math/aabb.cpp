@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: aabb.cpp,v 1.1 2003/12/06 03:48:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

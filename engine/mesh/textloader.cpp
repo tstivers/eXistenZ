@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: textloader.cpp,v 1.5 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

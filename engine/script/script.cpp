@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.cpp
 // script engine class
-// $Id: script.cpp,v 1.4 2004/07/09 07:42:25 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: frustrum.h,v 1.2 2003/12/13 17:37:14 tstivers Exp $
+// $Id$
 //
 
 #pragma once

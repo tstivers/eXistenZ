@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.12 2004/07/09 16:04:56 tstivers Exp $
+// $Id$
 //
 
 #define VC_EXTRALEAN
