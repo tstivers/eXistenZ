@@ -1,7 +1,5 @@
 * text=auto !eol
 /.cvsignore -text svneol=native#unset
-bin/client.debug.exe -text
-bin/client.release.exe -text
 bin/config.js -text svneol=native#unset
 bin/js32.dll -text
 bin/js32D.dll -text

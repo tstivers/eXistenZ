@@ -1,3 +1,7 @@
 BuildLog.htm
 *.obj
 *.ilk
+*.idb
+*.pdb
+*.pch
+*.exe
