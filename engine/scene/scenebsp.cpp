@@ -229,8 +229,10 @@ void SceneBSP::render()
 		}
 
 	unsigned num_entities = entities.size();
-	for(unsigned i = 0; i < num_entities; i++)
-		entities[i]->render();
+	for(unsigned i = 0; i < num_entities; i++) {
+		if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
+			entities[i]->render();
+	}
 }
 
 SceneBSP* SceneBSP::loadBSP(const std::string& name)
