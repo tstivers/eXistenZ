@@ -131,6 +131,8 @@ engine/render/shapes.h -text svneol=native#unset
 engine/resource/luxicon.ico -text
 engine/resource/luxiconD.ico -text
 engine/resource/resource.h -text svneol=native#unset
+engine/scene/jsscene.cpp -text svneol=native#unset
+engine/scene/jsscene.h -text svneol=native#unset
 engine/scene/scene.cpp -text svneol=native#unset
 engine/scene/scene.h -text svneol=native#unset
 engine/scene/scenebsp.cpp -text svneol=native#unset

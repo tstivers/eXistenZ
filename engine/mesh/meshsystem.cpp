@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshsystem.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id: meshsystem.cpp,v 1.3 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -28,11 +28,18 @@ MeshSystem::~MeshSystem()
 
 void MeshSystem::acquire()
 {
-	refcount++;
+	if(acquired)
+		return;
+
+	for(unsigned i = 0; i < meshes.size(); i++)
+		meshes[i].mesh->acquire();
+
+	acquired = true;
 }
 
 void MeshSystem::release()
 {
-	refcount--;
-	ASSERT(refcount >= 0);
+	for(unsigned i = 0; i < meshes.size(); i++)
+		meshes[i].mesh->release();
+	acquired = false;
 }

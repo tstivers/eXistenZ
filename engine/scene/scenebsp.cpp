@@ -10,6 +10,7 @@
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsppatch.h"
 #include "render/meshoptimize.h"
+#include "entity/entity.h"
 
 namespace scene {
 };
@@ -158,6 +159,10 @@ void SceneBSP::acquire()
 	}
 
 	// loop through entities and acquire everything
+	unsigned num_entities = entities.size();
+	for(unsigned i = 0; i < num_entities; i++)
+		entities[i]->acquire();
+
 	acquired = true;
 }
 
@@ -222,6 +227,10 @@ void SceneBSP::render()
 			render::frame_faces++;
 			render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup);
 		}
+
+	unsigned num_entities = entities.size();
+	for(unsigned i = 0; i < num_entities; i++)
+		entities[i]->render();
 }
 
 SceneBSP* SceneBSP::loadBSP(const std::string& name)
@@ -237,6 +246,9 @@ SceneBSP* SceneBSP::loadBSP(const std::string& name)
 	return scene;
 }
 
-void SceneBSP::addEntity(const entity::Entity* entity)
+void SceneBSP::addEntity(entity::Entity* entity)
 {
+	entities.push_back(entity);
+	if(acquired)
+		entity->acquire();
 }

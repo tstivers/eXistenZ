@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bind.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: bind.cpp,v 1.2 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -27,10 +27,11 @@ void input::bindKey(int key, char* cmd)
 		return;
 	}
 
-	if(!con::isCommand(real_cmd)) {
-		LOG3("[input::bindKey] tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
-		return;
-	}
+	// TODO: proper command parsing
+	//if(!con::isCommand(real_cmd)) {
+	//	LOG3("[input::bindKey] tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
+	//	return;
+	//}
 
 	strcpy(binds[key], cmd);
 }

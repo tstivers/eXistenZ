@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.h
 // script engine class definition
-// $Id: script.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: script.h,v 1.2 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #pragma once
@@ -47,4 +47,5 @@ extern ScriptEngine gScriptEngine;
 
 namespace script {
 	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
+	void init();
 };

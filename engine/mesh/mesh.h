@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: mesh.h,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id: mesh.h,v 1.3 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #pragma once
@@ -30,9 +30,10 @@ namespace mesh {
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
 		
+		bool acquired;
 		unsigned int vertice_format;
 		unsigned int vertice_count;
-		unsigned int indice_type;
+		D3DPRIMITIVETYPE prim_type;
 		unsigned int indice_count;
 		unsigned int poly_count;
 		void* vertices;

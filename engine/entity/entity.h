@@ -41,6 +41,8 @@ namespace entity {
 		virtual void deactivate();
 		virtual void render() = 0;
 		virtual void update();
+		virtual void calcAABB() = 0;
+		inline_ void mark(unsigned int frame);
 		
 		std::string name;
 		ENTITY_TYPE type;
@@ -50,6 +52,7 @@ namespace entity {
 		AABB aabb;
 		D3DXVECTOR3 pos, rot, scale;
 		D3DXMATRIX transform;
+		unsigned int frame;
 	};
 
 	class StaticEntity : public Entity {
@@ -59,6 +62,7 @@ namespace entity {
 		void acquire();
 		void release();
 		void render();
+		void calcAABB();
 
 		static StaticEntity* create(std::string name, std::string meshname);
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: meshsystem.h,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id: meshsystem.h,v 1.3 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #pragma once
@@ -31,6 +31,7 @@ namespace mesh {
 		void acquire();
 		void release();
 
+		bool acquired;
 		std::string name;
 		int refcount;
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.6 2003/12/23 04:51:58 tstivers Exp $
+// $Id: main.cpp,v 1.7 2003/12/24 01:45:45 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -29,6 +29,7 @@
 #include "mesh/meshcache.h"
 #include "mesh/meshsystemcache.h"
 #include "scene/scene.h"
+#include "scene/jsscene.h"
 #include "entity/jsentity.h"
 
 //extern unsigned long  _build_num;
@@ -53,6 +54,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	//LOG2("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
 
 	// initialize essention system services
+	script::init();
 	jsscript::init();
 	timer::init();
 	con::init();
@@ -71,6 +73,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	q3bsp::init();
 	shader::init();
 	scene::init();
+	jsscene::init();
 	jsentity::init();
 
 	// add some generic system settings

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: textloader.cpp,v 1.3 2003/12/13 02:58:04 tstivers Exp $
+// $Id: textloader.cpp,v 1.4 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -37,7 +37,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			this_token = getToken(&token, ",");
 			vertex->pos.y = (float)atof(this_token);
 			this_token = getToken(&token, " ");
-			vertex->pos.z = (float)atof(this_token);
+			vertex->pos.z = -(float)atof(this_token);
 			continue;
 		}
 
@@ -47,7 +47,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			this_token = getToken(&token, ",");
 			vertex->nrm.y = (float)atof(this_token);
 			this_token = getToken(&token, " ");
-			vertex->nrm.z = (float)atof(this_token);
+			vertex->nrm.z = -(float)atof(this_token);
 			continue;
 		}
 
@@ -123,7 +123,6 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 		if(!stricmp(this_token, "INDICECOUNT:")) {
 			mesh->indice_count = atoi(token);
 			mesh->indices = new unsigned short[mesh->indice_count];
-			mesh->indice_type = D3DPT_TRIANGLELIST;
 		}
 
 		if(!_memicmp(this_token, "VERTEX[", strlen("VERTEX["))) {
@@ -137,6 +136,9 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 			current_ind++;
 		}
 	}
+
+	mesh->poly_count = mesh->indice_count / 3;
+	mesh->prim_type = D3DPT_TRIANGLELIST;
 
 	return mesh;
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.cpp
 // script engine class
-// $Id: script.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: script.cpp,v 1.3 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,6 +10,10 @@
 #include "vfs/file.h"
 
 #pragma warning( disable : 4311 4312 )
+
+namespace script {
+	void exec(char* cmd, char* cmdline, void* user);
+};
 
 ScriptEngine::ScriptEngine()
 {	
@@ -220,4 +224,14 @@ void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *re
 		con::log(con::FLAG_ERROR, "[ScriptEngine] %s(%i) : %s", report->filename, report->lineno, report->linebuf);		
 	con::log(con::FLAG_ERROR, "[ScriptEngine] %s(%i) : %s", report->filename, report->lineno, message);
 	//DebugBreak();
+}
+
+void script::init()
+{
+	con::addCommand("exec", script::exec);
+}
+
+void script::exec(char* cmd, char* cmdline, void* user)
+{
+	gScriptEngine.RunScript(cmdline);
 }

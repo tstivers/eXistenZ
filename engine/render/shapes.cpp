@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: shapes.cpp,v 1.1 2003/11/25 22:57:23 tstivers Exp $
+// $Id: shapes.cpp,v 1.2 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -32,6 +32,7 @@ void render::drawLine(const D3DXVECTOR3* vertices, int verticeCount, float r, fl
 	render::device->SetFVF(LINEVERTEXF);
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->DrawPrimitiveUP(D3DPT_LINELIST, verticeCount / 2, linebuf, sizeof(lineVertex));
 }
 

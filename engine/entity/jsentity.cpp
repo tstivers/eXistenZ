@@ -36,7 +36,7 @@ namespace jsentity {
 		{NULL, NULL, 0, 0, 0}
 	};
 
-	JSClass entity_class = {
+	JSClass JSEntity = {
 		"Entity", JSCLASS_HAS_RESERVED_SLOTS(1),
 			JS_PropertyStub,  JS_PropertyStub,
 			JS_PropertyStub, JS_PropertyStub,
@@ -71,51 +71,50 @@ void jsentity::init()
 
 JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
 {
+	*rval = JSVAL_NULL;
+
 	if(argc != 2) {
 		gScriptEngine.ReportError("createStaticEntity() takes 2 arguments");
-		*rval = JSVAL_NULL;
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JSVAL_FALSE;	
 	}
 
 	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
 	std::string meshname = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
-
-	LOG3("[jsentity::createStaticEntity] creating entity \"%s\" \"%s\"", name.c_str(), meshname.c_str());
+	
 	Entity* new_entity = entity::addStaticEntity(name, meshname);
 	if(!new_entity) {
 		gScriptEngine.ReportError("couldn't create entity");
-		*rval = JSVAL_NULL;
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JSVAL_FALSE;	
 	}
 
 	*rval = createEntityObject(cx, new_entity);
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
 {
+	*rval = JSVAL_NULL;
+	
 	if(argc != 1) {
 		gScriptEngine.ReportError("getEntity() takes 1 argument");
-		*rval = JSVAL_NULL;
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JSVAL_FALSE;	
 	}
 
 	Entity* entity = entity::getEntity(std::string(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))));
 	if(!entity) {
-		gScriptEngine.ReportError("getEntity() couldn't find entity");
-		*rval = JSVAL_NULL;
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		gScriptEngine.ReportError("getEntity() couldn't find entity");		
+		return JSVAL_FALSE;	
 	}
 
 	*rval = createEntityObject(cx, entity);
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 {
-	JSObject* object = JS_NewObject(cx, &entity_class, NULL, NULL);
+	JSObject* object = JS_NewObject(cx, &JSEntity, NULL, NULL);
 	JS_DefineProperties(cx, object, entity_props);
 	JS_DefineFunctions(cx, object, entity_functions);
 	JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity));
@@ -142,7 +141,7 @@ JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, entity->name.c_str()));
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::getVector(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
@@ -170,7 +169,7 @@ JSBool jsentity::getVector(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 	
 	JS_NewDoubleValue(cx, double_val, vp);
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 
@@ -180,7 +179,7 @@ JSBool jsentity::setVector(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 
 	if(JS_ValueToNumber(cx, *vp, &jd) == JS_FALSE) {
 		gScriptEngine.ReportError("value must be double!");
-		return BOOLEAN_TO_JSVAL(FALSE);
+		return JSVAL_FALSE;
 	}
 
 	jsval vector_object;
@@ -201,7 +200,7 @@ JSBool jsentity::setVector(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 			break;
 	}
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -210,7 +209,7 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 
 	if(argc != 3) {
 		gScriptEngine.ReportError("setPos() takes 3 parameters (x, y, z)!");
-		return BOOLEAN_TO_JSVAL(FALSE);
+		return JSVAL_FALSE;
 	}
 
 	jsval entity_object;
@@ -222,13 +221,13 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
 			gScriptEngine.ReportError("setPos() takes 3 doubles (x, y, z)!");
-			return BOOLEAN_TO_JSVAL(FALSE);
+			return JSVAL_FALSE;
 		}
 
 		entity->pos[x] = (float)jd;
 	}
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -237,7 +236,7 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 
 	if(argc != 3) {
 		gScriptEngine.ReportError("setRot() takes 3 parameters (x, y, z)!");
-		return BOOLEAN_TO_JSVAL(FALSE);
+		return JSVAL_FALSE;
 	}
 
 	jsval entity_object;
@@ -249,13 +248,13 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
 			gScriptEngine.ReportError("setRot() takes 3 doubles (x, y, z)!");
-			return BOOLEAN_TO_JSVAL(FALSE);
+			return JSVAL_FALSE;
 		}
 
 		entity->rot[x] = (float)jd;
 	}
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -264,7 +263,7 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 
 	if(argc != 3) {
 		gScriptEngine.ReportError("setScale() takes 3 parameters (x, y, z)!");
-		return BOOLEAN_TO_JSVAL(FALSE);
+		return JSVAL_FALSE;
 	}
 
 	jsval entity_object;
@@ -276,13 +275,13 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
 			gScriptEngine.ReportError("setScale() takes 3 doubles (x, y, z)!");
-			return BOOLEAN_TO_JSVAL(FALSE);
+			return JSVAL_FALSE;
 		}
 
 		entity->scale[x] = (float)jd;
 	}
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }
 
 JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -295,5 +294,5 @@ JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 
 	entity->update();
 
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JSVAL_TRUE;
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.9 2003/12/23 04:51:58 tstivers Exp $
+// $Id: render.cpp,v 1.10 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -62,6 +62,7 @@ namespace render {
 	unsigned int frame;
 	texture::DXTexture* current_texture;
 	texture::DXTexture* current_lightmap;
+	const D3DXMATRIX* current_transform;
 
 	unsigned int frame_polys;
 	unsigned int frame_texswaps;
@@ -211,6 +212,7 @@ void render::render()
 	sky_visible = true;
 	current_texture = NULL;
 	current_lightmap = NULL;
+	current_transform = NULL;
 	current_vb = NULL;
 	current_ib = NULL;
 	frame_polys = 0;
@@ -274,7 +276,16 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 		current_lightmap = rg->lightmap;
 		frame_texswaps++;
 	}
-	
+
+	if(transform != current_transform) {
+		if(transform)
+			device->SetTransform( D3DTS_WORLD, transform );
+		else
+			device->SetTransform( D3DTS_WORLD, &world );
+
+		current_transform = transform;
+	}
+
 	render::device->DrawIndexedPrimitive(
 		rg->type, 
 		rg->vertexbuffer->offset / rg->stride, 

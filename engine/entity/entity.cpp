@@ -30,8 +30,16 @@ void Entity::deactivate()
 
 void Entity::update()
 {
-	D3DXMatrixIdentity(&(this->transform));
-	D3DXMatrixTranslation(&(this->transform), pos.x, pos.y, pos.z);
-	D3DXMatrixRotationYawPitchRoll(&(this->transform), rot.y, rot.x, rot.z);
-	D3DXMatrixScaling(&(this->transform), scale.x, scale.y, scale.z);
+	D3DXQUATERNION rotq;
+	D3DXQuaternionRotationYawPitchRoll(&rotq, 
+		rot.y * (D3DX_PI / 180.0f), 
+		rot.x * (D3DX_PI / 180.0f), 
+		rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rotq, &pos);
+	calcAABB();
+}
+
+inline_ void Entity::mark(unsigned int frame)
+{
+	this->frame = frame;
 }

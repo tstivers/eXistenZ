@@ -10,6 +10,12 @@ namespace q3bsp {
 	class BSP;
 }
 
+namespace entity {
+	class Entity;
+
+	typedef std::vector<Entity*> EntityList;
+};
+
 namespace scene {
 
 	class BSPFace {
@@ -33,8 +39,7 @@ namespace scene {
 		AABB aabb;
 		unsigned int num_faces;
 		BSPFace** faces;
-		//BSPFacePtrList faces;
-		// Entity Lists
+		entity::EntityList entities;
 	};
 
 	class SceneBSP : public Scene {
@@ -50,26 +55,18 @@ namespace scene {
 		void release();
 		void reload(unsigned int flags = 0);
 		void render();
-		
+		void addEntity(entity::Entity* entity);
+
 		// new stuff
 		static SceneBSP* loadBSP(const std::string& name);
 		q3bsp::BSP *bsp;
 
-		// what i need here:
-		// list of clusters:
-		//		aabb
-		//		faces (RenderGroups?)
-		//		list of entities (RenderGroups?)
-		//		list of static 
 		unsigned int num_clusters;
 		BSPCluster* clusters;
 
 		unsigned int num_faces;
 		BSPFace* faces;
 
-		void addEntity(const entity::Entity* entity);
-
-		// stats
-		size_t vis_size;
+		entity::EntityList entities;
 	};
 };

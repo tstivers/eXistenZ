@@ -1,11 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: mesh.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id: mesh.cpp,v 1.3 2003/12/24 01:45:45 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "mesh/mesh.h"
+#include "render/rendergroup.h"
 
 namespace mesh {
 };
@@ -25,12 +26,20 @@ Mesh::~Mesh()
 }
 
 void Mesh::acquire()
-{
-	refcount++;
+{	
+	if(acquired)
+		return;
+
+	rendergroup = render::getRenderGroup(BSPVertex.FVF, sizeof(BSPVertex), vertice_count, indice_count);
+	rendergroup->texture = texture;
+	rendergroup->type = prim_type;
+	rendergroup->primitivecount = poly_count;
+	rendergroup->acquire();
+	rendergroup->update(vertices, indices);
+	acquired = true;
 }
 
 void Mesh::release()
 {
-	refcount--;
-	ASSERT(refcount >= 0);
+	acquired = false;
 }

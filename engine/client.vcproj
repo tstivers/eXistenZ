@@ -695,6 +695,12 @@
 			Name="scene"
 			Filter="">
 			<File
+				RelativePath=".\scene\jsscene.cpp">
+			</File>
+			<File
+				RelativePath=".\scene\jsscene.h">
+			</File>
+			<File
 				RelativePath=".\scene\scene.cpp">
 			</File>
 			<File

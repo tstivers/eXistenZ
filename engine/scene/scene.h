@@ -31,7 +31,7 @@ namespace scene {
 
 		// entity crap
 		//TODO: virtual addEntity(std::string name, int type,
-		virtual void addEntity(const entity::Entity* entity) = 0;
+		virtual void addEntity(entity::Entity* entity) = 0;
 		// virtual void updateEntity(const Entity* entity);
 		// virtual void removeEntity(const Entity* entity);
 
