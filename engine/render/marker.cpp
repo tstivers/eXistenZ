@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: marker.cpp,v 1.2 2004/07/09 16:04:56 tstivers Exp $
+// $Id: marker.cpp,v 1.3 2004/07/09 17:48:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -43,6 +43,7 @@ namespace render {
 		D3DXVECTOR3 pos;
 		D3DCOLORVALUE color;
 		float scale;
+		float rot;
 	} MARKER;
 
 	typedef std::list<MARKER*> marker_list_t;
@@ -103,6 +104,7 @@ char* render::addMarker(char* name, float x, float y, float z, float r, float g,
 	marker->color.g = g;
 	marker->color.b = b;
 	marker->scale = scale;
+	marker->rot = ((float)timer::game_ms / 4.0f);
 	marker_list.push_back(marker);
 	return marker->name;
 }
@@ -113,25 +115,25 @@ void render::drawMarkers()
 		return;
 
 	D3DMATERIAL9 mtrl;
-	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));
-	float yrot = (float)timer::game_ms / 5.0f;
+	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));	
 	D3DXMATRIX marker_pos, marker_rot, marker_scale, marker_final;
 
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);	
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CW );	
+	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );	
 	render::device->SetFVF(MARKERVERTEXF);	
 
 
 	for(marker_list_t::iterator it = marker_list.begin(); it != marker_list.end(); it++) {
 		MARKER* marker = *it;
+		float yrot = marker->rot + ((float)timer::game_ms / 5.0f);
 		mtrl.Diffuse.r = mtrl.Ambient.r = marker->color.r;
 		mtrl.Diffuse.g = mtrl.Ambient.g = marker->color.g;
 		mtrl.Diffuse.b = mtrl.Ambient.b = marker->color.b;
 
 		D3DXMatrixTranslation(&marker_pos, marker->pos.x / marker->scale, marker->pos.y / marker->scale, marker->pos.z / marker->scale);
-		D3DXMatrixRotationY(&marker_rot, yrot * -1 * (D3DX_PI / 180.0f));
+		D3DXMatrixRotationY(&marker_rot, yrot * (D3DX_PI / 180.0f));
 		D3DXMatrixScaling(&marker_scale, marker->scale, marker->scale, marker->scale);
 
 		D3DXMatrixIdentity(&marker_final);
