@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: player.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: player.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -9,7 +9,7 @@
 #include "game/game.h"
 #include "console/console.h"
 #include "timer/timer.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "q3bsp/bspcollide.h"
 #include "q3bsp/bspcache.h"
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bsp.h,v 1.2 2003/10/09 02:47:03 tstivers Exp $
+// $Id: bsp.h,v 1.3 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #pragma once
@@ -53,6 +53,7 @@ namespace q3bsp {
 		void render(); // doesn't really belong here, put it in render::renderBSP(BSP* bsp)
 		void render2(); // test rendering method
 		void render3(); // q3shader rendering method
+		void render4(); // q3shader rendering method
 
 		int leafFromPoint(D3DXVECTOR3 point);
 		inline int clusterVis(int current, int test);
@@ -65,6 +66,7 @@ namespace q3bsp {
 		void markTree(const int node_index);
 		void sortFaces();
 		inline bool setTexture(int face_index, bool queue_transparent);
+		inline bool setShader(const int face_index, const bool queue_transparent);
 		inline void initRenderState(void);
 		inline void renderFace(const int face_index, const tBSPFace& face);
 
@@ -118,7 +120,7 @@ namespace q3bsp {
 		int			*marked_leafs;
 		int			*sorted_faces;
 
-		int frame;
+		int frame;	
 		tBSPVisData  clusters;
 
 		int current_cluster;

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: game.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: game.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -11,7 +11,7 @@
 #include "input/input.h"
 #include "input/bind.h"
 #include "interface/interface.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
 #include "render/render.h"
 #include "settings/settings.h"

@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(ProjectDir)client&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -42,7 +42,7 @@
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib&quot;;&quot;$(SolutionDir)lib\js\debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\js\debug&quot;;&quot;$(SolutionDir)lib\nvtristrip\debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
 				SubSystem="2"
@@ -89,7 +89,7 @@
 				EnableFiberSafeOptimizations="TRUE"
 				OptimizeForProcessor="2"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
@@ -111,7 +111,7 @@
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -389,23 +389,10 @@
 			Name="q3bsp"
 			Filter="">
 			<File
-				RelativePath="q3bsp\bsp.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""
-						AdditionalIncludeDirectories="D:\Projects\eXistenZ\engine"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions=""/>
-				</FileConfiguration>
+				RelativePath=".\q3bsp\bleh.cpp">
 			</File>
 			<File
-				RelativePath="q3bsp\bsp.h">
+				RelativePath=".\q3bsp\bleh.h">
 			</File>
 			<File
 				RelativePath="q3bsp\bspcache.cpp">
@@ -420,13 +407,22 @@
 				RelativePath="q3bsp\bspcollide.h">
 			</File>
 			<File
-				RelativePath="input\jsinput.cpp">
+				RelativePath=".\q3bsp\bspload.cpp">
 			</File>
 			<File
-				RelativePath="q3bsp\patch.cpp">
+				RelativePath=".\q3bsp\bspload.h">
 			</File>
 			<File
-				RelativePath="q3bsp\patch.h">
+				RelativePath=".\q3bsp\bsppatch.cpp">
+			</File>
+			<File
+				RelativePath=".\q3bsp\bsppatch.h">
+			</File>
+			<File
+				RelativePath=".\q3bsp\bsprender.cpp">
+			</File>
+			<File
+				RelativePath=".\q3bsp\bsprender.h">
 			</File>
 			<File
 				RelativePath="q3bsp\q3bsptypes.h">
@@ -474,6 +470,9 @@
 			</File>
 			<File
 				RelativePath="input\input.h">
+			</File>
+			<File
+				RelativePath="input\jsinput.cpp">
 			</File>
 			<File
 				RelativePath="input\jsinput.h">

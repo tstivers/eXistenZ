@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsp.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
+// $Id: bsp.cpp,v 1.3 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -493,7 +493,8 @@ void BSP::render4()
 		if(facedrawn[face_index] == frame) {
 
 			if(setTexture(face_index, true))
-				renderFace(face_index, faces[face_index]);		
+				renderFace(face_index, faces[face_index]);	
+		}
 	}
 
 	if(last_tex != -1)
@@ -519,7 +520,7 @@ void BSP::render4()
 
 inline bool BSP::setShader(const int face_index, const bool queue_transparent)
 {
-	const tBSPFace& face = faces[face_index];
+/*	const tBSPFace& face = faces[face_index];
 
 	// skip invalid textures
 	if((face.textureID < 0) || 
@@ -580,7 +581,7 @@ inline bool BSP::setShader(const int face_index, const bool queue_transparent)
 		last_light = face.lightmapID;
 		num_textureswaps++;
 	}
-
+*/
 	return true;
 }
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: render.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: render.h,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #pragma once
@@ -30,6 +30,8 @@ namespace render {
 	extern int draw_patches;
 	extern int wait_vtrace;
 	extern bool sky_visible;
+	extern int diffuse;
+	extern int lighting;
 	extern IDirect3DDevice9* device;
 
 	class CFrustum;

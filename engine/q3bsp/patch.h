@@ -1,13 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: patch.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: patch.h,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #pragma once
 
-#include "q3bsp/q3bsptypes.h" // import types
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 
 namespace q3bsp {
 	//vertex as used for drawing
@@ -57,7 +56,7 @@ namespace q3bsp {
 		BSP_VERTEX * vertices;
 		unsigned int * indices;
 		int num_verts, num_indices;
-		tBSPVertexDX* verts;
+		BSPVertex* verts;
 		
 		IDirect3DVertexBuffer9* dxvertbuf;
 		IDirect3DIndexBuffer9* dxindexbuf;
@@ -76,5 +75,5 @@ namespace q3bsp {
 		BiquadraticPatch* quadraticPatches;
 	};
 
-	BSPPatch* patchFromFace(tBSPFace* face, tBSPVertexDX* vertices);
+	BSPPatch* patchFromFace(const BSPFace* face, BSPVertex* vertices);
 };

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: skybox.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: skybox.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -78,7 +78,7 @@ void skybox::acquire()
 	if(FAILED(render::device->CreateVertexBuffer(4 * 6 * sizeof(tSkyVertexDX),
 		D3DUSAGE_WRITEONLY,
 		SKYBOXVERTEXF,
-		D3DPOOL_DEFAULT,
+		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
 			LOG("[skybox::acquire] failed to create vertex buffer");
@@ -297,8 +297,8 @@ void skybox::render()
 	render::device->SetSamplerState( 0, D3DSAMP_ADDRESSW, D3DTADDRESS_CLAMP );
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);			
 	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
-	render::device->SetRenderState( D3DRS_LIGHTING, TRUE );
-	render::device->SetRenderState( D3DRS_AMBIENT, 0xffffffff);
+	render::device->SetRenderState( D3DRS_LIGHTING, FALSE );
+	render::device->SetRenderState( D3DRS_AMBIENT, 0);
 	render::device->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );

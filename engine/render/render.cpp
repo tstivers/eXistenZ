@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: render.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -12,7 +12,7 @@
 #include "render/frustrum.h"
 #include "render/marker.h"
 #include "interface/interface.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "skybox/skybox.h"
 #include "skybox/jsskybox.h"
 
@@ -40,6 +40,8 @@ namespace render {
 	bool sky_visible;
 	IDirect3DDevice9* device;
 	int bsp_rendermethod;
+	int diffuse;
+	int lighting;
 };
 
 void render::init()
@@ -68,11 +70,13 @@ void render::init()
 
 	settings::addsetting("system.render.wireframe", settings::TYPE_INT, 0, NULL, NULL, &wireframe);
 	settings::addsetting("system.render.lightmap", settings::TYPE_INT, 0, NULL, NULL, &lightmap);
+	settings::addsetting("system.render.diffuse", settings::TYPE_INT, 0, NULL, NULL, &diffuse);
 	settings::addsetting("system.render.transparency", settings::TYPE_INT, 0, NULL, NULL, &transparency);
 	settings::addsetting("system.render.boost", settings::TYPE_INT, 0, NULL, NULL, &boost);
 	settings::addsetting("system.render.tesselation", settings::TYPE_INT, 0, NULL, NULL, &tesselation);
 	settings::addsetting("system.render.patches", settings::TYPE_INT, 0, NULL, NULL, &draw_patches);
 	settings::addsetting("system.render.gamma", settings::TYPE_FLOAT, 0, NULL, NULL, &gamma);
+	settings::addsetting("system.render.lighting", settings::TYPE_INT, 0, NULL, NULL, &lighting);
 
 	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
 	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
@@ -81,6 +85,7 @@ void render::init()
 	con::addCommand("toggle_bsprender", con::toggle_int, &bsp_rendermethod);
 	con::addCommand("add_marker", render::con_add_marker, NULL);
 	con::addCommand("del_marker", render::con_del_marker, NULL);
+	con::addCommand("toggle_diffuse", con::toggle_int, &diffuse);
 
 	boost = 0;
 	gamma = 1.0;
@@ -91,6 +96,8 @@ void render::init()
 	draw_patches = 1;
 	wait_vtrace = 0;
 	bsp_rendermethod = 1;
+	diffuse = 0;
+	lighting = 0;
 	cam_pos.x = 0;
 	cam_pos.y = 0;
 	cam_pos.z = 0;

@@ -1,17 +1,20 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: patch.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: patch.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "q3bsp/q3bsptypes.h"
 #include "q3bsp/patch.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
 #include "render/render.h"
 #include "render/dx.h"
 #include "console/console.h"
+#include "nvtristrip.h"
+
+#define BSPVERTEXF ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) )
 
 namespace q3bsp {
 
@@ -32,7 +35,7 @@ BiquadraticPatch::BiquadraticPatch()
 	dxindexbuf = NULL;
 	vertices = NULL;
 	indices = NULL;
-	verts = NULL;
+	verts = NULL;  
 
 }
 
@@ -104,7 +107,7 @@ bool BiquadraticPatch::Tesselate(int newTesselation)
 	}
 
 	// convert to vertex buffer format
-	verts = new tBSPVertexDX[num_verts];
+	verts = new BSPVertex[num_verts];
 	for(int i = 0; i < num_verts; i++) {
 		verts[i].pos.x = vertices[i].position.x;
 		verts[i].pos.y = vertices[i].position.y;
@@ -134,7 +137,7 @@ bool BiquadraticPatch::Tesselate(int newTesselation)
 	memcpy(indexbuf, indices, num_indices * sizeof(unsigned int));
 	dxindexbuf->Unlock();
 
-	if(FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(tBSPVertexDX),
+	if(FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(BSPVertex),
 		D3DUSAGE_WRITEONLY,
 		BSPVERTEXF,
 		D3DPOOL_DEFAULT,
@@ -145,21 +148,21 @@ bool BiquadraticPatch::Tesselate(int newTesselation)
 		}
 
 	void* vertbuf;
-	if(FAILED(dxvertbuf->Lock(0, num_verts * sizeof(tBSPVertexDX), &vertbuf, D3DLOCK_DISCARD))) {
+	if(FAILED(dxvertbuf->Lock(0, num_verts * sizeof(BSPVertex), &vertbuf, D3DLOCK_DISCARD))) {
 		LOG("[BSP::initDeviceObjects] failed to lock vertex buffer");
 		return false;
 	}
-	memcpy(vertbuf, verts, num_verts * sizeof(tBSPVertexDX));
+	memcpy(vertbuf, verts, num_verts * sizeof(BSPVertex));
 	dxvertbuf->Unlock();
 
 	return true;
 }
 
-BSPPatch* patchFromFace(tBSPFace* face, tBSPVertexDX* vertices)
+BSPPatch* patchFromFace(const BSPFace* face, BSPVertex* vertices)
 {
 	BSPPatch* patch = new BSPPatch();
-	patch->textureindex = face->textureID;
-	patch->lightmapindex = face->lightmapID;
+	patch->textureindex = face->texture;
+	patch->lightmapindex = face->lightmap;
 	patch->width = face->size[0];
 	patch->height = face->size[1];
 	
@@ -179,21 +182,21 @@ BSPPatch* patchFromFace(tBSPFace* face, tBSPVertexDX* vertices)
 				for(int point=0; point<3; ++point)
 				{
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].position.x = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].pos.x;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].pos.x;
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].position.y = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].pos.y;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].pos.y;
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].position.z = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].pos.z;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].pos.z;
 
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].decalS = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].tex1.x;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].tex1.x;
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].decalT = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].tex1.y;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].tex1.y;
 
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].lightmapS = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].tex2.x;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].tex2.x;
 					patch->quadraticPatches[y*numPatchesWide+x].controlPoints[row*3+point].lightmapT = 
-						q3bsp::bsp->verts[face->vertexIndex+(y*2*patch->width+x*2)+row*patch->width+point].tex2.y;
+						q3bsp::bsp->verts[face->vertex+(y*2*patch->width+x*2)+row*patch->width+point].tex2.y;
 				}
 			}
 
@@ -215,11 +218,11 @@ void BSPPatch::render()
 
 void BiquadraticPatch::render()
 {
-	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(tBSPVertexDX));
+	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(BSPVertex));
 	render::device->SetIndices(dxindexbuf);
 
 	for(int row=0; row<tesselation; ++row) {
-		q3bsp::bsp->drawn_polys += 2*(tesselation+1) - 2;
+		q3bsp::bsp->frame_polys += 2*(tesselation+1) - 2;
 		render::device->DrawIndexedPrimitive(D3DPT_TRIANGLESTRIP, 0, 0, 2*(tesselation+1), row*2*(tesselation+1), 2*(tesselation+1) - 2);	
 	}
 }

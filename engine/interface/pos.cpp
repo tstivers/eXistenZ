@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: pos.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: pos.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,7 +10,7 @@
 #include "render/render.h"
 #include "render/dx.h"
 #include "render/d3dfont.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
 #include "game/game.h"
 #include "game/player.h"
@@ -49,7 +49,7 @@ void Pos::render()
 	sprintf(buf, "vel x: %.2f y: %.2f z: %.2f", game::player.vel.x, game::player.vel.y, game::player.vel.z);
 	d3dfont->DrawText(xpos, ypos + 20, D3DCOLOR_XRGB(255, 255, 255), buf);
 	if(q3bsp::bsp) {
-		sprintf(buf, "leafs: %i faces: %i polys: %i texswaps: %i", q3bsp::bsp->drawn_leafs, q3bsp::bsp->drawn_faces, q3bsp::bsp->drawn_polys, q3bsp::bsp->num_textureswaps);
+		sprintf(buf, "leafs: %i faces: %i polys: %i texswaps: %i", q3bsp::bsp->frame_leafs, q3bsp::bsp->frame_faces, q3bsp::bsp->frame_polys, q3bsp::bsp->frame_textureswaps);
 		d3dfont->DrawText(xpos, ypos + 30, D3DCOLOR_XRGB(255, 255, 255), buf);
 	}
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
+// $Id: main.cpp,v 1.3 2003/11/18 18:39:42 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -17,7 +17,7 @@
 #include "render/render.h"
 #include "interface/interface.h"
 #include "timer/timer.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "q3shader/q3shadercache.h"
 #include "input/input.h"
 #include "input/jsinput.h"
@@ -65,7 +65,6 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	jstexture::init();
 	jsinput::init();
 	q3bsp::init();
-	q3shader::init();
 	shader::init();
 
 	// add some generic system settings
@@ -92,7 +91,6 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	texture::acquire(); // hack
 	input::acquire();
 	render::start();
-	q3shader::acquire();
 	shader::acquire();
 
 	// enter main loop and do fun things
