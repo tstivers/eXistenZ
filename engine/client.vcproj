@@ -43,6 +43,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\js\debug&quot;;&quot;$(SolutionDir)lib\nvtristrip\debug&quot;"
+				IgnoreDefaultLibraryNames="libc.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
 				SubSystem="2"
@@ -112,6 +113,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
+				IgnoreDefaultLibraryNames="libc.lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -407,6 +409,12 @@
 				RelativePath="q3bsp\bspcollide.h">
 			</File>
 			<File
+				RelativePath=".\q3bsp\bspconvert.cpp">
+			</File>
+			<File
+				RelativePath=".\q3bsp\bspconvert.h">
+			</File>
+			<File
 				RelativePath=".\q3bsp\bspload.cpp">
 			</File>
 			<File
@@ -426,6 +434,9 @@
 			</File>
 			<File
 				RelativePath="q3bsp\q3bsptypes.h">
+			</File>
+			<File
+				RelativePath=".\q3bsp\rendertest.cpp">
 			</File>
 		</Filter>
 		<Filter

@@ -1,14 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bsppatch.h,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bsppatch.h,v 1.2 2003/11/20 03:08:40 tstivers Exp $
 //
 
 #pragma once
 
 namespace q3bsp {
-	//vertex as used for drawing
-
 	class MyBiquadraticPatch {
 	public:
 		MyBiquadraticPatch();

@@ -1,13 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspload.cpp,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bspload.cpp,v 1.2 2003/11/20 03:08:40 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
 #include "q3bsp/q3bsptypes.h"
+#include "q3bsp/bspconvert.h"
 #include "render/render.h" // get rid of this
 #include "vfs/vfs.h"
 #include "vfs/file.h"
@@ -258,6 +259,12 @@ bool BSP::load(VFile* file)
 
 	delete tmp_lightmaps;
 
+	// turn curved surfaces into normal polys
+	if(q3bsp::debug) {
+		LOG("[BSP::loadBSP] converting patches");
+	}
+	
+	generatePatches();
 
 	// ------------------------- dump debug info --------------------------
 

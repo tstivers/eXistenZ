@@ -1,12 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bleh.cpp,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bleh.cpp,v 1.2 2003/11/20 03:08:39 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsppatch.h"
+#include "q3bsp/bsprender.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
 #include "console/console.h"
@@ -44,6 +45,7 @@ BSP::BSP()
 	planes = NULL;
 	clusters = NULL;
 	bsptextures = NULL;
+	renderer = NULL;
 
 	drawn_faces = NULL;
 	sorted_faces = NULL;
@@ -72,8 +74,11 @@ BSP::~BSP()
 	delete [] sorted_faces;
 	delete [] transparent_faces;
 
+	delete renderer;
+
 	if(dxvertbuf) dxvertbuf->Release();
 	if(dxindexbuf) dxindexbuf->Release();
 
 	//TODO: release textures
+
 }

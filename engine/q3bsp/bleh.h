@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bleh.h,v 1.2 2003/11/20 03:08:39 tstivers Exp $
 //
 
 #pragma once
@@ -13,6 +13,8 @@
 class VFile;
 
 namespace q3bsp {
+	
+	class BSPRenderer;
 
 	typedef struct _BSPVertex{
 		D3DXVECTOR3 pos;
@@ -183,6 +185,8 @@ namespace q3bsp {
 		int frame;
 		int last_texture;
 		int last_lightmap;
+
+		BSPRenderer* renderer;
 
 		// counters
 		int frame_faces;

@@ -1,12 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bsprender.cpp,v 1.2 2003/11/20 03:08:40 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
+#include "q3bsp/bsprender.h"
 #include "render/render.h"
 #include "render/frustrum.h"
 #include "vfs/vfs.h"
@@ -20,12 +21,30 @@ using namespace q3bsp;
 #define BSPVERTEXF ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) )
 #define BSP_TESTVIS(to) (*(clustervis_start + ((to)>>3)) & (1 << ((to) & 7)))
 
-void BSP::initDeviceObjects()
+BSPRenderer::BSPRenderer(BSP* bsp)
 {
+	this->bsp = bsp;
+}
 
-	// turn curved surfaces into polys before we allocate buffers
-	generatePatches();
+BSPRenderer::~BSPRenderer()
+{
+}
 
+void BSPRenderer::acquire()
+{
+}
+
+void BSPRenderer::release()
+{
+}
+
+void BSPRenderer::render()
+{
+}
+
+
+void BSP::initDeviceObjects()
+{		
 	// generate our vertex buffer and drop everything into it
 	if(FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(BSPVertex),
 		D3DUSAGE_WRITEONLY,
@@ -72,7 +91,7 @@ void BSP::initDeviceObjects()
 	transparent_faces = new int[num_faces];
 
 	if(q3bsp::debug) {
-		LOG3("[BSP::initDeviceObjects] allocted %ikb vertex buffer, %ikb index buffer",
+		LOG3("[BSP::initDeviceObjects] allocated %ikb vertex buffer, %ikb index buffer",
 			num_verts * sizeof(BSPVertex) / 1024,
 			num_indices * sizeof(int) / 1024);
 	}
@@ -229,10 +248,15 @@ inline void BSP::initRenderState(void)
 
 void BSP::render()
 {
+	initRenderState();
+
+	if(renderer) {
+		renderer->render();
+		return;
+	}
+
 	if(!dxvertbuf)
 		initDeviceObjects();
-
-	initRenderState();
 
 	int current_leaf = leafFromPoint(render::cam_pos);
 	int current_cluster = leafs[current_leaf].cluster;
