@@ -6,3 +6,5 @@ bin/*.obj
 bin/*.pch
 bin/*.pdb
 bin/BuildLog.htm
+data/*
+data/textures/*
