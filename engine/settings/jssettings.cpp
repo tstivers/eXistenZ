@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: jssettings.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: jssettings.cpp,v 1.3 2003/12/05 15:43:31 tstivers Exp $
 //
 #include "precompiled.h"
 #include "console/console.h"
@@ -62,6 +62,8 @@ bool jssettings::addsetting(settings::Setting* setting)
 		JS_NewDoubleValue(gScriptEngine.GetContext(), bleh, &value);
 		break;
 	default:
+		ASSERT(1);
+		return false;
 		break;
 	}
 

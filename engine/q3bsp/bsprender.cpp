@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
+// $Id: bsprender.cpp,v 1.6 2003/12/05 15:43:31 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -100,7 +100,7 @@ void BSP::initDeviceObjects()
 	//sortFaces();
 }
 
-static int face_compare(const void* f1, const void* f2)
+static int __cdecl face_compare(const void* f1, const void* f2)
 {
 	face_sort_t* face1 = (face_sort_t*)f1;
 	face_sort_t* face2 = (face_sort_t*)f2;

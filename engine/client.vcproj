@@ -31,7 +31,7 @@
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -96,9 +96,9 @@
 				ExceptionHandling="TRUE"
 				RuntimeLibrary="0"
 				BufferSecurityCheck="FALSE"
-				EnableFunctionLevelLinking="FALSE"
+				EnableFunctionLevelLinking="TRUE"
 				EnableEnhancedInstructionSet="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
@@ -173,7 +173,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalOptions=""
-						UsePrecompiledHeader="0"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
 			<File

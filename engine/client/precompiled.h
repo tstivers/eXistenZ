@@ -1,15 +1,29 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.6 2003/12/04 12:34:24 tstivers Exp $
+// $Id: precompiled.h,v 1.7 2003/12/05 15:43:31 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
+
 
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>
 #include <time.h>
+
+#define inline_ __forceinline
+#pragma intrinsic(memcmp)
+#pragma intrinsic(memcpy)
+#pragma intrinsic(memset)
+#pragma intrinsic(strcat)
+#pragma intrinsic(strcmp)
+#pragma intrinsic(strcpy)
+#pragma intrinsic(strlen)
+#pragma intrinsic(abs)
+#pragma intrinsic(labs)
+#pragma inline_depth( 255 )
+
 #include <string>
 #include <hash_map>
 #include <list>
@@ -24,18 +38,6 @@
 #include "d3dx9core.h"
 #define DIRECTINPUT_VERSION 0x0800
 #include "dinput.h"
-
-#define inline_ __forceinline
-#pragma intrinsic(memcmp)
-#pragma intrinsic(memcpy)
-#pragma intrinsic(memset)
-#pragma intrinsic(strcat)
-#pragma intrinsic(strcmp)
-#pragma intrinsic(strcpy)
-#pragma intrinsic(strlen)
-#pragma intrinsic(abs)
-#pragma intrinsic(labs)
-#pragma inline_depth( 255 )
 
 #define ASSERT(f) (void)((f) || (DebugBreak(), 0))
 

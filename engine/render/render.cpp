@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
+// $Id: render.cpp,v 1.6 2003/12/05 15:43:31 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -192,12 +192,12 @@ void render::render()
 	// draw the world
 	q3bsp::render();
 
-	if(!bleh) {
-		bleh = scene::Scene::load("maps/q3dm1.bsp");
-		bleh->init();
-	}
+	//if(!bleh) {
+	//	bleh = scene::Scene::load("maps/house.bsp");
+	//	bleh->init();
+	//}
 
-	bleh->render();
+	//bleh->render();
 
 	// draw other geometry
 	scene.render();

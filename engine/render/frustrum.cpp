@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: frustrum.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: frustrum.cpp,v 1.2 2003/12/05 15:43:31 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -59,7 +59,7 @@ void render::calc_frustrum(void)
 		D3DXPlaneNormalize(&clip_plane[plane_index], &clip_plane[plane_index]);
 }
 
-inline bool render::box_in_frustrum(const D3DXVECTOR3 &mins, const D3DXVECTOR3 &maxs)
+bool render::box_in_frustrum(const D3DXVECTOR3 &mins, const D3DXVECTOR3 &maxs)
 {
 	for(int i = 0; i < 6; i++) {
 		if(D3DXPlaneDotCoord(&clip_plane[i], &mins) > 0) continue;

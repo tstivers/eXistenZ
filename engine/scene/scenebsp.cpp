@@ -4,6 +4,7 @@
 #include "console/console.h"
 #include "render/render.h"
 #include "render/shapes.h"
+#include "render/frustrum.h"
 
 namespace scene {
 };
@@ -121,8 +122,16 @@ void SceneBSP::render()
 	const byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
 
 	for(unsigned i = 0; i < num_clusters; i++) {
-		if(BSP_TESTVIS(i))
-			render::drawBox(&clusters[i].aabb.min, &clusters[i].aabb.max);
+		
+		if(!BSP_TESTVIS(i))
+			continue;
+
+		if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+			continue;
+
+		// loop through faces and draw 'em (mark 'em?)(add 'em to a render list?)
+
+		render::drawBox(&clusters[i].aabb.min, &clusters[i].aabb.max);
 	}
 
 	// find cluster for camera
