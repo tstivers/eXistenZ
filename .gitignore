@@ -1,1 +1,4 @@
 /*.ncb
+bin/*.ilk
+bin/*.obj
+bin/BuildLog.htm

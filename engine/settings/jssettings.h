@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.h
 // console class definition
-// $Id: jssettings.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: jssettings.h,v 1.2 2003/10/08 05:16:07 tstivers Exp $
 //
 
 #pragma once
@@ -19,7 +19,7 @@ namespace jssettings {
 	JSBool dump(JSContext *cx, JSObject *obj, uintN argc,
                              jsval *argv, jsval *rval);
 	
-	typedef std::hash_map<char*, settings::Setting*, std::hash<char*>, eqstr> propmap_hash;
+	typedef std::hash_map<char*, settings::Setting*, hash_char_ptr> propmap_hash;
 	typedef propmap_hash::iterator propmap_iterator;
 
 	bool addsetting(settings::Setting* setting);

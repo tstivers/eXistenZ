@@ -13,7 +13,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)bin"
-			IntermediateDirectory="$(ProjectDir)client\debug"
+			IntermediateDirectory="$(SolutionDir)bin"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="FALSE">
@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;D:\Projects\STLport-4.5.3\stlport&quot;;D:\Projects\eXistenZ\engine;D:\Projects\js\include;D:\Projects\eXistenZ\engine\client"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(ProjectDir)client&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -42,7 +42,7 @@
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\STLport-4.5.3\lib&quot;;&quot;$(SolutionDir)lib&quot;;&quot;$(SolutionDir)..\js\debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib&quot;;&quot;$(SolutionDir)lib\js\debug&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
 				SubSystem="2"
@@ -519,84 +519,6 @@
 			<File
 				RelativePath="q3shader\q3shadercache.h">
 			</File>
-		</Filter>
-		<Filter
-			Name="shader"
-			Filter="">
-			<File
-				RelativePath="shader\shader.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="shader\shader.h">
-			</File>
-			<File
-				RelativePath="shader\shadercache.cpp">
-			</File>
-			<File
-				RelativePath="shader\shadercache.h">
-			</File>
-			<Filter
-				Name="q3shader"
-				Filter="">
-				<File
-					RelativePath="shader\q3shader\q3shader.cpp">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="shader\q3shader\q3shader.h">
-				</File>
-			</Filter>
-			<Filter
-				Name="stdshader"
-				Filter="">
-				<File
-					RelativePath="shader\stdshader\pass.cpp">
-				</File>
-				<File
-					RelativePath="shader\stdshader\pass.h">
-				</File>
-				<File
-					RelativePath="shader\stdshader\shader.cpp">
-					<FileConfiguration
-						Name="Debug|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)2.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)2.obj"/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="shader\stdshader\shader.h">
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
