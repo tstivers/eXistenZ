@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.6 2003/12/05 15:43:31 tstivers Exp $
+// $Id: bsprender.cpp,v 1.7 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -18,7 +18,6 @@
 
 using namespace q3bsp;
 
-#define BSPVERTEXF ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) )
 #define BSP_TESTVIS(to) (*(clustervis_start + ((to)>>3)) & (1 << ((to) & 7)))
 
 BSPRenderer::BSPRenderer(BSP* bsp)
@@ -48,7 +47,7 @@ void BSP::initDeviceObjects()
 	// generate our vertex buffer and drop everything into it
 	if(FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(BSPVertex),
 		D3DUSAGE_WRITEONLY,
-		BSPVERTEXF,
+		BSPVertex::FVF,
 		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
@@ -170,9 +169,9 @@ inline void BSP::initRenderState(void)
 	frame_lightmapswaps = 0;
 	frame_transparent = 0;
 
-	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(BSPVertex));
-	render::device->SetIndices(dxindexbuf);
-	render::device->SetFVF(BSPVERTEXF);
+	//render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(BSPVertex));
+	//render::device->SetIndices(dxindexbuf);
+	//render::device->SetFVF(BSPVertex::FVF);
 	render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );

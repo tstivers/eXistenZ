@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: scenenode.cpp,v 1.2 2003/11/25 22:57:23 tstivers Exp $
+// $Id: scenenode.cpp,v 1.3 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -9,7 +9,7 @@
 #include "render/scenegraph.h"
 #include "console/console.h"
 #include "q3bsp/bleh.h"
-#include "render/aabb.h"
+#include "math/aabb.h"
 #include "render/shapes.h"
 
 namespace render {
@@ -47,7 +47,7 @@ void SceneNode::acquire()
 	if((vertice_size < max_node_vertsize) && (vertice_size > 0)) {
 		if(FAILED(render::device->CreateVertexBuffer((UINT)vertice_size,
 			D3DUSAGE_WRITEONLY,
-			BSPVERTEXF,
+			BSPVertex::FVF,
 			D3DPOOL_MANAGED,
 			&vertexbuffer,
 			NULL))) {
@@ -68,7 +68,7 @@ void SceneNode::acquire()
 			if(mesh->rendergroup)
 				continue;
 
-			mesh->rendergroup = new RenderGroup();
+		/*	mesh->rendergroup = new RenderGroup();
 			mesh->rendergroup->texture = mesh->texture;
 			mesh->rendergroup->lightmap = mesh->lightmap;
 			mesh->rendergroup->vertexbuffer = vertexbuffer;
@@ -81,6 +81,7 @@ void SceneNode::acquire()
 			mesh->rendergroup->minindex = 0;
 			mesh->rendergroup->numvertices = mesh->vertice_count;
 			//mesh->rendergroup.startindex = 
+			*/
 		}
 	}
 
@@ -151,7 +152,7 @@ bool SceneNode::checkSplit()
 			contained++;
 
 		numvertices += mesh->vertice_count;
-		vertice_size += mesh->vertice_count * sizeof(q3bsp::BSPVertex);
+		vertice_size += mesh->vertice_count * sizeof(BSPVertex);
 		indice_size += mesh->indice_count * sizeof(unsigned short);
 		switch(mesh->indice_format) {
 			case D3DPT_TRIANGLELIST: numpolys += mesh->indice_count / 3; break;

@@ -1,15 +1,16 @@
 #pragma once
 
-#include "q3bsp/bleh.h"
-#include "render/aabb.h"
+#include "math/aabb.h"
 
 namespace render {
 	class RenderGroup;
 };
 
-namespace scene {
+namespace q3bsp {
+	class BSP;
+}
 
-	typedef q3bsp::BSPVertex BSPVertex; // TODO: fix
+namespace scene {
 
 	class BSPFace {
 	public:
@@ -18,7 +19,7 @@ namespace scene {
 		int type; // remove?
 		unsigned int num_vertices;
 		unsigned int num_indices;
-		q3bsp::BSPVertex* vertices;
+		BSPVertex* vertices;
 		unsigned short* indices;
 		unsigned int frame;
 		render::RenderGroup* rendergroup;
@@ -28,7 +29,7 @@ namespace scene {
 
 	class BSPCluster {
 	public:
-		render::AABB aabb;
+		AABB aabb;
 		unsigned int num_faces;
 		//BSPFace* faces;
 		BSPFacePtrList faces;

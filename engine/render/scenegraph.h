@@ -1,13 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: scenegraph.h,v 1.2 2003/11/25 22:57:23 tstivers Exp $
+// $Id: scenegraph.h,v 1.3 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #pragma once
 
 #include "texture/texture.h"
-#include "render/aabb.h"
+#include "math/aabb.h"
 
 namespace render {
 
@@ -31,7 +31,7 @@ namespace render {
 		RenderGroup* rendergroup;
 	};
 
-	class RenderGroup {
+	/* class RenderGroup {
 	public:
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
@@ -48,7 +48,7 @@ namespace render {
 		unsigned int startindex;
 		unsigned int primitivecount;
 		unsigned int frame;
-	};
+	}; */
 
 	typedef std::vector<Mesh*> MeshList;
 	typedef std::vector<RenderGroup*> RenderGroupList;

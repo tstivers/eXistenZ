@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.7 2003/12/05 15:43:31 tstivers Exp $
+// $Id: precompiled.h,v 1.8 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -29,6 +29,7 @@
 #include <list>
 #include <deque>
 #include <vector>
+#include <set>
 
 #include "platform/types.h"
 #include "common/common.h"
@@ -54,6 +55,8 @@
 
 extern HINSTANCE gHInstance;
 extern int gActive;
+
+#include "math/vertex.h"
 
 // some misc crap functions
 char* strlower(char* str);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: textloader.cpp,v 1.2 2003/12/05 08:44:56 tstivers Exp $
+// $Id: textloader.cpp,v 1.3 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -17,7 +17,7 @@
 
 namespace mesh {
 	// TODO: make this go away
-	typedef q3bsp::BSPVertex Vertex;
+	typedef BSPVertex Vertex;
 
 	void parseVertex(Vertex* vertex, char* info);
 };
@@ -111,7 +111,7 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 		
 		if(!stricmp(this_token, "VERTICEFORMAT:")) {
 			//mesh->vertice_format = fvfFromString(token);
-			mesh->vertice_format = BSPVERTEXF;
+			mesh->vertice_format = BSPVertex::FVF;
 		}
 
 		if(!stricmp(this_token, "VERTICECOUNT:")) {

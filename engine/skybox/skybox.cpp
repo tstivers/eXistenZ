@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: skybox.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
+// $Id: skybox.cpp,v 1.5 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -13,18 +13,11 @@
 #include "texture/texture.h"
 #include "settings/settings.h"
 
-#define SKYBOXVERTEXF ( D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0) )
-
 namespace skybox {
 	texture::DXTexture** textures;
 
-	struct tSkyVertexDX {
-		D3DXVECTOR3 pos;
-		D3DXVECTOR2 tex1;
-	};
-
 	D3DXVECTOR3 min, max;
-	tSkyVertexDX *verts;
+	SkyVertex *verts;
 
 	int draw;
 	int width, height, depth;
@@ -69,15 +62,15 @@ void skybox::acquire()
 	acquired = true;
 
 	// get memory for verts
-	verts = new tSkyVertexDX[4 * 6];
+	verts = new SkyVertex[4 * 6];
 
 	// generate our vertexes
 	genBox();
 
 	// create our vertex buffer
-	if(FAILED(render::device->CreateVertexBuffer(4 * 6 * sizeof(tSkyVertexDX),
+	if(FAILED(render::device->CreateVertexBuffer(4 * 6 * sizeof(SkyVertex),
 		D3DUSAGE_WRITEONLY,
-		SKYBOXVERTEXF,
+		SkyVertex.FVF,
 		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
@@ -86,11 +79,11 @@ void skybox::acquire()
 		}
 
 	void* vertbuf;
-	if(FAILED(dxvertbuf->Lock(0, 4 * 6 * sizeof(tSkyVertexDX), &vertbuf, D3DLOCK_DISCARD))) {
+	if(FAILED(dxvertbuf->Lock(0, 4 * 6 * sizeof(SkyVertex), &vertbuf, D3DLOCK_DISCARD))) {
 		LOG("[skybox::acquire] failed to lock vertex buffer");
 		return;
 	}
-	memcpy(vertbuf, verts, 4 * 6 * sizeof(tSkyVertexDX));
+	memcpy(vertbuf, verts, 4 * 6 * sizeof(SkyVertex));
 	dxvertbuf->Unlock();
 
 	// load our textures
@@ -286,8 +279,8 @@ void skybox::render()
 	if(!acquired)
 		acquire();
 
-	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(tSkyVertexDX));
-	render::device->SetFVF(SKYBOXVERTEXF);
+	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(SkyVertex));
+	render::device->SetFVF(SkyVertex.FVF);
 	render::device->SetMaterial( &mtrl );
 	render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );

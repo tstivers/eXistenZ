@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.6 2003/12/05 15:43:31 tstivers Exp $
+// $Id: render.cpp,v 1.7 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -16,6 +16,8 @@
 #include "skybox/skybox.h"
 #include "skybox/jsskybox.h"
 #include "scene/scene.h"
+#include "render/hwbuffer.h"
+#include "render/rendergroup.h"
 
 namespace render {
 	int xres;
@@ -52,9 +54,15 @@ namespace render {
 	unsigned int max_node_vertsize;
 	unsigned int max_node_indicesize;
 
+	unsigned int vertex_buffer_size;
+	unsigned int index_buffer_size;
+
 	SceneGraph scene;
 	scene::Scene* bleh = NULL;
+	unsigned int frame;
 };
+
+using namespace render;
 
 void render::init()
 {
@@ -98,6 +106,9 @@ void render::init()
 	settings::addsetting("system.render.scene.max_node_vertsize", settings::TYPE_INT, 0, NULL, NULL, &max_node_vertsize);
 	settings::addsetting("system.render.scene.max_node_indicesize", settings::TYPE_INT, 0, NULL, NULL, &max_node_indicesize);
 
+	settings::addsetting("system.render.vbsize", settings::TYPE_INT, 0, NULL, NULL, &vertex_buffer_size);
+	settings::addsetting("system.render.ibsize", settings::TYPE_INT, 0, NULL, NULL, &index_buffer_size);
+
 	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
 	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
 	con::addCommand("toggle_patches", con::toggle_int, &draw_patches);
@@ -140,6 +151,13 @@ void render::init()
 	max_node_polys = 12000;
 	max_node_vertsize = 128 * 1024;
 	max_node_indicesize = 128 * 1024;
+
+	vertex_buffer_size = 1280 * 1024;
+	index_buffer_size = 1280 * 1024;
+
+	current_vb = NULL;
+	current_ib = NULL;
+	frame = 0;
 }
 
 void render::release()
@@ -176,7 +194,7 @@ void render::setMatrices()
 
 void render::render()
 {
-	static int frame = 0;
+	frame++;	
 	sky_visible = true;
 
 	// clear the scene
@@ -190,14 +208,16 @@ void render::render()
 	skybox::render();
 
 	// draw the world
-	q3bsp::render();
+	q3bsp::render(); 
+	
+	if(!bleh) {
+		bleh = scene::Scene::load("maps/house.bsp");
+		bleh->init();
+		bleh->acquire();
+	}
 
-	//if(!bleh) {
-	//	bleh = scene::Scene::load("maps/house.bsp");
-	//	bleh->init();
-	//}
-
-	//bleh->render();
+	bleh->render();
+	
 
 	// draw other geometry
 	scene.render();
@@ -217,4 +237,25 @@ void render::render()
 void render::stop()
 {
 	d3d::release();
+}
+
+void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
+{
+	activateBuffers(rg->vertexbuffer, rg->indexbuffer);
+	
+	rg->texture->activate();
+	if(rg->lightmap)
+		rg->lightmap->activate();
+	
+	render::device->DrawIndexedPrimitive(
+		rg->type, 
+		rg->vertexbuffer->offset / rg->stride, 
+		0, 
+		rg->numvertices, 
+		rg->indexbuffer->offset / sizeof(unsigned short), 
+		rg->primitivecount);
+
+	rg->texture->deactivate();
+	if(rg->lightmap)
+		rg->lightmap->deactivate();
 }

@@ -319,12 +319,6 @@
 			Name="render"
 			Filter="">
 			<File
-				RelativePath=".\render\aabb.cpp">
-			</File>
-			<File
-				RelativePath=".\render\aabb.h">
-			</File>
-			<File
 				RelativePath="render\d3dfont.cpp">
 			</File>
 			<File
@@ -343,6 +337,12 @@
 				RelativePath="render\frustrum.h">
 			</File>
 			<File
+				RelativePath=".\render\hwbuffer.cpp">
+			</File>
+			<File
+				RelativePath=".\render\hwbuffer.h">
+			</File>
+			<File
 				RelativePath="render\marker.cpp">
 			</File>
 			<File
@@ -356,6 +356,12 @@
 			</File>
 			<File
 				RelativePath="render\render.h">
+			</File>
+			<File
+				RelativePath=".\render\rendergroup.cpp">
+			</File>
+			<File
+				RelativePath=".\render\rendergroup.h">
 			</File>
 			<File
 				RelativePath=".\render\scenegraph.cpp">
@@ -712,6 +718,44 @@
 			</File>
 			<File
 				RelativePath=".\scene\scenebsp.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="math"
+			Filter="">
+			<File
+				RelativePath=".\math\aabb.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\math\aabb.h">
+			</File>
+			<File
+				RelativePath=".\math\math.h">
+			</File>
+			<File
+				RelativePath=".\math\vertex.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="resource"
+			Filter="">
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\resource.rc">
 			</File>
 		</Filter>
 	</Files>

@@ -5,6 +5,9 @@
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/frustrum.h"
+#include "render/rendergroup.h"
+#include "render/hwbuffer.h"
+#include "q3bsp/bleh.h"
 
 namespace scene {
 };
@@ -29,9 +32,10 @@ void SceneBSP::init()
 	num_faces = bsp->num_faces;
 	faces = new BSPFace[num_faces];
 	ZeroMemory(faces, sizeof(BSPFace) * num_faces);
-	
+	 
 	for(unsigned i = 0; i < num_faces; i++) {
-		q3bsp::BSPFace& face = bsp->faces[bsp->sorted_faces[i]];
+		//q3bsp::BSPFace& face = bsp->faces[bsp->sorted_faces[i]];
+		q3bsp::BSPFace& face = bsp->faces[i];
 		faces[i].num_vertices = face.numverts;
 		faces[i].num_indices = face.nummeshverts;
 		faces[i].texture = face.texture;
@@ -54,6 +58,7 @@ void SceneBSP::init()
 	clusters = new BSPCluster[num_clusters];
 	ZeroMemory(clusters, sizeof(BSPCluster) * num_clusters);
 
+	// reset aabbs
 	for(unsigned i = 0; i < num_clusters; i++)
 		clusters[i].aabb.reset();
 
@@ -64,11 +69,11 @@ void SceneBSP::init()
 			&D3DXVECTOR3(bsp->leafs[i].max[0], bsp->leafs[i].max[1], bsp->leafs[i].max[2]));
 		
 		for(unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++) {
-			BSPFace* face = &faces[bsp->sorted_faces[bsp->leaffaces[bsp->leafs[i].leafface + j]]];
+			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
 			
 			// don't even bother adding invalid faces
 			if((face->texture < 0) || 
-				(face->texture > bsp->num_textures) ||
+				(face->texture > bsp->num_textures) || 
 				(!bsp->textures[face->texture]) ||
 				(!bsp->textures[face->texture]->draw))
 				continue;
@@ -90,6 +95,27 @@ void SceneBSP::acquire()
 
 	// loop through clusters and create rendergroups for faces
 	//		get vbuffers, ibuffers, textures
+	for(unsigned i = 0; i < num_clusters; i++) {
+		for(unsigned j = 0; j < clusters[i].faces.size(); j++) {
+			BSPFace& face = *(clusters[i].faces[j]);
+			
+			if(face.rendergroup)
+				continue;
+
+			if((!face.num_vertices) || (!face.num_indices))
+				continue;
+
+			face.rendergroup = render::getRenderGroup(BSPVertex.FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
+			face.rendergroup->texture = bsp->textures[face.texture];
+			if((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
+				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
+			face.rendergroup->type = D3DPT_TRIANGLELIST;
+			face.rendergroup->primitivecount = face.num_indices / 3;
+			face.rendergroup->acquire();
+			face.rendergroup->update(face.vertices, face.indices);
+		}
+	}
+
 	// loop through entities and acquire everything
 	acquired = true;
 }
@@ -116,6 +142,8 @@ void SceneBSP::reload(unsigned int flags)
 
 void SceneBSP::render()
 {
+	bsp->initRenderState();
+
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
@@ -129,9 +157,24 @@ void SceneBSP::render()
 		if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
 			continue;
 
+		for(unsigned j = 0; j < clusters[i].faces.size(); j++) {
+
+			BSPFace& face = *(clusters[i].faces[j]);
+
+			if(!face.rendergroup)
+				continue;
+
+			if(face.frame == render::frame)
+				continue;
+
+			face.frame = render::frame;
+
+			render::drawGroup(face.rendergroup);
+		}
+
 		// loop through faces and draw 'em (mark 'em?)(add 'em to a render list?)
 
-		render::drawBox(&clusters[i].aabb.min, &clusters[i].aabb.max);
+		//render::drawBox(&clusters[i].aabb.min, &clusters[i].aabb.max);
 	}
 
 	// find cluster for camera

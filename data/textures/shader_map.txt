@@ -17,10 +17,6 @@ textures/base_wall/glass01	textures/shaders/nodraw.shader
 // skies
 textures/skies/*		textures/shaders/sky.shader
 
-// glass texture
-textures/house/glass	textures/shaders/glass.shader
-
-
 // flares
 models/mapobjects/gratelamp/gratelamp_flare textures/shaders/flare_billboard.shader
 models/mapobjects/flares/electric	textures/shaders/flare_billboard.shader
@@ -89,5 +85,7 @@ models/mapobjects/Skull/ribcage	textures/shaders/alphatest08.shader
 models/mapobjects/spotlamp/spotlamp	textures/shaders/alphatest08.shader
 models/mapobjects/timlamp/timlamp	textures/shaders/alphatest08.shader
 
-
+// glass texture
+textures/house/glass	textures/shaders/glass.shader
+textures/gas/glass	textures/shaders/glass.shader
 

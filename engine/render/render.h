@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: render.h,v 1.3 2003/11/24 00:16:13 tstivers Exp $
+// $Id: render.h,v 1.4 2003/12/13 02:58:04 tstivers Exp $
 //
 
 #pragma once
@@ -9,6 +9,8 @@
 #include "render/scenegraph.h"
 
 namespace render {
+	class RenderGroup;
+
 	extern int xres;
 	extern int yres;
 	extern int refresh;
@@ -19,6 +21,7 @@ namespace render {
 	bool start(void);
 	void stop(void);
 	void render(void);
+	void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
 
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
 	extern D3DXMATRIX world, view, projection;
@@ -43,6 +46,12 @@ namespace render {
 	extern unsigned int max_node_polys;
 	extern unsigned int max_node_vertsize;
 	extern unsigned int max_node_indicesize;
+
+	extern unsigned int vertex_buffer_size;
+	extern unsigned int index_buffer_size;
+
+	extern unsigned int frame;
+
 	extern SceneGraph scene;
 
 	class CFrustum;

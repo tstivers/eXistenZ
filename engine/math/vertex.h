@@ -38,3 +38,9 @@ typedef struct _TVertex {
 	D3DXVECTOR2 tex1;
 	static const DWORD FVF = ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0));
 } TVertex;
+
+typedef struct _SkyVertex {
+	D3DXVECTOR3 pos;
+	D3DXVECTOR2 tex1;
+	static const DWORD FVF = ( D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0));
+} SkyVertex;
