@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: uiconsole.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: uiconsole.h,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #pragma once
@@ -32,8 +32,8 @@ namespace ui {
 		std::deque<char*> scrollback;
 		std::deque<std::string> history;
 		std::string cmd;
-		int cursorpos;
-		int historypos;
+		unsigned int cursorpos;
+		unsigned int historypos;
 		int wireframe;
 		int draw;
 

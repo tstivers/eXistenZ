@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: fps.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: fps.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -46,11 +46,11 @@ void FPS::render()
 
 	if(timer::time_ms - last_ms >= 1000)
 	{
-		fps = (double)frames / ((double)((double)timer::time_ms - (double)last_ms) / 1000);
+		fps = (float)((double)frames / ((double)((double)timer::time_ms - (double)last_ms) / 1000));
 		frames = 0;
 		last_ms = timer::time_ms;
 	}
 
 	sprintf(buf, "%.2f fps", fps);
-	d3dfont->DrawText(xpos, ypos, D3DCOLOR_XRGB(255, 255, 255), buf);
+	d3dfont->DrawText((float)xpos, (float)ypos, D3DCOLOR_XRGB(255, 255, 255), buf);
 }

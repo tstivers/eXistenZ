@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: jssettings.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: jssettings.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 #include "precompiled.h"
 #include "console/console.h"
@@ -10,6 +10,8 @@
 #include "script/script.h"
 
 extern ScriptEngine gScriptEngine;
+
+#pragma warning( disable : 4311 4312 )
 
 void jssettings::init()
 {
@@ -153,7 +155,7 @@ JSBool jssettings::jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *v
 	case settings::TYPE_FLOAT:
 		jsdouble dvalue;
 		JS_ValueToNumber(cx, *vp, &dvalue);
-		*((float*)setting->data) = dvalue;
+		*((float*)setting->data) = (float)dvalue;
 		break;
 	default:
 		break;

@@ -45,11 +45,11 @@ function bench() {
 }
 
 function home() {
-	game.camera.pos.x = 0;
-	game.camera.pos.y = 0;
-	game.camera.pos.z = 0;
-	game.camera.rot.x = 0;
-	game.camera.rot.y = 0;
+	game.player.pos.x = 0;
+	game.player.pos.y = 0;
+	game.player.pos.z = 0;
+	game.player.rot.x = 0;
+	game.player.rot.y = 0;
 }
 
 function stress() {
@@ -107,6 +107,7 @@ system.render.resolution.y = 768;
 system.vfs.path = "../data/;/data/files.zip;";
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
+system.render.bsp.debug = 1;
 system.render.fullscreen = 0;
 system.render.boost = 0;
 system.render.gamma = 2.0;
@@ -119,7 +120,7 @@ system.ui.console.x = 20;
 system.ui.console.y = 30;
 system.ui.console.height = system.render.resolution.y - system.ui.console.y - 50;
 system.ui.fps.x = system.render.resolution.x - 150;
-system.debug.traceflags = 0; // turn off debugger tracing
+system.debug.traceflags = 0xffff; // turn on debugger tracing
 game.camera.pos.x = 0;
 game.camera.pos.y = 0;
 game.camera.pos.z = 0;
@@ -127,6 +128,8 @@ game.mouse.sensitivity.x = 0.5;
 game.mouse.sensitivity.y = 0.5;
 system.render.tesselation = 6;
 game.init_command = "";
+system.render.use_scenegraph = 0;
+system.render.bsp.convert = 0;
 
 system.render.skybox.texture = "textures/skybox/cx";
 
@@ -163,8 +166,10 @@ bind(KEY_D, "dbg_break");
 bind(KEY_U, "toggle_ui");
 bind(KEY_SPACE, "log_frame");
 bind(KEY_LCONTROL, "+log_frame");
-bind(KEY_B, "toggle_bsprender");
+bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
+bind(KEY_K, "toggle_diffuse");
+bind(KEY_S, "toggle_sky");
 
 function markerfun() {
 	bind(BUTTON_0, "+add_marker");

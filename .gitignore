@@ -1,5 +1,7 @@
 /*.ncb
 /Engine.ncb
+bin/*.DPbcd
+bin/*.NLB
 bin/*.dpprf
 bin/*.exe
 bin/*.idb

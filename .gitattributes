@@ -154,4 +154,20 @@ lib/js/release/js32.lib -text
 tools/buildnuminc.exe -text
 tools/compile.rsp -text svneol=native#unset
 tools/link.rsp -text svneol=native#unset
+tools/maya_export/exportStatic.cpp -text svneol=native#unset
+tools/maya_export/exportStatic.h -text svneol=native#unset
+tools/maya_export/export_dialog.cpp -text svneol=native#unset
+tools/maya_export/export_dialog.h -text svneol=native#unset
+tools/maya_export/export_options.cpp -text svneol=native#unset
+tools/maya_export/export_options.h -text svneol=native#unset
+tools/maya_export/maya_export.cpp -text svneol=native#unset
+tools/maya_export/maya_export.h -text svneol=native#unset
+tools/maya_export/maya_export.vcproj -text svneol=native#unset
+tools/maya_export/resource.h -text svneol=native#unset
+tools/maya_export/resources.aps -text
+tools/maya_export/resources.rc -text svneol=native#unset
+tools/maya_export/scandag.cpp -text svneol=native#unset
+tools/maya_export/scandag.h -text svneol=native#unset
+tools/maya_export/stdafx.cpp -text svneol=native#unset
+tools/maya_export/stdafx.h -text svneol=native#unset
 tools/opt.rsp -text svneol=native#unset

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: timer.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: timer.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -33,6 +33,6 @@ void timer::doTick()
 	QueryPerformanceCounter((LARGE_INTEGER*)&time_ticks);	
 	delta_ticks = time_ticks - last_time_ticks;	
 
-	time_ms = time_ticks / ((float)time_hz / 1000.0f);
+	time_ms = (unsigned int)(time_ticks / ((float)time_hz / 1000.0f));
 	delta_ms = (float)delta_ticks / ((float)time_hz / 1000.0f);
 }

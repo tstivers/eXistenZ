@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // appwindow.cpp
 // main application window
-// $Id: appwindow.cpp,v 1.1 2003/10/07 20:17:44 tstivers Exp $
+// $Id: appwindow.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -124,7 +124,7 @@ LONG appwindow::onKey(WPARAM wparam, LPARAM lparam)
 	case VK_DELETE:
 	case VK_HOME:
 	case VK_END:
-		ui::keypressed(wparam, true);		
+		ui::keypressed((char)wparam, true);		
 		break;
 	default:		
 		break;
@@ -161,6 +161,6 @@ LONG CALLBACK appwindow::appwndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		IGNORE_MESSAGE(WM_SYSKEYUP)		
 		IGNORE_MESSAGE(WM_KEYUP)
 		IGNORE_MESSAGE(WM_ERASEBKGND)*/
-		default: return DefWindowProc(hwnd, msg, wparam, lparam);
+		default: return (LONG)DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 }

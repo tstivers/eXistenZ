@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.cpp
 // script engine class
-// $Id: jsscript.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: jsscript.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -9,6 +9,8 @@
 #include "script/jsscript.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
+
+#pragma warning( disable : 4311 4312 )
 
 void jsscript::init()
 {

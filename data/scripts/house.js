@@ -5,10 +5,10 @@ system.render.skybox.texture = "textures/skybox/fullmoon";
 system.render.skybox.reset();
 
 // set player position
-game.player.pos.x = -560;
+game.player.pos.x = -360;
 game.player.pos.y = 20;
-game.player.pos.z = 520;
-game.player.rot.x = 90;
+game.player.pos.z = -800;
+game.player.rot.x = 30;
 game.player.rot.y = 0;
 game.player.rot.z = 0;
 

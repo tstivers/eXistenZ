@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // vfs.cpp
 // virtual file system
-// $Id: vfs.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: vfs.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -152,7 +152,7 @@ bool vfs::fileExists(const char* filename)
 int vfs::getFileList(file_list_t& file_list, const char* path, const char* wildcard, bool recurse)
 {
 	struct _finddata_t file;
-	long hFile;
+	intptr_t hFile;
 
 	for(std::list<std::string>::iterator it = path_list.begin(); it != path_list.end(); it++) {
 		std::string curpath = vfs_root + 
@@ -162,7 +162,7 @@ int vfs::getFileList(file_list_t& file_list, const char* path, const char* wildc
 			(std::string)path + 
 			(std::string)"/" + 
 			(std::string)wildcard;			
-		if((hFile = _findfirst(curpath.c_str(), &file)) == -1L)
+		if((hFile = _findfirst(curpath.c_str(), &file)) == (intptr_t)-1)
 			continue;
 		file_list.push_back((std::string)file.name);
 		while(_findnext(hFile, &file) == 0)

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: uiconsole.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: uiconsole.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -92,9 +92,9 @@ void Console::render()
 		d3dfont->RestoreDeviceObjects();
 	}
 
-	float x = xpos;
-	float top = ypos;
-	float curr_y = ypos + height - 25;
+	float x = (float)xpos;
+	float top = (float)ypos;
+	float curr_y = (float)(ypos + height - 25);
 
 	scrollback_iter line = scrollback.begin();
 
@@ -109,7 +109,7 @@ void Console::render()
 	if(ui::has_focus && (((int)timer::time_ms / 300) % 2))
 		cmd.insert(cursorpos, 1, cursor);
 	cmd.insert(0, "> ");
-	d3dfont->DrawText(x, ypos + height - 10, color, cmd.c_str(), wireframe ? D3DFONT_WIREFRAME : 0);
+	d3dfont->DrawText(x, (float)(ypos + height - 10), color, cmd.c_str(), wireframe ? D3DFONT_WIREFRAME : 0);
 	cmd.erase(0, 2);
 	if(ui::has_focus && (((int)timer::time_ms / 300) % 2))
 		cmd.erase(cursorpos, 1);
@@ -147,14 +147,14 @@ void Console::keypressed(char key, bool extended)
 			if((history.size() > 0) && (historypos < history.size())) {
 				historypos++;
 				cmd = history[historypos - 1];
-				cursorpos = cmd.size();
+				cursorpos = (unsigned int)cmd.size();
 			}			
 			break;
 		case VK_DOWN:
 			if((history.size() > 0) && (historypos > 0)) {
 				historypos--;
 				cmd = history[historypos];
-				cursorpos = cmd.size();
+				cursorpos = (unsigned int)cmd.size();
 			}
 			break;
 		case VK_DELETE:
@@ -165,7 +165,7 @@ void Console::keypressed(char key, bool extended)
 			cursorpos = 0;
 			break;
 		case VK_END:
-			cursorpos = cmd.size();
+			cursorpos = (unsigned int)cmd.size();
 			break;
 		}
 	else switch(key) {

@@ -3,7 +3,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eXistenZ Engine Client", "e
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maya_export", "tools\maya_export\maya_export.vcproj", "{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
@@ -13,6 +20,10 @@ Global
 		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug.Build.0 = Debug|Win32
 		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release.ActiveCfg = Release|Win32
 		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release.Build.0 = Release|Win32
+		{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}.Debug.ActiveCfg = Debug|Win32
+		{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}.Debug.Build.0 = Debug|Win32
+		{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}.Release.ActiveCfg = Release|Win32
+		{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

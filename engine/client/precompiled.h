@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.4 2003/11/24 00:16:13 tstivers Exp $
+// $Id: precompiled.h,v 1.5 2003/12/03 07:21:39 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -24,6 +24,18 @@
 #include "d3dx9core.h"
 #define DIRECTINPUT_VERSION 0x0800
 #include "dinput.h"
+
+#define inline_ __forceinline
+#pragma intrinsic(memcmp)
+#pragma intrinsic(memcpy)
+#pragma intrinsic(memset)
+#pragma intrinsic(strcat)
+#pragma intrinsic(strcmp)
+#pragma intrinsic(strcpy)
+#pragma intrinsic(strlen)
+#pragma intrinsic(abs)
+#pragma intrinsic(labs)
+#pragma inline_depth( 255 )
 
 #define ASSERT(f) (void)((f) || (DebugBreak(), 0))
 
@@ -52,7 +64,7 @@ public:
 	const static size_t bucket_size = 4;
     const static size_t min_buckets = 8;
     
-	size_t operator()(const char* Key) const
+	inline_ size_t operator()(const char* Key) const
     {
         size_t hash = 5381;
         int c;
@@ -63,7 +75,7 @@ public:
         return hash;
     }
     
-    bool operator()(const char* keyval1,
+    inline_ bool operator()(const char* keyval1,
         const char* keyval2) const
     {
         return strcmp(keyval1, keyval2) < 0; //<

@@ -7,5 +7,7 @@ BuildLog.htm
 *.exe
 *.pcc
 *.dpprf
+*.NLB
+*.DPbcd
 debug
 release
