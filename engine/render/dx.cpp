@@ -49,10 +49,27 @@ bool d3d::init()
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 	else
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+	
+	UINT adapter = settings::getint("system.render.device");
+	D3DDEVTYPE devicetype = D3DDEVTYPE_HAL;
+
+	// Look for 'NVIDIA NVPerfHUD' adapter
+	// If it is present, override default settings
+	for (UINT i = 0; i < d3d->GetAdapterCount(); i++)
+	{
+		D3DADAPTER_IDENTIFIER9 id;
+		HRESULT res = d3d->GetAdapterIdentifier(i,0,&id);
+		if (!strcmp(id.Description, "NVIDIA NVPerfHUD"))
+		{
+			adapter = i;
+			devicetype = D3DDEVTYPE_REF;
+			break;
+		}
+	}
 
 	if(FAILED((d3d->CreateDevice(
-		settings::getint("system.render.device"), 
-		D3DDEVTYPE_HAL, 
+		adapter, 
+		devicetype, 
 		appwindow::getHwnd(),
 		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
 		&d3dpp, 
