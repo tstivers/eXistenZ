@@ -12,14 +12,14 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)../bin"
+			IntermediateDirectory="$(SolutionDir)../bin/maya_debug"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\AliasWavefront\Maya5.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;"
 				PreprocessorDefinitions="REQUIRE_IOSTREAM;NT_PLUGIN"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -32,10 +32,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Foundation.lib Image.lib OpenMaya.lib OpenMayaAnim.lib OpenMayaFX.lib OpenMayaRender.lib OpenMayaUI.lib libMDtApi.lib libmocap.lib"
+				AdditionalDependencies="Foundation.lib Image.lib OpenMaya.lib OpenMayaAnim.lib OpenMayaFX.lib OpenMayaRender.lib OpenMayaUI.lib libmocap.lib"
 				OutputFile="$(OutDir)/maya_export.mll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\AliasWavefront\Maya5.0\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Alias\Maya6.0\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/maya_export.pdb"
 				SubSystem="2"
@@ -64,13 +64,13 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)../bin"
+			IntermediateDirectory="$(SolutionDir)../bin/maya_release"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\AliasWavefront\Maya5.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Alias\Maya6.0\include&quot;"
 				PreprocessorDefinitions="REQUIRE_IOSTREAM;NT_PLUGIN"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
@@ -81,10 +81,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Foundation.lib Image.lib OpenMaya.lib OpenMayaAnim.lib OpenMayaFX.lib OpenMayaRender.lib OpenMayaUI.lib libMDtApi.lib libmocap.lib"
+				AdditionalDependencies="Foundation.lib Image.lib OpenMaya.lib OpenMayaAnim.lib OpenMayaFX.lib OpenMayaRender.lib OpenMayaUI.lib libmocap.lib"
 				OutputFile="$(OutDir)/maya_export.mll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\AliasWavefront\Maya5.0\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Alias\Maya6.0\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -121,34 +121,40 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\export_dialog.cpp">
+				RelativePath="..\tools\maya_export\export_dialog.cpp">
 			</File>
 			<File
-				RelativePath=".\export_dialog.h">
+				RelativePath="..\tools\maya_export\export_dialog.h">
 			</File>
 			<File
-				RelativePath=".\export_options.cpp">
+				RelativePath="..\tools\maya_export\export_options.cpp">
 			</File>
 			<File
-				RelativePath=".\export_options.h">
+				RelativePath="..\tools\maya_export\export_options.h">
 			</File>
 			<File
-				RelativePath=".\exportStatic.cpp">
+				RelativePath="..\tools\maya_export\exportStatic.cpp">
 			</File>
 			<File
-				RelativePath=".\exportStatic.h">
+				RelativePath="..\tools\maya_export\exportStatic.h">
 			</File>
 			<File
-				RelativePath=".\maya_export.cpp">
+				RelativePath="..\tools\maya_export\maya_export.cpp">
 			</File>
 			<File
-				RelativePath=".\scandag.cpp">
+				RelativePath="..\tools\maya_export\maya_export.h">
 			</File>
 			<File
-				RelativePath=".\scandag.h">
+				RelativePath="..\tools\maya_export\resource.h">
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp">
+				RelativePath="..\tools\maya_export\scandag.cpp">
+			</File>
+			<File
+				RelativePath="..\tools\maya_export\scandag.h">
+			</File>
+			<File
+				RelativePath="..\tools\maya_export\stdafx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -162,19 +168,8 @@
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath=".\maya_export.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\stdafx.h">
+				RelativePath="..\tools\maya_export\stdafx.h">
 			</File>
 		</Filter>
 		<Filter
@@ -182,7 +177,7 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\resources.rc">
+				RelativePath="..\tools\maya_export\resources.rc">
 			</File>
 		</Filter>
 	</Files>

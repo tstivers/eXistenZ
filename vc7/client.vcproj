@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)bin"
-			IntermediateDirectory="$(SolutionDir)bin\debug"
+			OutputDirectory="$(SolutionDir)..\bin"
+			IntermediateDirectory="$(SolutionDir)..\bin\engine_debug"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="FALSE">
@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;;&quot;$(SolutionDir)lib&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js/include&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -42,7 +42,7 @@
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\js\debug&quot;;&quot;$(SolutionDir)lib\nvtristrip\debug&quot;;&quot;$(SolutionDir)lib\zlib\debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\lib\js\debug&quot;;&quot;$(SolutionDir)..\lib\nvtristrip\debug&quot;;&quot;$(SolutionDir)..\lib\zlib\debug&quot;"
 				IgnoreDefaultLibraryNames="libc.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
@@ -73,8 +73,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)bin"
-			IntermediateDirectory="$(SolutionDir)bin\release"
+			OutputDirectory="$(SolutionDir)..\bin"
+			IntermediateDirectory="$(SolutionDir)..\bin\engine_release"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="TRUE">
@@ -91,7 +91,7 @@
 				EnableFiberSafeOptimizations="TRUE"
 				OptimizeForProcessor="2"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;;&quot;$(SolutionDir)lib&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js/include&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
@@ -113,7 +113,7 @@
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib zlib.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/zlib/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -150,143 +150,141 @@
 			Name="client"
 			Filter="">
 			<File
-				RelativePath="client\appwindow.cpp">
+				RelativePath="..\engine\client\appwindow.cpp">
 			</File>
 			<File
-				RelativePath="client\appwindow.h">
+				RelativePath="..\engine\client\appwindow.h">
 			</File>
 			<File
-				RelativePath="client\main.cpp">
+				RelativePath="..\engine\client\main.cpp">
 			</File>
 			<File
-				RelativePath="client\main.h">
+				RelativePath="..\engine\client\main.h">
 			</File>
 			<File
-				RelativePath="client\precompiled.cpp">
+				RelativePath="..\engine\client\precompiled.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						AdditionalOptions=""
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="client\precompiled.h">
+				RelativePath="..\engine\client\precompiled.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="script"
 			Filter="">
 			<File
-				RelativePath="script\jsscript.cpp">
+				RelativePath="..\engine\script\jsscript.cpp">
 			</File>
 			<File
-				RelativePath="script\jsscript.h">
+				RelativePath="..\engine\script\jsscript.h">
 			</File>
 			<File
-				RelativePath="script\script.cpp">
+				RelativePath="..\engine\script\script.cpp">
 			</File>
 			<File
-				RelativePath="script\script.h">
+				RelativePath="..\engine\script\script.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="platform"
 			Filter="">
 			<File
-				RelativePath="platform\types.h">
+				RelativePath="..\engine\platform\types.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="console"
 			Filter="">
 			<File
-				RelativePath="console\console.cpp">
+				RelativePath="..\engine\console\console.cpp">
 			</File>
 			<File
-				RelativePath="console\console.h">
+				RelativePath="..\engine\console\console.h">
 			</File>
 			<File
-				RelativePath="console\jsconsole.cpp">
+				RelativePath="..\engine\console\jsconsole.cpp">
 			</File>
 			<File
-				RelativePath="console\jsconsole.h">
+				RelativePath="..\engine\console\jsconsole.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="settings"
 			Filter="">
 			<File
-				RelativePath="settings\jssettings.cpp">
+				RelativePath="..\engine\settings\jssettings.cpp">
 			</File>
 			<File
-				RelativePath="settings\jssettings.h">
+				RelativePath="..\engine\settings\jssettings.h">
 			</File>
 			<File
-				RelativePath="settings\settings.cpp">
+				RelativePath="..\engine\settings\settings.cpp">
 			</File>
 			<File
-				RelativePath="settings\settings.h">
+				RelativePath="..\engine\settings\settings.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="vfs"
 			Filter="">
 			<File
-				RelativePath=".\vfs\diskfile.cpp">
+				RelativePath="..\engine\vfs\diskfile.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\diskfile.h">
+				RelativePath="..\engine\vfs\diskfile.h">
 			</File>
 			<File
-				RelativePath=".\vfs\diskpath.cpp">
+				RelativePath="..\engine\vfs\diskpath.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\diskpath.h">
+				RelativePath="..\engine\vfs\diskpath.h">
 			</File>
 			<File
-				RelativePath="vfs\file.cpp">
+				RelativePath="..\engine\vfs\file.cpp">
 			</File>
 			<File
-				RelativePath="vfs\file.h">
+				RelativePath="..\engine\vfs\file.h">
 			</File>
 			<File
-				RelativePath=".\vfs\jsvfs.cpp">
+				RelativePath="..\engine\vfs\jsvfs.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\jsvfs.h">
+				RelativePath="..\engine\vfs\jsvfs.h">
 			</File>
 			<File
-				RelativePath=".\vfs\path.cpp">
+				RelativePath="..\engine\vfs\path.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\path.h">
+				RelativePath="..\engine\vfs\path.h">
 			</File>
 			<File
-				RelativePath="vfs\vfs.cpp">
+				RelativePath="..\engine\vfs\vfs.cpp">
 			</File>
 			<File
-				RelativePath="vfs\vfs.h">
+				RelativePath="..\engine\vfs\vfs.h">
 			</File>
 			<File
-				RelativePath=".\vfs\zipfile.cpp">
+				RelativePath="..\engine\vfs\zipfile.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\zipfile.h">
+				RelativePath="..\engine\vfs\zipfile.h">
 			</File>
 			<File
-				RelativePath=".\vfs\zippath.cpp">
+				RelativePath="..\engine\vfs\zippath.cpp">
 			</File>
 			<File
-				RelativePath=".\vfs\zippath.h">
+				RelativePath="..\engine\vfs\zippath.h">
 			</File>
 		</Filter>
 		<Filter
@@ -357,253 +355,253 @@
 			Name="render"
 			Filter="">
 			<File
-				RelativePath="render\d3dfont.cpp">
+				RelativePath="..\engine\render\d3dfont.cpp">
 			</File>
 			<File
-				RelativePath="render\d3dfont.h">
+				RelativePath="..\engine\render\d3dfont.h">
 			</File>
 			<File
-				RelativePath="render\dx.cpp">
+				RelativePath="..\engine\render\dx.cpp">
 			</File>
 			<File
-				RelativePath="render\dx.h">
+				RelativePath="..\engine\render\dx.h">
 			</File>
 			<File
-				RelativePath="render\frustrum.cpp">
+				RelativePath="..\engine\render\frustrum.cpp">
 			</File>
 			<File
-				RelativePath="render\frustrum.h">
+				RelativePath="..\engine\render\frustrum.h">
 			</File>
 			<File
-				RelativePath=".\render\hwbuffer.cpp">
+				RelativePath="..\engine\render\hwbuffer.cpp">
 			</File>
 			<File
-				RelativePath=".\render\hwbuffer.h">
+				RelativePath="..\engine\render\hwbuffer.h">
 			</File>
 			<File
-				RelativePath="render\marker.cpp">
+				RelativePath="..\engine\render\marker.cpp">
 			</File>
 			<File
-				RelativePath="render\marker.h">
+				RelativePath="..\engine\render\marker.h">
 			</File>
 			<File
-				RelativePath=".\render\meshoptimize.cpp">
+				RelativePath="..\engine\render\meshoptimize.cpp">
 			</File>
 			<File
-				RelativePath=".\render\meshoptimize.h">
+				RelativePath="..\engine\render\meshoptimize.h">
 			</File>
 			<File
-				RelativePath="render\render.cpp">
+				RelativePath="..\engine\render\render.cpp">
 			</File>
 			<File
-				RelativePath="render\render.h">
+				RelativePath="..\engine\render\render.h">
 			</File>
 			<File
-				RelativePath=".\render\rendergroup.cpp">
+				RelativePath="..\engine\render\rendergroup.cpp">
 			</File>
 			<File
-				RelativePath=".\render\rendergroup.h">
+				RelativePath="..\engine\render\rendergroup.h">
 			</File>
 			<File
-				RelativePath=".\render\shapes.cpp">
+				RelativePath="..\engine\render\shapes.cpp">
 			</File>
 			<File
-				RelativePath=".\render\shapes.h">
+				RelativePath="..\engine\render\shapes.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="interface"
 			Filter="">
 			<File
-				RelativePath="interface\fps.cpp">
+				RelativePath="..\engine\interface\fps.cpp">
 			</File>
 			<File
-				RelativePath="interface\fps.h">
+				RelativePath="..\engine\interface\fps.h">
 			</File>
 			<File
-				RelativePath="interface\interface.cpp">
+				RelativePath="..\engine\interface\interface.cpp">
 			</File>
 			<File
-				RelativePath="interface\interface.h">
+				RelativePath="..\engine\interface\interface.h">
 			</File>
 			<File
-				RelativePath="interface\pos.cpp">
+				RelativePath="..\engine\interface\pos.cpp">
 			</File>
 			<File
-				RelativePath="interface\pos.h">
+				RelativePath="..\engine\interface\pos.h">
 			</File>
 			<File
-				RelativePath="interface\uiconsole.cpp">
+				RelativePath="..\engine\interface\uiconsole.cpp">
 			</File>
 			<File
-				RelativePath="interface\uiconsole.h">
+				RelativePath="..\engine\interface\uiconsole.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="timer"
 			Filter="">
 			<File
-				RelativePath="timer\timer.cpp">
+				RelativePath="..\engine\timer\timer.cpp">
 			</File>
 			<File
-				RelativePath="timer\timer.h">
+				RelativePath="..\engine\timer\timer.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="q3bsp"
 			Filter="">
 			<File
-				RelativePath=".\q3bsp\bleh.cpp">
+				RelativePath="..\engine\q3bsp\bleh.cpp">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bleh.h">
+				RelativePath="..\engine\q3bsp\bleh.h">
 			</File>
 			<File
-				RelativePath="q3bsp\bspcache.cpp">
+				RelativePath="..\engine\q3bsp\bspcache.cpp">
 			</File>
 			<File
-				RelativePath="q3bsp\bspcache.h">
+				RelativePath="..\engine\q3bsp\bspcache.h">
 			</File>
 			<File
-				RelativePath="q3bsp\bspcollide.cpp">
+				RelativePath="..\engine\q3bsp\bspcollide.cpp">
 			</File>
 			<File
-				RelativePath="q3bsp\bspcollide.h">
+				RelativePath="..\engine\q3bsp\bspcollide.h">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bspload.cpp">
+				RelativePath="..\engine\q3bsp\bspload.cpp">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bspload.h">
+				RelativePath="..\engine\q3bsp\bspload.h">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bsppatch.cpp">
+				RelativePath="..\engine\q3bsp\bsppatch.cpp">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bsppatch.h">
+				RelativePath="..\engine\q3bsp\bsppatch.h">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bsprender.cpp">
+				RelativePath="..\engine\q3bsp\bsprender.cpp">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bsprender.h">
+				RelativePath="..\engine\q3bsp\bsprender.h">
 			</File>
 			<File
-				RelativePath="q3bsp\q3bsptypes.h">
+				RelativePath="..\engine\q3bsp\q3bsptypes.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="texture"
 			Filter="">
 			<File
-				RelativePath="texture\jstexture.cpp">
+				RelativePath="..\engine\texture\jstexture.cpp">
 			</File>
 			<File
-				RelativePath="texture\jstexture.h">
+				RelativePath="..\engine\texture\jstexture.h">
 			</File>
 			<File
-				RelativePath="texture\shader.cpp">
+				RelativePath="..\engine\texture\shader.cpp">
 			</File>
 			<File
-				RelativePath="texture\shader.h">
+				RelativePath="..\engine\texture\shader.h">
 			</File>
 			<File
-				RelativePath="texture\texture.cpp">
+				RelativePath="..\engine\texture\texture.cpp">
 			</File>
 			<File
-				RelativePath="texture\texture.h">
+				RelativePath="..\engine\texture\texture.h">
 			</File>
 			<File
-				RelativePath="texture\texturecache.cpp">
+				RelativePath="..\engine\texture\texturecache.cpp">
 			</File>
 			<File
-				RelativePath="texture\texturecache.h">
+				RelativePath="..\engine\texture\texturecache.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="input"
 			Filter="">
 			<File
-				RelativePath="input\bind.cpp">
+				RelativePath="..\engine\input\bind.cpp">
 			</File>
 			<File
-				RelativePath="input\bind.h">
+				RelativePath="..\engine\input\bind.h">
 			</File>
 			<File
-				RelativePath="input\input.cpp">
+				RelativePath="..\engine\input\input.cpp">
 			</File>
 			<File
-				RelativePath="input\input.h">
+				RelativePath="..\engine\input\input.h">
 			</File>
 			<File
-				RelativePath="input\jsinput.cpp">
+				RelativePath="..\engine\input\jsinput.cpp">
 			</File>
 			<File
-				RelativePath="input\jsinput.h">
+				RelativePath="..\engine\input\jsinput.h">
 			</File>
 			<File
-				RelativePath="input\keys.h">
+				RelativePath="..\engine\input\keys.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="game"
 			Filter="">
 			<File
-				RelativePath="game\game.cpp">
+				RelativePath="..\engine\game\game.cpp">
 			</File>
 			<File
-				RelativePath="game\game.h">
+				RelativePath="..\engine\game\game.h">
 			</File>
 			<File
-				RelativePath="game\jsgame.cpp">
+				RelativePath="..\engine\game\jsgame.cpp">
 			</File>
 			<File
-				RelativePath="game\jsgame.h">
+				RelativePath="..\engine\game\jsgame.h">
 			</File>
 			<File
-				RelativePath="game\player.cpp">
+				RelativePath="..\engine\game\player.cpp">
 			</File>
 			<File
-				RelativePath="game\player.h">
+				RelativePath="..\engine\game\player.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="skybox"
 			Filter="">
 			<File
-				RelativePath="skybox\jsskybox.cpp">
+				RelativePath="..\engine\skybox\jsskybox.cpp">
 			</File>
 			<File
-				RelativePath="skybox\jsskybox.h">
+				RelativePath="..\engine\skybox\jsskybox.h">
 			</File>
 			<File
-				RelativePath="skybox\skybox.cpp">
+				RelativePath="..\engine\skybox\skybox.cpp">
 			</File>
 			<File
-				RelativePath="skybox\skybox.h">
+				RelativePath="..\engine\skybox\skybox.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="q3shader"
 			Filter="">
 			<File
-				RelativePath="q3shader\q3shader.cpp">
+				RelativePath="..\engine\q3shader\q3shader.cpp">
 			</File>
 			<File
-				RelativePath="q3shader\q3shader.h">
+				RelativePath="..\engine\q3shader\q3shader.h">
 			</File>
 			<File
-				RelativePath="q3shader\q3shadercache.cpp">
+				RelativePath="..\engine\q3shader\q3shadercache.cpp">
 			</File>
 			<File
-				RelativePath="q3shader\q3shadercache.h">
+				RelativePath="..\engine\q3shader\q3shadercache.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="shader"
 			Filter="">
 			<File
-				RelativePath=".\shader\shader.cpp">
+				RelativePath="..\engine\shader\shader.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -618,25 +616,25 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\shader\shader.h">
+				RelativePath="..\engine\shader\shader.h">
 			</File>
 			<File
-				RelativePath=".\shader\shadercache.cpp">
+				RelativePath="..\engine\shader\shadercache.cpp">
 			</File>
 			<File
-				RelativePath=".\shader\shadercache.h">
+				RelativePath="..\engine\shader\shadercache.h">
 			</File>
 			<Filter
 				Name="stdshader"
 				Filter="">
 				<File
-					RelativePath=".\shader\stdshader\pass.cpp">
+					RelativePath="..\engine\shader\stdshader\pass.cpp">
 				</File>
 				<File
-					RelativePath=".\shader\stdshader\pass.h">
+					RelativePath="..\engine\shader\stdshader\pass.h">
 				</File>
 				<File
-					RelativePath=".\shader\stdshader\shader.cpp">
+					RelativePath="..\engine\shader\stdshader\shader.cpp">
 					<FileConfiguration
 						Name="Debug|Win32">
 						<Tool
@@ -651,17 +649,17 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\shader\stdshader\shader.h">
+					RelativePath="..\engine\shader\stdshader\shader.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="simpleshader"
 				Filter="">
 				<File
-					RelativePath=".\shader\simpleshader\simpleshader.cpp">
+					RelativePath="..\engine\shader\simpleshader\simpleshader.cpp">
 				</File>
 				<File
-					RelativePath=".\shader\simpleshader\simpleshader.h">
+					RelativePath="..\engine\shader\simpleshader\simpleshader.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -669,29 +667,29 @@
 			Name="common"
 			Filter="">
 			<File
-				RelativePath=".\common\common.cpp">
+				RelativePath="..\engine\common\common.cpp">
 			</File>
 			<File
-				RelativePath=".\common\common.h">
+				RelativePath="..\engine\common\common.h">
 			</File>
 			<File
-				RelativePath=".\common\mystring.cpp">
+				RelativePath="..\engine\common\mystring.cpp">
 			</File>
 			<File
-				RelativePath=".\common\mystring.h">
+				RelativePath="..\engine\common\mystring.h">
 			</File>
 			<File
-				RelativePath=".\common\smart_cptr.h">
+				RelativePath="..\engine\common\smart_cptr.h">
 			</File>
 			<File
-				RelativePath=".\common\smart_ptr.h">
+				RelativePath="..\engine\common\smart_ptr.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="mesh"
 			Filter="">
 			<File
-				RelativePath=".\mesh\mesh.cpp">
+				RelativePath="..\engine\mesh\mesh.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -706,66 +704,66 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\mesh\mesh.h">
+				RelativePath="..\engine\mesh\mesh.h">
 			</File>
 			<File
-				RelativePath=".\mesh\meshcache.cpp">
+				RelativePath="..\engine\mesh\meshcache.cpp">
 			</File>
 			<File
-				RelativePath=".\mesh\meshcache.h">
+				RelativePath="..\engine\mesh\meshcache.h">
 			</File>
 			<File
-				RelativePath=".\mesh\meshload.cpp">
+				RelativePath="..\engine\mesh\meshload.cpp">
 			</File>
 			<File
-				RelativePath=".\mesh\meshload.h">
+				RelativePath="..\engine\mesh\meshload.h">
 			</File>
 			<File
-				RelativePath=".\mesh\meshsystem.cpp">
+				RelativePath="..\engine\mesh\meshsystem.cpp">
 			</File>
 			<File
-				RelativePath=".\mesh\meshsystem.h">
+				RelativePath="..\engine\mesh\meshsystem.h">
 			</File>
 			<File
-				RelativePath=".\mesh\meshsystemcache.cpp">
+				RelativePath="..\engine\mesh\meshsystemcache.cpp">
 			</File>
 			<File
-				RelativePath=".\mesh\meshsystemcache.h">
+				RelativePath="..\engine\mesh\meshsystemcache.h">
 			</File>
 			<File
-				RelativePath=".\mesh\textloader.cpp">
+				RelativePath="..\engine\mesh\textloader.cpp">
 			</File>
 			<File
-				RelativePath=".\mesh\textloader.h">
+				RelativePath="..\engine\mesh\textloader.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="scene"
 			Filter="">
 			<File
-				RelativePath=".\scene\jsscene.cpp">
+				RelativePath="..\engine\scene\jsscene.cpp">
 			</File>
 			<File
-				RelativePath=".\scene\jsscene.h">
+				RelativePath="..\engine\scene\jsscene.h">
 			</File>
 			<File
-				RelativePath=".\scene\scene.cpp">
+				RelativePath="..\engine\scene\scene.cpp">
 			</File>
 			<File
-				RelativePath=".\scene\scene.h">
+				RelativePath="..\engine\scene\scene.h">
 			</File>
 			<File
-				RelativePath=".\scene\scenebsp.cpp">
+				RelativePath="..\engine\scene\scenebsp.cpp">
 			</File>
 			<File
-				RelativePath=".\scene\scenebsp.h">
+				RelativePath="..\engine\scene\scenebsp.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="math"
 			Filter="">
 			<File
-				RelativePath=".\math\aabb.cpp">
+				RelativePath="..\engine\math\aabb.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -780,57 +778,57 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\math\aabb.h">
+				RelativePath="..\engine\math\aabb.h">
 			</File>
 			<File
-				RelativePath=".\math\math.h">
+				RelativePath="..\engine\math\math.h">
 			</File>
 			<File
-				RelativePath=".\math\vertex.h">
+				RelativePath="..\engine\math\vertex.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="resource"
 			Filter="">
 			<File
-				RelativePath=".\resource\eXistenZ Engine Client.rc">
+				RelativePath="..\engine\resource\eXistenZ Engine Client.rc">
 			</File>
 			<File
-				RelativePath=".\resource\luxicon.ico">
+				RelativePath="..\engine\resource\luxicon.ico">
 			</File>
 			<File
-				RelativePath=".\resource\luxiconD.ico">
+				RelativePath="..\engine\resource\luxiconD.ico">
 			</File>
 			<File
-				RelativePath=".\resource\luxlogo.bmp">
+				RelativePath="..\engine\resource\luxlogo.bmp">
 			</File>
 			<File
-				RelativePath=".\resource\resource.h">
+				RelativePath="..\engine\resource\resource.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="entity"
 			Filter="">
 			<File
-				RelativePath=".\entity\entity.cpp">
+				RelativePath="..\engine\entity\entity.cpp">
 			</File>
 			<File
-				RelativePath=".\entity\entity.h">
+				RelativePath="..\engine\entity\entity.h">
 			</File>
 			<File
-				RelativePath=".\entity\entitycache.cpp">
+				RelativePath="..\engine\entity\entitycache.cpp">
 			</File>
 			<File
-				RelativePath=".\entity\entitycache.h">
+				RelativePath="..\engine\entity\entitycache.h">
 			</File>
 			<File
-				RelativePath=".\entity\jsentity.cpp">
+				RelativePath="..\engine\entity\jsentity.cpp">
 			</File>
 			<File
-				RelativePath=".\entity\jsentity.h">
+				RelativePath="..\engine\entity\jsentity.h">
 			</File>
 			<File
-				RelativePath=".\entity\staticentity.cpp">
+				RelativePath="..\engine\entity\staticentity.cpp">
 			</File>
 		</Filter>
 	</Files>
