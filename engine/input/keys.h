@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: keys.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: keys.h,v 1.2 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #pragma once
@@ -161,7 +161,8 @@ namespace input {
 		MAKE_KEY( BUTTON_1		   ,   0xF1 )   /* Mouse Button 1 */
 		MAKE_KEY( BUTTON_2		   ,   0xF2 )   /* Mouse Button 2 */
 		MAKE_KEY( BUTTON_3		   ,   0xF3 )   /* Mouse Button 3 */
-
+		MAKE_KEY( KEY_MWHEELUP     ,   0xF4 )   /* Mouse Wheel Up */
+		MAKE_KEY( KEY_MWHEELDN     ,   0xF5 )   /* Mouse Wheel Down */
 		/*
 		*  Alternate names for keys, to facilitate transition from DOS.
 		*/

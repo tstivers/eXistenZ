@@ -138,20 +138,20 @@ system.render.skybox.texture = "textures/skybox/cx";
 execfile("scripts/keys.js");
 
 // map keys here
-bind(KEY_PGUP, "+move_up");
-bind(KEY_PGDN, "+move_down");
-bind(KEY_LEFT, "+move_left");
-bind(KEY_RIGHT, "+move_right");
-bind(KEY_UP, "+move_forward");
-bind(KEY_DOWN, "+move_back");
+bind(KEY_PGUP, "*move_up");
+bind(KEY_PGDN, "*move_down");
+bind(KEY_LEFT, "*move_left");
+bind(KEY_RIGHT, "*move_right");
+bind(KEY_UP, "*move_forward");
+bind(KEY_DOWN, "*move_back");
 
-bind(KEY_NUMPAD8, "+move_forward");
-bind(KEY_NUMPAD5, "+move_back");
-bind(KEY_NUMPAD2, "+move_back");
-bind(KEY_NUMPAD4, "+move_left");
-bind(KEY_NUMPAD6, "+move_right");
+bind(KEY_NUMPAD8, "*move_forward");
+bind(KEY_NUMPAD5, "*move_back");
+bind(KEY_NUMPAD2, "*move_back");
+bind(KEY_NUMPAD4, "*move_left");
+bind(KEY_NUMPAD6, "*move_right");
 bind(KEY_NUMPAD0, "move_jump");
-bind(BUTTON_0, "+move_jump");
+bind(BUTTON_0, "*move_jump");
 bind(BUTTON_1, "move_jump");
 
 bind(KEY_W, "toggle_wireframe");
@@ -166,12 +166,19 @@ bind(KEY_M, "add_marker");
 bind(KEY_D, "dbg_break");
 bind(KEY_U, "toggle_ui");
 bind(KEY_SPACE, "log_frame");
-bind(KEY_LCONTROL, "+log_frame");
+bind(KEY_LCONTROL, "*log_frame");
 bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
 bind(KEY_K, "toggle_diffuse");
 bind(KEY_S, "toggle_sky");
-bind(KEY_Z, "+exec move_up();");
+bind(KEY_Z, "*exec move_up()");
+bind(MWHEELUP, "exec print(\"mousewheel up\")");
+bind(MWHEELDN, "exec print(\"mousewheel down\")");
+bind(BUTTON_2, "exec bullet_time_toggle()");
+bind(BUTTON_3, "+exec bullet_time_on()");
+bind(BUTTON_3, "-exec bullet_time_off()");
+
+
 
 x = 0;
 nene = new Array(10);
@@ -181,10 +188,29 @@ function bleh() {
 		woot();
 }
 
+function bullet_time_on() {
+	system.time.scale = 0.2;
+	print("bullet time enabled!");
+}
+
+function bullet_time_off() {
+	system.time.scale = 1;
+	print("bullet time disabled!");
+}
+
 function circle() {	
 	game.player.pos.x += Math.sin(x);
 	game.player.pos.z += Math.cos(x);
 	x += 0.01;
+}
+
+bullet_time_function = bullet_time_on;
+function bullet_time_toggle() {
+	bullet_time_function();
+	if(bullet_time_function == bullet_time_on)
+		bullet_time_function = bullet_time_off;
+	else
+		bullet_time_function = bullet_time_on;
 }
 
 function large() {
@@ -213,4 +239,4 @@ function markerfun() {
 }
 
 // log our start date and time
-// print("eXistenZ engine started on " + Date());
+print("eXistenZ engine started on " + Date());

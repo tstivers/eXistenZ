@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.11 2004/07/09 07:42:25 tstivers Exp $
+// $Id: precompiled.h,v 1.12 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -55,6 +55,8 @@
 #define DIK_BUTTON1 0xF1
 #define DIK_BUTTON2 0xF2
 #define DIK_BUTTON3 0xF3
+#define DIK_MWHEELUP 0xF4
+#define DIK_MWHEELDN 0xF5
 
 #define BIGFLOAT 1000000000000.0f
 

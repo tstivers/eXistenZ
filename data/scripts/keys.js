@@ -148,6 +148,8 @@ const BUTTON_0		   =   0xF0 ;
 const BUTTON_1		   =   0xF1 ;
 const BUTTON_2		   =   0xF2 ;
 const BUTTON_3		   =   0xF3 ;
+const MWHEELUP		   =   0xF4 ;
+const MWHEELDN         =   0xF5 ;
 
 /*
  *  Alternate names for keys, to facilitate transition from DOS.

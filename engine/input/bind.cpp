@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bind.cpp,v 1.2 2003/12/24 01:45:45 tstivers Exp $
+// $Id: bind.cpp,v 1.3 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -11,7 +11,7 @@
 #include "console/console.h"
 
 namespace input {
-	char binds[256][128] = {0};	
+	char binds[256][3][128] = {0};	
 	char* keyName(int id);
 	int keyCode(char* name);
 }
@@ -19,7 +19,7 @@ namespace input {
 void input::bindKey(int key, char* cmd)
 {
 	char* real_cmd = cmd;
-	if(*real_cmd == '+' || *real_cmd == '-')
+	if(*real_cmd == '+' || *real_cmd == '-' || *real_cmd == '*')
 		real_cmd++;
 
 	if(key < 0 || key >= 256) {
@@ -33,42 +33,51 @@ void input::bindKey(int key, char* cmd)
 	//	return;
 	//}
 
-	strcpy(binds[key], cmd);
+	switch(*cmd) {
+		case '-':
+			strcpy(binds[key][2], real_cmd);
+			break;
+		case '*':
+			strcpy(binds[key][1], real_cmd);
+			break;
+		case '+':
+			strcpy(binds[key][0], real_cmd);
+			break;
+		default:
+			strcpy(binds[key][0], cmd);
+			break;
+	}
 }
 
-void input::unnbind(int key)
+void input::unbind(int key)
 {
-	binds[key][0] = 0;
+	binds[key][0][0] = 0;
+	binds[key][1][0] = 0;
+	binds[key][2][0] = 0;
 }
 
 void input::listBinds()
 {
 	LOG("Key Bindings:");
-	for(int key_idx = 0; key_idx < 256; key_idx++) 	
-		if(binds[key_idx][0])
-			LOG3("  [%s] = \"%s\"", keyName(key_idx), binds[key_idx]);
+	for(int key_idx = 0; key_idx < 256; key_idx++) {
+		if(binds[key_idx][0][0])
+			LOG3("  [%s] = \"+%s\"", keyName(key_idx), binds[key_idx][0]);
+		if(binds[key_idx][1][0])
+			LOG3("  [%s] = \"*%s\"", keyName(key_idx), binds[key_idx][1]);
+		if(binds[key_idx][2][0])
+			LOG3("  [%s] = \"-%s\"", keyName(key_idx), binds[key_idx][2]);
+	}
 }
 
 void input::processBinds()
 {
-	for(int key_idx = 0; key_idx < 256; key_idx++) {
-		if(binds[key_idx][0]) {
-			
-			if(binds[key_idx][0] == '+') {
-				if(KEYDOWN(key_idx)) {
-					con::executeCommand(&binds[key_idx][1]);
-					continue;
-				}
-			}
-			
-			if(binds[key_idx][0] == '-') {
-				// do something here;
-				continue;
-			}
-
-			if(KEYPRESSED(key_idx))
-				con::executeCommand(binds[key_idx]);
-		}
+	for(int i = 0; i < 256; i++) {
+		if(KEYPRESSED(i) && binds[i][0][0])
+			con::executeCommand(&binds[i][0][0]);
+		if(KEYDOWN(i) && binds[i][1][0])
+			con::executeCommand(&binds[i][1][0]);
+		if(KEYRELEASED(i) && binds[i][2][0])
+			con::executeCommand(&binds[i][2][0]);
 	}
 }
 

@@ -1,14 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bind.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: bind.h,v 1.2 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #pragma once
 
 namespace input {
 	void bindKey(int key, char* cmd);
-	void unnbind(int key);
+	void unbind(int key);
 	void listBinds();
 
 	void processBinds();

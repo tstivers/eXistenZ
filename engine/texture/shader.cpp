@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: shader.cpp,v 1.2 2004/07/09 07:42:25 tstivers Exp $
+// $Id: shader.cpp,v 1.3 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -355,8 +355,8 @@ void texture::deactivate_cullmode(Shader* shader, DXTexture* texture)
 
 void texture::activate_chain(Shader* shader, DXTexture* texture)
 {
-	if((shader->chain_last_time + shader->chain_time) < timer::time_ms) {
-		shader->chain_last_time = timer::time_ms;
+	if((shader->chain_last_time + shader->chain_time) < timer::game_ms) {
+		shader->chain_last_time = timer::game_ms;
 		shader->chain_current++;
 	}
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: input.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: input.cpp,v 1.2 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,6 +10,9 @@
 #include "client/appwindow.h"
 #include "console/console.h"
 #include "interface/interface.h"
+#include "settings/settings.h"
+
+#define DIKBSIZE 32
 
 namespace input {
 	IDirectInput* dinput;
@@ -17,10 +20,7 @@ namespace input {
 	IDirectInputDevice8* mouse;
 
 	int has_focus;
-	char kbstate1[256];
-	char kbstate2[256];
-	char* kbstate;
-	char* last_kbstate;
+	char kbstate[256];
 	DIMOUSESTATE mousestate;
 };
 
@@ -69,9 +69,27 @@ void input::init()
 		return;
 	}
 
+	DIPROPDWORD dipdw;
+	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
+	dipdw.diph.dwHow = DIPH_DEVICE;
+	dipdw.diph.dwObj = 0;
+	dipdw.dwData = DIKBSIZE;
+
+	hr = keyboard->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
+	if(FAILED(hr)) {
+		LOG("[input::init] failed to set keyboard buffer size");
+		return;
+	}
+
+	hr = mouse->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
+	if(FAILED(hr)) {
+		LOG("[input::init] failed to set mouse buffer size");
+		return;
+	}
+
 	has_focus = 0;
-	kbstate = (char*)&kbstate1;
-	last_kbstate = (char*)&kbstate2;
+	ZeroMemory(kbstate, 256);
 
 	con::addCommand("binds", input::con_listBinds);
 	con::addCommand("bind", input::con_bind);
@@ -93,6 +111,8 @@ void input::acquire()
 
 	has_focus = 1;
 	ui::has_focus = 0;
+	memset(kbstate, 0, 256);
+	memset(&mousestate, 0, sizeof(mousestate));
 }
 
 void input::doTick()
@@ -100,34 +120,88 @@ void input::doTick()
 	if(!has_focus)
 		return;
 
-	char* tmp = last_kbstate;
-	last_kbstate = kbstate;
-	kbstate = tmp;
+	//char* tmp = last_kbstate;
+	//last_kbstate = kbstate;
+	//kbstate = tmp;
 
-	HRESULT hr = keyboard->GetDeviceState(256, (void*)kbstate);
-	if(FAILED(hr)) {
+	DIDEVICEOBJECTDATA didod[ DIKBSIZE ];
+	int num_items = DIKBSIZE;
+
+	for(int i = 0; i < 256; i++)
+		if(kbstate[i] == 1)
+			kbstate[i] = 2;
+		else if(kbstate[i] == 3)
+			kbstate[i] = 0;
+
+	memset(&mousestate, 0, sizeof(mousestate));
+
+	HRESULT hr = keyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), didod, (LPDWORD)&num_items, 0);
+	if(hr != DI_OK) {
 		if((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED)) {
 			input::acquire();
+			ZeroMemory(kbstate, 256);
 			return;
+		}
+
+		if(hr == DI_BUFFEROVERFLOW) {
+			LOG("[input::doTick] keyboard input buffer overflow");
 		}
 
 		LOG("[input::doTick] failed getting keyboard device state");
 	}
 
-	hr = mouse->GetDeviceState(sizeof(mousestate), (void*)&mousestate);
-	if(FAILED(hr)) {
+	for(int i = 0; i < num_items; i++) {
+		if(didod[i].dwData & 0x80) { // key was pressed
+			kbstate[didod[i].dwOfs] = 1;
+		} else {
+			kbstate[didod[i].dwOfs] = 3;
+		}
+	}
+
+	num_items = DIKBSIZE;
+
+	hr = mouse->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), didod, (LPDWORD)&num_items, 0);
+	if(hr != DI_OK) {
 		if((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED)) {
 			input::acquire();
 			return;
 		}
 
+		if(hr == DI_BUFFEROVERFLOW) {
+			LOG("[input::doTick] mouse input buffer overflow");
+		}			
+
 		LOG("[input::doTick] failed getting mouse device state");
 	}
 
-	kbstate[DIK_BUTTON0] = mousestate.rgbButtons[0];
-	kbstate[DIK_BUTTON1] = mousestate.rgbButtons[1];
-	kbstate[DIK_BUTTON2] = mousestate.rgbButtons[2];
-	kbstate[DIK_BUTTON3] = mousestate.rgbButtons[3];
+	for(int i = 0; i < num_items; i++) {
+		switch(didod[i].dwOfs) {
+			case DIMOFS_X:
+				mousestate.lX += didod[i].dwData;
+				break;
+			case DIMOFS_Y:
+				mousestate.lY += didod[i].dwData;
+				break;
+			case DIMOFS_Z:
+				if(didod[i].dwData & 0x80)
+					kbstate[DIK_MWHEELDN] = 1;
+				else
+					kbstate[DIK_MWHEELUP] = 1;
+				break;
+			case DIMOFS_BUTTON0:
+				kbstate[DIK_BUTTON0] = didod[i].dwData & 0x80 ? 1 : 3;
+				break;
+			case DIMOFS_BUTTON1:
+				kbstate[DIK_BUTTON1] = didod[i].dwData & 0x80 ? 1 : 3;
+				break;
+			case DIMOFS_BUTTON2:
+				kbstate[DIK_BUTTON2] = didod[i].dwData & 0x80 ? 1 : 3;
+				break;
+			case DIMOFS_BUTTON3:
+				kbstate[DIK_BUTTON3] = didod[i].dwData & 0x80 ? 1 : 3;
+				break;
+		}
+	}
 }
 
 void input::unacquire()
@@ -137,6 +211,8 @@ void input::unacquire()
 
 	ui::has_focus = 1;
 	has_focus = 0;
+	memset(kbstate, 0, 256);
+	memset(&mousestate, 0, sizeof(mousestate));
 }
 
 void input::release()

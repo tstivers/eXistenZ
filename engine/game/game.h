@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: game.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: game.h,v 1.2 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #pragma once
@@ -30,7 +30,7 @@ namespace game {
 	extern float mouse_sens_y;
 	extern float step_up;
 	extern float climb_interpol;
-	extern int noclip;
+	extern int noclip;	
 
 	// console commands
 	void con_map(char* cmd, char* cmdline, void* user);

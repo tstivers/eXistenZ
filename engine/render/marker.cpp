@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: marker.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: marker.cpp,v 1.2 2004/07/09 16:04:56 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -57,7 +57,7 @@ void render::drawMarker(float x, float y, float z, D3DXVECTOR3 color, float scal
 
 void render::drawMarker(D3DXVECTOR3 pos, D3DXVECTOR3 color, float scale)
 {
-	float yrot = (float)timer::time_ms / 5.0f;
+	float yrot = (float)timer::game_ms / 5.0f;
 	D3DXMATRIX marker_pos, marker_rot, marker_scale, marker;
 	D3DXMatrixTranslation(&marker_pos, pos.x / scale, pos.y / scale, pos.z / scale);
 	D3DXMatrixRotationY(&marker_rot, yrot * -1 * (D3DX_PI / 180.0f));
@@ -114,7 +114,7 @@ void render::drawMarkers()
 
 	D3DMATERIAL9 mtrl;
 	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));
-	float yrot = (float)timer::time_ms / 5.0f;
+	float yrot = (float)timer::game_ms / 5.0f;
 	D3DXMATRIX marker_pos, marker_rot, marker_scale, marker_final;
 
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
