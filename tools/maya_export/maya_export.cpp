@@ -13,7 +13,6 @@ MStatus initializePlugin( MObject obj )
 	
 	MFnPlugin plugin (obj, "Eyetraxx eXistenZ", "1.0", "Any");
 	plugin.setName("eXistenZ Engine Plugin");
-	//plugin.registerUI("eXistenZCreateUI", "eXistenZDeleteUI");
 	plugin.registerCommand("exScanDag", scanDag::creator);
 	plugin.registerCommand("exExportStatic", exportStatic::creator);
 	plugin.registerCommand("exOptions", optionsCmd::creator);
@@ -24,8 +23,7 @@ MStatus initializePlugin( MObject obj )
 	MGlobal::executeCommand("setParent \"MayaWindow\";", result);
 	MGlobal::executeCommand("menu -p \"MayaWindow\" -label \"eXistenZ\" -tearOff false eXistenZ;", result);
 	MGlobal::executeCommand("menuItem -label \"Export Selected\" -command exExportStatic;", result);
-	MGlobal::executeCommand("menuItem -label \"Options\" -command exOptions;", result);
-
+	MGlobal::executeCommand("menuItem -label \"Options\" -command exOptions;", result);	
 
 	return status;
 }

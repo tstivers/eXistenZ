@@ -215,11 +215,13 @@ void ExportDialog::objectNameChange()
 	}
 }
 
-int ExportDialog::show() {	
+int ExportDialog::show() 
+{	
 	return DialogBox(MhInstPlugin, MAKEINTRESOURCE(IDD_EXPORTSTATIC), parent, (DLGPROC)ExportDialogProc);		
 }
 
-BOOL ExportDialog::Init(HWND hwnd) {
+BOOL ExportDialog::init(HWND hwnd) 
+{
 	this->hwnd = hwnd;
 
 	setObjectName(object->name);
@@ -233,21 +235,41 @@ BOOL ExportDialog::Init(HWND hwnd) {
 	return TRUE;
 }
 
+void ExportDialog::end(bool ok)
+{
+	// update the meshsystem
+	object->name = getObjectName();
+	object->filepath = getObjectPath();
+	object->export = getObjectExport();
+	
+	// update the current mesh
+	// TODO: fix this
+	object->meshes[current_mesh]->name = getMeshName();
+	object->meshes[current_mesh]->filepath = getMeshPath();
+	object->meshes[current_mesh]->material = getMeshMaterial();
+	object->meshes[current_mesh]->export = getMeshExport();
+	object->meshes[current_mesh]->export_normals = getExportNormals();
+	object->meshes[current_mesh]->export_colors = getExportColors();
+	object->meshes[current_mesh]->export_uvs = getExportUVs();
+}
+
 BOOL CALLBACK ExportDialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam) 
 { 
 	switch (message) 
 	{ 
 	case WM_INITDIALOG:
-		return dialog->Init(hwndDlg);
+		return dialog->init(hwndDlg);
 
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
 		{
 		case IDOK:
+			dialog->end(true);
 			EndDialog(hwndDlg, 1);
 			return TRUE;
 
 		case IDCANCEL:
+			dialog->end(false);
 			EndDialog(hwndDlg, 0);
 			return TRUE;
 

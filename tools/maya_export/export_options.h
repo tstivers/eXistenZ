@@ -1,5 +1,8 @@
 #pragma once
 
+#define MESH_EXTENSION ".tm"
+#define MESHSYSTEM_EXTENSION ".tms"
+
 class Options {
 public:
 	Options();
@@ -28,20 +31,13 @@ public:
 	HWND hwnd;
 };
 
-class exportStatic: public MPxCommand
+class optionsCmd: public MPxCommand
 {
 public:
-	exportStatic();
-	virtual	~exportStatic();
-	static void* creator();
+	optionsCmd() {};
+	virtual	~optionsCmd() {};
+	static void* creator() { return new optionsCmd(); }
 	virtual MStatus	doIt(const MArgList& args);
-
-private:
-	MStatus status;
-	void exportMesh(const MDagPath& dagPath);
-	MIntArray GetLocalIndex( MIntArray & getVertices, MIntArray & getTriangle );
-	std::string GetTexture(MObject& shader);
-	xMeshSystem meshsystem;
 };
 
 BOOL CALLBACK OptionsDialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam);

@@ -46,6 +46,7 @@ public:
 	std::string dagPath;
 	bool export;
 	xMeshList meshes;
+	void dump(FILE* file);
 };
 
 typedef struct {

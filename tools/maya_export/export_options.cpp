@@ -142,3 +142,12 @@ BOOL CALLBACK OptionsDialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARA
 		return FALSE; 
 	} 
 }
+
+MStatus optionsCmd::doIt(const MArgList& args)
+{
+	OptionsDialog options_dialog(M3dView::applicationShell());
+	options_dialog.show();
+
+	MStatus status;
+	return status;
+}

@@ -5,13 +5,10 @@
 
 exportStatic::exportStatic()
 {
-	printf("[exportStatic::exportStatic] object constructed\n");
 }
 
 exportStatic::~exportStatic()
 {
-	printf("[exportStatic::~exportStatic] object destroyed\n");
-	fflush(stdout);
 }
 
 void* exportStatic::creator()
@@ -21,14 +18,19 @@ void* exportStatic::creator()
 
 MStatus exportStatic::doIt( const MArgList& args )
 {
-	printf("[exportStatic::doit] exportStatic called\n");
-
-	OptionsDialog options_dialog(M3dView::applicationShell());
-	if(!options_dialog.show())
-		return status;
-
 	MSelectionList selected;
 	MGlobal::getActiveSelectionList(selected);
+	
+	if(selected.length() < 1) {
+		MessageBox(NULL, "Nothing selected!", "Export Error", MB_OK);
+		return status;
+	}
+
+	if((selected.length() > 1) && !options.allow_multi) {
+		MessageBox(NULL, "More than one object selected!", "Export Error", MB_OK);
+		return status;
+	}
+
 	MItSelectionList iter(selected, MFn::kMesh);
 	for(;!iter.isDone(); iter.next()) {
 		
@@ -36,8 +38,6 @@ MStatus exportStatic::doIt( const MArgList& args )
 		MDagPath path;
 		iter.getDagPath(path);
 		MFnDagNode node(path);
-
-		printf("[exportStatic::doit] checking node %s\n", path.fullPathName().asChar());
 
 		// make sure we can export this object
 		if ( path.hasFn(MFn::kTransform)) continue;
@@ -51,7 +51,7 @@ MStatus exportStatic::doIt( const MArgList& args )
 		meshsystem.name = filename;
 
 		// set system path				
-		meshsystem.filepath = options.export_path;
+		meshsystem.filepath = "";
 
 		// set dag pathname
 		meshsystem.dagPath += (meshsystem.dagPath.size() ? ", " : "") + std::string(path.fullPathName().asChar());
@@ -65,6 +65,27 @@ MStatus exportStatic::doIt( const MArgList& args )
 	ExportDialog dialog(M3dView::applicationShell(), &meshsystem);
 	if(!dialog.show())
 		return status;
+
+	std::string filepath = options.export_path + "\\" + meshsystem.filepath + "\\" + meshsystem.name + MESHSYSTEM_EXTENSION;
+	FILE* file;
+
+	if(meshsystem.export) {
+		file = fopen(filepath.c_str(), "w");
+		meshsystem.dump(file);
+		fclose(file);
+		printf("Wrote file \"%s\"", filepath.c_str());
+	}
+
+	for(unsigned i = 0; i < meshsystem.meshes.size(); i++) {
+		if(!meshsystem.meshes[i]->export)
+			continue;
+
+		filepath = options.export_path + "\\" + meshsystem.meshes[i]->filepath + "\\" + meshsystem.meshes[i]->name + MESH_EXTENSION;
+		FILE* file = fopen(filepath.c_str(), "w");
+		meshsystem.meshes[i]->dump(file);
+		fclose(file);
+		printf("Wrote file \"%s\"", filepath.c_str());
+	}
 
 	return status;
 }
@@ -89,8 +110,7 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 	status = fnMesh.getUVSetNames( UVSets );
 
 	uvMap uvmap;
-	for(unsigned i = 0; i < UVSets.length(); i++) {
-		printf("[exportStatic::exportMesh] getting UVs for  %s\n", UVSets[i].asChar());
+	for(unsigned i = 0; i < UVSets.length(); i++) {		
 		uvSet set;
 		fnMesh.getUVs( set.u, set.v, &UVSets[i] );
 		uvmap.insert(uvMap::value_type(i, set));
@@ -103,11 +123,20 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 	shaderMap shadermap;
 	status = fnMesh.getConnectedShaders( dagPath.instanceNumber(), shaders, polyshader );
 
-	if(status == MS::kSuccess ) {
-		printf("%i shaders, %i shader indices\n", shaders.length(), polyshader.length());
-		for(unsigned i = 0; i < shaders.length(); i++) {			
-			shadermap.insert(shaderMap::value_type(i, GetTexture(shaders[i])));
-			printf("shader[%i] = %s\n", i, shadermap[i].c_str());
+	if(status == MS::kSuccess ) {		
+		for(unsigned i = 0; i < shaders.length(); i++) {
+			char material[MAX_PATH];
+			char strip[MAX_PATH];
+			std::string bleh;
+			strcpy(strip, options.mat_strip_path.c_str());
+			strcpy(material, GetTexture(shaders[i]).c_str());
+
+			if((strlen(strip) < strlen(material)) && !memicmp(strip, material, strlen(strip)))
+				bleh = &(material[strlen(strip)]);
+			else
+				bleh = material;
+
+			shadermap.insert(shaderMap::value_type(i, bleh));
 		}
 	}
 
@@ -136,6 +165,7 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 			mesh = new xMesh;
 			mesh->material = shadername;
 			mesh->filepath = meshsystem.filepath;
+			// TODO: this don't work right
 			mesh->dagPath += (mesh->dagPath.size() ? ", " : "") + std::string(dagPath.fullPathName().asChar());
 			mesh->export = true;
 			mesh->export_normals = true;
@@ -254,21 +284,57 @@ std::string exportStatic::GetTexture(MObject& shader)
 
 void xMesh::dump(FILE* file)
 {
+	std::string verticeformat;
+	verticeformat = "D3DFVF_XYZ";
+	if(export_normals) verticeformat += " | D3DFVF_NORMAL";
+	if(export_colors) verticeformat += " | D3DFVF_DIFFUSE";
+	if(export_uvs && vertices[0].uvs.size()) {
+		verticeformat += " | D3DFVF_TEX";
+		char buf[3];
+		verticeformat += itoa(vertices[0].uvs.size(), buf, 3);
+		for(unsigned i = 0; i < vertices[0].uvs.size(); i++)
+			verticeformat += std::string(" | D3DFVF_TEXCOORDSIZE2(") + itoa(i, buf, 3) + std::string(")");
+	}
 	fprintf(file, "NAME: %s\n", name.c_str());
+	fprintf(file, "DAGPATH: %s\n", dagPath.c_str());
 	fprintf(file, "MATERIAL: %s\n", material.c_str());
+	fprintf(file, "VERTICEFORMAT: %s\n", verticeformat.c_str());
 	fprintf(file, "VERTICECOUNT: %i\n", vertices.size());
 	fprintf(file, "INDICECOUNT: %i\n", indices.size());
 	for(unsigned i = 0; i < vertices.size(); i++) {
-		fprintf(file, "VERTEX[%i]: POS: %f, %f, %f NRM: %f, %f, %f COL: %f, %f, %f, %f",
-			i,
-			vertices[i].pos.x, vertices[i].pos.y, vertices[i].pos.z,
-			vertices[i].nrm.x, vertices[i].nrm.y, vertices[i].nrm.z,
-			vertices[i].color.r, vertices[i].color.g, vertices[i].color.b, vertices[i].color.a);
-		for(unsigned j = 0; j < vertices[i].uvs.size(); j++) 
-			fprintf(file, " UV[%i]: %f, %f", j, vertices[i].uvs[j].x, vertices[i].uvs[j].y);
+		fprintf(file, "VERTEX[%i]: POS: %f, %f, %f", i,
+			vertices[i].pos.x, vertices[i].pos.y, vertices[i].pos.z);
+		
+		if(export_normals)
+			fprintf(file, " NRM: %f, %f, %f", 
+				vertices[i].nrm.x, vertices[i].nrm.y, vertices[i].nrm.z);
+
+		if(export_colors)
+			fprintf(file, " COL: %f, %f, %f, %f",
+				vertices[i].color.r, vertices[i].color.g, vertices[i].color.b, vertices[i].color.a);
+
+		if(export_uvs && vertices[i].uvs.size())
+			for(unsigned j = 0; j < vertices[i].uvs.size(); j++) 
+				fprintf(file, " UV[%i]: %f, %f", j, vertices[i].uvs[j].x, vertices[i].uvs[j].y);
+
 		fprintf(file, "\n");
 	}
+
 	for(unsigned i = 0; i < indices.size(); i++)
 		fprintf(file, "INDICE[%i]: %i\n", i, indices[i]);
+
 	fflush(file);
+}
+
+void xMeshSystem::dump(FILE* file)
+{
+	fprintf(file, "NAME: %s\n", name.c_str());
+	fprintf(file, "DAGPATH: %s\n", dagPath.c_str());
+	for(unsigned i = 0; i < meshes.size(); i++)
+		if(meshes[i]->export)
+			fprintf(file, "MESH: %s%s%s%s\n", 
+			meshes[i]->filepath.size() ? meshes[i]->filepath.c_str() : "", 
+			meshes[i]->filepath.size() ? "\\" : "",
+			meshes[i]->name.c_str(), 
+			MESH_EXTENSION);
 }

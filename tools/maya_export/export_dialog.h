@@ -7,7 +7,8 @@ public:
 	ExportDialog(HWND hwndParent, xMeshSystem* object);
 	~ExportDialog();
 
-	BOOL Init(HWND hwnd);
+	BOOL init(HWND hwnd);
+	void end(bool ok);
 	int show();
 
 	void setObjectName(std::string name);
