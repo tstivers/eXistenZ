@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: texturecache.h,v 1.3 2003/10/08 16:38:58 tstivers Exp $
+// $Id: texturecache.h,v 1.4 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #pragma once
@@ -25,15 +25,8 @@ namespace texture {
 		}
 	};
 
-	typedef struct _pair {
-		char* key;
-		char* value;
-		_pair(char* k, char* v) {key = k; value = v;}
-	} pair;
-
 	typedef stdext::hash_map<char*, DXTexture*, hash_char_ptr> texture_hash_map;
 	typedef stdext::hash_map<char*, Shader*, hash_char_ptr> shader_hash_map;
-	typedef std::list<pair*> alias_list;
 
 	DXTexture* getTexture(const char* name, bool use_alias = true);
 	DXTexture* loadTexture(const char* name);	

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsp.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: bsp.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -173,14 +173,14 @@ bool BSP::loadBSP(VFile* file)
 	num_textures = lumps[kTextures].length / sizeof(tBSPTexture);
 	bsp_textures = new tBSPTexture[num_textures];
 	textures = new texture::DXTexture*[num_textures];
-	shaders = new q3shader::Q3Shader*[num_textures];
+	q3shaders = new q3shader::Q3Shader*[num_textures];
 
 	file->seek(lumps[kTextures].offset);
 	file->read((void*)bsp_textures, lumps[kTextures].length);
 
 	for(int texindex = 0; texindex < num_textures; texindex++) {		
 			textures[texindex] = texture::getTexture(bsp_textures[texindex].strName);
-			shaders[texindex] = q3shader::getShader(bsp_textures[texindex].strName);
+			q3shaders[texindex] = q3shader::getShader(bsp_textures[texindex].strName);
 	}
 
 	// load lightmaps
@@ -428,7 +428,7 @@ int face_compare(const void* f1, const void* f2)
 	if(face1->lightmap_index != face2->lightmap_index)
 		return face1->lightmap_index - face2->lightmap_index;
 
-	return face1->face_address - face2->face_address;
+	return (int)(face1->face_address - face2->face_address);
 }
 
 void BSP::sortFaces()
@@ -450,6 +450,143 @@ void BSP::sortFaces()
 
 	delete [] sort_array;
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// renders using new material shaders
+//
+
+void BSP::render4()
+{
+	if(!deviceObjects)
+		initDeviceObjects();
+
+	initRenderState();
+
+	int current_leaf = leafFromPoint(render::cam_pos);
+	current_cluster = leafs[current_leaf].cluster;
+
+	const byte* clustervis_start = clusters.pBitsets + (current_cluster * clusters.bytesPerCluster);
+
+	if(current_cluster < 0) {
+		drawn_leafs = num_leafs;
+		for(int leaf_index = 0; leaf_index < num_leafs; leaf_index++)
+			for(int leafface_index = 0; leafface_index < leafs[leaf_index].numOfLeafFaces; leafface_index++)
+				facedrawn[leaffaces[leafs[leaf_index].leafface + leafface_index]] = frame;		
+	} else {
+		for(int leaf_index = 0; leaf_index < num_leafs; leaf_index++) {
+			if(BSP_TESTVIS2(leafs[leaf_index].cluster) && 
+				render::box_in_frustrum(leafs[leaf_index].min, leafs[leaf_index].max))
+			{
+				drawn_leafs++;
+
+				for(int leafface_index = 0; leafface_index < leafs[leaf_index].numOfLeafFaces; leafface_index++)
+					facedrawn[leaffaces[leafs[leaf_index].leafface + leafface_index]] = frame;
+			}
+		}
+	}
+
+	// draw all our sorted faces
+	for(int sorted_face_index = 0; sorted_face_index < num_faces; sorted_face_index++)
+	{
+		int face_index = sorted_faces[sorted_face_index];
+
+		if(facedrawn[face_index] == frame) {
+
+			if(setTexture(face_index, true))
+				renderFace(face_index, faces[face_index]);		
+	}
+
+	if(last_tex != -1)
+		textures[last_tex]->deactivate();
+
+	// draw all the transparent faces after everything else
+	for(int transface_index = 0; transface_index < num_trans_faces; transface_index++) 
+	{
+		int face_index = transfacelist[transface_index];
+		tBSPFace& face = faces[face_index];
+
+		// set up the texturing
+		if(!setTexture(face_index, false))
+			continue;
+
+		// render the face rarr
+		renderFace(face_index, face);
+	}
+
+	if(last_tex != -1)
+		textures[last_tex]->deactivate();
+}
+
+inline bool BSP::setShader(const int face_index, const bool queue_transparent)
+{
+	const tBSPFace& face = faces[face_index];
+
+	// skip invalid textures
+	if((face.textureID < 0) || 
+		(face.textureID > num_textures) || 
+		(!shaders[face.textureID]))
+		return false;
+	
+	shader::Shader* shader = shaders[face.textureID];
+
+	// set sky if this is a sky shader
+	if(shader->flags & shader::FLAG_SKY)
+		render::sky_visible = true;
+
+	// skip nodraw textures
+	if(shader->flags & shader::FLAG_NODRAW)
+		return false;
+
+	// check for transparent texture, add to trans list and skip if it is
+	if(render::transparency && queue_transparent && (shader->flags & shader::FLAG_TRANSPARENT)) {
+		transfacelist[num_trans_faces] = face_index;
+		num_trans_faces++;
+		return false;
+	}
+
+	// set lightmap or disable if invalid
+	if((face.lightmapID < 0) || (face.lightmapID > num_lightmaps) || 
+		(!lightmaps[face.lightmapID]) || !render::lightmap) 
+	{
+		last_light = -1;
+		shader->setTexture(shader::TEXTURE_LIGHTMAP, NULL);		
+	} 
+	else if(face.lightmapID != last_light) 
+	{
+		shader->setTexture(shader::TEXTURE_LIGHTMAP, lightmaps[face.lightmapID]);
+		last_light = face.lightmapID;
+		num_textureswaps++;
+	}
+
+	// activate the shader if it or the lightmap has changed
+	if(face.textureID != last_tex) {
+		if(last_tex != -1)
+			shaders[last_tex]->deactivate();					
+		shader->activate();
+		last_tex = face.textureID;
+		num_textureswaps++;
+	}
+
+	// set lightmap or disable if invalid
+	if((face.lightmapID < 0) || (face.lightmapID > num_lightmaps) || 
+		(!lightmaps[face.lightmapID]) || !render::lightmap) 
+	{
+		last_light = -1;
+		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);			
+	} 
+	else if(face.lightmapID != last_light) 
+	{
+		lightmaps[face.lightmapID]->activate();
+		last_light = face.lightmapID;
+		num_textureswaps++;
+	}
+
+	return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// renders using q3 style shaders
+//
 
 void BSP::render3()
 {
@@ -487,19 +624,23 @@ void BSP::render3()
 		int face_index = sorted_faces[sorted_face_index];
 
 		if(facedrawn[face_index] == frame) {
-			shaders[faces[face_index].textureID]->activate(faces[face_index].lightmapID == -1 ? NULL : lightmaps[faces[face_index].lightmapID]);
-			if(shaders[faces[face_index].textureID]->passes == 0)
+			q3shaders[faces[face_index].textureID]->activate(faces[face_index].lightmapID == -1 ? NULL : lightmaps[faces[face_index].lightmapID]);
+			if(q3shaders[faces[face_index].textureID]->passes == 0)
 				renderFace(face_index, faces[face_index]);
 			else
-				for(int pass = 1; pass <= shaders[faces[face_index].textureID]->passes; pass++) {
-					shaders[faces[face_index].textureID]->activate(faces[face_index].lightmapID == -1 ? NULL : lightmaps[faces[face_index].lightmapID], pass);
+				for(int pass = 1; pass <= q3shaders[faces[face_index].textureID]->passes; pass++) {
+					q3shaders[faces[face_index].textureID]->activate(faces[face_index].lightmapID == -1 ? NULL : lightmaps[faces[face_index].lightmapID], pass);
 					renderFace(face_index, faces[face_index]);
-					shaders[faces[face_index].textureID]->deactivate(pass);
+					q3shaders[faces[face_index].textureID]->deactivate(pass);
 				}
-			shaders[faces[face_index].textureID]->deactivate();
+			q3shaders[faces[face_index].textureID]->deactivate();
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// renders using old texture->shader method
+//
 
 void BSP::render2()
 {
@@ -562,6 +703,10 @@ void BSP::render2()
 		textures[last_tex]->deactivate();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// renders unsorted faces
+//
+
 void BSP::render()
 {
 	if(!deviceObjects)
@@ -623,6 +768,8 @@ void BSP::render()
 	if(last_tex != -1)
 		textures[last_tex]->deactivate();
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 inline void BSP::renderFace(const int face_index, const tBSPFace& face)
 {

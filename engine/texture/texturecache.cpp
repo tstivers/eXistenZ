@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: texturecache.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: texturecache.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -9,7 +9,6 @@
 #include "texture/texture.h"
 #include "texture/shader.h"
 #include "vfs/vfs.h"
-#include "vfs/file.h"
 #include "console/console.h"
 #include "settings/settings.h"
 #include "render/render.h"
@@ -26,8 +25,6 @@ namespace texture {
 	alias_list shader_map;
 
 	void load_maps();
-	void load_map(const char* filename, alias_list& list);
-	char* find_alias(const char* key, alias_list& list);
 	DXTexture* active_texture;
 	Shader* active_shader;
 };
@@ -65,50 +62,10 @@ void texture::acquire()
 
 void texture::load_maps()
 {
-	load_map(settings::getstring("system.render.texture.shader_map_file"), shader_map);
-	load_map(settings::getstring("system.render.texture.texture_alias_file"), texture_alias);
-	load_map(settings::getstring("system.render.texture.shader_alias_file"), shader_alias);
+	load_alias_list(settings::getstring("system.render.texture.shader_map_file"), shader_map);
+	load_alias_list(settings::getstring("system.render.texture.texture_alias_file"), texture_alias);
+	load_alias_list(settings::getstring("system.render.texture.shader_alias_file"), shader_alias);
 }
-
-void texture::load_map(const char* filename, alias_list& map)
-{
-	VFile* file = vfs::getFile(filename);
-	if(!file)
-		return;
-
-	char buf[MAX_PATH * 2];
-
-	while(file->readLine(buf, MAX_PATH * 2)) {
-		char* bufptr = buf;
-		char* comment = strstr(buf, "//");
-		if(comment) *comment = 0;
-
-		strip(buf);
-
-		if(!buf[0]) continue;
-
-		char* key = getToken(&bufptr, " \t");
-		char* value = getToken(&bufptr, " \t");
-
-		if(!(key && value)) continue;
-
-		//LOG3("[texture::load_map] \"%s\" = \"%s\"", key, value);
-
-		map.push_back(new pair(strdup(key), strdup(value)));
-	}
-
-	file->close();
-}
-
-char* texture::find_alias(const char* key, alias_list& map)
-{
-	for(alias_list::iterator it = map.begin(); it != map.end(); it++)
-		if(wildcmp((*it)->key, key))
-			return (*it)->value;
-
-	return NULL;
-}
-
 
 texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 {

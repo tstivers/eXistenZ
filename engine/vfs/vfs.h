@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // vfs.h
 // virtual file system
-// $Id: vfs.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: vfs.h,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #pragma once
 
-class VFile;
+#include "vfs/file.h"
 
 namespace vfs
 {

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: settings.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: settings.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -241,7 +241,7 @@ void settings::dump(char* pattern, bool sort)
 
 	for(std::list<std::string>::iterator li = blah.begin(); li != blah.end(); li++)
 	{
-		settings_hash_map::iterator iter = settings_map.find((char*)(*li).c_str());
+		settings_hash_map::iterator iter = settings_map.find((char*)(*li).c_str());		
 		Setting* setting = (Setting*)((*iter).second);
 		switch(setting->type){
 			case TYPE_STRING:

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: q3shadercache.cpp,v 1.3 2003/10/08 16:38:58 tstivers Exp $
+// $Id: q3shadercache.cpp,v 1.4 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -21,19 +21,12 @@ namespace q3shader {
 		}
 	};
 
-	typedef struct _pair {
-		const char* key;
-		const char* value;
-		_pair(char* k, char* v) {key = k; value = v;}
-	} pair;
-
 	typedef stdext::hash_map<const char*, Q3Shader*, hash_char_ptr> shader_hash_map;	
 	typedef stdext::hash_map<const char*, char*, hash_char_ptr> alias_hash_map;
-	typedef std::list<pair*> alias_map;
 
 	shader_hash_map shader_cache;
 	alias_hash_map shader_file_map;
-	alias_map shader_alias;
+	alias_list shader_alias;
 	int debug;
 
 	void loadShaderList();

@@ -1,5 +1,4 @@
 * text=auto !eol
-/.cvsignore -text svneol=native#unset
 bin/config.js -text svneol=native#unset
 bin/js32.dll -text
 bin/js32D.dll -text
@@ -31,6 +30,8 @@ engine/client/main.cpp -text svneol=native#unset
 engine/client/main.h -text svneol=native#unset
 engine/client/precompiled.cpp -text svneol=native#unset
 engine/client/precompiled.h -text svneol=native#unset
+engine/common/common.cpp -text svneol=native#unset
+engine/common/common.h -text svneol=native#unset
 engine/console/console.cpp -text svneol=native#unset
 engine/console/console.h -text svneol=native#unset
 engine/console/jsconsole.cpp -text svneol=native#unset
@@ -96,6 +97,8 @@ engine/shader/shader.cpp -text svneol=native#unset
 engine/shader/shader.h -text svneol=native#unset
 engine/shader/shadercache.cpp -text svneol=native#unset
 engine/shader/shadercache.h -text svneol=native#unset
+engine/shader/simpleshader/simpleshader.cpp -text svneol=native#unset
+engine/shader/simpleshader/simpleshader.h -text svneol=native#unset
 engine/shader/stdshader/pass.cpp -text svneol=native#unset
 engine/shader/stdshader/shader.cpp -text svneol=native#unset
 engine/shader/stdshader/shader.h -text svneol=native#unset

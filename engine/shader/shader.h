@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // shader.h
 // shader base class
-// $Id: shader.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: shader.h,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #pragma once
@@ -31,7 +31,10 @@ namespace shader {
 		virtual void setTexture(int type, texture::DXTexture* texture) = 0;
 
 		virtual int activate() = 0; // returns number of passes
-		virtual bool nextPass() = 0;
+		virtual bool nextPass() = 0; // returns false on last pass
 		virtual void deactivate() = 0;
 	};
+
+	// for debugging purposes
+	extern int debug;
 };

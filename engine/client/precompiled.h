@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.2 2003/10/08 05:16:07 tstivers Exp $
+// $Id: precompiled.h,v 1.3 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "platform/types.h"
+#include "common/common.h"
 #include "jsapi.h"
 
 #include "d3d9.h"
@@ -40,6 +41,8 @@ char* strip(char* str);
 int countArgs(char* args);
 char *getToken(char **src, char *token_sep);
 int wildcmp(const char* w, const char* s);
+void load_map(const char* filename, alias_list& list);
+char* find_alias(const char* key, alias_list& list);
 
 // class for char* hash_map
 class hash_char_ptr {

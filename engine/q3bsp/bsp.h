@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bsp.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: bsp.h,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #pragma once
@@ -14,6 +14,8 @@ class VFile;
 #include "texture/texture.h"
 #include "q3shader/q3shader.h"
 #include "q3shader/q3shadercache.h"
+#include "shader/shader.h"
+#include "shader/shadercache.h"
 
 
 namespace q3bsp {
@@ -93,7 +95,8 @@ namespace q3bsp {
 		tBSPTexture* bsp_textures;
 
 		texture::DXTexture** lightmaps;
-		q3shader::Q3Shader** shaders;
+		q3shader::Q3Shader** q3shaders;
+		//shader::Shader** shaders;
 
 		tBSPNode		*nodes;
 		tBSPLeaf		*leafs;

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // types.h
 // contains all basic typedefs
-// $Id: types.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: types.h,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 
 #pragma once
@@ -20,3 +20,11 @@ typedef unsigned _int64		U64;
 
 typedef float				F32;
 typedef double          	F64;
+
+typedef struct _pair {
+	char* key;
+	char* value;
+	_pair(char* k, char* v) {key = k; value = v;}
+} pair;
+
+typedef std::list<pair*> alias_list;

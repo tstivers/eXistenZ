@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.1 2003/10/07 20:17:44 tstivers Exp $
+// $Id: main.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -25,6 +25,7 @@
 #include "game/jsgame.h"
 #include "texture/texturecache.h"
 #include "texture/jstexture.h"
+#include "shader/shadercache.h"
 
 //extern unsigned long  _build_num;
 
@@ -65,6 +66,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	jsinput::init();
 	q3bsp::init();
 	q3shader::init();
+	shader::init();
 
 	// add some generic system settings
 	addSystemSettings();
@@ -91,6 +93,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	input::acquire();
 	render::start();
 	q3shader::acquire();
+	shader::acquire();
 
 	// enter main loop and do fun things
 	mainloop();

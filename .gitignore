@@ -1,4 +1,5 @@
 /*.ncb
+/Engine.ncb
 bin/*.dpprf
 bin/*.exe
 bin/*.idb
@@ -12,3 +13,4 @@ bin/debug
 bin/release
 data/*
 data/textures/*
+/eXistenZ
