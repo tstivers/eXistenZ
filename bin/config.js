@@ -7,8 +7,8 @@ log("loading configuration...");
 
 // define some standard functions
 
-function print(message) {
-	log(message);
+function print(messageb) {
+	log(messageb);
 }
 
 function square(val) {
