@@ -234,6 +234,10 @@ lib/opcode/include/OPC_TriTriOverlap.h -text svneol=native#unset
 lib/opcode/include/OPC_VolumeCollider.h -text svneol=native#unset
 lib/opcode/include/Opcode.h -text svneol=native#unset
 lib/opcode/release/Opcode.lib -text
+lib/tinyxml/tinystr.h eol=crlf
+lib/tinyxml/tinyxml.h eol=crlf
+lib/tinyxml/tinyxml.lib -text
+lib/tinyxml/tinyxmld.lib -text
 lib/zlib/debug/zlibd.lib -text
 lib/zlib/include/zconf.h -text svneol=native#unset
 lib/zlib/include/zlib.h -text svneol=native#unset
