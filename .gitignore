@@ -1,8 +1,10 @@
 /*.ncb
+bin/*.dpprf
 bin/*.exe
 bin/*.idb
 bin/*.ilk
 bin/*.obj
+bin/*.pcc
 bin/*.pch
 bin/*.pdb
 bin/BuildLog.htm

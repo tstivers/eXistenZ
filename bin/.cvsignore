@@ -5,3 +5,5 @@ BuildLog.htm
 *.pdb
 *.pch
 *.exe
+*.pcc
+*.dpprf
