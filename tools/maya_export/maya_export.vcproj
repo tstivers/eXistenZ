@@ -81,8 +81,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="Foundation.lib Image.lib OpenMaya.lib OpenMayaAnim.lib OpenMayaFX.lib OpenMayaRender.lib OpenMayaUI.lib libMDtApi.lib libmocap.lib"
 				OutputFile="$(OutDir)/maya_export.mll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\AliasWavefront\Maya5.0\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"

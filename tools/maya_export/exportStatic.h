@@ -71,4 +71,5 @@ private:
 	MIntArray GetLocalIndex( MIntArray & getVertices, MIntArray & getTriangle );
 	std::string GetTexture(MObject& shader);
 	xMeshSystem meshsystem;
+	int unknown_materials;
 };

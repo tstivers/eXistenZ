@@ -5,6 +5,7 @@
 
 exportStatic::exportStatic()
 {
+	unknown_materials = 0;
 }
 
 exportStatic::~exportStatic()
@@ -130,6 +131,10 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 			std::string bleh;
 			strcpy(strip, options.mat_strip_path.c_str());
 			strcpy(material, GetTexture(shaders[i]).c_str());
+			if(!strcmp(material, "unknown")) {
+				itoa(unknown_materials, &material[strlen(material)], MAX_PATH);
+				unknown_materials++;
+			}
 
 			if((strlen(strip) < strlen(material)) && !memicmp(strip, material, strlen(strip)))
 				bleh = &(material[strlen(strip)]);
@@ -159,7 +164,11 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 		xMesh* mesh = NULL;
 		for(unsigned i = 0; i < meshsystem.meshes.size(); i++)
 			if(shadername == meshsystem.meshes[i]->material)
-				mesh = meshsystem.meshes[i];
+				if(options.combine_meshes)
+					mesh = meshsystem.meshes[i];
+				else
+					if(meshsystem.meshes[i]->dagPath == std::string(dagPath.fullPathName().asChar()))
+						mesh = meshsystem.meshes[i];
 
 		if(mesh == NULL) {
 			mesh = new xMesh;

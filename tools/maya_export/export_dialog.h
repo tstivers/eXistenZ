@@ -38,6 +38,8 @@ public:
 	bool getExportUVs();
 	void updateMeshNames();
 	void objectNameChange();
+	void objectPathChange();
+
 	
 	HWND parent;
 	HWND hwnd;

@@ -215,6 +215,18 @@ void ExportDialog::objectNameChange()
 	}
 }
 
+void ExportDialog::objectPathChange()
+{
+	if(object->filepath != getObjectPath()) {
+		object->filepath = getObjectPath();
+		for(unsigned i = 0; i < object->meshes.size(); i++) {
+			object->meshes[i]->filepath = object->filepath;
+		}
+
+		setMeshPath(object->meshes[current_mesh]->filepath);
+	}
+}
+
 int ExportDialog::show() 
 {	
 	return DialogBox(MhInstPlugin, MAKEINTRESOURCE(IDD_EXPORTSTATIC), parent, (DLGPROC)ExportDialogProc);		
@@ -282,6 +294,17 @@ BOOL CALLBACK ExportDialogProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM
 			default:
 				return FALSE;
 			}
+
+		case IDC_OBJECTPATH:
+			switch(HIWORD(wParam))
+			{
+			case EN_CHANGE:
+				dialog->objectPathChange();
+				return TRUE;
+			default:
+				return FALSE;
+			}
+
 
 		default:
 			return FALSE;
