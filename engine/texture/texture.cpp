@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: texture.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: texture.cpp,v 1.2 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -65,6 +65,9 @@ bool DXTexture::activate()
 
 void DXTexture::deactivate()
 {
+	if(is_lightmap)
+		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+
 	if(shader)
 		shader->deactivate(this);	
 }

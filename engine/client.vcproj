@@ -100,6 +100,7 @@
 				EnableEnhancedInstructionSet="1"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="precompiled.h"
+				AssemblerOutput="4"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="0"/>
@@ -111,13 +112,12 @@
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames="libc.lib"
-				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				OptimizeForWindows98="1"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -349,9 +349,6 @@
 				RelativePath="render\marker.h">
 			</File>
 			<File
-				RelativePath=".\render\mesh.cpp">
-			</File>
-			<File
 				RelativePath="render\render.cpp">
 			</File>
 			<File
@@ -362,15 +359,6 @@
 			</File>
 			<File
 				RelativePath=".\render\rendergroup.h">
-			</File>
-			<File
-				RelativePath=".\render\scenegraph.cpp">
-			</File>
-			<File
-				RelativePath=".\render\scenegraph.h">
-			</File>
-			<File
-				RelativePath=".\render\scenenode.cpp">
 			</File>
 			<File
 				RelativePath=".\render\shapes.cpp">
@@ -439,12 +427,6 @@
 				RelativePath="q3bsp\bspcollide.h">
 			</File>
 			<File
-				RelativePath=".\q3bsp\bspconvert.cpp">
-			</File>
-			<File
-				RelativePath=".\q3bsp\bspconvert.h">
-			</File>
-			<File
 				RelativePath=".\q3bsp\bspload.cpp">
 			</File>
 			<File
@@ -464,9 +446,6 @@
 			</File>
 			<File
 				RelativePath="q3bsp\q3bsptypes.h">
-			</File>
-			<File
-				RelativePath=".\q3bsp\rendertest.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -746,16 +725,6 @@
 			</File>
 			<File
 				RelativePath=".\math\vertex.h">
-			</File>
-		</Filter>
-		<Filter
-			Name="resource"
-			Filter="">
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\resource.rc">
 			</File>
 		</Filter>
 	</Files>

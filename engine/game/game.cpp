@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: game.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id: game.cpp,v 1.3 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -20,6 +20,7 @@
 #include "script/script.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
+#include "Scene/scene.h"
 
 
 namespace game {
@@ -217,7 +218,9 @@ bool game::startMap(char* name)
 	sprintf(bspname, "maps/%s.bsp", name);
 
 	// load the bsp
-	q3bsp::loadBSP(bspname);
+	render::scene = scene::Scene::load(bspname);	
+	render::scene->init();
+	render::scene->acquire();
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);

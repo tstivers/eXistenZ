@@ -31,8 +31,8 @@ namespace scene {
 	public:
 		AABB aabb;
 		unsigned int num_faces;
-		//BSPFace* faces;
-		BSPFacePtrList faces;
+		BSPFace** faces;
+		//BSPFacePtrList faces;
 		// Entity Lists
 	};
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsppatch.cpp,v 1.1 2003/11/18 18:39:42 tstivers Exp $
+// $Id: bsppatch.cpp,v 1.2 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,6 +10,8 @@
 #include "render/render.h"
 #include "console/console.h"
 #include "nvtristrip.h"
+#include "scene/scene.h"
+#include "scene/scenebsp.h"
 
 using namespace q3bsp;
 
@@ -202,4 +204,58 @@ void BSP::generatePatches()
 		num_verts += total_vertices;
 		num_indices += total_indices;		
 	}
+}
+
+void q3bsp::genPatch(scene::BSPFace& face, int width, int height)
+{
+	int numPatchesWide = (width - 1) / 2;
+	int numPatchesHigh = (height - 1) / 2;
+	int total_vertices = 0;
+	int total_indices = 0;
+
+	int numQuadraticPatches = numPatchesWide * numPatchesHigh;
+	MyBiquadraticPatch* quadraticPatches = new MyBiquadraticPatch[numQuadraticPatches];
+
+	//fill in the quadratic patches
+	for(int y = 0; y < numPatchesHigh; ++y) {		
+		for(int x = 0; x < numPatchesWide; ++x) {
+			for(int row = 0; row < 3; ++row) {
+				for(int point = 0; point < 3; ++point) {
+					quadraticPatches[y * numPatchesWide + x].controlPoints[row * 3 + point] = 
+						face.vertices[(y * 2 * width + x * 2) + row * width + point];
+				}
+			}
+
+			//tesselate the patch
+			quadraticPatches[y*numPatchesWide+x].Tesselate(render::tesselation);
+			quadraticPatches[y*numPatchesWide+x].dumpIndices();
+			total_vertices += quadraticPatches[y * numPatchesWide + x].num_verts;
+			total_indices += quadraticPatches[y * numPatchesWide + x].num_polys * 3;
+		}
+	}
+
+	// we have our tesselated patches now, combine them all into one bigass vert/index array
+	BSPVertex* vertices = new BSPVertex[total_vertices];
+	unsigned short* indices = new unsigned short[total_indices];
+	int current_vert = 0;
+	int current_indice = 0;
+
+	for(int i = 0; i < numQuadraticPatches; i++) {
+		memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(BSPVertex));
+		for(int indice = 0; indice < quadraticPatches[i].num_polys * 3; indice++) {
+			indices[current_indice + indice] = quadraticPatches[i].list[indice] + current_vert;
+		}
+		current_vert += quadraticPatches[i].num_verts;
+		current_indice += quadraticPatches[i].num_polys * 3;
+	}
+
+	delete [] face.indices;
+	delete [] face.vertices;
+	delete [] quadraticPatches;
+
+	face.indices = indices;
+	face.vertices = vertices;
+	face.num_indices = total_indices;
+	face.num_vertices = total_vertices;
+	face.type = 1;
 }

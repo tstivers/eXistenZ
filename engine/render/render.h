@@ -1,12 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: render.h,v 1.4 2003/12/13 02:58:04 tstivers Exp $
+// $Id: render.h,v 1.5 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #pragma once
 
-#include "render/scenegraph.h"
+namespace scene {
+	class Scene;
+}
 
 namespace render {
 	class RenderGroup;
@@ -21,7 +23,7 @@ namespace render {
 	bool start(void);
 	void stop(void);
 	void render(void);
-	void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
+	inline_ extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
 
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
 	extern D3DXMATRIX world, view, projection;
@@ -51,8 +53,13 @@ namespace render {
 	extern unsigned int index_buffer_size;
 
 	extern unsigned int frame;
+	extern unsigned int frame_polys;
+	extern unsigned int frame_texswaps;
+	extern unsigned int frame_bufswaps;
+	extern unsigned int frame_clusters;
+	extern unsigned int frame_faces;
 
-	extern SceneGraph scene;
+	extern scene::Scene* scene;
 
 	class CFrustum;
 	extern CFrustum frustum;

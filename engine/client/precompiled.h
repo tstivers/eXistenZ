@@ -1,11 +1,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.8 2003/12/13 02:58:04 tstivers Exp $
+// $Id: precompiled.h,v 1.9 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
-
 
 #include <windows.h>
 #include <stdio.h>
@@ -51,7 +50,6 @@
 
 #define EXTENSION_TEXTMESH ".tm"
 #define EXTENSION_TEXTMESHSYSTEM ".tms"
-
 
 extern HINSTANCE gHInstance;
 extern int gActive;

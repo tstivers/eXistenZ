@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.7 2003/12/13 02:58:04 tstivers Exp $
+// $Id: render.cpp,v 1.8 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -18,6 +18,7 @@
 #include "scene/scene.h"
 #include "render/hwbuffer.h"
 #include "render/rendergroup.h"
+#include "texture/texture.h"
 
 namespace render {
 	int xres;
@@ -57,9 +58,16 @@ namespace render {
 	unsigned int vertex_buffer_size;
 	unsigned int index_buffer_size;
 
-	SceneGraph scene;
-	scene::Scene* bleh = NULL;
+	scene::Scene* scene = NULL;
 	unsigned int frame;
+	texture::DXTexture* current_texture;
+	texture::DXTexture* current_lightmap;
+
+	unsigned int frame_polys;
+	unsigned int frame_texswaps;
+	unsigned int frame_bufswaps;
+	unsigned int frame_clusters;
+	unsigned int frame_faces;
 };
 
 using namespace render;
@@ -155,9 +163,8 @@ void render::init()
 	vertex_buffer_size = 1280 * 1024;
 	index_buffer_size = 1280 * 1024;
 
-	current_vb = NULL;
-	current_ib = NULL;
 	frame = 0;
+	scene = NULL;
 }
 
 void render::release()
@@ -196,6 +203,15 @@ void render::render()
 {
 	frame++;	
 	sky_visible = true;
+	current_texture = NULL;
+	current_lightmap = NULL;
+	current_vb = NULL;
+	current_ib = NULL;
+	frame_polys = 0;
+	frame_texswaps = 0;
+	frame_bufswaps = 0;
+	frame_clusters = 0;
+	frame_faces = 0;
 
 	// clear the scene
 	d3d::clear();
@@ -207,20 +223,8 @@ void render::render()
 	// draw the skybox TODO: render only if visible in bsp (transparent crap bug)
 	skybox::render();
 
-	// draw the world
-	q3bsp::render(); 
-	
-	if(!bleh) {
-		bleh = scene::Scene::load("maps/house.bsp");
-		bleh->init();
-		bleh->acquire();
-	}
-
-	bleh->render();
-	
-
-	// draw other geometry
-	scene.render();
+	if(scene)
+		scene->render();
 
 	// draw any markers
 	render::drawMarkers();
@@ -243,9 +247,23 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 {
 	activateBuffers(rg->vertexbuffer, rg->indexbuffer);
 	
-	rg->texture->activate();
-	if(rg->lightmap)
-		rg->lightmap->activate();
+	if(rg->texture != current_texture) {
+		if(current_texture)
+			current_texture->deactivate();
+		if(rg->texture)
+			rg->texture->activate();
+		current_texture = rg->texture;
+		frame_texswaps++;
+	}
+
+	if(rg->lightmap != current_lightmap) {
+		if(current_lightmap)
+			current_lightmap->deactivate();
+		if(rg->lightmap)
+			rg->lightmap->activate();
+		current_lightmap = rg->lightmap;
+		frame_texswaps++;
+	}
 	
 	render::device->DrawIndexedPrimitive(
 		rg->type, 
@@ -255,7 +273,5 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 		rg->indexbuffer->offset / sizeof(unsigned short), 
 		rg->primitivecount);
 
-	rg->texture->deactivate();
-	if(rg->lightmap)
-		rg->lightmap->deactivate();
+	frame_polys += rg->primitivecount;
 }

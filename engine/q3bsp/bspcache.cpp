@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspcache.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
+// $Id: bspcache.cpp,v 1.6 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -55,8 +55,8 @@ bool q3bsp::loadBSP(char* filename)
 		return false;
 	}
 
-	if(convert)
-		convertBSP(*bsp);
+	//if(convert)
+	//	convertBSP(*bsp);
 
 	file->close();
 	return true;

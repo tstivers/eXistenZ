@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspconvert.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
+// $Id: bspconvert.cpp,v 1.4 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -25,7 +25,7 @@ void q3bsp::convertBSP(BSP& bsp)
 		if((face.type < 0) || (face.type > 3))
 			continue;
 
-		if(render::use_scenegraph && face.type == 2) {
+		/*if(render::use_scenegraph && face.type == 2) {
 			if((face.texture >= 0) && (face.texture <= bsp.num_textures) && bsp.textures[face.texture] && bsp.textures[face.texture]->draw) {
 				render::Mesh* mesh = new render::Mesh();
 				mesh->texture = bsp.textures[face.texture];
@@ -56,7 +56,7 @@ void q3bsp::convertBSP(BSP& bsp)
 				render::scene.addStaticMesh(*mesh);
 			}
 			//continue;
-		}
+		} */
 
 		polylist_value* bucket;
 		polylist_hash::iterator it = polyhash.find(polylist_key(face.texture, face.lightmap));
@@ -81,7 +81,7 @@ void q3bsp::convertBSP(BSP& bsp)
 		bucket->indice_count += face.nummeshverts;
 	}
 
-	render::scene.finalizeStatic();
+	//render::scene.finalizeStatic();
 
 	int total_verts = 0;
 	int total_indices = 0;

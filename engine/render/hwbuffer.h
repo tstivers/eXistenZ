@@ -27,7 +27,7 @@ namespace render {
 	VertexBuffer* getVB(unsigned int size, DWORD fvf, unsigned int stride, unsigned int group = 0, bool dynamic = false);
 	IndexBuffer* getIB(unsigned int size, unsigned int group = 0, bool dynamic = false);
 
-	void activateBuffers(const VertexBuffer* vb, const IndexBuffer* ib);
+	inline_ extern void activateBuffers(const VertexBuffer* vb, const IndexBuffer* ib);
 
 	extern IDirect3DVertexBuffer9* current_vb;
 	extern IDirect3DIndexBuffer9* current_ib;

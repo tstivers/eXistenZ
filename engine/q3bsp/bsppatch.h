@@ -1,10 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bsppatch.h,v 1.2 2003/11/20 03:08:40 tstivers Exp $
+// $Id: bsppatch.h,v 1.3 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #pragma once
+
+namespace scene {
+	class BSPFace;
+}
 
 namespace q3bsp {
 	class MyBiquadraticPatch {
@@ -24,4 +28,6 @@ namespace q3bsp {
 		int num_verts, num_indices;
 		int num_polys;
 	};
+
+	void genPatch(scene::BSPFace& face, int width, int height);
 };

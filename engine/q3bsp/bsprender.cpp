@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.7 2003/12/13 02:58:04 tstivers Exp $
+// $Id: bsprender.cpp,v 1.8 2003/12/13 17:37:14 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -121,7 +121,7 @@ void BSP::sortFaces()
 	for(int face_index = 0; face_index < num_faces; face_index++) {		
 		sort_array[face_index].face_index = face_index;
 		sort_array[face_index].texture_index = faces[face_index].texture;
-		sort_array[face_index].texture_index = faces[face_index].lightmap;
+		sort_array[face_index].lightmap_index = faces[face_index].lightmap;
 		sort_array[face_index].face_address = &faces[face_index];
 	}
 

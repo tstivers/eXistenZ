@@ -8,6 +8,7 @@
 #include "render/rendergroup.h"
 #include "render/hwbuffer.h"
 #include "q3bsp/bleh.h"
+#include "q3bsp/bsppatch.h"
 
 namespace scene {
 };
@@ -52,6 +53,10 @@ void SceneBSP::init()
 	}
 
 	// optimize faces (convert stupid patches, stripify, cache)
+	for(unsigned i = 0; i < num_faces; i++) {
+		if(faces[i].type == 2)
+			q3bsp::genPatch(faces[i], bsp->faces[i].size[0], bsp->faces[i].size[1]);
+	}
 
 	// load clusters
 	num_clusters = bsp->num_clusters;
@@ -62,7 +67,15 @@ void SceneBSP::init()
 	for(unsigned i = 0; i < num_clusters; i++)
 		clusters[i].aabb.reset();
 
+	// first extend aabb and count faces
 	for(unsigned i = 0; i < bsp->num_leafs; i++) {
+
+		if(bsp->leafs[i].cluster < 0)
+			continue;
+
+		if(bsp->leafs[i].cluster >= num_clusters)
+			continue;
+
 		BSPCluster& cluster = clusters[bsp->leafs[i].cluster];
 		
 		cluster.aabb.extend(&D3DXVECTOR3(bsp->leafs[i].min[0], bsp->leafs[i].min[1], bsp->leafs[i].min[2]),
@@ -77,15 +90,41 @@ void SceneBSP::init()
 				(!bsp->textures[face->texture]) ||
 				(!bsp->textures[face->texture]->draw))
 				continue;
-
-			// guess faces are unique by cluster
-			cluster.faces.push_back(face);
+			
+			cluster.num_faces++;
 		}
 	}
 
-	// maybe group clusters that have few faces together?
+	// now allocate and add faces
+	for(unsigned i = 0; i < bsp->num_leafs; i++) {
 
-	// load entities from the bsp.js here i guess (but don't acquire yet) (move to game::?)
+		if(bsp->leafs[i].cluster < 0)
+			continue;
+
+		if(bsp->leafs[i].cluster >= num_clusters)
+			continue;
+
+		BSPCluster& cluster = clusters[bsp->leafs[i].cluster];
+
+		if(!cluster.faces) {
+			cluster.faces = new BSPFace*[cluster.num_faces];
+			cluster.num_faces = 0;
+		}
+
+		for(unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++) {
+			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
+
+			// don't even bother adding invalid faces
+			if((face->texture < 0) || 
+				(face->texture > bsp->num_textures) || 
+				(!bsp->textures[face->texture]) ||
+				(!bsp->textures[face->texture]->draw))
+				continue;
+
+			cluster.faces[cluster.num_faces] = face;
+			cluster.num_faces++;
+		}
+	}
 }
 
 void SceneBSP::acquire()
@@ -96,13 +135,10 @@ void SceneBSP::acquire()
 	// loop through clusters and create rendergroups for faces
 	//		get vbuffers, ibuffers, textures
 	for(unsigned i = 0; i < num_clusters; i++) {
-		for(unsigned j = 0; j < clusters[i].faces.size(); j++) {
+		for(unsigned j = 0; j < clusters[i].num_faces; j++) {
 			BSPFace& face = *(clusters[i].faces[j]);
 			
 			if(face.rendergroup)
-				continue;
-
-			if((!face.num_vertices) || (!face.num_indices))
 				continue;
 
 			face.rendergroup = render::getRenderGroup(BSPVertex.FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
@@ -149,48 +185,38 @@ void SceneBSP::render()
 
 	const byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
 
-	for(unsigned i = 0; i < num_clusters; i++) {
-		
-		if(!BSP_TESTVIS(i))
-			continue;
+	if(current_cluster < 0) {
+		for(unsigned i = 0; i < num_clusters; i++) {
 
-		if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
-			continue;
+			//if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+			//	continue;
 
-		for(unsigned j = 0; j < clusters[i].faces.size(); j++) {
+			render::frame_clusters++;
 
-			BSPFace& face = *(clusters[i].faces[j]);
-
-			if(!face.rendergroup)
-				continue;
-
-			if(face.frame == render::frame)
-				continue;
-
-			face.frame = render::frame;
-
-			render::drawGroup(face.rendergroup);
+			for(unsigned j = 0; j < clusters[i].num_faces; j++)
+				clusters[i].faces[j]->frame = render::frame;
 		}
+	} else {
+		for(unsigned i = 0; i < num_clusters; i++) {
+			
+			if(!BSP_TESTVIS(i))
+				continue;
 
-		// loop through faces and draw 'em (mark 'em?)(add 'em to a render list?)
+			if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+				continue;
 
-		//render::drawBox(&clusters[i].aabb.min, &clusters[i].aabb.max);
+			render::frame_clusters++;
+
+			for(unsigned j = 0; j < clusters[i].num_faces; j++)
+				clusters[i].faces[j]->frame = render::frame;			
+		}
 	}
 
-	// find cluster for camera
-	// loop through clusters
-	// if (cluster is not visible) continue;
-	// loop through cluster faces and render::render(face->rendergroup); // bad?
-	// loop through entities
-	// if(entity->flags || FLAG_RENDER) entity->render();
-
-	// BRAINSTORM - ruined by lightmaps i believe
-	// load vertices into vertex buffers grouped by texture
-	// allocate a dynamic index buffer
-	// walk clusters, mark faces (or add to vector?(problem: bye bye material sort(add to hash by material? hash<material, vector<face*>>?)
-	// walk faces, add indices to dynamic index buffer, render primitives when material changes (fucking lightmaps)
-	// advantage: renderprimitive calls = number of visible materials, large strips rendered, card kept busy
-	// disadvantage: dynamic index buffer, memcpy of indices, indices must be indexed by material vertex buffer indices, face walk, fucking lightmaps
+	for(unsigned i = 0; i < num_faces; i++)
+		if(faces[bsp->sorted_faces[i]].frame == render::frame) {
+			render::frame_faces++;
+			render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup);
+		}
 }
 
 SceneBSP* SceneBSP::loadBSP(const std::string& name)
@@ -201,5 +227,6 @@ SceneBSP* SceneBSP::loadBSP(const std::string& name)
 
 	SceneBSP* scene = new SceneBSP();
 	scene->bsp = bsp;
+	q3bsp::bsp = bsp;
 	return scene;
 }

@@ -5,7 +5,7 @@ typedef struct _BSPVertex {
 	D3DXVECTOR3	nrm;
 	D3DCOLOR	diffuse;
 	D3DXVECTOR2 tex1;
-	D3DXVECTOR2 tex2;
+	D3DXVECTOR2 tex2;	
 	static const DWORD FVF = ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) );		
 
 	_BSPVertex operator+(const _BSPVertex& rhs) const
