@@ -58,6 +58,7 @@ engine/interface/uiconsole.cpp -text svneol=native#unset
 engine/interface/uiconsole.h -text svneol=native#unset
 engine/math/aabb.cpp -text svneol=native#unset
 engine/math/aabb.h -text svneol=native#unset
+engine/math/vertex.h -text svneol=native#unset
 engine/mesh/mesh.cpp -text svneol=native#unset
 engine/mesh/mesh.h -text svneol=native#unset
 engine/mesh/meshcache.cpp -text svneol=native#unset
