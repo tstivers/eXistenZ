@@ -1,0 +1,93 @@
+// don't draw these
+noshader						textures/shaders/nodraw.shader
+textures/common/caulk			textures/shaders/nodraw.shader
+textures/common/clip			textures/shaders/nodraw.shader
+textures/common/hint			textures/shaders/nodraw.shader
+textures/common/donotenter		textures/shaders/nodraw.shader
+textures/common/nodraw			textures/shaders/nodraw.shader
+textures/common/weapclip		textures/shaders/nodraw.shader
+textures/common/nodrawnonsolid	textures/shaders/nodraw.shader
+textures/common/nodrop	textures/shaders/nodraw.shader
+textures/common/clusterportal	textures/shaders/nodraw.shader
+flareShader	textures/shaders/nodraw.shader
+textures/common/trigger	textures/shaders/nodraw.shader
+textures/base_button/shootme2	textures/shaders/nodraw.shader
+textures/base_wall/glass01	textures/shaders/nodraw.shader
+
+// skies
+textures/skies/*		textures/shaders/sky.shader
+
+// glass texture
+textures/house/glass	textures/shaders/glass.shader
+
+
+// flares
+models/mapobjects/gratelamp/gratelamp_flare textures/shaders/flare_billboard.shader
+models/mapobjects/flares/electric	textures/shaders/flare_billboard.shader
+models/mapobjects/slamp/slamp3	textures/shaders/flare_billboard.shader
+models/mapobjects/baph/bapholamp* textures/shaders/flare_billboard.shader
+models/mapobjects/baph/wrist  textures/shaders/flare_billboard.shader
+
+// light beams
+textures/sfx/beam*				textures/shaders/lightbeam.shader
+textures/sfx/lavabeam				textures/shaders/lightbeam.shader
+models/mapobjects/spotlamp/beam			textures/shaders/lightbeam.shader
+
+// animated fire shader
+textures/shaders/fire1		textures/shaders/fire1.shader
+textures/sfx/flameanim_green_pj textures/shaders/fire_green.shader
+textures/sfx/flame1dark		textures/shaders/fire1.shader
+
+// animated fan shader
+textures/sfx/fanfx			textures/shaders/fanfx.shader
+
+// rotating console shader
+textures/sfx/console01		textures/shaders/console.shader
+textures/sfx/console03		textures/shaders/console.shader
+
+// these are stencil textures
+textures/base_wall/protobanner		textures/shaders/alphatest08.shader
+textures/base_floor/cybergrate2		textures/shaders/alphatest08.shader
+textures/base_floor/cybergrate3		textures/shaders/alphatest08.shader
+textures/base_floor/pjgrate1	textures/shaders/alphatest08.shader
+textures/base_floor/pjgrate2	textures/shaders/alphatest08.shader
+textures/base_floor/proto_grate		textures/shaders/alphatest08.shader
+textures/base_floor/proto_grate3	textures/shaders/alphatest08.shader
+textures/base_floor/proto_grate4		textures/shaders/alphatest08.shader
+textures/base_floor/proto_rustygrate	textures/shaders/alphatest08.shader
+textures/base_floor/proto_rustygrate2	textures/shaders/alphatest08.shader
+textures/base_floor/rusty_pentagrate	textures/shaders/alphatest08.shader
+textures/base_support/x_support			textures/shaders/alphatest08.shader
+textures/base_support/x_support2		textures/shaders/alphatest08.shader
+textures/base_support/x_support3		textures/shaders/alphatest08.shader
+textures/base_support/z_support			textures/shaders/alphatest08.shader
+textures/base_trim/proto_fence			textures/shaders/alphatest08.shader
+textures/base_trim/wires01				textures/shaders/alphatest08.shader
+textures/base_trim/wires01_ass			textures/shaders/alphatest08.shader
+textures/base_trim/wires02				textures/shaders/alphatest08.shader
+textures/base_wall/girders1i_128_yellofin	textures/shaders/alphatest08.shader
+textures/base_wall/girders1i_yellodark_fin	textures/shaders/alphatest08.shader
+textures/base_wall/glass_frame	textures/shaders/alphatest08.shader
+textures/base_wall/protobanner_ow	textures/shaders/alphatest08.shader
+textures/gothic_trim/gothgrate2	textures/shaders/alphatest08.shader
+textures/sfx/fan							textures/shaders/alphatest08.shader
+textures/sfx/fan_grate						textures/shaders/alphatest08.shader
+models/mapobjects/chain/chain				textures/shaders/alphatest08.shader
+models/mapobjects/console/under	textures/shaders/alphatest08.shader
+models/mapobjects/corpse/chain	textures/shaders/alphatest08.shader
+models/mapobjects/cross/cross	textures/shaders/alphatest08.shader
+models/mapobjects/cross/cross_skull	textures/shaders/alphatest08.shader
+models/mapobjects/gratelamp/gratelamp	textures/shaders/alphatest08.shader
+models/mapobjects/gratelamp/gratetorch2b	textures/shaders/alphatest08.shader
+models/mapobjects/lamps/bot_lamp2b	textures/shaders/alphatest08.shader
+models/mapobjects/lamps/bot_wing	textures/shaders/alphatest08.shader
+models/mapobjects/lamps/bot_wing2	textures/shaders/alphatest08.shader
+models/mapobjects/skel/skel	textures/shaders/alphatest08.shader
+models/mapobjects/skel/xray	textures/shaders/alphatest08.shader
+models/mapobjects/Skull/monkeyhead2	textures/shaders/alphatest08.shader
+models/mapobjects/Skull/ribcage	textures/shaders/alphatest08.shader
+models/mapobjects/spotlamp/spotlamp	textures/shaders/alphatest08.shader
+models/mapobjects/timlamp/timlamp	textures/shaders/alphatest08.shader
+
+
+

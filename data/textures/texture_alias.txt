@@ -1,0 +1,23 @@
+//textures/* textures/shaders/fire1
+textures/skin/tongue_trans textures/skin/tongue
+textures/sfx/flameanim_green_pj textures/sfx/flameanim_green_pj // don't map this to default fire shader
+textures/sfx/flame*	textures/shaders/fire1
+textures/gothic_trim/pitted_rust2_trans textures/gothic_trim/pitted_rust2
+textures/gothic_light/pentagram_light1* textures/gothic_light/pentagram_light1
+textures/skin/surface8_trans textures/skin/surface8
+textures/liquids/lavahellflat_400 textures/liquids/lavahell
+textures/liquids/lavahell_750 textures/liquids/lavahell
+textures/gothic_light/gothic_light2*	textures/gothic_light/gothic_light2
+textures/gothic_light/gothic_light3_lrg* textures/gothic_light/gothic_light2_lrg
+textures/gothic_light/gothic_light3*	textures/gothic_light/gothic_light3
+textures/gothic_light/goth_lt2_lrg*	textures/gothic_light/gothic_light2_lrg
+textures/base_trim/border12b_pj		textures/base_trim/border12b
+textures/base_light/proto_light*	textures/base_light/proto_light
+textures/base_light/patch10_pj_lite2*	textures/base_light/patch10_pj_lite2
+//textures/base_wall/glass01 textures/base_wall/rusted
+textures/base_support/support2rust textures/base_support/support1rust
+textures/base_light/baslt4_1*	textures/base_light/baslt4_1
+textures/skin/skin5* textures/skin/skin5
+textures/skin/skin6* textures/skin/skin6
+textures/gothic_light/ironcrosslt2* textures/gothic_light/ironcrosslt2
+textures/house/static1 textures/shaders/static

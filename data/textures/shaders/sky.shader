@@ -1,0 +1,2 @@
+NODRAW
+SKY

@@ -1,0 +1,32 @@
+/////////////////////////////////////////////////////////////////////////////
+// render.h
+// rendering system interface
+// $Id: texture.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+//
+
+#pragma once
+
+namespace texture {
+	class Shader;
+
+	class DXTexture {
+	public:
+		char* name;
+		int refcount;
+		bool is_transparent;
+		bool is_lightmap;
+		bool use_texture;
+		bool draw;
+		bool sky;
+
+		IDirect3DTexture9* texture;
+		Shader* shader;
+
+		DXTexture();
+		~DXTexture();
+		bool activate();
+		void deactivate();
+		void acquire();
+		void release();
+	};
+};
