@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // dx.h
 // rendering system directx functions interface
-// $Id: dx.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: dx.h,v 1.2 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #pragma once
@@ -14,4 +14,5 @@ namespace d3d {
 	ID3DXFont* createFont(HFONT font);
 	void begin();
 	void end();
+	bool checkDevice();
 };

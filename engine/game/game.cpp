@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: game.cpp,v 1.3 2003/12/13 17:37:14 tstivers Exp $
+// $Id: game.cpp,v 1.4 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -218,7 +218,10 @@ bool game::startMap(char* name)
 	sprintf(bspname, "maps/%s.bsp", name);
 
 	// load the bsp
-	render::scene = scene::Scene::load(bspname);	
+	render::scene = scene::Scene::load(bspname);
+	if(!render::scene)
+		return false;
+
 	render::scene->init();
 	render::scene->acquire();
 

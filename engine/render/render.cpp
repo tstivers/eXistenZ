@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.8 2003/12/13 17:37:14 tstivers Exp $
+// $Id: render.cpp,v 1.9 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -117,6 +117,12 @@ void render::init()
 	settings::addsetting("system.render.vbsize", settings::TYPE_INT, 0, NULL, NULL, &vertex_buffer_size);
 	settings::addsetting("system.render.ibsize", settings::TYPE_INT, 0, NULL, NULL, &index_buffer_size);
 
+	settings::addsetting("system.render.device", settings::TYPE_INT, 0, NULL, NULL, NULL);
+	settings::addsetting("system.render.backbuffercount", settings::TYPE_INT, 0, NULL, NULL, NULL);
+
+	settings::setint("system.render.device", 0);
+	settings::setint("system.render.backbuffercount", 2);
+
 	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
 	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
 	con::addCommand("toggle_patches", con::toggle_int, &draw_patches);
@@ -212,6 +218,10 @@ void render::render()
 	frame_bufswaps = 0;
 	frame_clusters = 0;
 	frame_faces = 0;
+
+	// check the device
+	if(!d3d::checkDevice())
+		return;
 
 	// clear the scene
 	d3d::clear();

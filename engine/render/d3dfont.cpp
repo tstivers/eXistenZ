@@ -327,7 +327,7 @@ HRESULT CD3DFont::RestoreDeviceObjects()
 {
     HRESULT hr;
 
-    // Create vertex buffer for the letters
+	// Create vertex buffer for the letters
     int vertexSize = max( sizeof(FONT2DVERTEX), sizeof(FONT3DVERTEX ) );
     if( FAILED( hr = m_pd3dDevice->CreateVertexBuffer( MAX_NUM_VERTICES * vertexSize,
                                                        D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
@@ -367,7 +367,7 @@ HRESULT CD3DFont::RestoreDeviceObjects()
         m_pd3dDevice->SetTexture( 0, m_pTexture );
 
         if ( D3DFONT_ZENABLE & m_dwFontFlags )
-            m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
+            m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
         else
             m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, FALSE );
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: pos.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: pos.h,v 1.2 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #pragma once
@@ -14,6 +14,7 @@ namespace ui {
 		Pos();
 		~Pos();
 		void render();
+		void reset();
 
 	public:
 		int xpos;

@@ -1,5 +1,9 @@
 #pragma once
 
+namespace entity {
+	class Entity;
+};
+
 namespace scene {
 	enum SCENE_TYPE {
 		ST_BSP,
@@ -26,7 +30,10 @@ namespace scene {
 		virtual void render() = 0;		
 
 		// entity crap
-		//TODO: virtual addEntity(std::string name, int type, 
+		//TODO: virtual addEntity(std::string name, int type,
+		virtual void addEntity(const entity::Entity* entity) = 0;
+		// virtual void updateEntity(const Entity* entity);
+		// virtual void removeEntity(const Entity* entity);
 
 		// movement/collision crap (or let game:: handle movement and collide:: handle collision?)
 		// maybe collision:: looks like addCollider(Collider& col) and there are ColliderMesh, ColliderBox(trigger), ColliderBSP, etc.
@@ -38,4 +45,8 @@ namespace scene {
 		bool acquired;
 		bool initialized;
 	};
+
+	void init();
+
+	extern int optimize_bsp;
 };

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: fps.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: fps.cpp,v 1.3 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -26,6 +26,12 @@ FPS::~FPS()
 {
 	if(d3dfont)
 		delete d3dfont;
+}
+
+void FPS::reset()
+{
+	delete d3dfont;
+	d3dfont = NULL;
 }
 
 void FPS::render()

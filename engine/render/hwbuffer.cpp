@@ -258,7 +258,7 @@ void render::IndexBuffer::update(void* data)
 	void* buf;
 
 	if(FAILED(indexbuffer->indexbuffer->Lock(offset, size, &buf, 0))) {
-		LOG("[VB::update] failed to lock vertex buffer");
+		LOG("[IB::update] failed to lock vertex buffer");
 		return;
 	}
 

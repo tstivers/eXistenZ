@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: pos.cpp,v 1.4 2003/12/13 17:37:14 tstivers Exp $
+// $Id: pos.cpp,v 1.5 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -27,6 +27,13 @@ Pos::~Pos()
 {
 	delete d3dfont;
 }
+
+void Pos::reset()
+{
+	delete d3dfont;
+	d3dfont = NULL;
+}
+
 
 void Pos::render()
 {

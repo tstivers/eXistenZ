@@ -17,6 +17,7 @@ namespace scene {
 		int texture;
 		int lightmap;
 		int type; // remove?
+		D3DPRIMITIVETYPE prim_type;
 		unsigned int num_vertices;
 		unsigned int num_indices;
 		BSPVertex* vertices;
@@ -66,7 +67,7 @@ namespace scene {
 		unsigned int num_faces;
 		BSPFace* faces;
 
-		//virtual addEntity(std::string name, int type, 
+		void addEntity(const entity::Entity* entity);
 
 		// stats
 		size_t vis_size;

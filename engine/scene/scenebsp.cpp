@@ -9,6 +9,7 @@
 #include "render/hwbuffer.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsppatch.h"
+#include "render/meshoptimize.h"
 
 namespace scene {
 };
@@ -42,6 +43,7 @@ void SceneBSP::init()
 		faces[i].texture = face.texture;
 		faces[i].lightmap = face.lightmap;
 		faces[i].type = face.type;
+		faces[i].prim_type = D3DPT_TRIANGLELIST;
 
 		faces[i].vertices = new BSPVertex[faces[i].num_vertices];
 		for(unsigned j = 0; j < faces[i].num_vertices; j++)
@@ -56,6 +58,9 @@ void SceneBSP::init()
 	for(unsigned i = 0; i < num_faces; i++) {
 		if(faces[i].type == 2)
 			q3bsp::genPatch(faces[i], bsp->faces[i].size[0], bsp->faces[i].size[1]);
+
+		if(scene::optimize_bsp) 
+			render::optimizeMesh(&faces[i].prim_type, &faces[i].vertices, &faces[i].indices, &faces[i].num_vertices, &faces[i].num_indices, true, true, false);
 	}
 
 	// load clusters
@@ -145,8 +150,8 @@ void SceneBSP::acquire()
 			face.rendergroup->texture = bsp->textures[face.texture];
 			if((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
 				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
-			face.rendergroup->type = D3DPT_TRIANGLELIST;
-			face.rendergroup->primitivecount = face.num_indices / 3;
+			face.rendergroup->type = face.prim_type;
+			face.rendergroup->primitivecount = face.prim_type == D3DPT_TRIANGLELIST ? face.num_indices / 3 : face.num_indices - 2;
 			face.rendergroup->acquire();
 			face.rendergroup->update(face.vertices, face.indices);
 		}
@@ -188,8 +193,8 @@ void SceneBSP::render()
 	if(current_cluster < 0) {
 		for(unsigned i = 0; i < num_clusters; i++) {
 
-			//if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
-			//	continue;
+			if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+				continue;
 
 			render::frame_clusters++;
 
@@ -222,6 +227,7 @@ void SceneBSP::render()
 SceneBSP* SceneBSP::loadBSP(const std::string& name)
 {
 	q3bsp::BSP* bsp = q3bsp::BSP::load(name.c_str());
+
 	if(!bsp)
 		return NULL;
 
@@ -229,4 +235,8 @@ SceneBSP* SceneBSP::loadBSP(const std::string& name)
 	scene->bsp = bsp;
 	q3bsp::bsp = bsp;
 	return scene;
+}
+
+void SceneBSP::addEntity(const entity::Entity* entity)
+{
 }

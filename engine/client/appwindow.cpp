@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // appwindow.cpp
 // main application window
-// $Id: appwindow.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: appwindow.cpp,v 1.3 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -48,10 +48,10 @@ bool appwindow::createWindow(HINSTANCE hinst)
 
 	wc.cbSize = sizeof(WNDCLASSEX);
     wc.hInstance		= hinst;
+	wc.hIcon			= LoadIcon(hinst, MAKEINTRESOURCE(IDI_LUXICON));
 	wc.lpszClassName	= classname;
 	wc.lpfnWndProc		= appwndproc;
 	wc.style			= CS_VREDRAW|CS_HREDRAW|CS_DBLCLKS;
-	wc.hIcon			= NULL;
 	wc.hIconSm			= NULL;
 	wc.hCursor			= NULL;	
 	wc.lpszMenuName		= NULL;	

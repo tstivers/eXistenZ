@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.9 2003/12/13 17:37:14 tstivers Exp $
+// $Id: precompiled.h,v 1.10 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -38,6 +38,8 @@
 #include "d3dx9core.h"
 #define DIRECTINPUT_VERSION 0x0800
 #include "dinput.h"
+
+#include "resource/resource.h"
 
 #define ASSERT(f) (void)((f) || (DebugBreak(), 0))
 

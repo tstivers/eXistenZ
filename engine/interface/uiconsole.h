@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: uiconsole.h,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: uiconsole.h,v 1.3 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #pragma once
@@ -19,6 +19,7 @@ namespace ui {
 		void addMessage(const char* message);
 		void keypressed(char key, bool extended = false);
 		void clear();
+		void reset();
 
 	public:
 		int xpos;

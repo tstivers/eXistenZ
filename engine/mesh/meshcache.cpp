@@ -1,13 +1,14 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: meshcache.cpp,v 1.1 2003/12/04 12:33:48 tstivers Exp $
+// $Id: meshcache.cpp,v 1.2 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
 #include "mesh/meshcache.h"
 #include "mesh/mesh.h"
 #include "mesh/meshload.h"
+#include "console/console.h"
 
 namespace mesh {
 
@@ -31,6 +32,8 @@ Mesh* mesh::getMesh(std::string& name)
 		cache.insert(MeshCache::value_type(name, mesh));
 		return mesh;
 	}
+
+	LOG2("[mesh::getMesh] failed to find mesh \"%s\"", name.c_str());
 
 	return NULL;
 }

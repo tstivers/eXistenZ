@@ -30,6 +30,15 @@ typedef struct _BSPVertex {
 		result.diffuse = D3DXCOLOR(diffuse) * rhs;
 		return result;
 	}
+
+	bool operator==(const _BSPVertex& rhs)
+	{
+		return (pos == rhs.pos) &&
+			(nrm == rhs.nrm) &&
+			(tex1 == rhs.tex1) &&
+			(tex2 == rhs.tex2) &&
+			(diffuse == rhs.diffuse);
+	}
 } BSPVertex;
 
 typedef struct _TVertex {

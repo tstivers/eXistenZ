@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: skybox.cpp,v 1.5 2003/12/13 02:58:04 tstivers Exp $
+// $Id: skybox.cpp,v 1.6 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -281,7 +281,7 @@ void skybox::render()
 
 	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(SkyVertex));
 	render::device->SetFVF(SkyVertex.FVF);
-	render::device->SetMaterial( &mtrl );
+	//render::device->SetMaterial( &mtrl );
 	render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
@@ -294,7 +294,7 @@ void skybox::render()
 	render::device->SetRenderState( D3DRS_AMBIENT, 0);
 	render::device->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
 
 	D3DXMATRIX skybox;
 	D3DXMatrixIdentity(&skybox);
@@ -325,6 +325,7 @@ void skybox::render()
 	render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
 
 	render::device->SetTransform( D3DTS_WORLD, &render::world );
+	FRAMEDO(LOG("[skybox::render] sky drawn"));
 }
 
 void skybox::unacquire()

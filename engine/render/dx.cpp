@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: dx.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: dx.cpp,v 1.2 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,17 +10,18 @@
 #include "settings/settings.h"
 #include "client/appwindow.h"
 #include "console/console.h"
+#include "interface/interface.h" // hack for fullscreen reset
 
 namespace d3d {
 	IDirect3D9* d3d;
 	IDirect3DDevice9* d3dDevice;
+
+	D3DPRESENT_PARAMETERS d3dpp;
 };
 
 bool d3d::init()
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
-	
-	D3DPRESENT_PARAMETERS d3dpp;
 
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 	d3dpp.Windowed = settings::getint("system.render.fullscreen") ? FALSE : TRUE;
@@ -28,7 +29,7 @@ bool d3d::init()
 	if(d3dpp.Windowed) {
 		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 		d3dpp.EnableAutoDepthStencil = TRUE;
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 		d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 		d3dpp.BackBufferCount = 1;
 	} else {
@@ -36,10 +37,10 @@ bool d3d::init()
 		d3dpp.BackBufferHeight = settings::getint("system.render.resolution.y");
 		d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
 		//d3dpp.BackBufferFormat = D3DFMT_R5G6B5;
-		d3dpp.BackBufferCount = 1;
+		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
 		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 		d3dpp.EnableAutoDepthStencil = TRUE;
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D16;
+		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 		d3dpp.Flags = D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
 		d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
 	}
@@ -49,16 +50,38 @@ bool d3d::init()
 	else
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
-	if(FAILED((d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, appwindow::getHwnd(),
+	if(FAILED((d3d->CreateDevice(
+		settings::getint("system.render.device"), 
+		D3DDEVTYPE_HAL, 
+		appwindow::getHwnd(),
 		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
-		&d3dpp, &d3dDevice)))) {
-			LOG("[d3d::init] unable to create device");
+		&d3dpp, 
+		&d3dDevice)))) {
+			MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
 			exit(1);
 		}
 
 	render::device = d3dDevice;
 
 	return true;
+}
+
+bool d3d::checkDevice()
+{
+	switch(d3dDevice->TestCooperativeLevel()) {
+	case D3DERR_DEVICELOST: 
+		LOG("[d3d::checkDevice] device lost");
+		return false;
+	case D3DERR_DEVICENOTRESET:
+		ui::reset(); // hack for stupid d3dfont stuff
+		if(FAILED(d3dDevice->Reset(&d3dpp))) {
+			LOG("[d3d::checkDevice] could not reset device");
+			return false;
+		}
+		LOG("[d3d::checkDevice] device reset");
+	default:
+		return true;
+	}	
 }
 
 void d3d::begin()

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: uiconsole.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: uiconsole.cpp,v 1.3 2003/12/23 04:51:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -38,6 +38,12 @@ Console::Console()
 
 Console::~Console()
 {
+}
+
+void Console::reset()
+{
+	delete d3dfont;
+	d3dfont = NULL;
 }
 
 void Console::chooseFont()
@@ -89,7 +95,7 @@ void Console::render()
 	{
 		d3dfont = new CD3DFont("Terminal", 9, 0);
 		d3dfont->InitDeviceObjects(render::device);
-		d3dfont->RestoreDeviceObjects();
+		d3dfont->RestoreDeviceObjects();	
 	}
 
 	float x = (float)xpos;

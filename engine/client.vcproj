@@ -58,7 +58,8 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -128,7 +129,8 @@
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
@@ -347,6 +349,12 @@
 			</File>
 			<File
 				RelativePath="render\marker.h">
+			</File>
+			<File
+				RelativePath=".\render\meshoptimize.cpp">
+			</File>
+			<File
+				RelativePath=".\render\meshoptimize.h">
 			</File>
 			<File
 				RelativePath="render\render.cpp">
@@ -725,6 +733,50 @@
 			</File>
 			<File
 				RelativePath=".\math\vertex.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="resource"
+			Filter="">
+			<File
+				RelativePath=".\resource\eXistenZ Engine Client.rc">
+			</File>
+			<File
+				RelativePath=".\resource\luxicon.ico">
+			</File>
+			<File
+				RelativePath=".\resource\luxiconD.ico">
+			</File>
+			<File
+				RelativePath=".\resource\luxlogo.bmp">
+			</File>
+			<File
+				RelativePath=".\resource\resource.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="entity"
+			Filter="">
+			<File
+				RelativePath=".\entity\entity.cpp">
+			</File>
+			<File
+				RelativePath=".\entity\entity.h">
+			</File>
+			<File
+				RelativePath=".\entity\entitycache.cpp">
+			</File>
+			<File
+				RelativePath=".\entity\entitycache.h">
+			</File>
+			<File
+				RelativePath=".\entity\jsentity.cpp">
+			</File>
+			<File
+				RelativePath=".\entity\jsentity.h">
+			</File>
+			<File
+				RelativePath=".\entity\staticentity.cpp">
 			</File>
 		</Filter>
 	</Files>

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
+// $Id: main.cpp,v 1.6 2003/12/23 04:51:58 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -28,6 +28,8 @@
 #include "shader/shadercache.h"
 #include "mesh/meshcache.h"
 #include "mesh/meshsystemcache.h"
+#include "scene/scene.h"
+#include "entity/jsentity.h"
 
 //extern unsigned long  _build_num;
 
@@ -68,6 +70,8 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	jsinput::init();
 	q3bsp::init();
 	shader::init();
+	scene::init();
+	jsentity::init();
 
 	// add some generic system settings
 	addSystemSettings();
