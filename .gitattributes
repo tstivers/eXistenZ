@@ -20,9 +20,9 @@ data/textures/shaders/nodraw.shader -text svneol=native#unset
 data/textures/shaders/sky.shader -text svneol=native#unset
 data/textures/shaders/static.shader -text svneol=native#unset
 data/textures/texture_alias.txt -text svneol=native#unset
-/eXistenZ[!!-~]Engine.sln -text svneol=native#unset
+/eXistenZ[!!-~]Engine.sln eol=crlf
 /eXistenZ[!!-~]Engine.suo -text
-engine/client.vcproj -text svneol=native#unset
+engine/client.vcproj eol=crlf
 engine/client/appwindow.cpp -text svneol=native#unset
 engine/client/appwindow.h -text svneol=native#unset
 engine/client/main.cpp -text svneol=native#unset
@@ -132,7 +132,6 @@ engine/render/scenegraph.h -text svneol=native#unset
 engine/render/scenenode.cpp -text svneol=native#unset
 engine/render/shapes.cpp -text svneol=native#unset
 engine/render/shapes.h -text svneol=native#unset
-engine/resource/eXistenZ[!!-~]Engine[!!-~]Client.rc -text svneol=native#unset
 engine/resource/luxicon.ico -text
 engine/resource/luxiconD.ico -text
 engine/resource/resource.h -text svneol=native#unset
@@ -253,7 +252,7 @@ tools/maya_export/export_options.cpp -text svneol=native#unset
 tools/maya_export/export_options.h -text svneol=native#unset
 tools/maya_export/maya_export.cpp -text svneol=native#unset
 tools/maya_export/maya_export.h -text svneol=native#unset
-tools/maya_export/maya_export.vcproj -text svneol=native#unset
+tools/maya_export/maya_export.vcproj eol=crlf
 tools/maya_export/resource.h -text svneol=native#unset
 tools/maya_export/resources.aps -text
 tools/maya_export/resources.rc -text svneol=native#unset
