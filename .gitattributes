@@ -163,6 +163,42 @@ lib/js/debug/js32D.ilk -text
 lib/js/release/js32.dll -text
 lib/js/release/js32.exp -text
 lib/js/release/js32.lib -text
+lib/opcode/debug/Opcode.lib -text
+lib/opcode/include/OPC_AABBCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_AABBTree.h -text svneol=native#unset
+lib/opcode/include/OPC_BaseModel.h -text svneol=native#unset
+lib/opcode/include/OPC_BoxBoxOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_BoxPruning.h -text svneol=native#unset
+lib/opcode/include/OPC_Collider.h -text svneol=native#unset
+lib/opcode/include/OPC_Common.h -text svneol=native#unset
+lib/opcode/include/OPC_HybridModel.h -text svneol=native#unset
+lib/opcode/include/OPC_IceHook.h -text svneol=native#unset
+lib/opcode/include/OPC_LSSAABBOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_LSSCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_LSSTriOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_MeshInterface.h -text svneol=native#unset
+lib/opcode/include/OPC_Model.h -text svneol=native#unset
+lib/opcode/include/OPC_OBBCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_OptimizedTree.h -text svneol=native#unset
+lib/opcode/include/OPC_Picking.h -text svneol=native#unset
+lib/opcode/include/OPC_PlanesAABBOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_PlanesCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_PlanesTriOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_RayAABBOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_RayCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_RayTriOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_Settings.h -text svneol=native#unset
+lib/opcode/include/OPC_SphereAABBOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_SphereCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_SphereTriOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_SweepAndPrune.h -text svneol=native#unset
+lib/opcode/include/OPC_TreeBuilders.h -text svneol=native#unset
+lib/opcode/include/OPC_TreeCollider.h -text svneol=native#unset
+lib/opcode/include/OPC_TriBoxOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_TriTriOverlap.h -text svneol=native#unset
+lib/opcode/include/OPC_VolumeCollider.h -text svneol=native#unset
+lib/opcode/include/Opcode.h -text svneol=native#unset
+lib/opcode/release/Opcode.lib -text
 tools/buildnuminc.exe -text
 tools/compile.rsp -text svneol=native#unset
 tools/link.rsp -text svneol=native#unset
