@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.10 2003/12/24 01:45:45 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"
@@ -69,6 +69,7 @@ namespace render {
 	unsigned int frame_bufswaps;
 	unsigned int frame_clusters;
 	unsigned int frame_faces;
+	unsigned int frame_drawcalls;
 };
 
 using namespace render;
@@ -220,6 +221,7 @@ void render::render()
 	frame_bufswaps = 0;
 	frame_clusters = 0;
 	frame_faces = 0;
+	frame_drawcalls = 0;
 
 	// check the device
 	if(!d3d::checkDevice())
@@ -294,5 +296,6 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 		rg->indexbuffer->offset / sizeof(unsigned short), 
 		rg->primitivecount);
 
+	frame_drawcalls++;
 	frame_polys += rg->primitivecount;
 }

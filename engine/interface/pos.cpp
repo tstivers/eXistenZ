@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: pos.cpp,v 1.5 2003/12/23 04:51:58 tstivers Exp $
+// $Id$
 //
 
 #include "precompiled.h"
@@ -59,4 +59,7 @@ void Pos::render()
 	d3dfont->DrawText((float)xpos, (float)ypos + 30, D3DCOLOR_XRGB(255, 255, 255), buf);
 	sprintf(buf, "polys: %i texswaps: %i bufswaps: %i", render::frame_polys, render::frame_texswaps, render::frame_bufswaps);
 	d3dfont->DrawText((float)xpos, (float)ypos + 40, D3DCOLOR_XRGB(255, 255, 255), buf);
+	sprintf(buf, "DIP calls: %i", render::frame_drawcalls);
+	d3dfont->DrawText((float)xpos, (float)ypos + 50, D3DCOLOR_XRGB(255, 255, 255), buf);
+
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: render.h,v 1.5 2003/12/13 17:37:14 tstivers Exp $
+// $Id$
 //
 
 #pragma once
@@ -58,6 +58,7 @@ namespace render {
 	extern unsigned int frame_bufswaps;
 	extern unsigned int frame_clusters;
 	extern unsigned int frame_faces;
+	extern unsigned int frame_drawcalls;
 
 	extern scene::Scene* scene;
 
