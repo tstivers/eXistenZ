@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.6 2003/12/13 02:58:04 tstivers Exp $
+// $Id: bleh.h,v 1.7 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #pragma once
@@ -9,8 +9,7 @@
 #include "texture/texture.h"
 #include "q3bsp/bspcache.h"
 #include "q3bsp/bspcollide.h"
-
-class VFile;
+#include "vfs/vfs.h"
 
 namespace q3bsp {
 	
@@ -81,7 +80,7 @@ namespace q3bsp {
 		~BSP();
 
 	public:
-		bool load(VFile* file);
+		bool load(vfs::IFilePtr file);
 		static BSP* load(const std::string& filename);
 
 		// render functions

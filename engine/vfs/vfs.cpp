@@ -1,174 +1,136 @@
-/////////////////////////////////////////////////////////////////////////////
-// vfs.cpp
-// virtual file system
-// $Id: vfs.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
-//
-
 #include "precompiled.h"
-#include "vfs/vfs.h"
-#include "vfs/file.h"
-#include "settings/settings.h"
 #include "console/console.h"
-#include "sys/stat.h"
+#include "vfs/vfs.h"
+#include "vfs/path.h"
+#include "vfs/file.h"
+#include "vfs/diskfile.h"
 
-namespace vfs
-{	
-	std::list<std::string> path_list;
-	std::string vfs_root;
+namespace vfs {
 
-	void release(void);
-	void clear(void);
-	bool fileExists(const char* filename);
-	bool stsetpath(settings::Setting* setting, void* value);
-	bool stgetpath(settings::Setting* setting, void** value);
-	int debug;
-}
+	typedef std::smart_ptr<Path> PathPtr;
+	typedef std::vector<PathPtr> PathList;
+
+	PathList paths;
+	char root[MAX_PATH];
+};
 
 void vfs::init()
 {
-	debug = 0;
-	path_list.clear();
-	settings::addsetting("system.vfs.path", settings::TYPE_STRING, settings::FLAG_VIRTUAL, stsetpath, stgetpath, NULL);
-	settings::addsetting("system.vfs.debug", settings::TYPE_INT, 0, NULL, NULL, &debug);
+	root[0] = 0;	
 }
 
-bool vfs::stsetpath(settings::Setting* setting, void* value)
+void vfs::setRoot(const char* path)
 {
-	vfs::setPath((char*) value);
-	return true;
-}
-
-bool vfs::stgetpath(settings::Setting* setting, void** value)
-{
-	vfs::getPath((char*)setting->data);
-	*value = setting->data;
-	return true;
-}
-
-
-void vfs::release()
-{
-	path_list.clear();
-}
-
-void vfs::addPath(char* pathstr)
-{
-	if(debug) LOG2("[vfs::addPath] adding \"%s\"", pathstr);
-	std::string new_path(pathstr);
-	path_list.push_back(new_path);
-}
-
-void vfs::getPath(char* pathbuf)
-{
-	pathbuf[0] = 0;
-	for(std::list<std::string>::iterator it = path_list.begin(); it != path_list.end(); it++)
-	{
-		strcat(pathbuf, (*it).c_str());
-		strcat(pathbuf, ";");
+	char pathbuf[MAX_PATH];
+	char canonpath[MAX_PATH];
+	
+	if(PathCanonicalize(canonpath, sanitizePath(pathbuf, path)) != TRUE) {
+		LOG2("invalid root! \"%s\"", path);
+		return;
 	}
+	
+	strcpy(root, path);
+
+	LOG2("root set to \"%s\"", root);
+
+	// clear paths and add root
+	paths.clear();
+	addPath(root);
 }
 
-void vfs::setPath(char* pathstr)
-{	
-	// hack
-	char* buf = strdup(pathstr);
-	char* next = buf;
-	char* curr = buf;
-
-	path_list.clear();
-
-	while(curr && *curr) {
-		next = strchr(next, ';');
-		if(next) {
-			*next = 0;
-			next++;
-		}
-		addPath(curr);
-		curr = next;
-	}
-	free(buf);
-}
-
-void vfs::setRoot(char* root)
+const char* vfs::getRoot()
 {
-	vfs_root = root;
+	return root;
 }
 
-void vfs::getRoot(char* root)
+void vfs::addPath(const char* path)
 {
-	strcpy(root, vfs_root.c_str());
-}
+	char sanepath[MAX_PATH];	
+	char searchpath[MAX_PATH];
+	char canonpath[MAX_PATH];
 
-VFile* vfs::getFile(const char* filename)
-{
-	// duh
-	if(!filename)
-		return NULL;
+	sanitizePath(sanepath, path);
+	if(sanepath[1] != ':')
+		sprintf(searchpath, "%s\\%s", root, sanepath); // normal
+	else
+		strcpy(searchpath, sanepath); // absolute
 
-	// check for file in the root
-	std::string curpath = vfs_root + (std::string)"/" + filename;
-	if(debug) LOG2("[vfs::getfile] looking for %s", filename);
-	if(fileExists(curpath.c_str())){
-		VDiskFile* file = new VDiskFile();
-		file->filename = strdup(filename);
-		file->open(curpath.c_str());
-		if(debug) LOG2("[vfs::getfile] found %s", file->filename);
-		return file;
-	}
+	PathCanonicalize(canonpath, searchpath);
 
-	// check using paths
-	for(std::list<std::string>::iterator it = path_list.begin(); it != path_list.end(); it++) {
-		curpath = vfs_root + (std::string)"/" + *it + (std::string)"/" + filename;		
-		if(fileExists(curpath.c_str())){
-			VDiskFile* file = new VDiskFile();
-			file->filename = strdup(filename);
-			file->open(curpath.c_str());
-			if(debug) LOG2("[vfs::getfile] found %s", file->filename);
-			return file;
-		}
-	}
+	Path* cpath = Path::createPath(canonpath);
+	if(!cpath)
+		return;
 
-	// check for absolute path
-	if(fileExists(filename)){			
-		VDiskFile* file = new VDiskFile();
-			file->filename = strdup(filename);
-			file->open(filename);
-			if(debug) LOG2("[vfs::getfile] found %s", file->filename);
-			return file;
-	}
-
-	if(debug) LOG2("[vfs::getfile] ERROR: unable to find %s", filename);
-	return NULL;
+	paths.push_back(cpath);
+	LOG2("added path \"%s\"", canonpath);	
 }
 
 bool vfs::fileExists(const char* filename)
 {
-	struct stat statbuf;
-	if(stat(filename, &statbuf))
-		return false;
-	return true;
-}
+	char sane_path[MAX_PATH];
+	sanitizePath(sane_path, filename);
 
-int vfs::getFileList(file_list_t& file_list, const char* path, const char* wildcard, bool recurse)
-{
-	struct _finddata_t file;
-	intptr_t hFile;
-
-	for(std::list<std::string>::iterator it = path_list.begin(); it != path_list.end(); it++) {
-		std::string curpath = vfs_root + 
-			(std::string)"/" + 
-			*it + 
-			(std::string)"/" + 
-			(std::string)path + 
-			(std::string)"/" + 
-			(std::string)wildcard;			
-		if((hFile = _findfirst(curpath.c_str(), &file)) == (intptr_t)-1)
-			continue;
-		file_list.push_back((std::string)file.name);
-		while(_findnext(hFile, &file) == 0)
-			file_list.push_back((std::string)file.name);
-		_findclose(hFile);
+	if(sane_path[1] == ':') { // absolute
+		DWORD att = GetFileAttributes(sane_path);
+		return (att != -1);
 	}
 
-	return (int)file_list.size();
+	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it) {
+		if((*it)->fileExists(sane_path))
+			return true;
+	}
+
+	return false;
+}
+
+vfs::IFile* vfs::getFile(const char* filename) 
+{
+	char sane_path[MAX_PATH];
+	
+	if(!filename || !*filename)
+		return NULL;
+
+	sanitizePath(sane_path, filename);
+
+	if(sane_path[1] == ':') { // absolute
+		if(fileExists(filename))
+			return new DiskFile(sane_path);
+		else {
+			//LOG2("unable to find file \"%s\"", filename);
+			return NULL;
+		}
+	}
+
+	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it) {
+		if((*it)->fileExists(sane_path))
+			return (*it)->getFile(sane_path);
+	}
+
+	//LOG2("unable to find file \"%s\"", filename);
+	return NULL;
+}
+
+vfs::IFile* vfs::createFile(const char* filename)
+{
+	char sanepath[MAX_PATH];
+	char actualpath[MAX_PATH];
+	char canonpath[MAX_PATH];
+
+	sanitizePath(sanepath, filename);
+	if(sanepath[1] != ':')
+		sprintf(actualpath, "%s\\%s", root, sanepath); // normal
+	else
+		strcpy(actualpath, sanepath); // absolute
+
+	PathCanonicalize(canonpath, actualpath);
+
+	return new DiskFile(canonpath, true);	
+}
+
+U32 vfs::getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse)
+{
+	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it)
+		(*it)->getFileList(file_list, path, filespec, flags, recurse);
+
+	return (U32)file_list.size();
 }

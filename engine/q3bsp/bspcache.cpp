@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspcache.cpp,v 1.6 2003/12/13 17:37:14 tstivers Exp $
+// $Id: bspcache.cpp,v 1.7 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -46,7 +46,7 @@ bool q3bsp::loadBSP(char* filename)
 {	
 	delete bsp;
 	bsp = new BSP();
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!bsp->load(file))
 	{
 		LOG2("[q3bsp::loadBSP] unable to load \"%s\"", filename);
@@ -58,7 +58,6 @@ bool q3bsp::loadBSP(char* filename)
 	//if(convert)
 	//	convertBSP(*bsp);
 
-	file->close();
 	return true;
 }
 
@@ -72,8 +71,7 @@ void q3bsp::con_list_maps(int argc, char* argv[], void* user)
 {
 	vfs::file_list_t map_list;
 	vfs::getFileList(map_list, settings::getstring("system.render.bsp.bsp_path"), "*.bsp");
-	map_list.sort();
 	LOG("Map List:");
 	for(vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
-		LOG2("  %s", (*it).c_str());
+		LOG2("  %s", (*it));
 }

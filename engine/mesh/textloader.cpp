@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: textloader.cpp,v 1.4 2003/12/24 01:45:45 tstivers Exp $
+// $Id: textloader.cpp,v 1.5 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,7 +10,6 @@
 #include "mesh/meshsystem.h"
 #include "mesh/meshcache.h"
 #include "vfs/vfs.h"
-#include "vfs/file.h"
 #include "q3bsp/bleh.h"  // for vertex typedef
 #include "console/console.h"
 #include "texture/texturecache.h"
@@ -77,7 +76,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 
 Mesh* mesh::loadTextMesh(const std::string& filename)
 {	
-	VFile* file = vfs::getFile(filename.c_str());
+	vfs::IFile* file = vfs::getFile(filename.c_str());
 	if(!file)
 		return NULL;
 
@@ -90,9 +89,7 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 	unsigned current_vert = 0;
 	unsigned current_ind = 0;
 
-	while(!file->eof) {
-
-		file->readLine(buf, 1024);
+	while(file->readLine(buf, 1024)) {		
 
 		char* comment = strstr(buf, "//");
 		if(comment) *comment = 0;
@@ -145,7 +142,7 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 
 MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
 {
-	VFile* file = vfs::getFile(filename.c_str());
+	vfs::IFile* file = vfs::getFile(filename.c_str());
 	if(!file)
 		return NULL;
 
@@ -158,8 +155,7 @@ MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
 	unsigned current_vert = 0;
 	unsigned current_ind = 0;
 
-	while(!file->eof) {
-		file->readLine(buf, 1024);
+	while(file->readLine(buf, 1024)) {		
 
 		char* comment = strstr(buf, "//");
 		if(comment) *comment = 0;

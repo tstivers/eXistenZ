@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.h
 // script engine class definition
-// $Id: script.h,v 1.2 2003/12/24 01:45:45 tstivers Exp $
+// $Id: script.h,v 1.3 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #pragma once
 
-class VFile;
+#include "vfs/vfs.h"
 
 class ScriptEngine {
 private:
@@ -26,7 +26,7 @@ public:
 	bool RunScript(char* script, jsval* retval);
 	bool RunScript(char* name, uintN lineno, char* script);
 	bool RunScript(char* name, uintN lineno, char* script, jsval* retval);
-	bool RunScript(VFile* file);
+	bool RunScript(vfs::IFilePtr file);
 
 	JSFunction* AddFunction(char* name, uintN argc, JSNative call);	
 	JSFunction* AddFunction(JSObject* obj, char*name, uintN argc, JSNative call);

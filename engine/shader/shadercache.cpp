@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: shadercache.cpp,v 1.3 2003/10/09 02:47:03 tstivers Exp $
+// $Id: shadercache.cpp,v 1.4 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -77,7 +77,7 @@ shader::Shader* shader::getShader(const char* name)
 shader::Shader* shader::loadShader(const char* name)
 {
 	char shader_file[MAX_PATH];
-	VFile* file;
+	vfs::IFilePtr file;
 	Shader* shader = NULL;
 
 	strcpy(shader_file, name);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.cpp
 // script engine class
-// $Id: jsscript.cpp,v 1.2 2003/12/03 07:21:39 tstivers Exp $
+// $Id: jsscript.cpp,v 1.3 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -26,10 +26,9 @@ JSBool jsscript::jsexecfile(JSContext *cx, JSObject *obj, uintN argc,
 		return BOOLEAN_TO_JSVAL(FALSE);	
 	}
 
-	VFile* file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+	vfs::IFilePtr file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 	if(file){
-		gScriptEngine.RunScript(file);
-		file->close();
+		gScriptEngine.RunScript(file);		
 	} else {
 		gScriptEngine.ReportError("execfile(): unable to open %s", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 		return BOOLEAN_TO_JSVAL(FALSE);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: shader.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: shader.cpp,v 1.2 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -81,17 +81,16 @@ Shader::Shader()
 
 Shader::Shader(char* filename)
 {
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!file)
 		return;
 
 	load(file);
 }
 
-Shader::Shader(VFile* file)
+Shader::Shader(vfs::IFilePtr file)
 {
 	load(file);
-	file->close();
 }
 
 void Shader::acquire()
@@ -108,7 +107,7 @@ void Shader::release()
 
 bool Shader::load(char* filename)
 {
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!file)
 		return false;
 
@@ -119,7 +118,7 @@ Shader::~Shader()
 {
 }
 
-bool Shader::load(VFile* file)
+bool Shader::load(vfs::IFilePtr file)
 {
 	char buf[256];
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: common.cpp,v 1.1 2003/10/09 02:47:03 tstivers Exp $
+// $Id: common.cpp,v 1.2 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -10,7 +10,7 @@
 
 void load_alias_list(const char* filename, alias_list& map)
 {
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!file)
 		return;
 
@@ -34,8 +34,6 @@ void load_alias_list(const char* filename, alias_list& map)
 
 		map.push_back(new pair(strdup(key), strdup(value)));
 	}
-
-	file->close();
 }
 
 char* find_alias(const char* key, alias_list& map)

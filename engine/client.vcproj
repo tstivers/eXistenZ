@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;;&quot;$(SolutionDir)lib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -38,11 +38,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib zlibd.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\js\debug&quot;;&quot;$(SolutionDir)lib\nvtristrip\debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib\js\debug&quot;;&quot;$(SolutionDir)lib\nvtristrip\debug&quot;;&quot;$(SolutionDir)lib\zlib\debug&quot;"
 				IgnoreDefaultLibraryNames="libc.lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/client.pdb"
@@ -91,7 +91,7 @@
 				EnableFiberSafeOptimizations="TRUE"
 				OptimizeForProcessor="2"
 				OptimizeForWindowsApplication="TRUE"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;;&quot;$(ProjectDir)client&quot;;&quot;$(SolutionDir)lib/js/include&quot;;&quot;$(SolutionDir)lib/nvtristrip/include&quot;;&quot;$(SolutionDir)lib&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC"
 				StringPooling="TRUE"
 				ExceptionHandling="TRUE"
@@ -110,10 +110,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib js32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib zlib.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)lib/js/release&quot;;&quot;$(SolutionDir)lib/zlib/release&quot;;&quot;$(SolutionDir)lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -241,16 +241,52 @@
 			Name="vfs"
 			Filter="">
 			<File
+				RelativePath=".\vfs\diskfile.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\diskfile.h">
+			</File>
+			<File
+				RelativePath=".\vfs\diskpath.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\diskpath.h">
+			</File>
+			<File
 				RelativePath="vfs\file.cpp">
 			</File>
 			<File
 				RelativePath="vfs\file.h">
 			</File>
 			<File
+				RelativePath=".\vfs\jsvfs.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\jsvfs.h">
+			</File>
+			<File
+				RelativePath=".\vfs\path.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\path.h">
+			</File>
+			<File
 				RelativePath="vfs\vfs.cpp">
 			</File>
 			<File
 				RelativePath="vfs\vfs.h">
+			</File>
+			<File
+				RelativePath=".\vfs\zipfile.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\zipfile.h">
+			</File>
+			<File
+				RelativePath=".\vfs\zippath.cpp">
+			</File>
+			<File
+				RelativePath=".\vfs\zippath.h">
 			</File>
 		</Filter>
 		<Filter
@@ -637,6 +673,18 @@
 			</File>
 			<File
 				RelativePath=".\common\common.h">
+			</File>
+			<File
+				RelativePath=".\common\mystring.cpp">
+			</File>
+			<File
+				RelativePath=".\common\mystring.h">
+			</File>
+			<File
+				RelativePath=".\common\smart_cptr.h">
+			</File>
+			<File
+				RelativePath=".\common\smart_ptr.h">
 			</File>
 		</Filter>
 		<Filter

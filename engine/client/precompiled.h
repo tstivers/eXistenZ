@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.10 2003/12/23 04:51:58 tstivers Exp $
+// $Id: precompiled.h,v 1.11 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <io.h>
 #include <time.h>
+#include <assert.h>
+#include <shlwapi.h>
 
 #define inline_ __forceinline
 #pragma intrinsic(memcmp)
@@ -32,6 +34,9 @@
 
 #include "platform/types.h"
 #include "common/common.h"
+#include "common/smart_ptr.h"
+#include "common/smart_cptr.h"
+#include "common/mystring.h"
 #include "jsapi.h"
 
 #include "d3d9.h"
@@ -40,6 +45,9 @@
 #include "dinput.h"
 
 #include "resource/resource.h"
+
+#include "zlib/include/zlib.h"
+
 
 #define ASSERT(f) (void)((f) || (DebugBreak(), 0))
 
@@ -59,11 +67,6 @@ extern int gActive;
 #include "math/vertex.h"
 
 // some misc crap functions
-char* strlower(char* str);
-char* strip(char* str);
-int countArgs(char* args);
-char *getToken(char **src, char *token_sep);
-int wildcmp(const char* w, const char* s);
 void load_map(const char* filename, alias_list& list);
 char* find_alias(const char* key, alias_list& list);
 

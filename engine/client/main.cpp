@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.7 2003/12/24 01:45:45 tstivers Exp $
+// $Id: main.cpp,v 1.8 2004/07/09 07:42:25 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -12,7 +12,7 @@
 #include "settings/settings.h"
 #include "settings/jssettings.h"
 #include "vfs/vfs.h"
-#include "vfs/file.h"
+#include "vfs/jsvfs.h"
 #include "client/appwindow.h"
 #include "render/render.h"
 #include "interface/interface.h"
@@ -62,6 +62,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	settings::init();
 	jssettings::init();
 	vfs::init();
+	jsvfs::init();
 	appwindow::init();
 	render::init();
 	ui::init();
@@ -83,10 +84,9 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	vfs::setRoot(settings::getstring("system.env.exepath"));
 	
 	// load and execute the config script
-	VFile* file = vfs::getFile("config.js");
+	vfs::IFilePtr file = vfs::getFile("config.js");
 	if(file){
-		gScriptEngine.RunScript(file);
-		file->close();
+		gScriptEngine.RunScript(file);		
 	} else LOG("[eXistenZ] unable to open \"config.js\"");
 
 	// execute command line

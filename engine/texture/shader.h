@@ -1,11 +1,12 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: shader.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: shader.h,v 1.2 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #pragma once
-class VFile;
+
+#include "vfs/vfs.h"
 
 namespace texture {
 	class DXTexture;	
@@ -16,7 +17,7 @@ namespace texture {
 		int refcount;
 
 		Shader();
-		Shader(VFile* file);
+		Shader(vfs::IFilePtr file);
 		Shader(char* filename);
 		~Shader();
 
@@ -25,7 +26,7 @@ namespace texture {
 		void deactivate( DXTexture* texture);
 		void acquire();
 		void release();
-		bool load(VFile* file);
+		bool load(vfs::IFilePtr file);
 		bool load(char* filename);
 
 		int line; // hack

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: q3shader.h,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: q3shader.h,v 1.2 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #pragma once
@@ -48,7 +48,7 @@ namespace q3shader {
 		~Q3Shader();
 
 		bool load(const char* filename);
-		bool parse(VFile* file);
+		bool parse(vfs::IFilePtr file);
 		void parseLine(char* line);
 
 		bool activate(texture::DXTexture* lightmap, int pass = 0);		

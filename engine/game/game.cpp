@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: game.cpp,v 1.5 2003/12/24 01:45:45 tstivers Exp $
+// $Id: game.cpp,v 1.6 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -226,10 +226,9 @@ bool game::startMap(char* name)
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);
-	VFile* file = vfs::getFile(bspname);
+	vfs::IFilePtr file = vfs::getFile(bspname);
 	if(file){
 		gScriptEngine.RunScript(file);
-		file->close();
 	}
 
 	render::scene->acquire();

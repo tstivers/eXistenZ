@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: texturecache.cpp,v 1.2 2003/10/09 02:47:03 tstivers Exp $
+// $Id: texturecache.cpp,v 1.3 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -117,7 +117,7 @@ texture::DXTexture* texture::loadTexture(const char* name)
 {	
 	IDirect3DTexture9* texture = NULL;
 	Shader* shader = NULL;
-	VFile* file;
+	vfs::IFilePtr file;
 	char buf[MAX_PATH];	
 
 	strcpy(buf, name);
@@ -145,7 +145,7 @@ texture::DXTexture* texture::loadTexture(const char* name)
 	goto shader;
 
 found:
-	HRESULT hr = D3DXCreateTextureFromFile(render::device, file->real_filename, &texture);
+	//HRESULT hr = D3DXCreateTextureFromFile(render::device, file->real_filename, &texture);
 	/*HRESULT hr = D3DXCreateTextureFromFileEx(device(), file->filename, 
 		0, 0,
 		0, 0,
@@ -158,11 +158,11 @@ found:
 		NULL,
 		&texture); */
 
+	HRESULT hr = D3DXCreateTextureFromFileInMemory(render::device, file->cache(), file->size, &texture);
+
 	if(FAILED(hr))
 		goto err;
 	
-	file->close();
-
 	if(debug) {
 		LOG2("[texture::loadTexture] loaded %s", name);
 	}
@@ -196,7 +196,7 @@ done:
 err:	
 //	if(debug) 
 		LOG2("[texture::loadTexture] failed to load %s", name);
-	if(file) file->close();
+
 	return NULL;
 }
 

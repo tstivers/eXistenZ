@@ -104,7 +104,8 @@ system.render.resolution.bitdepth = 32;
 system.render.resolution.refreshrate = 60;
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
-system.vfs.path = "../data/;/data/files.zip;";
+system.vfs.addPath("../data/");
+system.vfs.addPath("d:/games/quake iii arena/baseq3/pak0.zip");
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
 system.render.bsp.debug = 1;
@@ -170,12 +171,46 @@ bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
 bind(KEY_K, "toggle_diffuse");
 bind(KEY_S, "toggle_sky");
+bind(KEY_Z, "+exec move_up();");
+
+x = 0;
+nene = new Array(10);
+
+function bleh() {
+	for(y = 0; y < 100; y++)
+		woot();
+}
+
+function circle() {	
+	game.player.pos.x += Math.sin(x);
+	game.player.pos.z += Math.cos(x);
+	x += 0.01;
+}
+
+function large() {
+	this.name = "hey there this is a longish string";
+	this.size = 5200;
+	this.bleh = "wow";
+	this.something = "forums";
+	this.porridge = bleh;
+}
+
+function woot() {
+	nene[x++] = new large();
+}
+
+function dump(obj) {
+	for (i in obj) {
+		print(typeof(obj[i]) + "." + i + " = " + obj[i]);
+			dump(i);
+	}
+}
 
 function markerfun() {
 	bind(BUTTON_0, "+add_marker");
 	bind(BUTTON_2, "+del_marker");
-	print("go go gadget markers");
+	//print("go go gadget markers");
 }
 
 // log our start date and time
-print("eXistenZ engine started on " + Date());
+// print("eXistenZ engine started on " + Date());

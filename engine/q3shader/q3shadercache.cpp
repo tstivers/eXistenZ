@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: q3shadercache.cpp,v 1.4 2003/10/09 02:47:03 tstivers Exp $
+// $Id: q3shadercache.cpp,v 1.5 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -59,14 +59,14 @@ void q3shader::loadShaderList()
 	vfs::getFileList(shader_list, settings::getstring("system.render.shader.shaderpath"), "*.shader");
 	for(vfs::file_list_t::iterator it = shader_list.begin(); it != shader_list.end(); ++it) {
 		char filename[256];
-		sprintf(filename, "%s/%s",  settings::getstring("system.render.shader.shaderpath"), (*it).c_str());
+		sprintf(filename, "%s/%s",  settings::getstring("system.render.shader.shaderpath"), (*it));
 		parseShader(filename);
 	}
 }
 
 void q3shader::parseShader(char* filename)
 {
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!file)
 		return;
 
@@ -76,8 +76,8 @@ void q3shader::parseShader(char* filename)
 
 	//LOG2("[q3shader::parseShader] parsing %s...", filename);
 
-	while(!file->eof) {
-		file->readLine(buf, 1024);
+	while(file->readLine(buf, 1024)) {
+		
 		line++;
 
 		char* comment = strstr(buf, "//");
@@ -100,8 +100,6 @@ void q3shader::parseShader(char* filename)
 			}
 		}
 	}
-
-	file->close();
 }
 
 void q3shader::loadShaderMap()

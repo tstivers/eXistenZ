@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: q3shader.cpp,v 1.1 2003/10/07 20:17:45 tstivers Exp $
+// $Id: q3shader.cpp,v 1.2 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -127,7 +127,7 @@ Q3Shader::~Q3Shader()
 bool Q3Shader::load(const char* filename)
 {
 	// open file and skip down to our section
-	VFile* file = vfs::getFile(filename);
+	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!file)
 		return false;
 
@@ -137,8 +137,8 @@ bool Q3Shader::load(const char* filename)
 	line = 0;
 	int level = 0;
 
-	while(!file->eof) {
-		file->readLine(buf, 1024);
+	while(file->readLine(buf, 1024)) {
+		
 		line++;
 
 		char* comment = strstr(buf, "//");
@@ -160,24 +160,22 @@ bool Q3Shader::load(const char* filename)
 					file->readLine(buf, 1024);
 					line++;
 					parse(file);
-					file->close();
+
 					return true;
 				}
 			}
 		}
 	}
 
-	file->close();
-
 	return false;
 }
 
-bool Q3Shader::parse(VFile* file)
+bool Q3Shader::parse(vfs::IFilePtr file)
 {
 	char buf[1024];
 
-	while(!file->eof) {
-		file->readLine(buf, 1024);
+	while(file->readLine(buf, 1024)) {
+		
 		line++;
 
 		char* comment = strstr(buf, "//");

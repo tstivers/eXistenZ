@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // script.cpp
 // script engine class
-// $Id: script.cpp,v 1.3 2003/12/24 01:45:45 tstivers Exp $
+// $Id: script.cpp,v 1.4 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -85,7 +85,7 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retv
 	return (JS_TRUE == JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval));
 }
 
-bool ScriptEngine::RunScript(VFile* file)
+bool ScriptEngine::RunScript(vfs::IFilePtr file)
 {	
 	char *script = (char*)malloc(file->size + 1);
 	file->read(script, file->size);

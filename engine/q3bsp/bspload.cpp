@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspload.cpp,v 1.4 2003/12/05 13:44:20 tstivers Exp $
+// $Id: bspload.cpp,v 1.5 2004/07/09 07:42:25 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -20,7 +20,7 @@ using namespace q3bsp;
 
 BSP* BSP::load(const std::string& filename)
 {
-	VFile* file = vfs::getFile(filename.c_str());
+	vfs::IFilePtr file = vfs::getFile(filename.c_str());
 
 	if(!file)
 		return NULL;
@@ -31,11 +31,10 @@ BSP* BSP::load(const std::string& filename)
 		return NULL;
 	}
 
-	file->close();
 	return bsp;
 }
 
-bool BSP::load(VFile* file)
+bool BSP::load(vfs::IFilePtr file)
 {
 	if(!file) 
 		return false;	
@@ -54,7 +53,7 @@ bool BSP::load(VFile* file)
 	num_verts = lumps[kVertices].length / sizeof(tBSPVertex);
 	tBSPVertex *tmp_verts = new tBSPVertex[num_verts];
 
-	file->seek(lumps[kVertices].offset);
+	file->seek(lumps[kVertices].offset, FILE_BEGIN);
 	file->read((void*)tmp_verts, num_verts * sizeof(tBSPVertex));
 
 	verts = new BSPVertex[num_verts];
@@ -82,14 +81,14 @@ bool BSP::load(VFile* file)
 	// ------------------------ load indices ----------------------------
 	num_indices = lumps[kMeshVerts].length / sizeof(int);
 	indices = new int[num_indices];
-	file->seek(lumps[kMeshVerts].offset);
+	file->seek(lumps[kMeshVerts].offset, FILE_BEGIN);
 	file->read((void*)indices, lumps[kMeshVerts].length);
 
 	// ------------------------ load faces ------------------------------
 	num_faces = lumps[kFaces].length / sizeof(tBSPFace);
 	tBSPFace *tmp_faces = new tBSPFace[num_faces];
 
-	file->seek(lumps[kFaces].offset);
+	file->seek(lumps[kFaces].offset, FILE_BEGIN);
 	file->read((void*)tmp_faces, num_faces * sizeof(tBSPFace));
 
 	faces = new BSPFace[num_faces];
@@ -118,7 +117,7 @@ bool BSP::load(VFile* file)
 	// ----------------------- load nodes --------------------------------
 	num_nodes = lumps[kNodes].length / sizeof(tBSPNode);
 	tBSPNode* tmp_nodes = new tBSPNode[num_nodes];
-	file->seek(lumps[kNodes].offset);
+	file->seek(lumps[kNodes].offset, FILE_BEGIN);
 	file->read((void*)tmp_nodes, lumps[kNodes].length);
 
 	nodes = new BSPNode[num_nodes];
@@ -143,7 +142,7 @@ bool BSP::load(VFile* file)
 	// --------------------- load leafs -------------------------------
 	num_leafs = lumps[kLeafs].length / sizeof(tBSPLeaf);
 	tBSPLeaf* tmp_leafs = new tBSPLeaf[num_leafs];
-	file->seek(lumps[kLeafs].offset);
+	file->seek(lumps[kLeafs].offset, FILE_BEGIN);
 	file->read((void*)tmp_leafs, lumps[kLeafs].length);	
 
 	leafs = new BSPLeaf[num_leafs];
@@ -169,19 +168,19 @@ bool BSP::load(VFile* file)
 	// ---------------------- load leaf faces ----------------------------
 	num_leaffaces = lumps[kLeafFaces].length / sizeof(int);
 	leaffaces = new int[num_leaffaces];
-	file->seek(lumps[kLeafFaces].offset);
+	file->seek(lumps[kLeafFaces].offset, FILE_BEGIN);
 	file->read((void*)leaffaces, lumps[kLeafFaces].length);
 
 	// ---------------------- load leaf brushes --------------------------
 	num_leafbrushes = lumps[kLeafBrushes].length / sizeof(int);
 	leafbrushes = new int[num_leafbrushes];
-	file->seek(lumps[kLeafBrushes].offset);
+	file->seek(lumps[kLeafBrushes].offset, FILE_BEGIN);
 	file->read((void*)leafbrushes, lumps[kLeafBrushes].length);
 
 	// ----------------------- load brushes -----------------------------
 	num_brushes = lumps[kBrushes].length / sizeof(tBSPBrush);
 	tBSPBrush* tmp_brushes = new tBSPBrush[num_brushes];
-	file->seek(lumps[kBrushes].offset);
+	file->seek(lumps[kBrushes].offset, FILE_BEGIN);
 	file->read((void*)tmp_brushes, lumps[kBrushes].length);
 
 	brushes = new BSPBrush[num_brushes];
@@ -198,7 +197,7 @@ bool BSP::load(VFile* file)
 	// --------------------- load brush sides ---------------------------
 	num_brushsides = lumps[kBrushSides].length / sizeof(tBSPBrushSide);
 	tBSPBrushSide* tmp_brushsides = new tBSPBrushSide[num_brushsides];
-	file->seek(lumps[kBrushSides].offset);
+	file->seek(lumps[kBrushSides].offset, FILE_BEGIN);
 	file->read((void*)tmp_brushsides, lumps[kBrushSides].length);
 
 	brushsides = new BSPBrushSide[num_brushsides];
@@ -214,7 +213,7 @@ bool BSP::load(VFile* file)
 	// ------------------------ load planes ----------------------------
 	num_planes = lumps[kPlanes].length / sizeof(tBSPPlane);
 	tBSPPlane* tmp_planes = new tBSPPlane[num_planes];
-	file->seek(lumps[kPlanes].offset);
+	file->seek(lumps[kPlanes].offset, FILE_BEGIN);
 	file->read((void*)tmp_planes, lumps[kPlanes].length);
 
 	planes = new BSPPlane[num_planes];
@@ -231,7 +230,7 @@ bool BSP::load(VFile* file)
 
 	// ------------------- load vis data if it exists --------------------
 	if(lumps[kVisData].length) {
-		file->seek(lumps[kVisData].offset);
+		file->seek(lumps[kVisData].offset, FILE_BEGIN);
 		file->read(&num_clusters, sizeof(int));
 		file->read(&cluster_size, sizeof(int));
 
@@ -245,7 +244,7 @@ bool BSP::load(VFile* file)
 	num_textures = lumps[kTextures].length / sizeof(tBSPTexture);
 	bsptextures = new BSPTexture[num_textures];
 	
-	file->seek(lumps[kTextures].offset);
+	file->seek(lumps[kTextures].offset, FILE_BEGIN);
 	file->read((void*)bsptextures, lumps[kTextures].length);
 	
 	textures = new texture::DXTexture*[num_textures];	
@@ -258,7 +257,7 @@ bool BSP::load(VFile* file)
 	num_lightmaps = lumps[kLightmaps].length / sizeof(tBSPLightmap);
 	tBSPLightmap* tmp_lightmaps = new tBSPLightmap[num_lightmaps];
 	
-	file->seek(lumps[kLightmaps].offset);
+	file->seek(lumps[kLightmaps].offset, FILE_BEGIN);
 	file->read((void*)tmp_lightmaps, lumps[kLightmaps].length);
 
 	lightmaps = new texture::DXTexture*[num_lightmaps];
