@@ -118,6 +118,15 @@ engine/vfs/file.h -text svneol=native#unset
 engine/vfs/vfs.cpp -text svneol=native#unset
 engine/vfs/vfs.h -text svneol=native#unset
 lib/buildnum.lib -text
+lib/js/debug/fdlibm.lib -text
+lib/js/debug/js32.exp -text
+lib/js/debug/js32.lib -text
+lib/js/debug/js32.pdb -text
+lib/js/debug/js32D.dll -text
+lib/js/debug/js32D.ilk -text
+lib/js/release/js32.dll -text
+lib/js/release/js32.exp -text
+lib/js/release/js32.lib -text
 tools/buildnuminc.exe -text
 tools/compile.rsp -text svneol=native#unset
 tools/link.rsp -text svneol=native#unset
