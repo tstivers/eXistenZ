@@ -1,107 +1,9 @@
 log("loading configuration...");
 
-// builtin functions list
-// log(string message) : logs a message to the console
-// system.settings.dump() : dumps the list of predefined settings
-// execfile(string filename) : loads and executes a script
-
-// define some standard functions
-
-function print(messageb) {
-	log(messageb);
-}
-
-function square(val) {
-	return val * val;
-}
-
-// debugging functions
-function go() {
-	game.startMap("q3dm1");
-}
-
-function map(map_name) {
-	game.startMap(map_name);
-}
-
-function trans() {
-	system.render.transparency = 1;
-	map("q3dm11");
-	game.player.pos.x = -118.63;
-	game.player.pos.y = 125.0;
-	game.player.pos.z = 95.25;
-	game.player.rot.x = 219.25;
-	game.player.rot.y = -50;
-}
-
-function bench() {
-	system.render.transparency = 1;
-	map("q3dm11");
-	game.player.pos.x = -775;
-	game.player.pos.y = 4200;
-	game.player.pos.z = 900;
-	game.player.rot.x = 180;
-	game.player.rot.y = 90;
-}
-
-function home() {
-	game.player.pos.x = 0;
-	game.player.pos.y = 0;
-	game.player.pos.z = 0;
-	game.player.rot.x = 0;
-	game.player.rot.y = 0;
-}
-
-function stress() {
-	map("q3dm1");
-	map("q3dm2");
-	map("q3dm3");
-	map("q3dm4");
-	map("q3dm5");
-	map("q3dm6");
-	map("q3dm7");
-	map("q3dm8");
-	map("q3dm9");
-	map("q3dm10");
-	map("q3dm11");
-	map("q3dm12");
-	map("q3dm13");
-	map("q3dm14");
-	map("q3dm15");
-	map("q3ctf1");
-	map("q3ctf2");
-	map("q3ctf3");
-	map("q3ctf4");
-}
-
-function ice() {
-	game.physics.friction = 0.001;
-	game.player.accel = 0.01;
-}
-
-function normal() {
-	game.physics.friction = 0.04;
-	game.player.accel = 0.05;
-}
-
-function q3dm11() {
-map("q3dm11");
-	game.noclip = 0;
-	game.player.pos.x = 878;
-	game.player.pos.y = 212;
-	game.player.pos.z = -135;
-	game.player.rot.x = 180;
-	game.player.rot.y = -17;
-}
-
-function benchmark() {
-	system.ui.draw = 0;
-	q3dm11();	
-}
-
 // standard config settings
 system.render.resolution.bitdepth = 32;
 system.render.resolution.refreshrate = 60;
+//system.render.wait_vtrace = 1;
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.vfs.addPath("../data/");
@@ -131,7 +33,6 @@ system.render.tesselation = 6;
 game.init_command = "";
 system.render.use_scenegraph = 0;
 system.render.bsp.convert = 0;
-
 system.render.skybox.texture = "textures/skybox/cx";
 
 // source keys (will fix this later)
@@ -178,14 +79,54 @@ bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
 
+// functions
 
+function print(message) {
+	log(message);
+}
 
-x = 0;
-nene = new Array(10);
+function map(map_name) {
+	game.startMap(map_name);
+}
 
-function bleh() {
-	for(y = 0; y < 100; y++)
-		woot();
+function home() {
+	game.player.pos.x = 0;
+	game.player.pos.y = 0;
+	game.player.pos.z = 0;
+	game.player.rot.x = 0;
+	game.player.rot.y = 0;
+}
+
+function stress() {
+	map("q3dm1");
+	map("q3dm2");
+	map("q3dm3");
+	map("q3dm4");
+	map("q3dm5");
+	map("q3dm6");
+	map("q3dm7");
+	map("q3dm8");
+	map("q3dm9");
+	map("q3dm10");
+	map("q3dm11");
+	map("q3dm12");
+	map("q3dm13");
+	map("q3dm14");
+	map("q3dm15");
+	map("q3ctf1");
+	map("q3ctf2");
+	map("q3ctf3");
+	map("q3ctf4");
+}
+
+function ice() {
+	game.physics.friction = 0.001;
+	game.player.accel = 0.01;
+}
+
+function normal() {
+	game.physics.friction = 0.04;
+	game.player.accel = 0.05;
 }
 
 function bullet_time_on() {
@@ -198,12 +139,6 @@ function bullet_time_off() {
 	print("bullet time disabled!");
 }
 
-function circle() {	
-	game.player.pos.x += Math.sin(x);
-	game.player.pos.z += Math.cos(x);
-	x += 0.01;
-}
-
 bullet_time_function = bullet_time_on;
 function bullet_time_toggle() {
 	bullet_time_function();
@@ -211,18 +146,6 @@ function bullet_time_toggle() {
 		bullet_time_function = bullet_time_off;
 	else
 		bullet_time_function = bullet_time_on;
-}
-
-function large() {
-	this.name = "hey there this is a longish string";
-	this.size = 5200;
-	this.bleh = "wow";
-	this.something = "forums";
-	this.porridge = bleh;
-}
-
-function woot() {
-	nene[x++] = new large();
 }
 
 function dump(obj) {
@@ -233,9 +156,9 @@ function dump(obj) {
 }
 
 function markerfun() {
-	bind(BUTTON_0, "+add_marker");
-	bind(BUTTON_2, "+del_marker");
-	//print("go go gadget markers");
+	bind(BUTTON_0, "*add_marker");
+	bind(BUTTON_2, "*del_marker");
+	print("go go gadget markers");
 }
 
 // log our start date and time
