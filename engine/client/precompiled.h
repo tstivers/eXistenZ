@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // precompiled.h
 // all headers in this file are precompiled to make compilation faster
-// $Id: precompiled.h,v 1.5 2003/12/03 07:21:39 tstivers Exp $
+// $Id: precompiled.h,v 1.6 2003/12/04 12:34:24 tstivers Exp $
 //
 
 #define VC_EXTRALEAN
@@ -45,6 +45,10 @@
 #define DIK_BUTTON3 0xF3
 
 #define BIGFLOAT 1000000000000.0f
+
+#define EXTENSION_TEXTMESH ".tm"
+#define EXTENSION_TEXTMESHSYSTEM ".tms"
+
 
 extern HINSTANCE gHInstance;
 extern int gActive;
