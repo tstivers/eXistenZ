@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspcache.cpp,v 1.4 2003/11/24 00:16:13 tstivers Exp $
+// $Id: bspcache.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -46,8 +46,8 @@ bool q3bsp::loadBSP(char* filename)
 {	
 	delete bsp;
 	bsp = new BSP();
-
-	if(!bsp->load(filename))
+	VFile* file = vfs::getFile(filename);
+	if(!bsp->load(file))
 	{
 		LOG2("[q3bsp::loadBSP] unable to load \"%s\"", filename);
 		delete bsp;
@@ -58,6 +58,7 @@ bool q3bsp::loadBSP(char* filename)
 	if(convert)
 		convertBSP(*bsp);
 
+	file->close();
 	return true;
 }
 

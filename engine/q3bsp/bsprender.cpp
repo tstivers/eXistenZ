@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
+// $Id: bsprender.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -87,7 +87,7 @@ void BSP::initDeviceObjects()
 
 	// allocate face arrays
 	drawn_faces = new int[num_faces];
-	sorted_faces = new int[num_faces];
+	//sorted_faces = new int[num_faces];
 	transparent_faces = new int[num_faces];
 
 	if(q3bsp::debug) {
@@ -97,7 +97,7 @@ void BSP::initDeviceObjects()
 	}
 
 	// sort faces by texture for faster rendering
-	sortFaces();
+	//sortFaces();
 }
 
 static int face_compare(const void* f1, const void* f2)

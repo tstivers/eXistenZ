@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // main.cpp
 // contains the program entry point as well as all globals
-// $Id: main.cpp,v 1.4 2003/12/05 08:44:56 tstivers Exp $
+// $Id: main.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
 //
 #include "precompiled.h"
 #include "client/main.h"
@@ -93,7 +93,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	texture::acquire(); // hack
 	input::acquire();
 	render::start();
-	shader::acquire();
+	shader::acquire();	
 
 	// enter main loop and do fun things
 	mainloop();

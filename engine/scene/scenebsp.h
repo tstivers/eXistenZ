@@ -1,8 +1,40 @@
 #pragma once
 
 #include "q3bsp/bleh.h"
+#include "render/aabb.h"
+
+namespace render {
+	class RenderGroup;
+};
 
 namespace scene {
+
+	typedef q3bsp::BSPVertex BSPVertex; // TODO: fix
+
+	class BSPFace {
+	public:
+		int texture;
+		int lightmap;
+		int type; // remove?
+		unsigned int num_vertices;
+		unsigned int num_indices;
+		q3bsp::BSPVertex* vertices;
+		unsigned short* indices;
+		unsigned int frame;
+		render::RenderGroup* rendergroup;
+	};	
+
+	typedef std::vector<BSPFace*> BSPFacePtrList;
+
+	class BSPCluster {
+	public:
+		render::AABB aabb;
+		unsigned int num_faces;
+		//BSPFace* faces;
+		BSPFacePtrList faces;
+		// Entity Lists
+	};
+
 	class SceneBSP : public Scene {
 	public:
 
@@ -27,14 +59,15 @@ namespace scene {
 		//		faces (RenderGroups?)
 		//		list of entities (RenderGroups?)
 		//		list of static 
+		unsigned int num_clusters;
+		BSPCluster* clusters;
 
-		// renderpass looks like:
-		//	loop through all clusters
-		//		test cluster visibility, then frustrum cull
-		//		render all faces
-		//		render all renderable entities
-
+		unsigned int num_faces;
+		BSPFace* faces;
 
 		//virtual addEntity(std::string name, int type, 
+
+		// stats
+		size_t vis_size;
 	};
 };

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: aabb.cpp,v 1.2 2003/11/25 22:57:23 tstivers Exp $
+// $Id: aabb.cpp,v 1.3 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -16,19 +16,23 @@ using namespace render;
 	
 AABB::AABB()
 {
-	ZeroMemory(this, sizeof(AABB));
-	min = D3DXVECTOR3(BIGFLOAT, BIGFLOAT, BIGFLOAT);
-	max = D3DXVECTOR3(-BIGFLOAT, -BIGFLOAT, -BIGFLOAT);
+	reset();
 }
 
 AABB::AABB(D3DXVECTOR3* min, D3DXVECTOR3* max)
 {
-	ZeroMemory(this, sizeof(AABB));
+	reset();
 	extend(min, max);
 }
 
 AABB::~AABB()
 {
+}
+
+void AABB::reset() {
+	ZeroMemory(this, sizeof(AABB));
+	min = D3DXVECTOR3(BIGFLOAT, BIGFLOAT, BIGFLOAT);
+	max = D3DXVECTOR3(-BIGFLOAT, -BIGFLOAT, -BIGFLOAT);
 }
 
 void AABB::extend(const D3DXVECTOR3* min, const D3DXVECTOR3* max)

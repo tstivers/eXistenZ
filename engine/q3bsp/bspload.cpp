@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspload.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
+// $Id: bspload.cpp,v 1.4 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -18,14 +18,21 @@
 
 using namespace q3bsp;
 
-bool BSP::load(char* filename)
+BSP* BSP::load(const std::string& filename)
 {
-	VFile* file = vfs::getFile(filename);
+	VFile* file = vfs::getFile(filename.c_str());
+
 	if(!file)
-		return false;
-	load(file);
+		return NULL;
+
+	BSP* bsp = new BSP();
+	if(!bsp->load(file)) {
+		delete bsp;
+		return NULL;
+	}
+
 	file->close();
-	return true;
+	return bsp;
 }
 
 bool BSP::load(VFile* file)
@@ -104,6 +111,9 @@ bool BSP::load(VFile* file)
 	}
 
 	delete [] tmp_faces;
+
+	sorted_faces = new int[num_faces];
+	sortFaces();
 
 	// ----------------------- load nodes --------------------------------
 	num_nodes = lumps[kNodes].length / sizeof(tBSPNode);
@@ -264,7 +274,7 @@ bool BSP::load(VFile* file)
 		LOG("[BSP::loadBSP] converting patches");
 	}
 	
-	generatePatches();
+	//generatePatches();
 
 	// ------------------------- dump debug info --------------------------
 

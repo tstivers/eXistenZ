@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
+// $Id: render.cpp,v 1.5 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -15,6 +15,7 @@
 #include "q3bsp/bleh.h"
 #include "skybox/skybox.h"
 #include "skybox/jsskybox.h"
+#include "scene/scene.h"
 
 namespace render {
 	int xres;
@@ -52,6 +53,7 @@ namespace render {
 	unsigned int max_node_indicesize;
 
 	SceneGraph scene;
+	scene::Scene* bleh = NULL;
 };
 
 void render::init()
@@ -189,6 +191,13 @@ void render::render()
 
 	// draw the world
 	q3bsp::render();
+
+	if(!bleh) {
+		bleh = scene::Scene::load("maps/q3dm1.bsp");
+		bleh->init();
+	}
+
+	bleh->render();
 
 	// draw other geometry
 	scene.render();

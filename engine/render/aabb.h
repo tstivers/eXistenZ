@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: aabb.h,v 1.2 2003/11/25 22:57:23 tstivers Exp $
+// $Id: aabb.h,v 1.3 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #pragma once
@@ -19,6 +19,7 @@ namespace render {
 		void recalc();
 		void recalcMinMax();
 		void recalcPos();
+		void reset();
 
 		void debugPrint();
 

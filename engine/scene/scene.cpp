@@ -1,5 +1,6 @@
 #include "precompiled.h"
 #include "scene/scene.h"
+#include "scene/scenebsp.h"
 
 namespace scene {
 };
@@ -18,5 +19,5 @@ Scene::~Scene()
 
 Scene* Scene::load(const std::string& name, SCENE_TYPE type)
 {
-	return NULL;
+	return SceneBSP::loadBSP(name);	
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.4 2003/12/05 08:44:56 tstivers Exp $
+// $Id: bleh.h,v 1.5 2003/12/05 13:44:20 tstivers Exp $
 //
 
 #pragma once
@@ -124,7 +124,7 @@ namespace q3bsp {
 
 	public:
 		bool load(VFile* file);
-		bool load(char* filename);
+		static BSP* load(const std::string& filename);
 
 		// render functions
 		void initDeviceObjects();
