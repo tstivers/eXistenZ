@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bsprender.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
+// $Id: bsprender.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -236,6 +236,7 @@ inline void BSP::initRenderState(void)
 		else
 			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
 	
+		render::device->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 		render::device->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
@@ -376,7 +377,7 @@ inline void BSP::renderFace(const int face_index)
 
 	switch(face.type) {
 				case 1:					
-					render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, face.vertex, 0, face.numverts, face.meshvertex, face.nummeshverts / 3);
+					render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, face.vertex, 0, face.numverts, face.meshvertex, face.nummeshverts / 3);					
 					frame_polys += face.nummeshverts / 3;
 					break;
 //					render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, face.vertex, face.numverts - 2);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspconvert.cpp,v 1.2 2003/11/24 00:16:13 tstivers Exp $
+// $Id: bspconvert.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -25,7 +25,7 @@ void q3bsp::convertBSP(BSP& bsp)
 		if((face.type < 0) || (face.type > 3))
 			continue;
 
-		if(render::use_scenegraph) {
+		if(render::use_scenegraph && face.type == 2) {
 			if((face.texture >= 0) && (face.texture <= bsp.num_textures) && bsp.textures[face.texture] && bsp.textures[face.texture]->draw) {
 				render::Mesh* mesh = new render::Mesh();
 				mesh->texture = bsp.textures[face.texture];
@@ -43,12 +43,7 @@ void q3bsp::convertBSP(BSP& bsp)
 
 				for(int i = 0; i < face.numverts; i++) {
 					vertices[i] = bsp.verts[face.vertex + i];
-					if(vertices[i].pos.x < mesh->bounds[0].x) mesh->bounds[0].x = vertices[i].pos.x;
-					if(vertices[i].pos.y < mesh->bounds[0].y) mesh->bounds[0].y = vertices[i].pos.y;
-					if(vertices[i].pos.z < mesh->bounds[0].z) mesh->bounds[0].z = vertices[i].pos.z;
-					if(vertices[i].pos.x > mesh->bounds[1].x) mesh->bounds[1].x = vertices[i].pos.x;
-					if(vertices[i].pos.y > mesh->bounds[1].y) mesh->bounds[1].y = vertices[i].pos.y;
-					if(vertices[i].pos.z > mesh->bounds[1].z) mesh->bounds[1].z = vertices[i].pos.z;
+					mesh->bbox.extend(&(vertices[i].pos));
 				}
 
 				for(int i = 0; i < face.nummeshverts; i++)
@@ -60,6 +55,7 @@ void q3bsp::convertBSP(BSP& bsp)
 
 				render::scene.addStaticMesh(*mesh);
 			}
+			//continue;
 		}
 
 		polylist_value* bucket;

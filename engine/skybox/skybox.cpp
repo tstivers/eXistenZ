@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: skybox.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
+// $Id: skybox.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -130,150 +130,150 @@ void skybox::genBox()
 	// generate front
 	verts[0].pos.x = -x;
 	verts[0].pos.y = -y;
-	verts[0].pos.z = -z;
+	verts[0].pos.z = z;
 	verts[0].tex1.x = 1.0f;
 	verts[0].tex1.y = 1.0f;
 
 	verts[1].pos.x = -x;
 	verts[1].pos.y = y;
-	verts[1].pos.z = -z;
+	verts[1].pos.z = z;
 	verts[1].tex1.x = 1.0f;
 	verts[1].tex1.y = 0.0f;
 
 	verts[2].pos.x = x;
 	verts[2].pos.y = y;
-	verts[2].pos.z = -z;
+	verts[2].pos.z = z;
 	verts[2].tex1.x = 0.0f;
 	verts[2].tex1.y = 0.0f;
 
 	verts[3].pos.x = x;
 	verts[3].pos.y = -y;
-	verts[3].pos.z = -z;
+	verts[3].pos.z = z;
 	verts[3].tex1.x = 0.0f;
 	verts[3].tex1.y = 1.0f;
 
 	// generate back
 	verts[5].pos.x = -x;
 	verts[5].pos.y = -y;
-	verts[5].pos.z = z;
+	verts[5].pos.z = -z;
 	verts[5].tex1.x = 0.0f;
 	verts[5].tex1.y = 1.0f;
 
 	verts[4].pos.x = -x;
 	verts[4].pos.y = y;
-	verts[4].pos.z = z;
+	verts[4].pos.z = -z;
 	verts[4].tex1.x = 0.0f;
 	verts[4].tex1.y = 0.0f;
 
 	verts[7].pos.x = x;
 	verts[7].pos.y = y;
-	verts[7].pos.z = z;
+	verts[7].pos.z = -z;
 	verts[7].tex1.x = 1.0f;
 	verts[7].tex1.y = 0.0f;
 
 	verts[6].pos.x = x;
 	verts[6].pos.y = -y;
-	verts[6].pos.z = z;
+	verts[6].pos.z = -z;
 	verts[6].tex1.x = 1.0f;
 	verts[6].tex1.y = 1.0f;
 
 	// generate left
 	verts[8].pos.x = -x;
 	verts[8].pos.y = y;
-	verts[8].pos.z = z;
+	verts[8].pos.z = -z;
 	verts[8].tex1.x = 1.0f;
 	verts[8].tex1.y = 0.0f;
 
 	verts[9].pos.x = -x;
 	verts[9].pos.y = y;
-	verts[9].pos.z = -z;
+	verts[9].pos.z = z;
 	verts[9].tex1.x = 0.0f;
 	verts[9].tex1.y = 0.0f;
 
 	verts[10].pos.x = -x;
 	verts[10].pos.y = -y;
-	verts[10].pos.z = -z;
+	verts[10].pos.z = z;
 	verts[10].tex1.x = 0.0f;
 	verts[10].tex1.y = 1.0f;
 
 	verts[11].pos.x = -x;
 	verts[11].pos.y = -y;
-	verts[11].pos.z = z;
+	verts[11].pos.z = -z;
 	verts[11].tex1.x = 1.0f;
 	verts[11].tex1.y = 1.0f;
 
 	// generate right
 	verts[13].pos.x = x;
 	verts[13].pos.y = y;
-	verts[13].pos.z = z;
+	verts[13].pos.z = -z;
 	verts[13].tex1.x = 0.0f;
 	verts[13].tex1.y = 0.0f;
 
 	verts[12].pos.x = x;
 	verts[12].pos.y = y;
-	verts[12].pos.z = -z;
+	verts[12].pos.z = z;
 	verts[12].tex1.x = 1.0f;
 	verts[12].tex1.y = 0.0f;
 
 	verts[15].pos.x = x;
 	verts[15].pos.y = -y;
-	verts[15].pos.z = -z;
+	verts[15].pos.z = z;
 	verts[15].tex1.x = 1.0f;
 	verts[15].tex1.y = 1.0f;
 
 	verts[14].pos.x = x;
 	verts[14].pos.y = -y;
-	verts[14].pos.z = z;
+	verts[14].pos.z = -z;
 	verts[14].tex1.x = 0.0f;
 	verts[14].tex1.y = 1.0f;
 
 	// generate top
 	verts[17].pos.x = -x;
 	verts[17].pos.y = y;
-	verts[17].pos.z = -z;
+	verts[17].pos.z = z;
 	verts[17].tex1.x = 1.0f;
 	verts[17].tex1.y = 0.0f;
 
 	verts[16].pos.x = x;
 	verts[16].pos.y = y;
-	verts[16].pos.z = -z;
+	verts[16].pos.z = z;
 	verts[16].tex1.x = 1.0f;
 	verts[16].tex1.y = 1.0f;
 
 	verts[19].pos.x = x;
 	verts[19].pos.y = y;
-	verts[19].pos.z = z;
+	verts[19].pos.z = -z;
 	verts[19].tex1.x = 0.0f;
 	verts[19].tex1.y = 1.0f;
 
 	verts[18].pos.x = -x;
 	verts[18].pos.y = y;
-	verts[18].pos.z = z;
+	verts[18].pos.z = -z;
 	verts[18].tex1.x = 0.0f;
 	verts[18].tex1.y = 0.0f;
 
 	// generate bottom
 	verts[20].pos.x = -x;
 	verts[20].pos.y = -y;
-	verts[20].pos.z = -z;
+	verts[20].pos.z = z;
 	verts[20].tex1.x = 1.0f;
 	verts[20].tex1.y = 1.0f;
 
 	verts[21].pos.x = x;
 	verts[21].pos.y = -y;
-	verts[21].pos.z = -z;
+	verts[21].pos.z = z;
 	verts[21].tex1.x = 1.0f;
 	verts[21].tex1.y = 0.0f;
 
 	verts[22].pos.x = x;
 	verts[22].pos.y = -y;
-	verts[22].pos.z = z;
+	verts[22].pos.z = -z;
 	verts[22].tex1.x = 0.0f;
 	verts[22].tex1.y = 0.0f;
 
 	verts[23].pos.x = -x;
 	verts[23].pos.y = -y;
-	verts[23].pos.z = z;
+	verts[23].pos.z = -z;
 	verts[23].tex1.x = 0.0f;
 	verts[23].tex1.y = 1.0f;
 }
@@ -313,6 +313,7 @@ void skybox::render()
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	} else {
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		render::device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
 

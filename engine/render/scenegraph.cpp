@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: scenegraph.cpp,v 1.1 2003/11/24 00:16:13 tstivers Exp $
+// $Id: scenegraph.cpp,v 1.2 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -38,6 +38,7 @@ MESHHANDLE SceneGraph::addDynamicMesh(Mesh& mesh)
 
 void SceneGraph::acquire()
 {
+	tree->acquire();
 }
 
 void SceneGraph::release()
@@ -45,7 +46,9 @@ void SceneGraph::release()
 }
 
 void SceneGraph::render()
-{
+{	
+	if(render::use_scenegraph)
+		tree->render();
 }
 
 void SceneGraph::finalizeStatic()

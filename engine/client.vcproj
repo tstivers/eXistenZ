@@ -366,6 +366,12 @@
 			<File
 				RelativePath=".\render\scenenode.cpp">
 			</File>
+			<File
+				RelativePath=".\render\shapes.cpp">
+			</File>
+			<File
+				RelativePath=".\render\shapes.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="interface"

@@ -1,12 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: scenegraph.h,v 1.1 2003/11/24 00:16:13 tstivers Exp $
+// $Id: scenegraph.h,v 1.2 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #pragma once
 
 #include "texture/texture.h"
+#include "render/aabb.h"
 
 namespace render {
 
@@ -18,7 +19,7 @@ namespace render {
 		Mesh();
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
-		D3DXVECTOR3 bounds[2];
+		AABB bbox;
 		D3DXMATRIX *transform;
 		unsigned int vertice_format;
 		unsigned int vertice_count;
@@ -56,7 +57,7 @@ namespace render {
 	public:
 		SceneNode(SceneNode* parent);
 		~SceneNode();
-		D3DXVECTOR3 bounds[2];
+		AABB bbox;
 
 		void addStaticMesh(Mesh& mesh);
 		void addDynamicMesh(Mesh& mesh);

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: bspload.cpp,v 1.2 2003/11/20 03:08:40 tstivers Exp $
+// $Id: bspload.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -56,11 +56,11 @@ bool BSP::load(VFile* file)
 	for(int i = 0; i < num_verts; i++) {
 		verts[i].pos.x = tmp_verts[i].vPosition[0];
 		verts[i].pos.y = tmp_verts[i].vPosition[2];
-		verts[i].pos.z = -tmp_verts[i].vPosition[1];
+		verts[i].pos.z = tmp_verts[i].vPosition[1];
 
 		verts[i].nrm.x = tmp_verts[i].vNormal[0];
 		verts[i].nrm.y = tmp_verts[i].vNormal[2];
-		verts[i].nrm.z = -tmp_verts[i].vNormal[1];
+		verts[i].nrm.z = tmp_verts[i].vNormal[1];
 
 		verts[i].diffuse = D3DCOLOR_ARGB(tmp_verts[i].color[3], tmp_verts[i].color[0], tmp_verts[i].color[1], tmp_verts[i].color[2]);
 
@@ -96,7 +96,7 @@ bool BSP::load(VFile* file)
 		faces[i].nummeshverts = tmp_faces[i].numMeshVerts;
 		faces[i].nrm.x = tmp_faces[i].vNormal[0];
 		faces[i].nrm.y = tmp_faces[i].vNormal[2];
-		faces[i].nrm.z = -tmp_faces[i].vNormal[1];
+		faces[i].nrm.z = tmp_faces[i].vNormal[1];
 		faces[i].texture = tmp_faces[i].textureID;
 		faces[i].lightmap = tmp_faces[i].lightmapID;
 		faces[i].size[0] = tmp_faces[i].size[0];
@@ -121,10 +121,10 @@ bool BSP::load(VFile* file)
 
 		nodes[i].min.x = (float)tmp_nodes[i].min[0];
 		nodes[i].min.y = (float)tmp_nodes[i].min[2];
-		nodes[i].min.z = -(float)tmp_nodes[i].min[1];
+		nodes[i].min.z = (float)tmp_nodes[i].min[1];
 		nodes[i].max.x = (float)tmp_nodes[i].max[0];
 		nodes[i].max.y = (float)tmp_nodes[i].max[2];
-		nodes[i].max.z = -(float)tmp_nodes[i].max[1];
+		nodes[i].max.z = (float)tmp_nodes[i].max[1];
 
 	}
 
@@ -148,10 +148,10 @@ bool BSP::load(VFile* file)
 
 		leafs[i].min.x = (float)tmp_leafs[i].min[0];
 		leafs[i].min.y = (float)tmp_leafs[i].min[2];
-		leafs[i].min.z = -(float)tmp_leafs[i].min[1];
+		leafs[i].min.z = (float)tmp_leafs[i].min[1];
 		leafs[i].max.x = (float)tmp_leafs[i].max[0];
 		leafs[i].max.y = (float)tmp_leafs[i].max[2];
-		leafs[i].max.z = -(float)tmp_leafs[i].max[1];
+		leafs[i].max.z = (float)tmp_leafs[i].max[1];
 	}
 
 	delete [] tmp_leafs;
@@ -213,7 +213,7 @@ bool BSP::load(VFile* file)
 	for(int i = 0; i < num_planes; i++) {		
 		planes[i].nrm.x = tmp_planes[i].vNormal[0];
 		planes[i].nrm.y = tmp_planes[i].vNormal[2];
-		planes[i].nrm.z = -tmp_planes[i].vNormal[1];
+		planes[i].nrm.z = tmp_planes[i].vNormal[1];
 		planes[i].dst = tmp_planes[i].d;
 	}
 

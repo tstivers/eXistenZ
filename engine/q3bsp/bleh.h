@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.h
 // rendering system interface
-// $Id: bleh.h,v 1.2 2003/11/20 03:08:39 tstivers Exp $
+// $Id: bleh.h,v 1.3 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #pragma once
@@ -11,6 +11,8 @@
 #include "q3bsp/bspcollide.h"
 
 class VFile;
+
+#define BSPVERTEXF ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1) )
 
 namespace q3bsp {
 	

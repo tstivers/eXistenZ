@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // render.cpp
 // rendering system implementation
-// $Id: render.cpp,v 1.3 2003/11/24 00:16:13 tstivers Exp $
+// $Id: render.cpp,v 1.4 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -132,10 +132,10 @@ void render::init()
 	jsskybox::init();
 
 	use_scenegraph = 1;
-	max_node_level = 100;
-	max_node_meshes = 200;
-	max_node_vertices = 1500;
-	max_node_polys = 1200;
+	max_node_level = 3;
+	max_node_meshes = 2000;
+	max_node_vertices = 15000;
+	max_node_polys = 12000;
 	max_node_vertsize = 128 * 1024;
 	max_node_indicesize = 128 * 1024;
 }
@@ -157,14 +157,14 @@ void render::setMatrices()
 	D3DXMatrixIdentity(&view);
 
 	D3DXMatrixTranslation(&pos, cam_pos.x * -1, cam_pos.y * - 1 , cam_pos.z * -1);
-	D3DXMatrixRotationY(&rotx, cam_rot.x * (D3DX_PI / 180.0f)); 
-	D3DXMatrixRotationX(&roty, cam_rot.y * (D3DX_PI / 180.0f)); 
+	D3DXMatrixRotationY(&rotx, cam_rot.x * -1 * (D3DX_PI / 180.0f)); 
+	D3DXMatrixRotationX(&roty, cam_rot.y * -1 * (D3DX_PI / 180.0f)); 
 
 	view *= pos;
 	view *= rotx;
 	view *= roty;
 
-	D3DXMatrixPerspectiveFovRH( &projection, D3DX_PI/4, (float)xres / (float)yres, 1.0f, 5000.0f );
+	D3DXMatrixPerspectiveFovLH( &projection, D3DX_PI/4, (float)xres / (float)yres, 1.0f, 10000.0f );
 
 	device->SetTransform( D3DTS_WORLD, &world );
 	device->SetTransform( D3DTS_VIEW, &view );
@@ -189,6 +189,9 @@ void render::render()
 
 	// draw the world
 	q3bsp::render();
+
+	// draw other geometry
+	scene.render();
 
 	// draw any markers
 	render::drawMarkers();

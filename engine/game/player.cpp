@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id: player.cpp,v 1.2 2003/11/18 18:39:42 tstivers Exp $
+// $Id: player.cpp,v 1.3 2003/11/25 22:57:23 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -353,7 +353,7 @@ void Player::process_moves()
 	}
 
 	if(moving[MOVE_BACK] && moving[MOVE_RIGHT]) {
-		acceleration_vect = makeAccelVect(rot.x + 180 - 45);
+		acceleration_vect = makeAccelVect(rot.x - 180 - 45);
 	}
 
 	if(moving[MOVE_JUMP]) {
@@ -383,8 +383,8 @@ void Player::process_moves()
 	}
 
 	// do the actual movement
-	actual_pos.x -= vel.x * ((float)timer::delta_ms / (1000.0f / 600.f));	
-	actual_pos.z -= vel.z * ((float)timer::delta_ms / (1000.0f / 600.f));
+	actual_pos.x += vel.x * ((float)timer::delta_ms / (1000.0f / 600.f));	
+	actual_pos.z += vel.z * ((float)timer::delta_ms / (1000.0f / 600.f));
 
 	// clear the move flags
 	for(int i = 0; i < MOVE_MAX; i++)
@@ -394,7 +394,7 @@ void Player::process_moves()
 D3DXVECTOR3 Player::makeAccelVect(const float x_rot)
 {
 	return D3DXVECTOR3(
-		(float)sin(x_rot * -1.0f * (D3DX_PI / 180.0f)), 
+		(float)sin(x_rot * (D3DX_PI / 180.0f)), 
 		0, 
 		(float)cos(x_rot * (D3DX_PI / 180.0f)));
 }
