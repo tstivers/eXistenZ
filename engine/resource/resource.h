@@ -2,9 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by eXistenZ Engine Client.rc
 //
-#define IDD_DIALOG1                     101
 #define IDB_BITMAP1                     102
-#define IDB_LUXLOGO                     102
 #define IDI_ICON1                       103
 #define IDI_LUXICON                     103
 #define IDI_ICON2                       104
