@@ -188,8 +188,7 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 						
 			if ( status == MS::kSuccess )
 			{
-				xVertex mesh_vertices[3];
-				int current_indice = mesh->indices.size();
+				xVertex mesh_vertices[3];				
 
 				// Get face-relative vertex indices for this triangle
 				localIndex = GetLocalIndex( polygonVertices, triangleVertices );
@@ -224,11 +223,25 @@ void exportStatic::exportMesh(const MDagPath& dagPath)
 					mesh_vertices[i].color.a = color.a;
 
 					// add vertice to object
-					// TODO: check if this vertice already exists and use it if it does
-					mesh->vertices.push_back(mesh_vertices[i]);
-
-					// add indice to object
-					mesh->indices.push_back(current_indice + i);
+					if(options.optimize_meshes) {
+						bool found = false;
+						for(unsigned j = 0; j < mesh->vertices.size(); j++) {
+							if(mesh_vertices[i] == mesh->vertices[j]) {
+								found = true;
+								mesh->indices.push_back(j);
+								break;
+							}
+						}
+						
+						if(!found) {
+							mesh->vertices.push_back(mesh_vertices[i]);
+							mesh->indices.push_back(mesh->vertices.size() - 1);
+						}
+					}
+					else {
+						mesh->vertices.push_back(mesh_vertices[i]);
+						mesh->indices.push_back(mesh->vertices.size() - 1);
+					}
 				}
 			}
 		}		
