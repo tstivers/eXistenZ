@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.h
 // console class definition
-// $Id: settings.h,v 1.2 2003/10/08 05:16:07 tstivers Exp $
+// $Id: settings.h,v 1.3 2003/10/08 16:38:58 tstivers Exp $
 //
 
 #pragma once
@@ -16,7 +16,7 @@ namespace settings {
 		}
 	};
 
-	typedef std::hash_map<char*, Setting*, hash_char_ptr> settings_hash_map;
+	typedef stdext::hash_map<char*, Setting*, hash_char_ptr> settings_hash_map;
 
 	typedef bool (* setFunction)(Setting* setting, void* value);
 	typedef bool (* getFunction)(Setting* setting, void** value);

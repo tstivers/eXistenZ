@@ -8,5 +8,7 @@ bin/*.pcc
 bin/*.pch
 bin/*.pdb
 bin/BuildLog.htm
+bin/debug
+bin/release
 data/*
 data/textures/*

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // console.cpp
 // console class
-// $Id: console.cpp,v 1.2 2003/10/08 05:16:07 tstivers Exp $
+// $Id: console.cpp,v 1.3 2003/10/08 16:38:58 tstivers Exp $
 //
 
 #include "precompiled.h"
@@ -33,7 +33,7 @@ namespace con {
 		}
 	};
 
-	typedef std::hash_map<char*, CommandEntry*, hash_char_ptr> command_map_t;
+	typedef stdext::hash_map<char*, CommandEntry*, hash_char_ptr> command_map_t;
 	command_map_t command_map;
 
 	void traceLoggerCallback(U32 flags, void *userdef, const char* message);
