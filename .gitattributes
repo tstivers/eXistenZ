@@ -256,10 +256,6 @@ lib/tinyxml/tinystr.h eol=crlf
 lib/tinyxml/tinyxml.h eol=crlf
 lib/tinyxml/tinyxml.lib -text
 lib/tinyxml/tinyxmld.lib -text
-lib/zlib/debug/zlibd.lib -text
-lib/zlib/include/zconf.h eol=crlf
-lib/zlib/include/zlib.h eol=crlf
-lib/zlib/release/zlib.lib -text
 tools/buildnuminc.exe -text
 tools/compile.rsp eol=crlf
 tools/env.bat eol=crlf
