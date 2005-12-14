@@ -39,7 +39,8 @@ namespace render {
 	extern bool sky_visible;
 	extern int diffuse;
 	extern int lighting;
-	extern IDirect3DDevice9* device;	
+	extern IDirect3DDevice9* device;
+	extern IDirect3DSwapChain9* swapchain;
 
 	extern int use_scenegraph;
 	extern unsigned int max_node_level;

@@ -259,3 +259,6 @@ tools/opt.rsp eol=crlf
 vc7/client.vcproj eol=crlf
 vc7/eXistenZ[!!-~]Engine.sln eol=crlf
 vc7/maya_export.vcproj eol=crlf
+vc8/client.vcproj eol=crlf
+vc8/eXistenZ[!!-~]Engine.sln eol=crlf
+vc8/maya_export.vcproj eol=crlf

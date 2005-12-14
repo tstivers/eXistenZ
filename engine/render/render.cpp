@@ -43,6 +43,7 @@ namespace render {
 	int wait_vtrace;
 	bool sky_visible;
 	IDirect3DDevice9* device;
+	IDirect3DSwapChain9* swapchain;
 	int bsp_rendermethod;
 	int diffuse;
 	int lighting;	
@@ -249,7 +250,10 @@ void render::render()
 	d3d::end();
 	
 	// show it rarr
-	d3d::present();
+	if(swapchain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_DONOTWAIT) == D3DERR_WASSTILLDRAWING) {
+		LOG("[render::render()] Had to wait for drawing");
+		d3d::present();
+	}
 }
 
 void render::stop()

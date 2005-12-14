@@ -37,7 +37,7 @@
 #include "common/smart_ptr.h"
 #include "common/smart_cptr.h"
 #include "common/mystring.h"
-#include "jsapi.h"
+#include "js32.h"
 
 #include "d3d9.h"
 #include "d3dx9core.h"
@@ -46,7 +46,7 @@
 
 #include "resource/resource.h"
 
-#include "zlib/include/zlib.h"
+#include "zlib/src/zlib.h"
 
 
 #define ASSERT(f) (void)((f) || (DebugBreak(), 0))

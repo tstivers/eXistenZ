@@ -22,3 +22,8 @@ data/textures/*
 /eXistenZ[!!-~]Engine.ncb
 vc7/*.ncb
 vc7/*.suo
+vc8/*.ncb
+vc8/*.suo
+vc8/*.vcproj.*
+vc8/debug
+vc8/release

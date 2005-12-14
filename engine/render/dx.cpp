@@ -46,7 +46,7 @@ bool d3d::init()
 	}
 
 	if(render::wait_vtrace)
-		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	else
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 	
@@ -67,18 +67,22 @@ bool d3d::init()
 		}
 	}
 
-	if(FAILED((d3d->CreateDevice(
+	if(FAILED(d3d->CreateDevice(
 		adapter, 
 		devicetype, 
 		appwindow::getHwnd(),
 		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
 		&d3dpp, 
-		&d3dDevice)))) {
+		&d3dDevice))) {
 			MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
 			exit(1);
 		}
 
 	render::device = d3dDevice;
+	if(FAILED(render::device->GetSwapChain(0, &render::swapchain))) {
+		MessageBox(NULL, "[d3d::init] unable to get swapchain", "ERROR", MB_OK);
+		exit(1);		
+	}
 
 	return true;
 }
@@ -128,7 +132,7 @@ void d3d::release()
 ID3DXFont* d3d::createFont(HFONT font)
 {
 	ID3DXFont* dxfont;
-	if(D3DXCreateFont(d3dDevice, font, &dxfont) != D3D_OK)
+	//if(D3DXCreateFont(d3dDevice, font, &dxfont) != D3D_OK)
 		return NULL;
 
 	return dxfont;
