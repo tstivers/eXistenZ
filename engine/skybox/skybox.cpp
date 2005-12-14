@@ -79,7 +79,7 @@ void skybox::acquire()
 		}
 
 	void* vertbuf;
-	if(FAILED(dxvertbuf->Lock(0, 4 * 6 * sizeof(SkyVertex), &vertbuf, D3DLOCK_DISCARD))) {
+	if(FAILED(dxvertbuf->Lock(0, 4 * 6 * sizeof(SkyVertex), &vertbuf, 0))) {
 		LOG("[skybox::acquire] failed to lock vertex buffer");
 		return;
 	}
@@ -292,7 +292,7 @@ void skybox::render()
 	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
 	render::device->SetRenderState( D3DRS_LIGHTING, FALSE );
 	render::device->SetRenderState( D3DRS_AMBIENT, 0);
-	render::device->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
+	render::device->SetRenderState( D3DRS_ZENABLE, TRUE );
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
 

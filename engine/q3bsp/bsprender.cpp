@@ -185,7 +185,7 @@ inline void BSP::initRenderState(void)
 	render::device->SetRenderState( D3DRS_ALPHATESTENABLE, FALSE );
 	render::device->SetRenderState( D3DRS_LIGHTING, FALSE );
 	render::device->SetRenderState( D3DRS_AMBIENT, 0x00000000);
-	render::device->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
+	render::device->SetRenderState( D3DRS_ZENABLE, TRUE );
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
 

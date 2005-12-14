@@ -367,7 +367,7 @@ HRESULT CD3DFont::RestoreDeviceObjects()
         m_pd3dDevice->SetTexture( 0, m_pTexture );
 
         if ( D3DFONT_ZENABLE & m_dwFontFlags )
-            m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, D3DZB_USEW );
+            m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
         else
             m_pd3dDevice->SetRenderState( D3DRS_ZENABLE, FALSE );
 
