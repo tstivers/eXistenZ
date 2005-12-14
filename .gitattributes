@@ -195,9 +195,6 @@ engine/vfs/zipfile.cpp eol=crlf
 engine/vfs/zipfile.h eol=crlf
 engine/vfs/zippath.cpp eol=crlf
 engine/vfs/zippath.h eol=crlf
-lib/NvTriStrip/debug/NvTriStrip.lib -text
-lib/NvTriStrip/include/NvTriStrip.h eol=crlf
-lib/NvTriStrip/release/NvTriStrip.lib -text
 lib/buildnum.lib -text
 lib/js/debug/fdlibm.lib -text
 lib/js/debug/js32.exp -text
