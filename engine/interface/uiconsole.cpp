@@ -104,7 +104,7 @@ void Console::render()
 
 	scrollback_iter line = scrollback.begin();
 
-	while(curr_y > top)
+	while((curr_y > top) && (line != scrollback.end()))
 	{	
 		d3dfont->DrawText(x, curr_y, color, *line, wireframe ? D3DFONT_WIREFRAME : 0);
 		line++;
