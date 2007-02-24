@@ -17,7 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "js32", "..\lib\js32\js32.vc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Libs", "External Libs", "{67764B00-DAA7-4B94-80FA-67E675AEB3D9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\jsautocfg\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\js32\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
