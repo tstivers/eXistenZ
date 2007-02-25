@@ -3,10 +3,10 @@ log("loading configuration...");
 // standard config settings
 system.render.resolution.bitdepth = 32;
 system.render.resolution.refreshrate = 60;
-system.render.wait_vtrace = 0;
-system.render.resolution.x = 1024;
-system.render.resolution.y = 768;
-system.render.fullscreen = 0;
+system.render.wait_vtrace = 1;
+system.render.resolution.x = 1280;
+system.render.resolution.y = 1024;
+system.render.fullscreen = 1;
 system.vfs.addPath("../data/");
 system.vfs.addPath("c:/games/eXistenZ/data");
 system.vfs.addPath("c:/games/eXistenZ/data/pak0.zip");
