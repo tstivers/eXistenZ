@@ -83,6 +83,8 @@ engine/mesh/meshsystemcache.cpp eol=crlf
 engine/mesh/meshsystemcache.h eol=crlf
 engine/mesh/textloader.cpp eol=crlf
 engine/mesh/textloader.h eol=crlf
+engine/physics/physics.cpp -text
+engine/physics/physics.h -text
 engine/platform/types.h eol=crlf
 engine/q3bsp/bleh.cpp eol=crlf
 engine/q3bsp/bleh.h eol=crlf

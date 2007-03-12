@@ -20,6 +20,8 @@
 #define TEXNAME (collider.fraction != 1.0f ? q3bsp::bsp->textures[collider.brush_contents]->name : "none")
 #define LOGPOS(a,b) a.x, a.y, a.z, b.x, b.y, b.z
 #define LOGCOL(label, start, end) FRAMEDO(con::log(con::FLAG_DEBUG, "  %-12s [%1.2f] (%2.2f, %2.2f, %2.2f) - (%2.2f, %2.2f, %2.2f) : %s[%i]", label, collider.fraction, LOGPOS(start, end), TEXNAME, collider.brush_id))
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+#define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
 
 namespace game {
 	Player player;
@@ -368,7 +370,7 @@ void Player::process_moves()
 		float tmp_y = vel.y;
 		D3DXVECTOR3 stopped(0, 0, 0);
 		vel.y = 0;
-		D3DXVec3Lerp(&vel, &vel, &stopped, min(1.0f, game::std_friction * ((float)timer::delta_ms / (1000.0f / 600.f))));
+		D3DXVec3Lerp(&vel, &vel, &stopped, MIN(1.0f, game::std_friction * ((float)timer::delta_ms / (1000.0f / 600.f))));
 		vel.y = tmp_y;
 		if((vel.x > -MIN_VELOCITY) && (vel.x < MIN_VELOCITY))
 			vel.x = 0;
@@ -378,7 +380,7 @@ void Player::process_moves()
 		float tmp_y = vel.y;
 		vel.y = 0;
 		acceleration_vect *= player_speed;
-		D3DXVec3Lerp(&vel, &vel, &acceleration_vect, min(1.0f, game::player_accel * ((float)timer::delta_ms / (1000.0f / 600.f))));
+		D3DXVec3Lerp(&vel, &vel, &acceleration_vect, MIN(1.0f, game::player_accel * ((float)timer::delta_ms / (1000.0f / 600.f))));
 		vel.y = tmp_y;
 	}
 

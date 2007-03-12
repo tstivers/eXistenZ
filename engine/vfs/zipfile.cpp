@@ -3,7 +3,11 @@
 #include "vfs.h"
 #include "zipfile.h"
 
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+#define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
+
 namespace vfs {
+
 };
 
 vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
@@ -61,7 +65,7 @@ U32 vfs::ZipFile::read(void* buffer, U32 size)
 {
 	byte* buf = (byte*)this->buffer;
 	byte* src = (byte*)bufptr;
-	byte* end = min((src + size), (buf + this->size));
+	byte* end = MIN((src + size), (buf + this->size));
 	memcpy(buffer, src, end - src);
 	bufptr = (void*)end;
 	return (U32)(end - src);

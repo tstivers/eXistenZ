@@ -85,7 +85,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 		JS_SetReservedSlot(gScriptEngine.GetContext(), obj, 0, PRIVATE_TO_JSVAL(props));
 	}
 
-	props->insert(propmap_hash::value_type(strdup(propname), setting));
+	props->insert(propmap_hash::value_type(_strdup(propname), setting));
 	
 	return true;
 }

@@ -122,7 +122,7 @@ bool Shader::load(vfs::IFilePtr file)
 {
 	char buf[256];
 
-	name = strdup(file->filename);
+	name = _strdup(file->filename);
 	line = 0;
 	flags = 0;
 
@@ -151,7 +151,7 @@ bool Shader::load(vfs::IFilePtr file)
 
 		int command_idx;
 		for(command_idx = 0; commands[command_idx].command; command_idx++)
-			if(!stricmp(name, commands[command_idx].command)) {
+			if(!_stricmp(name, commands[command_idx].command)) {
 				flags |= commands[command_idx].flag;
 				if(commands[command_idx].parse)
 					commands[command_idx].parse(this, argc, argv);

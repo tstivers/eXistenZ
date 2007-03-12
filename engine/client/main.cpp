@@ -31,6 +31,7 @@
 #include "scene/scene.h"
 #include "scene/jsscene.h"
 #include "entity/jsentity.h"
+#include "physics/physics.h"
 
 //extern unsigned long  _build_num;
 
@@ -76,6 +77,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	scene::init();
 	jsscene::init();
 	jsentity::init();
+	physics::init();
 
 	// add some generic system settings
 	addSystemSettings();
@@ -113,6 +115,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	settings::release();
 	//jscon::release();
 	//con::release();
+	physics::release();
 	
 	//LOG2("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
 	

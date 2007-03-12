@@ -33,7 +33,7 @@ void settings::release(void)
 void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, getFunction getter, void* data)
 {
 	Setting* setting = new Setting();
-	setting->name = strdup(name);
+	setting->name = _strdup(name);
 	setting->type = type;
 	setting->flags = flags;
 	setting->data = data;

@@ -19,6 +19,8 @@
 #define LOGERROR(x) con::log(con::FLAG_ERROR, x)
 #define LOGERROR2(x,y) con::log(con::FLAG_ERROR, x, y)
 #define LOGERROR3(x,y,z) con::log(con::FLAG_ERROR, x, y, z)
+#define LOGERROR4(x,y,z,a) con::log(con::FLAG_ERROR, x, y, z, a)
+#define LOGERROR5(x,y,z,a,b) con::log(con::FLAG_ERROR, x, y, z, a, b)
 
 #define LOGDEBUG(x) con::log(con::FLAG_DEBUG, x)
 #define LOGDEBUG2(x,y) con::log(con::FLAG_DEBUG, x, y)

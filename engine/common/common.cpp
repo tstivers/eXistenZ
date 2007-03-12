@@ -32,7 +32,7 @@ void load_alias_list(const char* filename, alias_list& map)
 
 		//LOG3("[texture::load_map] \"%s\" = \"%s\"", key, value);
 
-		map.push_back(new pair(strdup(key), strdup(value)));
+		map.push_back(new pair(_strdup(key), _strdup(value)));
 	}
 }
 

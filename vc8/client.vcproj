@@ -43,7 +43,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -69,7 +69,7 @@
 				Name="VCLinkerTool"
 				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib PhysXLoader.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -1080,6 +1080,18 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\staticentity.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="physics"
+			>
+			<File
+				RelativePath="..\engine\physics\physics.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\physics.h"
 				>
 			</File>
 		</Filter>

@@ -17,7 +17,7 @@
 namespace q3shader {
 	struct eqstr {
 		bool operator() (const char* s1, const char* s2) const {
-			return stricmp(s1, s2) == 0;
+			return _stricmp(s1, s2) == 0;
 		}
 	};
 
@@ -96,7 +96,7 @@ void q3shader::parseShader(char* filename)
 				level--;
 			else if(this_token[0] && level == 0) {
 				LOG2("[q3shader::parseShader] adding \"%s\"", this_token);
-				shader_file_map.insert(alias_hash_map::value_type(strdup(this_token), strdup(filename)));
+				shader_file_map.insert(alias_hash_map::value_type(_strdup(this_token), _strdup(filename)));
 			}
 		}
 	}
@@ -129,7 +129,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 		Q3Shader* shader = new Q3Shader(name);
 		LOG3("[q3shader::getShader] loading %s from file %s", name, (*map_iter).second);
 		shader->load((*map_iter).second);
-		shader_cache.insert(shader_hash_map::value_type(strdup(name), shader));		
+		shader_cache.insert(shader_hash_map::value_type(_strdup(name), shader));		
 		return shader;
 	}
 
@@ -140,7 +140,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 		Q3Shader* shader = new Q3Shader(name);
 		shader->texture.push_back(texture);
 		shader->flags = FLAG_STD_TEXTURE;
-		shader_cache.insert(shader_hash_map::value_type(strdup(name), shader));
+		shader_cache.insert(shader_hash_map::value_type(_strdup(name), shader));
 		return shader;
 	}
 	

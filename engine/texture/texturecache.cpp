@@ -96,7 +96,7 @@ texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 		if(texture) {
 			// set the fake name
 			free(texture->name);
-			texture->name = strdup(name);
+			texture->name = _strdup(name);
 			texture_cache.insert(texture_hash_map::value_type(texture->name, texture));
 			return texture;
 		}
@@ -187,7 +187,7 @@ done:
 	DXTexture* dxtex = new DXTexture();
 	dxtex->texture = texture;
 	dxtex->shader = shader;
-	dxtex->name = strdup(name);
+	dxtex->name = _strdup(name);
 	if(shader)
 		shader->init(dxtex);
 

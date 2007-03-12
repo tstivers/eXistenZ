@@ -74,7 +74,7 @@ void con::addCommand(char* name, ConsoleCommand command, void* userdef)
 	cmd->cmd_args = NULL;
 	cmd->cmd_noargs = NULL;
 	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
 }
 
 void con::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
@@ -84,7 +84,7 @@ void con::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
 	cmd->cmd_args = command;
 	cmd->cmd_noargs = NULL;
 	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
 }
 
 void con::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
@@ -94,7 +94,7 @@ void con::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
 	cmd->cmd_args = NULL;
 	cmd->cmd_noargs = command;
 	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
 }
 
 

@@ -30,7 +30,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 	char* token = info;
 	char* this_token;
 	while(this_token = getToken(&token, ":[")) {
-		if(!stricmp(this_token, "POS")) {
+		if(!_stricmp(this_token, "POS")) {
 			this_token = getToken(&token, ",");
 			vertex->pos.x = (float)atof(this_token);
 			this_token = getToken(&token, ",");
@@ -40,7 +40,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			continue;
 		}
 
-		if(!stricmp(this_token, "NRM")) {
+		if(!_stricmp(this_token, "NRM")) {
 			this_token = getToken(&token, ",");
 			vertex->nrm.x = (float)atof(this_token);
 			this_token = getToken(&token, ",");
@@ -50,7 +50,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			continue;
 		}
 
-		if(!stricmp(this_token, "COL")) {
+		if(!_stricmp(this_token, "COL")) {
 			this_token = getToken(&token, ",");
 			D3DXCOLOR color;
 			color.r = (float)atof(this_token);
@@ -64,7 +64,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			continue;
 		}
 
-		if(!stricmp(this_token, "UV")) {
+		if(!_stricmp(this_token, "UV")) {
 			this_token = getToken(&token, ":");
 			this_token = getToken(&token, ",");
 			vertex->tex1.x = (float)atof(this_token);
@@ -101,23 +101,23 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 		char* this_token;
 		this_token = getToken(&token, " ");
 		
-		if(!stricmp(this_token, "MATERIAL:")) {
+		if(!_stricmp(this_token, "MATERIAL:")) {
 			mesh->material_name = token;
 			mesh->texture = texture::getTexture(token);
 		}
 		
-		if(!stricmp(this_token, "VERTICEFORMAT:")) {
+		if(!_stricmp(this_token, "VERTICEFORMAT:")) {
 			//mesh->vertice_format = fvfFromString(token);
 			mesh->vertice_format = BSPVertex::FVF;
 		}
 
-		if(!stricmp(this_token, "VERTICECOUNT:")) {
+		if(!_stricmp(this_token, "VERTICECOUNT:")) {
 			mesh->vertice_count = atoi(token);
 			// TODO: switch based on fvf value
 			mesh->vertices = new Vertex[mesh->vertice_count];
 		}
 
-		if(!stricmp(this_token, "INDICECOUNT:")) {
+		if(!_stricmp(this_token, "INDICECOUNT:")) {
 			mesh->indice_count = atoi(token);
 			mesh->indices = new unsigned short[mesh->indice_count];
 		}
@@ -167,7 +167,7 @@ MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
 		char* this_token;
 		this_token = getToken(&token, " ");
 
-		if(!stricmp(this_token, "MESH:")) {
+		if(!_stricmp(this_token, "MESH:")) {
 			Mesh* mesh = getMesh(std::string(token));
 			if(!mesh) {
 				LOG3("[mesh::loadMeshSystem] failed to load mesh %s for system %s",

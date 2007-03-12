@@ -109,7 +109,7 @@ char* input::keyName(int id) {
 
 int input::keyCode(char* name) {	
 	for(int key_index = 0; keys[key_index].value != -1; key_index++)
-		if(!stricmp(keys[key_index].name, name))
+		if(!_stricmp(keys[key_index].name, name))
 			return(keys[key_index].value);
 
 	return -1;

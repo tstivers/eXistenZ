@@ -5,7 +5,7 @@
 //
 
 #define VC_EXTRALEAN
-
+#define NOMINMAX
 #include <windows.h>
 #include <stdio.h>
 #include <io.h>

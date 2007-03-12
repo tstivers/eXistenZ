@@ -11,7 +11,7 @@ using namespace shader;
 
 Shader::Shader(const char* name)
 {
-	this->name = strdup(name);
+	this->name = _strdup(name);
 	flags = 0;
 }
 
