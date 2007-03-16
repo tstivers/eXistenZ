@@ -167,9 +167,11 @@ int mainloop()
 		if(!gActive)
 			WaitMessage();
 		else {
-			timer::doTick();
+			timer::doTick();			
 			input::doTick();
+			physics::getResults();
 			game::doTick();
+			physics::startSimulation();
 			render::render();
 		}
 	}

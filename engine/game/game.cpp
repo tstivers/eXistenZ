@@ -21,6 +21,7 @@
 #include "vfs/vfs.h"
 #include "vfs/file.h"
 #include "Scene/scene.h"
+#include "physics/physics.h"
 
 
 namespace game {
@@ -231,6 +232,7 @@ bool game::startMap(char* name)
 		gScriptEngine.RunScript(file);
 	}
 
+	physics::acquire();
 	render::scene->acquire();
 
 	return true;
