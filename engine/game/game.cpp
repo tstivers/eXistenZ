@@ -233,6 +233,7 @@ bool game::startMap(char* name)
 	}
 
 	physics::acquire();
+	physics::addStaticSceneMesh(physics::BSPMeshDesc mesh(render::scene));
 	render::scene->acquire();
 
 	return true;
