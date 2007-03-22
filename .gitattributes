@@ -198,4 +198,3 @@ engine/vfs/zippath.h eol=crlf
 tools/env.bat eol=crlf
 vc8/client.vcproj eol=crlf
 vc8/eXistenZ[!!-~]Engine.sln eol=crlf
-vc8/maya_export.vcproj eol=crlf
