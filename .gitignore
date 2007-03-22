@@ -20,8 +20,6 @@ bin/maya_release
 data/*
 data/textures/*
 /eXistenZ[!!-~]Engine.ncb
-vc7/*.ncb
-vc7/*.suo
 vc8/*.ncb
 vc8/*.suo
 vc8/*.vcproj.*
