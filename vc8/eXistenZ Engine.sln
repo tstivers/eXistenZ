@@ -8,8 +8,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eXistenZ Engine Client", "c
 		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {D9BE4917-EFC7-495B-AB71-6F5CFD99B682}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maya_export", "maya_export.vcproj", "{1B5DBB5B-80F7-48AE-BB21-FA489411BBA2}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\lib\zlib\zlib.vcproj", "{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nvtristrip", "..\lib\nvtristrip\nvtristrip.vcproj", "{4B3A1F6D-AEE3-4C47-A34A-531563F91758}"
