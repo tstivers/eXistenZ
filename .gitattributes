@@ -84,7 +84,6 @@ engine/mesh/textloader.cpp eol=crlf
 engine/mesh/textloader.h eol=crlf
 engine/physics/meshdesc.cpp -text
 engine/physics/meshdesc.h -text
-engine/physics/meshdescimpl.cpp -text
 engine/physics/meshdescimpl.h -text
 engine/physics/physics.cpp -text
 engine/physics/physics.h -text

@@ -1,5 +1,9 @@
 #pragma once
 
+namespace scene {
+	class SceneBSP;
+}
+
 namespace physics {
 	
 	typedef enum {
@@ -14,11 +18,11 @@ namespace physics {
 		
 		virtual bool cook() = 0;
 	
-	private:
+	protected:
 		char* name;
 		mesh_desc_t type;	
 	};
 	
 	//MeshDesc* createMeshDesc(char* name, Entity* entity);
-	MeshDesc* createMeshDesc(const char* name, const Q3BSP::BSP* bsp);
+	MeshDesc* createMeshDesc(const char* name, scene::SceneBSP* scene);
 }

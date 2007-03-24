@@ -1,19 +1,26 @@
 #include "precompiled.h"
 #include "physics/meshdesc.h"
+#include "physics/meshdescimpl.h"
 #include "physics/physics.h"
 #include "console/console.h"
+#include "q3bsp/bsp.h"
+#include "scene/scene.h"
+#include "scene/scenebsp.h"
 #include "NxPhysics.h"
+#include "NxCooking.h"
 
 namespace physics {
 	extern NxCookingInterface *gCooking;
 }
 
-MeshDesc* physics::createMeshDesc(const char* name, const Q3BSP::BSP* bsp) {
-	return new BSPMeshDescImpl(name, bsp);
+using namespace physics;
+
+MeshDesc* physics::createMeshDesc(const char* name, scene::SceneBSP* scene) {
+	return new BSPMeshDescImpl(name, scene);
 }
 
 MeshDesc::MeshDesc(const char* name) {
-	_strdup(this->name, name);
+	this->name = _strdup(name);
 }
 
 MeshDesc::~MeshDesc() {
@@ -25,15 +32,23 @@ MeshDescImpl::MeshDescImpl(const char* name)
 {
 }
 
-MeshDescImpl::~MeshDiscImpl()
+MeshDescImpl::~MeshDescImpl()
 {	
 }
 
-BSPMeshDescImpl::BSPMeshDescImpl(const char* name, Q3BSP::BSP* bsp)
+BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	: MeshDescImpl(name)
 {
 	this->type = MESHDESC_BSP;
-	
+}
+
+BSPMeshDescImpl::~BSPMeshDescImpl()
+{
+}
+
+bool MeshDescImpl::cook()
+{
+	return true;
 }
 	
 	

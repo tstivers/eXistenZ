@@ -1087,11 +1087,31 @@
 			Name="physics"
 			>
 			<File
+				RelativePath="..\engine\physics\meshdesc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\meshdesc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\meshdescimpl.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\physics\physics.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\physics\physics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\stream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\stream.h"
 				>
 			</File>
 		</Filter>

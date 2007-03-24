@@ -1,4 +1,10 @@
 #pragma once
+#include <NxPhysics.h>
+#include "stream.h"
+
+namespace scene {
+	class SceneBSP;
+}
 
 namespace physics {
 	
@@ -11,11 +17,12 @@ namespace physics {
 	
 	private:
 		NxTriangleMeshDesc desc;
-	}
+		MemoryStream stream;
+	};
 	
 	class BSPMeshDescImpl : public MeshDescImpl {
 	public:
-		BSPMeshDescImpl(const char* name, const Q3BSP::BSP* bsp);
+		BSPMeshDescImpl(const char* name, scene::SceneBSP* scene);
 		~BSPMeshDescImpl();
 		
 	private:

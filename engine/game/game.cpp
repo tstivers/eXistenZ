@@ -20,7 +20,8 @@
 #include "script/script.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
-#include "Scene/scene.h"
+#include "scene/scene.h"
+#include "scene/scenebsp.h"
 #include "physics/physics.h"
 
 
@@ -233,7 +234,7 @@ bool game::startMap(char* name)
 	}
 
 	physics::acquire();
-	physics::addStaticSceneMesh(physics::BSPMeshDesc mesh(render::scene));
+	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
 	render::scene->acquire();
 
 	return true;

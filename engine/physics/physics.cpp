@@ -1,9 +1,11 @@
 #include "precompiled.h"
 #include "physics/physics.h"
+#include "physics/meshdesc.h"
 #include "console/console.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "NxPhysics.h"
+#include "NxCooking.h"
 
 namespace physics {
 	class PhysicsOutputStream : public NxUserOutputStream {
@@ -56,7 +58,7 @@ void physics::acquire() {
 	}
 	
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
-	gCooking->NxInitCooking();
+	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
 	NxSceneDesc sceneDesc;
 	NxVec3 gDefaultGravity(0,-9.8,0);
@@ -103,4 +105,9 @@ void physics::release() {
 	gDebugger = NULL;
 	gScene = NULL;
 	acquired = false;
+}
+
+void physics::addStaticMesh(std::string name, scene::SceneBSP* scene) {
+	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
+
 }
