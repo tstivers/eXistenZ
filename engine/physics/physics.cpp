@@ -25,6 +25,7 @@ namespace physics {
 	NxPhysicsSDK* gPhysicsSDK;
 	NxRemoteDebugger* gDebugger;
 	NxScene* gScene;
+	NxCookingInterface *gCooking;
 	int debug = 1;
 	bool acquired = false;
 }
@@ -53,6 +54,9 @@ void physics::acquire() {
 		if(!gDebugger->isConnected())
 			LOG("[physics] WARNING: debugger failed to attach");
 	}
+	
+	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
+	gCooking->NxInitCooking();
 
 	NxSceneDesc sceneDesc;
 	NxVec3 gDefaultGravity(0,-9.8,0);

@@ -1,5 +1,6 @@
 * text=auto !eol
 bin/config.js eol=crlf
+crimson/eXistenZ.prj -text
 data/scripts/house.js eol=crlf
 data/scripts/keys.js eol=crlf
 data/scripts/q3dm1.js eol=crlf
@@ -81,6 +82,10 @@ engine/mesh/meshsystemcache.cpp eol=crlf
 engine/mesh/meshsystemcache.h eol=crlf
 engine/mesh/textloader.cpp eol=crlf
 engine/mesh/textloader.h eol=crlf
+engine/physics/meshdesc.cpp -text
+engine/physics/meshdesc.h -text
+engine/physics/meshdescimpl.cpp -text
+engine/physics/meshdescimpl.h -text
 engine/physics/physics.cpp -text
 engine/physics/physics.h -text
 engine/platform/types.h eol=crlf
