@@ -88,6 +88,8 @@ engine/physics/meshdescimpl.cpp -text
 engine/physics/meshdescimpl.h -text
 engine/physics/physics.cpp -text
 engine/physics/physics.h -text
+engine/physics/stream.cpp -text
+engine/physics/stream.h -text
 engine/platform/types.h eol=crlf
 engine/q3bsp/bleh.cpp eol=crlf
 engine/q3bsp/bleh.h eol=crlf
