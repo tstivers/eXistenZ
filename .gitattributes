@@ -38,6 +38,8 @@ engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf
 engine/console/jsconsole.h eol=crlf
+engine/entity/boxentity.cpp -text
+engine/entity/boxentity.h -text
 engine/entity/entity.cpp eol=crlf
 engine/entity/entity.h eol=crlf
 engine/entity/entitycache.cpp eol=crlf

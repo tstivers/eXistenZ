@@ -6,6 +6,7 @@
 
 namespace jsentity {
 	JSBool createStaticEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool createBoxEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool getEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 	// entity property callbacks
@@ -66,6 +67,7 @@ using namespace entity;
 void jsentity::init()
 {
 	gScriptEngine.AddFunction("createStaticEntity", 2, jsentity::createStaticEntity);
+	gScriptEngine.AddFunction("createBoxEntity", 2, jsentity::createBoxEntity);
 	gScriptEngine.AddFunction("getEntity", 1, jsentity::getEntity);
 }
 
@@ -91,6 +93,30 @@ JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, js
 
 	return JSVAL_TRUE;
 }
+
+JSBool jsentity::createBoxEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
+{
+	*rval = JSVAL_NULL;
+
+	if(argc != 2) {
+		gScriptEngine.ReportError("createBoxEntity() takes 2 arguments");
+		return JSVAL_FALSE;	
+	}
+
+	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	std::string texture = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+
+	Entity* new_entity = entity::addBoxEntity(name, texture);
+	if(!new_entity) {
+		gScriptEngine.ReportError("couldn't create entity");
+		return JSVAL_FALSE;	
+	}
+
+	*rval = createEntityObject(cx, new_entity);
+
+	return JSVAL_TRUE;
+}
+
 
 JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
 {

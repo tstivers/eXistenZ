@@ -1,5 +1,6 @@
 #include "precompiled.h"
 #include "entity/entity.h"
+#include "entity/boxentity.h"
 #include "console/console.h"
 
 namespace entity {
@@ -19,6 +20,26 @@ Entity* entity::addStaticEntity(std::string& name, std::string& meshsys, D3DXMAT
 	}
 
 	StaticEntity* entity = StaticEntity::create(name, meshsys);
+	if(!entity)
+		return NULL;
+
+	if(transform)
+		entity->setTransform(*transform);
+
+	entity_cache.insert(EntityCache::value_type(name, entity));
+
+	return entity;
+}
+
+Entity* entity::addBoxEntity(std::string& name, std::string& texture, D3DXMATRIX* transform /* = NULL */)
+{
+	EntityCache::iterator it = entity_cache.find(name);
+	if(it != entity_cache.end()) {
+		LOG2("[entity::addBoxEntity] entity \"%s\" already exists!", name.c_str());
+		return NULL;
+	}
+
+	BoxEntity* entity = new BoxEntity(name, texture);
 	if(!entity)
 		return NULL;
 

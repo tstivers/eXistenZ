@@ -19,6 +19,7 @@ namespace entity {
 
 	enum ENTITY_TYPE {
 		ET_STATIC,
+		ET_DYNAMIC,
 		ET_TRIGGER,
 		ET_END = 0xffff
 	};
@@ -68,5 +69,5 @@ namespace entity {
 
 		std::string meshname;
 		mesh::MeshSystem* meshsys;
-	};
+	};	
 };

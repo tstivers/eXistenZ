@@ -79,6 +79,7 @@ bind(MWHEELDN, "exec print(\"mousewheel down\")");
 bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
+bind(KEY_N, "exec createBox()");
 
 // functions
 
@@ -160,6 +161,15 @@ function markerfun() {
 	bind(BUTTON_0, "*add_marker");
 	bind(BUTTON_2, "*del_marker");
 	print("go go gadget markers");
+}
+
+num_boxes = 0;
+function createBox() {
+    box = createBoxEntity("box" + num_boxes++, "");
+    box.pos.x = game.player.pos.x;
+    box.pos.y = game.player.pos.y;
+    box.pos.z = game.player.pos.z;
+    box.update();
 }
 
 // log our start date and time
