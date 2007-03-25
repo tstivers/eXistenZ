@@ -15,9 +15,11 @@ namespace physics {
 		
 		bool cook();
 	
-	private:
-		NxTriangleMeshDesc desc;
-		MemoryStream stream;
+	protected:
+		NxTriangleMeshDesc desc;		
+		std::vector<D3DXVECTOR3> vertices;
+		std::vector<unsigned int> indices;
+		NxTriangleMesh* mesh;
 	};
 	
 	class BSPMeshDescImpl : public MeshDescImpl {

@@ -10,7 +10,9 @@
 #include "NxCooking.h"
 
 namespace physics {
+	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxCookingInterface *gCooking;
+	extern NxScene* gScene;
 }
 
 using namespace physics;
@@ -40,6 +42,44 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	: MeshDescImpl(name)
 {
 	this->type = MESHDESC_BSP;
+	MemoryWriteBuffer mwBuf;
+
+	for(int i = 0; i < scene->num_faces; i++) {
+		if(scene->faces[i].type != 1)
+			continue;
+
+		unsigned int offset = vertices.size();
+		for(int j = 0;j < scene->faces[i].num_vertices; j++)
+			vertices.push_back(scene->faces[i].vertices[j].pos);
+
+		for(int j = 0; j < scene->faces[i].num_indices; j++)
+			indices.push_back(scene->faces[i].indices[j] + offset);
+	}
+
+	desc.pointStrideBytes = sizeof(D3DXVECTOR3);
+	desc.triangleStrideBytes = sizeof(unsigned int) * 3;
+
+	desc.numVertices = vertices.size();
+	desc.numTriangles = indices.size() / 3;
+
+	desc.points = &vertices[0];
+	desc.triangles = &indices[0];
+
+	ASSERT(desc.isValid());
+	
+	bool cooked = gCooking->NxCookTriangleMesh(desc, mwBuf);
+	ASSERT(cooked);
+	
+	mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(mwBuf.data));
+	ASSERT(mesh);
+
+	NxTriangleMeshShapeDesc meshShapeDesc;
+
+	meshShapeDesc.meshData = mesh;	
+	NxActorDesc actorDesc;
+	actorDesc.shapes.push_back(&meshShapeDesc);	
+	NxActor* newActor = gScene->createActor(actorDesc);
+	ASSERT(newActor);
 }
 
 BSPMeshDescImpl::~BSPMeshDescImpl()
@@ -48,7 +88,7 @@ BSPMeshDescImpl::~BSPMeshDescImpl()
 
 bool MeshDescImpl::cook()
 {
-	return true;
+	return false;
 }
 	
 	
