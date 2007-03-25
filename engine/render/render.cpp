@@ -40,6 +40,7 @@ namespace render {
 	int tesselation;
 	int transparency;
 	int draw_patches;
+	int draw_entities = 1;
 	int wait_vtrace;
 	bool sky_visible;
 	IDirect3DDevice9* device;
@@ -84,6 +85,7 @@ void render::init()
 	settings::addsetting("system.render.fullscreen", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.wait_vtrace", settings::TYPE_INT, 0, NULL, NULL, &wait_vtrace);
 	settings::addsetting("system.render.bsp_rendermethod", settings::TYPE_INT, 0, NULL, NULL, &bsp_rendermethod);
+	settings::addsetting("system.render.draw_entities", settings::TYPE_INT, 0, NULL, NULL, &draw_entities);
 
 	settings::setint("system.render.resolution.x", 800);
 	settings::setint("system.render.resolution.y", 600);
@@ -134,6 +136,7 @@ void render::init()
 	con::addCommand("add_marker", render::con_add_marker, NULL);
 	con::addCommand("del_marker", render::con_del_marker, NULL);
 	con::addCommand("toggle_diffuse", con::toggle_int, &diffuse);
+	con::addCommand("toggle_entities", con::toggle_int, &draw_entities);
 
 	boost = 0;
 	gamma = 1.0;
