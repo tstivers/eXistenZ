@@ -166,11 +166,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib PhysXLoader.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -205,6 +206,18 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}"
+			RelativePathToProject="..\lib\js32\js32.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{4B3A1F6D-AEE3-4C47-A34A-531563F91758}"
+			RelativePathToProject="..\lib\nvtristrip\nvtristrip.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}"
+			RelativePathToProject="..\lib\zlib\zlib.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

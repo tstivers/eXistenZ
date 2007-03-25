@@ -140,15 +140,17 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 		BSPBrush& brush = brushes[brush_index];
 		
 		// this needs to be figured out
-		if(bsptextures[brush.texture].flags == 16528) // ignore the 'hint' texture
+		/*if(bsptextures[brush.texture].flags == 16528) // ignore the 'hint' texture
 			continue;
 
 		if(bsptextures[brush.texture].flags == 16544) // ignore the 'cluster portal' texture
 			continue;
 
 		if(bsptextures[brush.texture].flags == 16512) // ignore the 'nodrawsolid' texture
-			continue;
+			continue; */
 
+		if(bsptextures[brush.texture].flags & 0x4000) // ignore the 'hint' texture
+			continue;
 
 		int side_start = brush.brushside;
 		int side_index = brush.numbrushsides;

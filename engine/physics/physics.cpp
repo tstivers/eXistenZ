@@ -4,8 +4,12 @@
 #include "console/console.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
+#include "render/render.h"
 #include "NxPhysics.h"
 #include "NxCooking.h"
+
+#define NX_DBG_EVENTGROUP_MYOBJECTS        0x00100000
+#define NX_DBG_EVENTMASK_MYOBJECTS         0x00100000
 
 namespace physics {
 	class PhysicsOutputStream : public NxUserOutputStream {
@@ -55,6 +59,11 @@ void physics::acquire() {
 		gDebugger->connect("localhost");
 		if(!gDebugger->isConnected())
 			LOG("[physics] WARNING: debugger failed to attach");
+
+		NX_DBG_CREATE_OBJECT(render::scene, NX_DBG_OBJECTTYPE_CAMERA, "Player", NX_DBG_EVENTGROUP_MYOBJECTS);
+		NX_DBG_CREATE_PARAMETER(NxVec3(render::cam_pos.x, render::cam_pos.y, render::cam_pos.z), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
+		NX_DBG_CREATE_PARAMETER(NxVec3(0, 0, 0), render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
+		//NX_DBG_CREATE_PARAMETER(NxVec3(0, 1, 0), render::scene, "Up", NX_DBG_EVENTGROUP_MYOBJECTS);
 	}
 	
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
@@ -71,11 +80,11 @@ void physics::acquire() {
 	defaultMaterial->setStaticFriction(0.5);
 	defaultMaterial->setDynamicFriction(0.5);
 
-	NxPlaneShapeDesc planeDesc;
+	/*NxPlaneShapeDesc planeDesc;
 	NxActorDesc actorDesc;
 	actorDesc.name = "ground";
 	actorDesc.shapes.pushBack(&planeDesc);
-	gScene->createActor(actorDesc);
+	gScene->createActor(actorDesc);*/
 
 	acquired = true;
 
@@ -88,6 +97,17 @@ void physics::startSimulation() {
 	
 	gScene->simulate(timer::delta_ms);
 	gScene->flushStream();
+	NX_DBG_SET_PARAMETER((NxVec3)(render::cam_pos + render::cam_offset), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
+	D3DXVECTOR3 lookat(
+		(float)sin(render::cam_rot.x * (D3DX_PI / 180.0f)), 
+		-1 * (float)sin(render::cam_rot.y * (D3DX_PI / 180.0f)), 
+		(float)cos(render::cam_rot.x * (D3DX_PI / 180.0f)));
+
+	lookat *= 5;
+	lookat += render::cam_pos + render::cam_offset;
+	NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
+	NX_DBG_FLUSH();
+	NX_DBG_FRAME_BREAK();
 }
 
 void physics::getResults() {

@@ -3,7 +3,7 @@
 #include "physics/meshdescimpl.h"
 #include "physics/physics.h"
 #include "console/console.h"
-#include "q3bsp/bsp.h"
+#include "q3bsp/bleh.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"
 #include "NxPhysics.h"
@@ -45,7 +45,7 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	MemoryWriteBuffer mwBuf;
 
 	for(int i = 0; i < scene->num_faces; i++) {
-		if(scene->faces[i].type != 1)
+		if(scene->faces[i].type != 1 && scene->faces[i].type != 3)
 			continue;
 
 		unsigned int offset = vertices.size();
