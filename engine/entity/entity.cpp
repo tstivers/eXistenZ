@@ -39,6 +39,15 @@ void Entity::update()
 	calcAABB();
 }
 
+void Entity::doTick()
+{
+}
+
+void Entity::setQuatRot(const D3DXQUATERNION& rot)
+{
+	
+}
+
 inline_ void Entity::mark(unsigned int frame)
 {
 	this->frame = frame;

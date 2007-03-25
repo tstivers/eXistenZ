@@ -16,6 +16,7 @@ namespace entity {
 		void render();
 		void calcAABB();
 		void update();
+		void doTick();
 
 		NxActor* actor;
 		texture::DXTexture* texture;

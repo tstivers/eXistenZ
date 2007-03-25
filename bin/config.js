@@ -80,9 +80,11 @@ bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
 bind(KEY_N, "exec createBox()");
+bind(KEY_V, "*exec createBox()");
 
 // functions
 
+var message;
 function print(message) {
 	log(message);
 }
@@ -164,8 +166,20 @@ function markerfun() {
 }
 
 num_boxes = 0;
+current_texture = 0;
+textures = new Array(
+    "textures/house/metal1",
+    "textures/house/shingle1",
+    "textures/house/grass1",
+    "textures/house/carpet1",
+    "textures/house/tv_front");
+
 function createBox() {
-    box = createBoxEntity("box" + num_boxes++, "");
+    box = createBoxEntity("box" + num_boxes++, textures[current_texture++]);
+    if(current_texture >= textures.length)
+        current_texture = 0;
+    
+    system.scene.addEntity(box);
     box.pos.x = game.player.pos.x;
     box.pos.y = game.player.pos.y;
     box.pos.z = game.player.pos.z;

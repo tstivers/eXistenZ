@@ -63,7 +63,7 @@ namespace render {
 	unsigned int frame;
 	texture::DXTexture* current_texture;
 	texture::DXTexture* current_lightmap;
-	const D3DXMATRIX* current_transform;
+	D3DXMATRIX current_transform;
 
 	unsigned int frame_polys;
 	unsigned int frame_texswaps;
@@ -213,8 +213,7 @@ void render::render()
 	frame++;	
 	sky_visible = true;
 	current_texture = NULL;
-	current_lightmap = NULL;
-	current_transform = NULL;
+	current_lightmap = NULL;	
 	current_vb = NULL;
 	current_ib = NULL;
 	frame_polys = 0;
@@ -283,13 +282,13 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 		frame_texswaps++;
 	}
 
-	if(transform != current_transform) {
+	if(transform && *transform != current_transform) {
 		if(transform)
 			device->SetTransform( D3DTS_WORLD, transform );
 		else
 			device->SetTransform( D3DTS_WORLD, &world );
 
-		current_transform = transform;
+		current_transform = *transform;
 	}
 
 	render::device->DrawIndexedPrimitive(

@@ -69,10 +69,19 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
+#define SCALE 36.08900
+
+	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, -0.05*SCALE);
+	gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
+	gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
+	gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
+
 	NxSceneDesc sceneDesc;
-	NxVec3 gDefaultGravity(0,-9.8,0);
+	NxVec3 gDefaultGravity(0,-9.8 * SCALE, 0);
 	sceneDesc.gravity = gDefaultGravity;
 	gScene = gPhysicsSDK->createScene(sceneDesc);
+
+
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
@@ -95,7 +104,7 @@ void physics::startSimulation() {
 	if(!acquired)
 		return;		
 	
-	gScene->simulate(timer::delta_ms);
+	gScene->simulate(timer::delta_ms / 1000.0f);
 	gScene->flushStream();
 	NX_DBG_SET_PARAMETER((NxVec3)(render::cam_pos + render::cam_offset), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
 	D3DXVECTOR3 lookat(

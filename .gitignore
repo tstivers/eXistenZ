@@ -1,6 +1,7 @@
 /*.ncb
 bin/*.DPbcd
 bin/*.NLB
+bin/*.dll
 bin/*.dpprf
 bin/*.exe
 bin/*.exp
@@ -15,6 +16,8 @@ bin/*.pdb
 bin/BuildLog.htm
 bin/engine_debug
 bin/engine_release
+bin/js32_debug
+bin/js32_release
 bin/maya_debug
 bin/maya_release
 data/*
