@@ -157,7 +157,10 @@ JSBool jssettings::jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *v
 	case settings::TYPE_FLOAT:
 		jsdouble dvalue;
 		JS_ValueToNumber(cx, *vp, &dvalue);
-		*((float*)setting->data) = (float)dvalue;
+		float f;
+		f = dvalue;
+		setting->set(setting, &f);
+		//*((float*)setting->data) = (float)dvalue;
 		break;
 	default:
 		break;

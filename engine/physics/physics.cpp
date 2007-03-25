@@ -28,18 +28,35 @@ namespace physics {
 
 	} physicsOutputStream;
 
-	NxPhysicsSDK* gPhysicsSDK;
-	NxRemoteDebugger* gDebugger;
-	NxScene* gScene;
+	NxPhysicsSDK* gPhysicsSDK = NULL;
+	NxRemoteDebugger* gDebugger = NULL;
+	NxScene* gScene = NULL;
 	NxCookingInterface *gCooking;
 	int debug = 1;
 	bool acquired = false;
+	float scale = 1.0f;
+	float gravity = -9.8f;
+
+	bool setGravity(settings::Setting* setting, void* value);
 }
 
 using namespace physics;
 
 void physics::init() {
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
+	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);
+	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
+}
+
+bool physics::setGravity(settings::Setting* setting, void* value)
+{
+	settings::float_setter(setting, value);
+	if(gScene) {
+		gScene->setGravity(NxVec3(0, gravity, 0));
+		for(int i = 0; i < gScene->getNbActors(); i++)
+			gScene->getActors()[i]->wakeUp();
+	}
+	return true;
 }
 
 void physics::acquire() {
@@ -69,19 +86,15 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
-#define SCALE 36.08900
-
-	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, -0.05*SCALE);
-	gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
-	gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
-	gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
+	//gPhysicsSDK->setParameter(NX_SKIN_WIDTH, -0.05*SCALE);
+	//gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
+	//gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
+	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
 
 	NxSceneDesc sceneDesc;
-	NxVec3 gDefaultGravity(0,-9.8 * SCALE, 0);
+	NxVec3 gDefaultGravity(0, gravity, 0);
 	sceneDesc.gravity = gDefaultGravity;
-	gScene = gPhysicsSDK->createScene(sceneDesc);
-
-
+	gScene = gPhysicsSDK->createScene(sceneDesc);	
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
@@ -106,17 +119,18 @@ void physics::startSimulation() {
 	
 	gScene->simulate(timer::delta_ms / 1000.0f);
 	gScene->flushStream();
-	NX_DBG_SET_PARAMETER((NxVec3)(render::cam_pos + render::cam_offset), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
-	D3DXVECTOR3 lookat(
-		(float)sin(render::cam_rot.x * (D3DX_PI / 180.0f)), 
-		-1 * (float)sin(render::cam_rot.y * (D3DX_PI / 180.0f)), 
-		(float)cos(render::cam_rot.x * (D3DX_PI / 180.0f)));
 
-	lookat *= 5;
-	lookat += render::cam_pos + render::cam_offset;
-	NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
-	NX_DBG_FLUSH();
-	NX_DBG_FRAME_BREAK();
+	if(NX_DBG_IS_CONNECTED()) {
+		NX_DBG_SET_PARAMETER((NxVec3)(render::cam_pos + render::cam_offset), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
+		D3DXMATRIX mat;
+		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
+		D3DXVECTOR3 lookat;
+		D3DXVec3TransformCoord(&lookat, &D3DXVECTOR3(0, 0, 10), &mat);
+		lookat += (render::cam_pos + render::cam_offset);
+		NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
+		NX_DBG_FLUSH();
+		NX_DBG_FRAME_BREAK();
+	}
 }
 
 void physics::getResults() {
@@ -138,5 +152,4 @@ void physics::release() {
 
 void physics::addStaticMesh(std::string name, scene::SceneBSP* scene) {
 	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
-
 }
