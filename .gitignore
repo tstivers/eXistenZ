@@ -1,4 +1,6 @@
 /*.ncb
+bin/*.DPRul
+bin/*.DPSup
 bin/*.DPbcd
 bin/*.NLB
 bin/*.dll
