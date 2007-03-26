@@ -8,7 +8,7 @@
 #include "interface/fps.h"
 #include "interface/interface.h"
 #include "render/render.h"
-#include "render/d3dfont.h"
+#include "render/font.h"
 #include "timer/timer.h"
 
 using namespace ui;

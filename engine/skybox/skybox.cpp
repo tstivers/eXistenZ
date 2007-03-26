@@ -17,7 +17,7 @@ namespace skybox {
 	texture::DXTexture** textures;
 
 	D3DXVECTOR3 min, max;
-	SkyVertex *verts;
+	SkyVertex *verts = NULL;
 
 	int draw;
 	int width, height, depth;
@@ -29,6 +29,8 @@ namespace skybox {
 	void genBox();
 	void con_sky(int argc, char* argv[], void* user);
 };
+
+using namespace skybox;
 
 void skybox::init()
 {
@@ -62,7 +64,7 @@ void skybox::acquire()
 	acquired = true;
 
 	// get memory for verts
-	verts = new SkyVertex[4 * 6];
+	skybox::verts = new SkyVertex[4 * 6];
 
 	// generate our vertexes
 	genBox();
@@ -85,6 +87,7 @@ void skybox::acquire()
 	}
 	memcpy(vertbuf, verts, 4 * 6 * sizeof(SkyVertex));
 	dxvertbuf->Unlock();
+	delete [] skybox::verts;
 
 	// load our textures
 	char texbuf[MAX_PATH];	
@@ -103,7 +106,7 @@ void skybox::acquire()
 	strcpy(ext, "up");
 	textures[BOX_TOP] = texture::getTexture(texbuf);
 	strcpy(ext, "dn");
-	textures[BOX_BOTTOM] = texture::getTexture(texbuf);
+	textures[BOX_BOTTOM] = texture::getTexture(texbuf);	
 }
 
 void skybox::reset()

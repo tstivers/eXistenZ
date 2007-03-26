@@ -12,7 +12,7 @@
 #include "render/dx.h"
 #include "interface/uiconsole.h"
 #include "input/input.h"
-#include "render/d3dfont.h"
+#include "render/font.h"
 #include "timer/timer.h"
 
 using namespace ui;

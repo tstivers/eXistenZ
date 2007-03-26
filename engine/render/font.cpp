@@ -1,12 +1,5 @@
-//-----------------------------------------------------------------------------
-// File: D3DFont.cpp
-//
-// Desc: Texture-based font class
-//
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
 #include "precompiled.h"
-#include "D3DFont.h"
+#include "render/font.h"
 //#include "D3DUtil.h"
 //#include "DXUtil.h"
 
@@ -17,7 +10,7 @@
 //-----------------------------------------------------------------------------
 // Custom vertex types for rendering text
 //-----------------------------------------------------------------------------
-#define MAX_NUM_VERTICES 500*6
+#define MAX_NUM_VERTICES 5000*6
 
 struct FONT2DVERTEX { D3DXVECTOR4 p;   DWORD color;     FLOAT tu, tv; };
 struct FONT3DVERTEX { D3DXVECTOR3 p;   D3DXVECTOR3 n;   FLOAT tu, tv; };
@@ -39,14 +32,11 @@ inline FONT3DVERTEX InitFont3DVertex( const D3DXVECTOR3& p, const D3DXVECTOR3& n
     return v;
 }
 
-
-
-
 //-----------------------------------------------------------------------------
 // Name: CD3DFont()
 // Desc: Font class constructor
 //-----------------------------------------------------------------------------
-CD3DFont::CD3DFont( const CHAR* strFontName, DWORD dwHeight, DWORD dwFlags )
+*CD3DFont::CD3DFont( const CHAR* strFontName, DWORD dwHeight, DWORD dwFlags )
 {
     strcpy( m_strFontName, strFontName);    
     m_dwFontHeight         = dwHeight;
@@ -776,117 +766,117 @@ HRESULT CD3DFont::DrawText( FLOAT sx, FLOAT sy, DWORD dwColor,
 
     return S_OK;
 }
-
-
-
-
-//-----------------------------------------------------------------------------
-// Name: Render3DText()
-// Desc: Renders 3D text
-//-----------------------------------------------------------------------------
-HRESULT CD3DFont::Render3DText( const CHAR* strText, DWORD dwFlags )
-{
-    if( m_pd3dDevice == NULL )
-        return E_FAIL;
-
-    // Setup renderstate
-    m_pStateBlockSaved->Capture();
-    m_pStateBlockDrawText->Apply();
-    m_pd3dDevice->SetFVF( D3DFVF_FONT3DVERTEX );
-    m_pd3dDevice->SetPixelShader( NULL );
-    m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(FONT3DVERTEX) );
-
-    // Set filter states
-    if( dwFlags & D3DFONT_FILTERED )
-    {
-        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-    }
-
-    // Position for each text element
-    FLOAT x = 0.0f;
-    FLOAT y = 0.0f;
-
-    // Center the text block at the origin (not the viewport)
-    if( dwFlags & D3DFONT_CENTERED_X )
-    {
-        SIZE sz;
-        GetTextExtent( strText, &sz );
-        x = -(((FLOAT)sz.cx)/10.0f)/2.0f;
-    }
-    if( dwFlags & D3DFONT_CENTERED_Y )
-    {
-        SIZE sz;
-        GetTextExtent( strText, &sz );
-        y = -(((FLOAT)sz.cy)/10.0f)/2.0f;
-    }
-
-    // Turn off culling for two-sided text
-    if( dwFlags & D3DFONT_TWOSIDED )
-        m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
-
-    // Adjust for character spacing
-    x -= m_dwSpacing / 10.0f;
-    FLOAT fStartX = x;
-    CHAR c;
-
-    // Fill vertex buffer
-    FONT3DVERTEX* pVertices;
-    DWORD         dwNumTriangles = 0L;
-    m_pVB->Lock( 0, 0, (void**)&pVertices, D3DLOCK_DISCARD );
-
-    while( (c = *strText++) != 0 )
-    {
-        if( c == '\n' )
-        {
-            x = fStartX;
-            y -= (m_fTexCoords[0][3]-m_fTexCoords[0][1])*m_dwTexHeight/10.0f;
-        }
-
-        if( (c-32) < 0 || (c-32) >= 128-32 )
-            continue;
-
-        FLOAT tx1 = m_fTexCoords[c-32][0];
-        FLOAT ty1 = m_fTexCoords[c-32][1];
-        FLOAT tx2 = m_fTexCoords[c-32][2];
-        FLOAT ty2 = m_fTexCoords[c-32][3];
-
-        FLOAT w = (tx2-tx1) * m_dwTexWidth  / ( 10.0f * m_fTextScale );
-        FLOAT h = (ty2-ty1) * m_dwTexHeight / ( 10.0f * m_fTextScale );
-
-        if( c != ' ' )
-        {
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+0,0), D3DXVECTOR3(0,0,-1), tx1, ty2 );
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+h,0), D3DXVECTOR3(0,0,-1), tx1, ty1 );
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+0,0), D3DXVECTOR3(0,0,-1), tx2, ty2 );
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+h,0), D3DXVECTOR3(0,0,-1), tx2, ty1 );
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+0,0), D3DXVECTOR3(0,0,-1), tx2, ty2 );
-            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+h,0), D3DXVECTOR3(0,0,-1), tx1, ty1 );
-            dwNumTriangles += 2;
-
-            if( dwNumTriangles*3 > (MAX_NUM_VERTICES-6) )
-            {
-                // Unlock, render, and relock the vertex buffer
-                m_pVB->Unlock();
-                m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, dwNumTriangles );
-                m_pVB->Lock( 0, 0, (void**)&pVertices, D3DLOCK_DISCARD );
-                dwNumTriangles = 0L;
-            }
-        }
-
-        x += w - (2 * m_dwSpacing) / 10.0f;
-    }
-
-    // Unlock and render the vertex buffer
-    m_pVB->Unlock();
-    if( dwNumTriangles > 0 )
-        m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, dwNumTriangles );
-
-    // Restore the modified renderstates
-    m_pStateBlockSaved->Apply();
-
-    return S_OK;
-}
+//
+//
+//
+//
+////-----------------------------------------------------------------------------
+//// Name: Render3DText()
+//// Desc: Renders 3D text
+////-----------------------------------------------------------------------------
+//HRESULT CD3DFont::Render3DText( const CHAR* strText, DWORD dwFlags )
+//{
+//    if( m_pd3dDevice == NULL )
+//        return E_FAIL;
+//
+//    // Setup renderstate
+//    m_pStateBlockSaved->Capture();
+//    m_pStateBlockDrawText->Apply();
+//    m_pd3dDevice->SetFVF( D3DFVF_FONT3DVERTEX );
+//    m_pd3dDevice->SetPixelShader( NULL );
+//    m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(FONT3DVERTEX) );
+//
+//    // Set filter states
+//    if( dwFlags & D3DFONT_FILTERED )
+//    {
+//        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+//        m_pd3dDevice->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+//    }
+//
+//    // Position for each text element
+//    FLOAT x = 0.0f;
+//    FLOAT y = 0.0f;
+//
+//    // Center the text block at the origin (not the viewport)
+//    if( dwFlags & D3DFONT_CENTERED_X )
+//    {
+//        SIZE sz;
+//        GetTextExtent( strText, &sz );
+//        x = -(((FLOAT)sz.cx)/10.0f)/2.0f;
+//    }
+//    if( dwFlags & D3DFONT_CENTERED_Y )
+//    {
+//        SIZE sz;
+//        GetTextExtent( strText, &sz );
+//        y = -(((FLOAT)sz.cy)/10.0f)/2.0f;
+//    }
+//
+//    // Turn off culling for two-sided text
+//    if( dwFlags & D3DFONT_TWOSIDED )
+//        m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+//
+//    // Adjust for character spacing
+//    x -= m_dwSpacing / 10.0f;
+//    FLOAT fStartX = x;
+//    CHAR c;
+//
+//    // Fill vertex buffer
+//    FONT3DVERTEX* pVertices;
+//    DWORD         dwNumTriangles = 0L;
+//    m_pVB->Lock( 0, 0, (void**)&pVertices, D3DLOCK_DISCARD );
+//
+//    while( (c = *strText++) != 0 )
+//    {
+//        if( c == '\n' )
+//        {
+//            x = fStartX;
+//            y -= (m_fTexCoords[0][3]-m_fTexCoords[0][1])*m_dwTexHeight/10.0f;
+//        }
+//
+//        if( (c-32) < 0 || (c-32) >= 128-32 )
+//            continue;
+//
+//        FLOAT tx1 = m_fTexCoords[c-32][0];
+//        FLOAT ty1 = m_fTexCoords[c-32][1];
+//        FLOAT tx2 = m_fTexCoords[c-32][2];
+//        FLOAT ty2 = m_fTexCoords[c-32][3];
+//
+//        FLOAT w = (tx2-tx1) * m_dwTexWidth  / ( 10.0f * m_fTextScale );
+//        FLOAT h = (ty2-ty1) * m_dwTexHeight / ( 10.0f * m_fTextScale );
+//
+//        if( c != ' ' )
+//        {
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+0,0), D3DXVECTOR3(0,0,-1), tx1, ty2 );
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+h,0), D3DXVECTOR3(0,0,-1), tx1, ty1 );
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+0,0), D3DXVECTOR3(0,0,-1), tx2, ty2 );
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+h,0), D3DXVECTOR3(0,0,-1), tx2, ty1 );
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+w,y+0,0), D3DXVECTOR3(0,0,-1), tx2, ty2 );
+//            *pVertices++ = InitFont3DVertex( D3DXVECTOR3(x+0,y+h,0), D3DXVECTOR3(0,0,-1), tx1, ty1 );
+//            dwNumTriangles += 2;
+//
+//            if( dwNumTriangles*3 > (MAX_NUM_VERTICES-6) )
+//            {
+//                // Unlock, render, and relock the vertex buffer
+//                m_pVB->Unlock();
+//                m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, dwNumTriangles );
+//                m_pVB->Lock( 0, 0, (void**)&pVertices, D3DLOCK_DISCARD );
+//                dwNumTriangles = 0L;
+//            }
+//        }
+//
+//        x += w - (2 * m_dwSpacing) / 10.0f;
+//    }
+//
+//    // Unlock and render the vertex buffer
+//    m_pVB->Unlock();
+//    if( dwNumTriangles > 0 )
+//        m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLELIST, 0, dwNumTriangles );
+//
+//    // Restore the modified renderstates
+//    m_pStateBlockSaved->Apply();
+//
+//    return S_OK;
+//}
 
 
 

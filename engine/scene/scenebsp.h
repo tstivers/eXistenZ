@@ -20,6 +20,7 @@ namespace scene {
 
 	class BSPFace {
 	public:
+		~BSPFace() { delete [] vertices; }
 		int texture;
 		int lightmap;
 		int type; // remove?

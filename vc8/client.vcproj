@@ -481,19 +481,19 @@
 			Name="render"
 			>
 			<File
-				RelativePath="..\engine\render\d3dfont.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\render\d3dfont.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\render\dx.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\render\dx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\font.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\font.h"
 				>
 			</File>
 			<File

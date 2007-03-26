@@ -266,7 +266,7 @@ bool BSP::load(vfs::IFilePtr file)
 		lightmaps[i] = texture::genLightmap((texture::tBSPLightmap*)&tmp_lightmaps[i], render::gamma, render::boost);
 	}
 
-	delete tmp_lightmaps;
+	delete [] tmp_lightmaps;
 
 	// turn curved surfaces into normal polys
 	if(q3bsp::debug) {
