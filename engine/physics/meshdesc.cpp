@@ -50,7 +50,7 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 
 		unsigned int offset = vertices.size();
 		for(int j = 0;j < scene->faces[i].num_vertices; j++)
-			vertices.push_back(scene->faces[i].vertices[j].pos);
+			vertices.push_back(scene->faces[i].vertices[j].pos / physics::scale);
 
 		for(int j = 0; j < scene->faces[i].num_indices; j++)
 			indices.push_back(scene->faces[i].indices[j] + offset);

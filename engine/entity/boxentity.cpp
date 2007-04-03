@@ -30,11 +30,11 @@ void BoxEntity::acquire()
 	NxActorDesc actorDesc;
 	NxBodyDesc bodyDesc;
 	NxBoxShapeDesc boxDesc;
-	boxDesc.dimensions.set(20,20,20);
+	boxDesc.dimensions.set(0.5,0.5,0.5);
 	actorDesc.shapes.pushBack(&boxDesc);    
 	actorDesc.body = &bodyDesc;    
 	actorDesc.density = 10;    
-	actorDesc.globalPose.t = (NxVec3)getPos();
+	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actor = physics::gScene->createActor(actorDesc);
 	ASSERT(actor);
 	actor->setName(name.c_str());	
@@ -47,7 +47,7 @@ void BoxEntity::release()
 
 void BoxEntity::update()
 {
-	actor->setGlobalPosition((NxVec3)pos);
+	actor->setGlobalPosition((NxVec3)pos / physics::scale);
 	//actor->setGlobalOrientation()
 }
 
@@ -60,7 +60,7 @@ void BoxEntity::doTick()
 
 void BoxEntity::render()
 {
-	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition(), (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(40, 40, 40), texture);
+	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture);
 }
 
 void BoxEntity::calcAABB()

@@ -34,7 +34,7 @@ namespace physics {
 	NxCookingInterface *gCooking;
 	int debug = 1;
 	bool acquired = false;
-	float scale = 1.0f;
+	float scale = 36.0f;
 	float gravity = -9.8f;
 
 	bool setGravity(settings::Setting* setting, void* value);
@@ -54,7 +54,8 @@ bool physics::setGravity(settings::Setting* setting, void* value)
 	if(gScene) {
 		gScene->setGravity(NxVec3(0, gravity, 0));
 		for(int i = 0; i < gScene->getNbActors(); i++)
-			gScene->getActors()[i]->wakeUp();
+			if(gScene->getActors()[i]->isDynamic())
+				gScene->getActors()[i]->wakeUp();
 	}
 	return true;
 }
@@ -86,7 +87,7 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
-	//gPhysicsSDK->setParameter(NX_SKIN_WIDTH, -0.05*SCALE);
+	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.001);
 	//gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
 	//gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
 	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
@@ -102,12 +103,6 @@ void physics::acquire() {
 	defaultMaterial->setStaticFriction(0.5);
 	defaultMaterial->setDynamicFriction(0.5);
 
-	/*NxPlaneShapeDesc planeDesc;
-	NxActorDesc actorDesc;
-	actorDesc.name = "ground";
-	actorDesc.shapes.pushBack(&planeDesc);
-	gScene->createActor(actorDesc);*/
-
 	acquired = true;
 
 	startSimulation(); // prime the pump
@@ -121,12 +116,13 @@ void physics::startSimulation() {
 	gScene->flushStream();
 
 	if(NX_DBG_IS_CONNECTED()) {
-		NX_DBG_SET_PARAMETER((NxVec3)(render::cam_pos + render::cam_offset), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
+		D3DXVECTOR3 campos = (render::cam_pos + render::cam_offset) / scale;
+		NX_DBG_SET_PARAMETER((NxVec3)campos, render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
 		D3DXMATRIX mat;
 		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
 		D3DXVECTOR3 lookat;
 		D3DXVec3TransformCoord(&lookat, &D3DXVECTOR3(0, 0, 10), &mat);
-		lookat += (render::cam_pos + render::cam_offset);
+		lookat += ((render::cam_pos + render::cam_offset) / scale);
 		NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
 		NX_DBG_FLUSH();
 		NX_DBG_FRAME_BREAK();
