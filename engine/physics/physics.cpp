@@ -34,7 +34,7 @@ namespace physics {
 	NxCookingInterface *gCooking;
 	int debug = 1;
 	bool acquired = false;
-	float scale = 36.0f;
+	float scale = 30.0f;
 	float gravity = -9.8f;
 
 	bool setGravity(settings::Setting* setting, void* value);
@@ -87,7 +87,7 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
-	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.001);
+	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.0f);
 	//gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
 	//gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
 	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);

@@ -17,6 +17,8 @@
 #include "render/render.h"
 #include "interface/interface.h"
 #include "timer/timer.h"
+#include "timer/timers.h"
+#include "timer/jstimers.h"
 #include "q3bsp/bleh.h"
 #include "q3shader/q3shadercache.h"
 #include "input/input.h"
@@ -78,6 +80,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	jsscene::init();
 	jsentity::init();
 	physics::init();
+	jstimer::init();
 
 	// add some generic system settings
 	addSystemSettings();
@@ -170,6 +173,7 @@ int mainloop()
 			timer::doTick();			
 			input::doTick();
 			physics::getResults();
+			timer::fireTimers();
 			game::doTick();
 			physics::startSimulation();
 			render::render();

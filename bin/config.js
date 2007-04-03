@@ -185,6 +185,14 @@ function createBox() {
     box.pos.y = game.player.pos.y;
     box.pos.z = game.player.pos.z;
     box.update();
+    print('added box ' + box.name);
+    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
+}
+
+function bounceBox(boxName)
+{
+    var box = getEntity(boxName);
+    box.applyForce((Math.random() - 0.5) * 10, Math.random() * 50, (Math.random() - 0.5) * 10);
 }
 
 // log our start date and time

@@ -41,7 +41,7 @@ namespace con
 	void addConsumer(ConsoleCallback callback, void *userdef);
 	void log(U32 flags, const char *format, ...);
 
-	bool processCmd(char* cmd);
+	bool processCmd(const char* cmd);
 	bool executeJS(char* script);
 	bool executeCommand(char *cmd);
 	void addCommand(char* name, ConsoleCommand command, void* userdef = NULL);

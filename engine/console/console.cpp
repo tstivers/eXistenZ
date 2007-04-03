@@ -173,14 +173,16 @@ void con::log(U32 flags, const char *format, ...)
 		(*iter)->log(flags, (*iter)->userdef, buffer);
 }
 
-bool con::processCmd(char* cmd)
+bool con::processCmd(const char* cmd)
 {
-	strip(cmd);
+	char buffer[512];
+	strcpy(buffer, cmd);
+	strip(buffer);
 
-	if(*cmd == '/')
-		return executeCommand(++cmd);
+	if(*buffer == '/')
+		return executeCommand(&buffer[1]);
 	else
-		return executeJS(cmd);	
+		return executeJS(buffer);	
 }
 
 void con::toggle_int(char* cmd, char* args, void* user)

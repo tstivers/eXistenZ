@@ -185,8 +185,12 @@ engine/texture/texture.cpp eol=crlf
 engine/texture/texture.h eol=crlf
 engine/texture/texturecache.cpp eol=crlf
 engine/texture/texturecache.h eol=crlf
+engine/timer/jstimers.cpp -text
+engine/timer/jstimers.h -text
 engine/timer/timer.cpp eol=crlf
 engine/timer/timer.h eol=crlf
+engine/timer/timers.cpp -text
+engine/timer/timers.h -text
 engine/vfs/diskfile.cpp eol=crlf
 engine/vfs/diskfile.h eol=crlf
 engine/vfs/diskpath.cpp eol=crlf

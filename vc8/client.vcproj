@@ -593,11 +593,27 @@
 			Name="timer"
 			>
 			<File
+				RelativePath="..\engine\timer\jstimers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\jstimers.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\timer\timer.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\timer\timer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\timers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\timers.h"
 				>
 			</File>
 		</Filter>
