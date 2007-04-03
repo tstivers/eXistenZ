@@ -17,6 +17,7 @@ namespace entity {
 		void calcAABB();
 		void update();
 		void doTick();
+		void applyForce(const D3DXVECTOR3 &force);
 
 		NxActor* actor;
 		texture::DXTexture* texture;

@@ -66,3 +66,8 @@ void BoxEntity::render()
 void BoxEntity::calcAABB()
 {
 }
+
+void BoxEntity::applyForce(const D3DXVECTOR3 &force)
+{
+	actor->addForce((NxVec3&)force, NX_IMPULSE);
+}

@@ -17,6 +17,7 @@ namespace jsentity {
 	JSBool setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 	// vector property callbacks
 	JSBool getVector(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
@@ -34,6 +35,7 @@ namespace jsentity {
 		{"setRot", setRot, 3, 0, 0},
 		{"setScale", setScale, 3, 0, 0},
 		{"update", update, 0, 0, 0},
+		{"applyForce", applyForce, 3, 0, 0},
 		{NULL, NULL, 0, 0, 0}
 	};
 
@@ -319,6 +321,32 @@ JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
 
 	entity->update();
+
+	return JSVAL_TRUE;
+}
+
+JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	if(argc != 3) {
+		gScriptEngine.ReportError("applyForce() takes 3 parameters (x, y, z)!");
+		return JSVAL_FALSE;
+	}
+
+	jsval entity_object;
+	JS_GetReservedSlot(cx, obj, 0, &entity_object);
+	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
+
+	jsdouble jd[3];
+	for(unsigned x = 0; x < 3; x++) {
+		if(JS_ValueToNumber(cx, argv[x], &jd[x]) == JS_FALSE) {
+			gScriptEngine.ReportError("setPos() takes 3 doubles (x, y, z)!");
+			return JSVAL_FALSE;
+		}
+	}
+
+	entity->applyForce(D3DXVECTOR3(jd[0], jd[1], jd[2]));
 
 	return JSVAL_TRUE;
 }
