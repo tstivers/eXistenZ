@@ -39,7 +39,7 @@ bool timer::addTimer(const std::string& name, const std::string& action, unsigne
 
 bool timer::removeTimer(const std::string& name)
 {
-	Timer t(name, std::string(""));
+	Timer t(name, std::string(""), 0, 0);
 	timers_t::iterator i = timers.find(t);
 	if(i != timers.end())
 		timers.erase(i);
