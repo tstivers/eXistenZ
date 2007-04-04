@@ -8,7 +8,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.h" />
 		</category>
-		<category name="physics" expanded="yes">
+		<category name="physics" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.h" />
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdescimpl.h" />
@@ -35,7 +35,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\scene\scenetree.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\scene\scenetree.h" />
 		</category>
-		<category name="q3bsp" expanded="yes">
+		<category name="q3bsp" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bleh.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bleh.h" />
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.cpp" />
@@ -59,6 +59,14 @@
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\q3bsptypes.h" />
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\rendertest.cpp" />
 		</category>
+		<category name="timer" expanded="yes">
+			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.h" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timer.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" />
+		</category>
 	</category>
 </project>
 
@@ -73,10 +81,10 @@
 	<localfile path="E:\Work\eXistenZ\engine\physics\physics.h" linenum="3" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
 	<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.cpp" linenum="36" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
 	<localfile path="E:\Work\eXistenZ\engine\physics\physics.cpp" linenum="28" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\physics\meshdescimpl.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
 	<localfile path="E:\Work\eXistenZ\engine\physics\meshdescimpl.h" linenum="13" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
 	<localfile path="E:\Work\eXistenZ\engine\q3bsp\rendertest.cpp" linenum="29" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
 	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsprender.h" linenum="1" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsprender.cpp" linenum="292" placement="2:3:-1:-1:-4:-25:66:72:718:506" />
+	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsprender.cpp" linenum="292" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
+	<localfile path="E:\Work\eXistenZ\crimson\eXistenZ.prj" linenum="1" placement="2:3:-1:-1:-4:-25:132:144:784:578" />
 </workspace>
 

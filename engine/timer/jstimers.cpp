@@ -6,11 +6,13 @@
 
 namespace jstimer {
 	JSBool jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
 void jstimer::init()
 {
 	gScriptEngine.AddFunction("timer.addTimer", 4, jstimer::jsAddTimer);
+	gScriptEngine.AddFunction("timer.removeTimer", 1, jstimer::jsRemoveTimer);
 }
 
 JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -37,6 +39,22 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 	}
 
 	timer::addTimer(name, action, frequency, start);
+
+	return JSVAL_TRUE;
+}
+
+JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	if(argc < 1) {
+		gScriptEngine.ReportError("removeTimer() takes 1 parameter (name)!");
+		return JSVAL_FALSE;
+	}
+
+	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));	
+
+	timer::removeTimer(name);
 
 	return JSVAL_TRUE;
 }

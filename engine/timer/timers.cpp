@@ -37,6 +37,14 @@ bool timer::addTimer(const std::string& name, const std::string& action, unsigne
 	return true;
 }
 
+bool timer::removeTimer(const std::string& name)
+{
+	Timer t(name, std::string(""));
+	timers_t::iterator i = timers.find(t);
+	if(i != timers.end())
+		timers.erase(i);
+}
+
 void timer::fireTimers()
 {
 	for(timers_t::iterator i = timers.begin(); i != timers.end(); i++)
