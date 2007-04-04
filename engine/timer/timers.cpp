@@ -42,7 +42,12 @@ bool timer::removeTimer(const std::string& name)
 	Timer t(name, std::string(""), 0, 0);
 	timers_t::iterator i = timers.find(t);
 	if(i != timers.end())
+	{
 		timers.erase(i);
+		return true;
+	}
+		
+	return false;
 }
 
 void timer::fireTimers()
