@@ -238,6 +238,7 @@ bool game::startMap(char* name)
 
 	physics::acquire();
 	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
+	player->acquire();
 	render::scene->acquire();
 
 	return true;

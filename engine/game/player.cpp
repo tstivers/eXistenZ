@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // interface.cpp
 // interface rendering implementation
-// $Id$
+// $Id: player.cpp 66 2007-03-12 03:37:50Z tstivers $
 //
 
 #include "precompiled.h"
@@ -16,8 +16,9 @@ namespace game {
 using namespace game;
 
 Player::Player(D3DXVECTOR3& size)
-: size(size)
-{	
+: size(size), pos(D3DXVECTOR3(0, 0, 0)), rot(D3DXVECTOR3(0, 0, 0)), vel(D3DXVECTOR3(0, 0, 0)),
+mode(MM_FLY), collide(false)
+{
 }
 
 Player::~Player()
@@ -26,5 +27,5 @@ Player::~Player()
 
 Player* game::createPlayer(D3DXVECTOR3& size)
 {
-	return createBSPPlayer(size);
+	return createPhysXPlayer(size);
 }

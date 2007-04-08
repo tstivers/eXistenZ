@@ -56,7 +56,6 @@ namespace game {
 		float step_end_height;
 		D3DXVECTOR3 actual_pos;
 		void do_step_interpol();
-		int move_mode;
 		bool moving[MOVE_MAX];
 		bool prev_moving[MOVE_MAX];
 		D3DXVECTOR3 move_start;
@@ -78,14 +77,10 @@ BSPPlayer::BSPPlayer(D3DXVECTOR3& size)
 : Player(size)
 {
 	actual_pos = D3DXVECTOR3(0, 0, 0);
-	pos = D3DXVECTOR3(0, 0, 0);
-	rot = D3DXVECTOR3(0, 0, 0);
-	vel = D3DXVECTOR3(0, 0, 0);
 	size = D3DXVECTOR3(10, 35, 10);
 	in_jump = false;
 	in_air = false;
 	in_step = false;
-	move_mode = MM_WALK;
 	down = D3DXVECTOR3(0, -1, 0);
 }
 
@@ -442,7 +437,7 @@ D3DXVECTOR3 BSPPlayer::makeAccelVect(const float x_rot)
 {
 	return D3DXVECTOR3(
 		(float)sin(x_rot * (D3DX_PI / 180.0f)), 
-		0, 
+		0,	
 		(float)cos(x_rot * (D3DX_PI / 180.0f)));
 }
 

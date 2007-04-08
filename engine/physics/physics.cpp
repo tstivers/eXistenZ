@@ -5,8 +5,10 @@
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "render/render.h"
-#include "NxPhysics.h"
-#include "NxCooking.h"
+#include <NxPhysics.h>
+#include <NxCooking.h>
+#include <NxCharacter.h>
+#include <NxControllerManager.h>
 
 #define NX_DBG_EVENTGROUP_MYOBJECTS        0x00100000
 #define NX_DBG_EVENTMASK_MYOBJECTS         0x00100000
@@ -28,10 +30,19 @@ namespace physics {
 
 	} physicsOutputStream;
 
+	class MyAllocator : public NxUserAllocator
+	{
+		void* mallocDEBUG(size_t size, const char* fileName, int line) { return malloc(size); }
+		void* malloc(size_t size) { return ::malloc(size); }
+		void* realloc(void* memory, size_t size) { return ::realloc(memory, size); }
+		void free(void* memory) { ::free(memory); }
+	} myAllocator;
+
 	NxPhysicsSDK* gPhysicsSDK = NULL;
 	NxRemoteDebugger* gDebugger = NULL;
 	NxScene* gScene = NULL;
 	NxCookingInterface *gCooking;
+	NxControllerManager* gManager;
 	int debug = 1;
 	bool acquired = false;
 	float scale = 30.0f;
@@ -102,6 +113,8 @@ void physics::acquire() {
 	defaultMaterial->setRestitution(0.5);
 	defaultMaterial->setStaticFriction(0.5);
 	defaultMaterial->setDynamicFriction(0.5);
+
+	gManager = NxCreateControllerManager(&myAllocator);
 
 	acquired = true;
 
