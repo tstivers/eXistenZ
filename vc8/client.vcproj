@@ -745,6 +745,14 @@
 			Name="game"
 			>
 			<File
+				RelativePath="..\engine\game\bspplayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\bspplayer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\game\game.cpp"
 				>
 			</File>
@@ -758,6 +766,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\game\jsgame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\physxplayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\physxplayer.h"
 				>
 			</File>
 			<File

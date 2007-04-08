@@ -52,10 +52,13 @@ namespace game {
 	void con_break();
 	
 	char init_command[MAX_PATH];
+
+	Player* player;
 };
 
 void game::init()
 {
+	player = createPlayer(D3DXVECTOR3(10, 35, 10));
 	game_state = STATE_RUN;
 	settings::addsetting("game.player.speed", settings::TYPE_FLOAT, 0, NULL, NULL, &player_speed);
 	settings::addsetting("game.player.step_up", settings::TYPE_FLOAT, 0, NULL, NULL, &step_up);
@@ -68,15 +71,15 @@ void game::init()
 	settings::addsetting("game.mouse.sensitivity.y", settings::TYPE_FLOAT, 0, NULL, NULL, &mouse_sens_y);
 	settings::addsetting("game.noclip", settings::TYPE_INT, 0, NULL, NULL, &noclip);
 
-	settings::addsetting("game.player.pos.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player.actual_pos.x);
-	settings::addsetting("game.player.pos.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player.actual_pos.y);
-	settings::addsetting("game.player.pos.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player.actual_pos.z);
-	settings::addsetting("game.player.rot.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player.rot.x);
-	settings::addsetting("game.player.rot.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player.rot.y);
-	settings::addsetting("game.player.rot.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player.rot.z);
-	settings::addsetting("game.player.size.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player.size.x);
-	settings::addsetting("game.player.size.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player.size.y);
-	settings::addsetting("game.player.size.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player.size.z);
+	settings::addsetting("game.player.pos.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.x);
+	settings::addsetting("game.player.pos.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.y);
+	settings::addsetting("game.player.pos.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.z);
+	settings::addsetting("game.player.rot.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.x);
+	settings::addsetting("game.player.rot.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.y);
+	settings::addsetting("game.player.rot.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.z);
+	settings::addsetting("game.player.size.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.x);
+	settings::addsetting("game.player.size.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.y);
+	settings::addsetting("game.player.size.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.z);
 	settings::addsetting("game.init_command", settings::TYPE_STRING, 0, NULL, NULL, init_command);
 
 	settings::setfloat("game.player.speed", 1.0f);
@@ -144,57 +147,57 @@ void game::processInput()
 	}
 
 	// handle mouse crap here for now
-	player.do_rotation((float)input::mousestate.lX * mouse_sens_x,
+	player->doRotation(D3DXVECTOR3((float)input::mousestate.lX * mouse_sens_x,
 		(float)input::mousestate.lY * mouse_sens_y,
-		0.0f);
+		0.0f));
 	
 	// process key mappings
 	input::processBinds();
 
 	// update player position
-	player.update_pos();
+	player->updatePos();
 
 	// attach camera to player
-	render::cam_pos = player.pos;
+	render::cam_pos = player->getPos();
 	render::cam_pos += render::cam_offset;
-	render::cam_rot = player.rot;
+	render::cam_rot = player->getRot();
 
 	return;
 }
 
 void game::move_up()
 {
-	player.do_move(MOVE_UP);
+	player->doMove(MOVE_UP);
 }
 
 void game::move_down()
 {
-	player.do_move(MOVE_DOWN);
+	player->doMove(MOVE_DOWN);
 }
 
 void game::move_left()
 {
-	player.do_move(MOVE_LEFT);
+	player->doMove(MOVE_LEFT);
 }
 
 void game::move_right()
 {
-	player.do_move(MOVE_RIGHT);
+	player->doMove(MOVE_RIGHT);
 }
 
 void game::move_forward()
 {
-	player.do_move(MOVE_FORWARD);
+	player->doMove(MOVE_FORWARD);
 }
 
 void game::move_back()
 {
-	player.do_move(MOVE_BACK);
+	player->doMove(MOVE_BACK);
 }
 
 void game::move_jump()
 {
-	player.do_move(MOVE_JUMP);
+	player->doMove(MOVE_JUMP);
 }
 
 void game::con_map(char* cmd, char* cmdline, void* user)

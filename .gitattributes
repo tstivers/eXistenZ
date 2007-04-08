@@ -47,11 +47,15 @@ engine/entity/entitycache.h eol=crlf
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
 engine/entity/staticentity.cpp eol=crlf
+engine/game/bspplayer.cpp eol=crlf
+engine/game/bspplayer.h -text
 engine/game/game.cpp eol=crlf
 engine/game/game.h eol=crlf
 engine/game/jsgame.cpp eol=crlf
 engine/game/jsgame.h eol=crlf
-engine/game/player.cpp eol=crlf
+engine/game/physxplayer.cpp -text
+engine/game/physxplayer.h -text
+engine/game/player.cpp -text
 engine/game/player.h eol=crlf
 engine/input/bind.cpp eol=crlf
 engine/input/bind.h eol=crlf
