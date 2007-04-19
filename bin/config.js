@@ -82,6 +82,7 @@ bind(BUTTON_3, "-exec bullet_time_off()");
 bind(KEY_N, "exec createBox()");
 bind(KEY_V, "*exec createBox()");
 bind(KEY_E, "toggle_entities");
+bind(KEY_F, "toggle_movemode");
 
 // functions
 

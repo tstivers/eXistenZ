@@ -50,6 +50,7 @@ namespace game {
 	void move_jump();
 	void con_quit();
 	void con_break();
+	void toggle_movemode();
 	
 	char init_command[MAX_PATH];
 
@@ -98,6 +99,7 @@ void game::init()
 	
 	con::addCommand("map", con_map);
 	con::addCommand("toggle_clipping", con::toggle_int, &noclip);
+	con::addCommand("toggle_movemode", toggle_movemode);
 	con::addCommand("move_up", move_up);
 	con::addCommand("move_down", move_down);
 	con::addCommand("move_left", move_left);
@@ -111,6 +113,14 @@ void game::init()
 
 void game::release()
 {
+}
+
+void game::toggle_movemode()
+{
+	if(player->getMoveMode() == MM_FLY)
+		player->setMoveMode(MM_WALK);
+	else
+		player->setMoveMode(MM_FLY);
 }
 
 void game::doTick()

@@ -9,6 +9,7 @@
 #include <NxController.h>
 #include <NxControllerManager.h>
 #include <NxCapsuleController.h>
+#include <NxBoxController.h>
 
 namespace game
 {
@@ -31,6 +32,7 @@ namespace game
 
 		NxController* nxc;
 		bool acquired;
+		bool in_air;		
 		bool moving[MOVE_MAX];
 	};
 }
@@ -38,6 +40,7 @@ namespace game
 namespace physics {
 	extern NxControllerManager* gManager;
 	extern NxScene* gScene;
+	extern float gravity;
 }
 
 
@@ -59,12 +62,10 @@ void PhysXPlayer::acquire()
 	if(acquired)
 		return;
 
-	NxCapsuleControllerDesc desc;
-	//desc.radius = size.x;
-	//desc.height = size.y;
-	//desc.upDirection = NX_Y;
-	desc.radius = 0.6;
-	desc.height = 1.8;
+	NxBoxControllerDesc desc;	
+	desc.upDirection = NX_Y;
+	desc.extents = NxVec3(0.5, 1.6, 0.5);
+	desc.stepOffset = 0.5;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
 	//nxc->setCollision(false);
@@ -103,10 +104,6 @@ void PhysXPlayer::updatePos()
 {
 	if(!acquired)
 		return;
-
-	//NxExtendedVec3 oldpos(pos.x / physics::scale, pos.y / physics::scale, pos.z / physics::scale);
-	//nxc->setPosition(oldpos);
-	//nxc->reportSceneChanged();
 
 	D3DXVECTOR3 dis;
 	switch(mode) {
@@ -160,19 +157,43 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 	D3DXVECTOR3 normal_dis;
 	D3DXVec3Normalize(&normal_dis, &dis);
 
-	D3DXMATRIX mat;
-	D3DXMatrixIdentity(&mat);
+	D3DXMATRIX mat;	
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
 
 	D3DXVECTOR3 rotated_dis;
 	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
 
-	return rotated_dis * (timer::delta_ms / 1000.0f);
+	return rotated_dis * (timer::delta_ms / 1000.0f) * game::player_speed * physics::scale;
 }
 
 D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 {
-	return(D3DXVECTOR3(0, 0, 0));
+	D3DXVECTOR3 dis(0.0f, 0.0f, 0.0f);
+
+	if(moving[MOVE_LEFT])
+		dis.x -= 1.0f;
+
+	if(moving[MOVE_RIGHT])
+		dis.x += 1.0f;
+
+	if(moving[MOVE_FORWARD])
+		dis.z += 1.0f;
+
+	if(moving[MOVE_BACK])
+		dis.z -= 1.0f;
+
+	D3DXVECTOR3 normal_dis;
+	D3DXVec3Normalize(&normal_dis, &dis);
+
+	D3DXMATRIX mat;	
+	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), 0, 0);
+
+	D3DXVECTOR3 rotated_dis;
+	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
+	rotated_dis *= (timer::delta_ms / 1000.0f) * game::player_speed * physics::scale;
+	rotated_dis.y += physics::gravity;
+
+	return rotated_dis;
 }
 
 Player* game::createPhysXPlayer(D3DXVECTOR3& size)

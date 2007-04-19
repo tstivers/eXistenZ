@@ -48,6 +48,9 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 		if(scene->faces[i].type != 1 && scene->faces[i].type != 3)
 			continue;
 
+		//if(scene->bsp->bsptextures[scene->faces[i].texture].flags & 0x4000)
+			//continue;
+
 		unsigned int offset = vertices.size();
 		for(int j = 0;j < scene->faces[i].num_vertices; j++)
 			vertices.push_back(scene->faces[i].vertices[j].pos / physics::scale);
