@@ -159,8 +159,12 @@ engine/scene/sceneportal.cpp eol=crlf
 engine/scene/sceneportal.h eol=crlf
 engine/scene/scenetree.cpp eol=crlf
 engine/scene/scenetree.h eol=crlf
+engine/script/JSArgumentList.cpp -text
+engine/script/JSArgumentList.h -text
 engine/script/jsscript.cpp eol=crlf
 engine/script/jsscript.h eol=crlf
+engine/script/jsvector.cpp -text
+engine/script/jsvector.h -text
 engine/script/script.cpp eol=crlf
 engine/script/script.h eol=crlf
 engine/settings/jssettings.cpp eol=crlf
