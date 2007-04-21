@@ -34,11 +34,12 @@
 #include "scene/jsscene.h"
 #include "entity/jsentity.h"
 #include "physics/physics.h"
+#include "script/jsvector.h"
 
 //extern unsigned long  _build_num;
 
 // hack
-ScriptEngine gScriptEngine;
+ScriptEngine* gScriptEngine;
 HINSTANCE gHInstance;
 int gActive = 0;
 
@@ -81,6 +82,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	jsentity::init();
 	physics::init();
 	jstimer::init();
+	//jsvector::init();
 
 	// add some generic system settings
 	addSystemSettings();
@@ -91,7 +93,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	// load and execute the config script
 	vfs::IFilePtr file = vfs::getFile("config.js");
 	if(file){
-		gScriptEngine.RunScript(file);		
+		gScriptEngine->RunScript(file);		
 	} else LOG("[eXistenZ] unable to open \"config.js\"");
 
 	// execute command line

@@ -6,6 +6,7 @@
 
 #include "precompiled.h"
 #include "script/script.h"
+#include "script/jsvector.h"
 #include "console/console.h"
 #include "vfs/file.h"
 
@@ -14,6 +15,8 @@
 namespace script {
 	void exec(char* cmd, char* cmdline, void* user);
 };
+
+using namespace script;
 
 ScriptEngine::ScriptEngine()
 {	
@@ -38,6 +41,7 @@ ScriptEngine::ScriptEngine()
 	
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
 	JS_InitStandardClasses(cx, globalObj);
+	initVectorClass(cx, globalObj);
 
 	SetErrorReporter(NULL);
 }
@@ -228,10 +232,11 @@ void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *re
 
 void script::init()
 {
+	gScriptEngine = new ScriptEngine();
 	con::addCommand("exec", script::exec);
 }
 
 void script::exec(char* cmd, char* cmdline, void* user)
 {
-	gScriptEngine.RunScript(cmdline);
+	gScriptEngine->RunScript(cmdline);
 }

@@ -243,7 +243,7 @@ bool game::startMap(char* name)
 	sprintf(bspname, "scripts/%s.js", name);
 	vfs::IFilePtr file = vfs::getFile(bspname);
 	if(file){
-		gScriptEngine.RunScript(file);
+		gScriptEngine->RunScript(file);
 	}
 
 	physics::acquire();

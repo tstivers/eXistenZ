@@ -265,11 +265,27 @@
 			Name="script"
 			>
 			<File
+				RelativePath="..\engine\script\JSArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\JSArgumentList.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\script\jsscript.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\script\jsscript.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\jsvector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\jsvector.h"
 				>
 			</File>
 			<File

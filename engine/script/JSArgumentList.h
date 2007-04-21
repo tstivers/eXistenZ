@@ -3,7 +3,7 @@
 namespace script {
 	class JSArgumentList {
 	public:
-		JSArgumentList(const JSContext* cx);
+		JSArgumentList(JSContext* cx);
 		~JSArgumentList();
 		
 		JSArgumentList& addParam(jsval val, bool rooted = false);

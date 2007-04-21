@@ -9,8 +9,6 @@
 #include "settings/settings.h"
 #include "script/script.h"
 
-extern ScriptEngine gScriptEngine;
-
 namespace con {
 	typedef struct {
 		ConsoleCallback log;
@@ -157,7 +155,7 @@ bool con::executeCommand(char* cmd)
 
 bool con::executeJS(char* script)
 {
-	return gScriptEngine.RunScript(script);
+	return gScriptEngine->RunScript(script);
 }
 
 void con::log(U32 flags, const char *format, ...)

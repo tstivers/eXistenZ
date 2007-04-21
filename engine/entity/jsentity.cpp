@@ -68,9 +68,9 @@ using namespace entity;
 
 void jsentity::init()
 {
-	gScriptEngine.AddFunction("createStaticEntity", 2, jsentity::createStaticEntity);
-	gScriptEngine.AddFunction("createBoxEntity", 2, jsentity::createBoxEntity);
-	gScriptEngine.AddFunction("getEntity", 1, jsentity::getEntity);
+	gScriptEngine->AddFunction("createStaticEntity", 2, jsentity::createStaticEntity);
+	gScriptEngine->AddFunction("createBoxEntity", 2, jsentity::createBoxEntity);
+	gScriptEngine->AddFunction("getEntity", 1, jsentity::getEntity);
 }
 
 JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
@@ -78,7 +78,7 @@ JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, js
 	*rval = JSVAL_NULL;
 
 	if(argc != 2) {
-		gScriptEngine.ReportError("createStaticEntity() takes 2 arguments");
+		gScriptEngine->ReportError("createStaticEntity() takes 2 arguments");
 		return JSVAL_FALSE;	
 	}
 
@@ -87,7 +87,7 @@ JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, js
 	
 	Entity* new_entity = entity::addStaticEntity(name, meshname);
 	if(!new_entity) {
-		gScriptEngine.ReportError("couldn't create entity");
+		gScriptEngine->ReportError("couldn't create entity");
 		return JSVAL_FALSE;	
 	}
 
@@ -101,7 +101,7 @@ JSBool jsentity::createBoxEntity(JSContext* cx, JSObject* obj, uintN argc, jsval
 	*rval = JSVAL_NULL;
 
 	if(argc != 2) {
-		gScriptEngine.ReportError("createBoxEntity() takes 2 arguments");
+		gScriptEngine->ReportError("createBoxEntity() takes 2 arguments");
 		return JSVAL_FALSE;	
 	}
 
@@ -110,7 +110,7 @@ JSBool jsentity::createBoxEntity(JSContext* cx, JSObject* obj, uintN argc, jsval
 
 	Entity* new_entity = entity::addBoxEntity(name, texture);
 	if(!new_entity) {
-		gScriptEngine.ReportError("couldn't create entity");
+		gScriptEngine->ReportError("couldn't create entity");
 		return JSVAL_FALSE;	
 	}
 
@@ -125,13 +125,13 @@ JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv
 	*rval = JSVAL_NULL;
 	
 	if(argc != 1) {
-		gScriptEngine.ReportError("getEntity() takes 1 argument");
+		gScriptEngine->ReportError("getEntity() takes 1 argument");
 		return JSVAL_FALSE;	
 	}
 
 	Entity* entity = entity::getEntity(std::string(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))));
 	if(!entity) {
-		gScriptEngine.ReportError("getEntity() couldn't find entity");		
+		gScriptEngine->ReportError("getEntity() couldn't find entity");		
 		return JSVAL_FALSE;	
 	}
 
@@ -206,7 +206,7 @@ JSBool jsentity::setVector(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 	jsdouble jd;
 
 	if(JS_ValueToNumber(cx, *vp, &jd) == JS_FALSE) {
-		gScriptEngine.ReportError("value must be double!");
+		gScriptEngine->ReportError("value must be double!");
 		return JSVAL_FALSE;
 	}
 
@@ -236,7 +236,7 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	*rval = JSVAL_VOID;
 
 	if(argc != 3) {
-		gScriptEngine.ReportError("setPos() takes 3 parameters (x, y, z)!");
+		gScriptEngine->ReportError("setPos() takes 3 parameters (x, y, z)!");
 		return JSVAL_FALSE;
 	}
 
@@ -248,7 +248,7 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 		jsdouble jd;
 	
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-			gScriptEngine.ReportError("setPos() takes 3 doubles (x, y, z)!");
+			gScriptEngine->ReportError("setPos() takes 3 doubles (x, y, z)!");
 			return JSVAL_FALSE;
 		}
 
@@ -263,7 +263,7 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	*rval = JSVAL_VOID;
 
 	if(argc != 3) {
-		gScriptEngine.ReportError("setRot() takes 3 parameters (x, y, z)!");
+		gScriptEngine->ReportError("setRot() takes 3 parameters (x, y, z)!");
 		return JSVAL_FALSE;
 	}
 
@@ -275,7 +275,7 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 		jsdouble jd;
 
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-			gScriptEngine.ReportError("setRot() takes 3 doubles (x, y, z)!");
+			gScriptEngine->ReportError("setRot() takes 3 doubles (x, y, z)!");
 			return JSVAL_FALSE;
 		}
 
@@ -290,7 +290,7 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 	*rval = JSVAL_VOID;
 
 	if(argc != 3) {
-		gScriptEngine.ReportError("setScale() takes 3 parameters (x, y, z)!");
+		gScriptEngine->ReportError("setScale() takes 3 parameters (x, y, z)!");
 		return JSVAL_FALSE;
 	}
 
@@ -302,7 +302,7 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 		jsdouble jd;
 
 		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-			gScriptEngine.ReportError("setScale() takes 3 doubles (x, y, z)!");
+			gScriptEngine->ReportError("setScale() takes 3 doubles (x, y, z)!");
 			return JSVAL_FALSE;
 		}
 
@@ -330,7 +330,7 @@ JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 	*rval = JSVAL_VOID;
 
 	if(argc != 3) {
-		gScriptEngine.ReportError("applyForce() takes 3 parameters (x, y, z)!");
+		gScriptEngine->ReportError("applyForce() takes 3 parameters (x, y, z)!");
 		return JSVAL_FALSE;
 	}
 
@@ -341,7 +341,7 @@ JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 	jsdouble jd[3];
 	for(unsigned x = 0; x < 3; x++) {
 		if(JS_ValueToNumber(cx, argv[x], &jd[x]) == JS_FALSE) {
-			gScriptEngine.ReportError("setPos() takes 3 doubles (x, y, z)!");
+			gScriptEngine->ReportError("setPos() takes 3 doubles (x, y, z)!");
 			return JSVAL_FALSE;
 		}
 	}

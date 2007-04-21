@@ -1,10 +1,9 @@
 #pragma once
 
 namespace script {
-	void registerVectorClass(JSContext* cx);
-	JSObject* getVectorObject();
-	JSObject* createVector(const D3DXVECTOR3& vec);
-	JSObject* createBoundVector(const D3DXVECTOR3* vec);
-	void bindVector(JSObject* jsvec, const D3DXVECTOR3* vec);
-	void setReadOnly(JSObject* jsvec);
+	JSObject* initVectorClass(JSContext* cx, JSObject* obj);
+	JSObject* NewVector(JSContext* cx, JSObject* parent, D3DXVECTOR3& vec);
+	JSObject* NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR3* vec, bool readonly);
+	JSBool SetVector(JSContext* cx, JSObject* obj, const D3DXVECTOR3& vec);
+	JSBool GetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec);
 }

@@ -9,19 +9,17 @@
 #include "input/input.h"
 #include "input/bind.h"
 
-extern ScriptEngine gScriptEngine;
-
 void jsinput::init()
 {
-	gScriptEngine.AddFunction("bind", 2, jsinput::jsbind);
-	gScriptEngine.AddFunction("unbind", 1, jsinput::jsunbind);
+	gScriptEngine->AddFunction("bind", 2, jsinput::jsbind);
+	gScriptEngine->AddFunction("unbind", 1, jsinput::jsunbind);
 }
 
 JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 					   jsval *argv, jsval *rval)
 {
 	if(argc != 2) {
-		gScriptEngine.ReportError("bind() takes 2 arguments");
+		gScriptEngine->ReportError("bind() takes 2 arguments");
 		return BOOLEAN_TO_JSVAL(FALSE);	
 	}
 
@@ -39,7 +37,7 @@ JSBool jsinput::jsunbind(JSContext *cx, JSObject *obj, uintN argc,
 					   jsval *argv, jsval *rval)
 {
 	if(argc != 1) {
-		gScriptEngine.ReportError("unbind() takes 1 argument");
+		gScriptEngine->ReportError("unbind() takes 1 argument");
 		return BOOLEAN_TO_JSVAL(FALSE);	
 	}
 

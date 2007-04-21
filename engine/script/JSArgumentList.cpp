@@ -6,15 +6,14 @@ namespace script {
 
 using namespace script;
 
-JSArgumentList::JSArgumentList(const JSContext* cx)
+JSArgumentList::JSArgumentList(JSContext* cx)
 	: cx(cx)
 {
 }
 
 JSArgumentList::~JSArgumentList()
 {
-	for(vec_jsval::iterator_t it = roots.begin(); it != roots.end(); it++)
-		JS_RemoveRoot(*it);
+	clear();
 }
 
 int JSArgumentList::getCount()
@@ -24,7 +23,7 @@ int JSArgumentList::getCount()
 
 jsval* JSArgumentList::getArgv()
 {
-	if(!argv.isEmpty())
+	if(!argv.empty())
 		return &argv[0];
 	else
 		return NULL;
@@ -32,14 +31,16 @@ jsval* JSArgumentList::getArgv()
 
 void JSArgumentList::clear()
 {
-	~JSArgumentList();
+	for(vec_jsval::iterator it = roots.begin(); it != roots.end(); it++)
+		JS_RemoveRoot(cx, &(*it));
+	roots.clear();
 	argv.clear();
 }
 
 JSArgumentList& JSArgumentList::addParam(jsval val, bool rooted /* = false */)
 {
 	if(!rooted && JSVAL_IS_GCTHING(val)) {
-		JS_AddRoot(val);
+		JS_AddRoot(cx, &val);
 		roots.push_back(val);
 	}
 	

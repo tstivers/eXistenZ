@@ -11,8 +11,6 @@
 #include "console/console.h"
 #include "client/appwindow.h"
 
-extern ScriptEngine gScriptEngine;
-
 namespace jsgame {
 	JSBool jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
                              jsval *argv, jsval *rval);
@@ -22,15 +20,15 @@ namespace jsgame {
 
 void jsgame::init()
 {
-	gScriptEngine.AddFunction("game.startMap", 1, jsgame::jsstartMap);
-	gScriptEngine.AddFunction("quit", 0, jsgame::jsquit);
+	gScriptEngine->AddFunction("game.startMap", 1, jsgame::jsstartMap);
+	gScriptEngine->AddFunction("quit", 0, jsgame::jsquit);
 }
 
 JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
                              jsval *argv, jsval *rval)
 {
 	if(argc != 1) {
-		gScriptEngine.ReportError("startMap() takes 1 argument");
+		gScriptEngine->ReportError("startMap() takes 1 argument");
 		return JS_FALSE;	
 	}
 

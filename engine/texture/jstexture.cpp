@@ -10,12 +10,9 @@
 #include "script/script.h"
 #include "console/console.h"
 
-
-extern ScriptEngine gScriptEngine;
-
 void jstexture::init()
 {
-	gScriptEngine.AddFunction("system.render.texture.flush", 0, jstexture::jsflush);
+	gScriptEngine->AddFunction("system.render.texture.flush", 0, jstexture::jsflush);
 }
 
 JSBool jstexture::jsflush(JSContext *cx, JSObject *obj, uintN argc,

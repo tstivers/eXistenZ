@@ -9,13 +9,11 @@
 #include "settings/jssettings.h"
 #include "script/script.h"
 
-extern ScriptEngine gScriptEngine;
-
 #pragma warning( disable : 4311 4312 )
 
 void jssettings::init()
 {
-	gScriptEngine.AddFunction("system.settings.dump", 0, jssettings::dump);
+	gScriptEngine->AddFunction("system.settings.dump", 0, jssettings::dump);
 }
 
 JSBool jssettings::dump(JSContext *cx, JSObject *obj, uintN argc,
@@ -37,7 +35,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	*propname = 0;
 	propname++;
 
-	JSObject* obj = gScriptEngine.GetObject(objname, true);
+	JSObject* obj = gScriptEngine->GetObject(objname, true);
 
 	// generate the starting value
 	jsval value;
@@ -50,7 +48,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	{
 	case settings::TYPE_STRING:
 		setting->get(setting, (void**)&string_value);
-		value = STRING_TO_JSVAL(JS_NewStringCopyZ(gScriptEngine.GetContext(), string_value));
+		value = STRING_TO_JSVAL(JS_NewStringCopyZ(gScriptEngine->GetContext(), string_value));
 		break;
 	case settings::TYPE_INT:
 		setting->get(setting, (void**)&int_value);
@@ -59,7 +57,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	case settings::TYPE_FLOAT:
 		setting->get(setting, (void**)&float_value);
 		bleh = float_value;
-		JS_NewDoubleValue(gScriptEngine.GetContext(), bleh, &value);
+		JS_NewDoubleValue(gScriptEngine->GetContext(), bleh, &value);
 		break;
 	default:
 		ASSERT(1);
@@ -71,18 +69,18 @@ bool jssettings::addsetting(settings::Setting* setting)
 	int flags = JSPROP_ENUMERATE | JSPROP_PERMANENT;
 	if(setting->flags & settings::FLAG_READONLY)
 		flags |= JSPROP_READONLY;
-	gScriptEngine.AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);	
+	gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);	
 	
 	jsval jspropmap;
 	propmap_hash* props;
 
-	JS_GetReservedSlot(gScriptEngine.GetContext(), obj, 0, &jspropmap);
+	JS_GetReservedSlot(gScriptEngine->GetContext(), obj, 0, &jspropmap);
 	props = (propmap_hash*)JSVAL_TO_PRIVATE(jspropmap);
 
 	if(!props) {		
 		// make new map and set it
 		props = new propmap_hash();
-		JS_SetReservedSlot(gScriptEngine.GetContext(), obj, 0, PRIVATE_TO_JSVAL(props));
+		JS_SetReservedSlot(gScriptEngine->GetContext(), obj, 0, PRIVATE_TO_JSVAL(props));
 	}
 
 	props->insert(propmap_hash::value_type(_strdup(propname), setting));
