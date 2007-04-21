@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "render/marker.h"
 #include "render/render.h"

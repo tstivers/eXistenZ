@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "game/jsgame.h"
 #include "game/game.h"

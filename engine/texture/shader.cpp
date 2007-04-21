@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "texture/shader.h"
 #include "texture/texture.h"

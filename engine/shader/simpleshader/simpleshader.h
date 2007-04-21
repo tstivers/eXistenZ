@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// shader.h
-// shader base class
-// $Id$
-//
-
 #pragma once
 #include "shader/shader.h"
 #include "texture/texture.h"

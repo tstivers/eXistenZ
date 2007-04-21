@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// dx.h
-// rendering system directx functions interface
-// $Id: timer.h 50 2004-08-27 21:31:06Z tstivers $
-//
-
 #pragma once
 
 namespace timer {

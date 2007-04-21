@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "mesh/textloader.h"
 #include "mesh/mesh.h"

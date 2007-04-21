@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "skybox/jsskybox.h"
 #include "skybox/skybox.h"

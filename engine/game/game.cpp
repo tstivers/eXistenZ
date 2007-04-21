@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "game/game.h"
 #include "game/player.h"

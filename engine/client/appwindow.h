@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// appwindow.h
-// main application window handling interface
-// $Id$
-//
-
 #pragma once
 
 namespace appwindow {

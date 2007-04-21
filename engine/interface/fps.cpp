@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "interface/fps.h"
 #include "interface/interface.h"

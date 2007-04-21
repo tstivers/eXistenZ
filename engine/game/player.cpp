@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id: player.cpp 66 2007-03-12 03:37:50Z tstivers $
-//
-
 #include "precompiled.h"
 #include "game/player.h"
 #include "game/bspplayer.h"

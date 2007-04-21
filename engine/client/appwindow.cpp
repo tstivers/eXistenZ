@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// appwindow.cpp
-// main application window
-// $Id$
-//
-
 #include "precompiled.h"
 #include "client/appwindow.h"
 #include "settings/settings.h"

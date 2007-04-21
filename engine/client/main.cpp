@@ -1,8 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// main.cpp
-// contains the program entry point as well as all globals
-// $Id$
-//
 #include "precompiled.h"
 #include "client/main.h"
 #include "console/console.h"

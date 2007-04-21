@@ -83,6 +83,8 @@ JSBool script::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval 
 		return JS_FALSE;
 	
 	D3DXVECTOR3* vec = (D3DXVECTOR3*)JSVAL_TO_PRIVATE(val);
+	if(!vec)
+		return JS_FALSE;
 	
 	switch(JSVAL_TO_INT(id)) {
 		case 0:
@@ -112,6 +114,8 @@ JSBool script::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval 
 		return JS_FALSE;
 
 	D3DXVECTOR3* vec = (D3DXVECTOR3*)JSVAL_TO_PRIVATE(val);
+	if(!vec)
+		return JS_FALSE;
 
 	jsdouble d;
 	if(!JS_ValueToNumber(cx, *vp, &d))

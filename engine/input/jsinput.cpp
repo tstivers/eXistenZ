@@ -1,8 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
 #include "precompiled.h"
 #include "script/script.h"
 #include "input/jsinput.h"

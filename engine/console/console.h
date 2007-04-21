@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.h
-// console class definition
-// $Id$
-//
-
 #pragma once
 
 #define LOG(a) con::log(con::FLAG_INFO,a)

@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// script.cpp
-// script engine class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "script/script.h"
 #include "script/jsvector.h"

@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3shader/q3shadercache.h"
 #include "q3shader/q3shader.h"

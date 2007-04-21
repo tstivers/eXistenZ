@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.cpp
-// rendering system implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "math/aabb.h"
 #include "console/console.h"

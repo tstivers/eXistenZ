@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.cpp
-// rendering system implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "render/render.h"
 #include "render/dx.h"

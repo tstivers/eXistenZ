@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// precompiled.h
-// all headers in this file are precompiled to make compilation faster
-// $Id$
-//
-
 #define VC_EXTRALEAN
 #define NOMINMAX
 #include <windows.h>

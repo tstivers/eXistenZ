@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #include "precompiled.h"
 #include "shader/shader.h"
 #include "shader/simpleshader/simpleshader.h"

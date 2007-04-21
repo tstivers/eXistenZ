@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "texture/jstexture.h"
 #include "texture/texturecache.h"

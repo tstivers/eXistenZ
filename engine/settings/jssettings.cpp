@@ -1,8 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
 #include "precompiled.h"
 #include "console/console.h"
 #include "settings/settings.h"
