@@ -53,6 +53,8 @@ engine/game/game.cpp eol=crlf
 engine/game/game.h eol=crlf
 engine/game/jsgame.cpp eol=crlf
 engine/game/jsgame.h eol=crlf
+engine/game/jsplayer.cpp -text
+engine/game/jsplayer.h -text
 engine/game/physxplayer.cpp -text
 engine/game/physxplayer.h -text
 engine/game/player.cpp -text
