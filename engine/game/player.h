@@ -25,14 +25,17 @@ namespace game {
 		virtual void acquire() {};
 		virtual void release() {};
 		
-		virtual D3DXVECTOR3& getPos() { return pos; };
-		virtual D3DXVECTOR3& getRot() { return rot; };
-		virtual D3DXVECTOR3& getVelocity() { return vel; };
+		virtual D3DXVECTOR3& getPos() { return pos; }
+		virtual D3DXVECTOR3& getRot() { return rot; }
+		virtual D3DXVECTOR3& getVelocity() { return vel; }
+		virtual float getSpeed() { return speed; }
+		virtual void setSpeed(float speed) { this->speed = speed; }
 		virtual bool getCollide() { return collide; }
 		virtual t_movemode getMoveMode() { return mode; }
 		
-		virtual void setPos(D3DXVECTOR3& pos) { this->pos = pos; };
-		virtual void setRot(D3DXVECTOR3& rot) { this->rot = rot; };
+		virtual void setPos(D3DXVECTOR3& pos) { this->pos = pos; }
+		virtual void setRot(D3DXVECTOR3& rot) { this->rot = rot; }
+		virtual void setSize(D3DXVECTOR3& size) { this->size = size; }
 		virtual void setCollide(bool collide) { this->collide = collide; }
 		virtual void setMoveMode(t_movemode mode) { this->mode = mode; }
 
@@ -42,6 +45,9 @@ namespace game {
 		D3DXVECTOR3 pos, rot, vel, size;
 		bool collide;
 		t_movemode mode;
+		float speed;
+		float step_up;
+		float step_down;
 	};
 
 	Player* createPlayer(D3DXVECTOR3& size);

@@ -35,7 +35,7 @@ ScriptEngine::ScriptEngine()
 	
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
 	JS_InitStandardClasses(cx, globalObj);
-	initVectorClass(cx, globalObj);
+	jsvector::initVectorClass(cx, globalObj);
 
 	SetErrorReporter(NULL);
 }

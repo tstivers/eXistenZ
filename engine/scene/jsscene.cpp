@@ -27,23 +27,23 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 
 	if(!render::scene) {
 		gScriptEngine->ReportError("addEntity(): no scene loaded");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	if(argc != 1) {
 		gScriptEngine->ReportError("usage: addEntity(Entity)");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	if(!JSVAL_IS_OBJECT(argv[0])) {
 		gScriptEngine->ReportError("addEntity(): argument wasn't an object");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
 	if(JS_InstanceOf(cx, entity_obj, &jsentity::JSEntity, NULL) == JS_FALSE) {
 		gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	jsval entity_val;
@@ -51,5 +51,5 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
 	render::scene->addEntity(entity);
 
-	return JSVAL_TRUE;
+	return JS_TRUE;
 }

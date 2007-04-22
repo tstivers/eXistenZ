@@ -21,7 +21,7 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	if(argc < 4) {
 		gScriptEngine->ReportError("addTimer() takes 4 parameters (name, action, frequency, start)!");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
@@ -30,17 +30,17 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	if(JS_ValueToNumber(cx, argv[2], &frequency) == JS_FALSE) {
 		gScriptEngine->ReportError("frequency must be double");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	if(JS_ValueToNumber(cx, argv[3], &start) == JS_FALSE) {
 		gScriptEngine->ReportError("start must be double");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	timer::addTimer(name, action, frequency, start);
 
-	return JSVAL_TRUE;
+	return JS_TRUE;
 }
 
 JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -49,12 +49,12 @@ JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 
 	if(argc < 1) {
 		gScriptEngine->ReportError("removeTimer() takes 1 parameter (name)!");
-		return JSVAL_FALSE;
+		return JS_FALSE;
 	}
 
 	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));	
 
 	timer::removeTimer(name);
 
-	return JSVAL_TRUE;
+	return JS_TRUE;
 }

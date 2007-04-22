@@ -64,8 +64,8 @@ void PhysXPlayer::acquire()
 
 	NxBoxControllerDesc desc;	
 	desc.upDirection = NX_Y;
-	desc.extents = NxVec3(0.5, 1.6, 0.5);
-	desc.stepOffset = 0.5;
+	desc.extents = (NxVec3)size;
+	desc.stepOffset = step_up;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
 	//nxc->setCollision(false);
@@ -163,7 +163,7 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 	D3DXVECTOR3 rotated_dis;
 	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
 
-	return rotated_dis * (timer::delta_ms / 1000.0f) * game::player_speed * physics::scale;
+	return rotated_dis * (timer::delta_ms / 1000.0f) * speed;
 }
 
 D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
@@ -190,7 +190,7 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 
 	D3DXVECTOR3 rotated_dis;
 	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
-	rotated_dis *= (timer::delta_ms / 1000.0f) * game::player_speed * physics::scale;
+	rotated_dis *= (timer::delta_ms / 1000.0f) * speed;
 	rotated_dis.y += physics::gravity;
 
 	return rotated_dis;

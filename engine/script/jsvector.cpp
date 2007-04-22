@@ -2,7 +2,7 @@
 #include "script/jsvector.h"
 #include "script/script.h"
 
-namespace script {	
+namespace jsvector {	
 	JSObject* vector_prototype = NULL;
 	
 	JSObject* initVectorClass(JSContext* cx, JSObject* obj);
@@ -13,7 +13,7 @@ namespace script {
 	JSBool wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 
 	JSClass vector_class = {
-		"Vector", JSCLASS_HAS_RESERVED_SLOTS(2),
+		"Vector", JSCLASS_HAS_RESERVED_SLOTS(4),
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
 		JS_EnumerateStub, JS_ResolveStub,
@@ -27,9 +27,9 @@ namespace script {
 	};
 }
 
-using namespace script;
+using namespace jsvector;
 
-JSObject* script::initVectorClass(JSContext* cx, JSObject* obj)
+JSObject* jsvector::initVectorClass(JSContext* cx, JSObject* obj)
 {	
 	vector_prototype = JS_InitClass(cx, obj, NULL, &vector_class, vector_construct, 3, NULL, vector_methods, NULL, NULL);
 		
@@ -39,7 +39,7 @@ JSObject* script::initVectorClass(JSContext* cx, JSObject* obj)
 	return vector_prototype;
 }
 
-JSObject* script::NewVector(JSContext* cx, JSObject* parent /* = NULL */, D3DXVECTOR3& vec)
+JSObject* jsvector::NewVector(JSContext* cx, JSObject* parent /* = NULL */, D3DXVECTOR3& vec)
 {
 	JSObject* obj = JS_NewObject(cx, &vector_class, vector_prototype, parent);
 	
@@ -52,7 +52,7 @@ JSObject* script::NewVector(JSContext* cx, JSObject* parent /* = NULL */, D3DXVE
 	return obj;
 }
 
-JSObject* script::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR3* vec, bool readonly)
+JSObject* jsvector::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR3* vec, bool readonly /* = false */, VectorOps* ops /* = NULL */, void* user /* = NULL */)
 {
 	JSObject* obj = JS_NewObject(cx, &vector_class, vector_prototype, parent);
 	
@@ -71,11 +71,14 @@ JSObject* script::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR3*
 		return NULL;
 	if(!JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(vec)))
 		return NULL;
-
+	if(!JS_SetReservedSlot(cx, obj, 1, PRIVATE_TO_JSVAL(ops)))		
+		return NULL;
+	if(!JS_SetReservedSlot(cx, obj, 2, PRIVATE_TO_JSVAL(user)))
+		return NULL;
 	return obj;
 }
 
-JSBool script::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsvector::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 {
 	jsval val;
 	
@@ -85,6 +88,16 @@ JSBool script::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval 
 	D3DXVECTOR3* vec = (D3DXVECTOR3*)JSVAL_TO_PRIVATE(val);
 	if(!vec)
 		return JS_FALSE;
+
+	if(!JS_GetReservedSlot(cx, obj, 1, &val))
+		return JS_FALSE;
+	VectorOps* ops = (VectorOps*)JSVAL_TO_PRIVATE(val);
+
+	if(!JS_GetReservedSlot(cx, obj, 2, &val))
+		return JS_FALSE;
+
+	if(ops && ops->on_get)
+		ops->on_get(cx, obj, JSVAL_TO_PRIVATE(val));
 	
 	switch(JSVAL_TO_INT(id)) {
 		case 0:
@@ -106,7 +119,7 @@ JSBool script::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval 
 	return JS_TRUE;
 }
 
-JSBool script::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 {
 	jsval val;
 
@@ -121,24 +134,35 @@ JSBool script::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval 
 	if(!JS_ValueToNumber(cx, *vp, &d))
 		return JS_FALSE;
 
+	D3DXVECTOR3 new_vec = *vec;
 	switch(JSVAL_TO_INT(id)) {
 		case 0:
-			vec->x = d;
+			new_vec.x = d;
 			break;
 		case 1:
-			vec->y = d;
+			new_vec.y = d;
 			break;
 		case 2:
-			vec->z = d;
+			new_vec.z = d;
 			break;
 		default:
 			return JS_FALSE;
+	}
+	
+	if(!JS_GetReservedSlot(cx, obj, 1, &val))
+		return JS_FALSE;
+	VectorOps* ops = (VectorOps*)JSVAL_TO_PRIVATE(val);
+	if(ops && ops->on_set) {
+		JS_GetReservedSlot(cx, obj, 2, &val);
+		return ops->on_set(cx, obj, new_vec, JSVAL_TO_PRIVATE(val));		
+	} else {
+		*vec = new_vec;
 	}
 
 	return JS_TRUE;
 }
 
-JSBool script::GetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec)
+JSBool jsvector::GetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec)
 {
 	jsval val[3];
 	jsdouble d[3];
@@ -162,7 +186,7 @@ JSBool script::GetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec)
 	return JS_TRUE;
 }
 
-JSBool script::SetVector(JSContext* cx, JSObject* obj, const D3DXVECTOR3& vec)
+JSBool jsvector::SetVector(JSContext* cx, JSObject* obj, const D3DXVECTOR3& vec)
 {
 	jsval val;
 
@@ -182,7 +206,7 @@ JSBool script::SetVector(JSContext* cx, JSObject* obj, const D3DXVECTOR3& vec)
 	return JS_TRUE;
 }
 
-JSBool script::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	if(argc == 0) {
 		if(!SetVector(cx, obj, D3DXVECTOR3(0,0,0)))
@@ -219,7 +243,7 @@ JSBool script::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval 
 	return JS_FALSE;
 }
 
-JSBool script::vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	D3DXVECTOR3 vec;
 	if(!GetVector(cx, obj, vec))

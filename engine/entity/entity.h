@@ -30,9 +30,9 @@ namespace entity {
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
-		virtual D3DXVECTOR3 getPos() { return pos; };
-		virtual D3DXVECTOR3 getRot() { return rot; };
-		virtual D3DXVECTOR3 getScale() { return scale; };
+		virtual D3DXVECTOR3& getPos() { return pos; };
+		virtual D3DXVECTOR3& getRot() { return rot; };
+		virtual D3DXVECTOR3& getScale() { return scale; };
 		virtual D3DXMATRIX getTransform() { return transform; };
 		virtual void setPos(const D3DXVECTOR3& pos) { this->pos = pos; };
 		virtual void setRot(const D3DXVECTOR3& rot) { this->rot = rot; };

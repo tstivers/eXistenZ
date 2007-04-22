@@ -17,21 +17,15 @@
 #include "scene/scene.h"
 #include "scene/scenebsp.h"
 #include "physics/physics.h"
+#include "jsplayer.h"
 
 
 namespace game {
 	int game_state;
 
 	void processInput();
-	float gravity;
-	float std_friction;
-	float player_accel;
-	float player_speed;
-	float jump_vel;
-	float step_up;
 	float mouse_sens_x;
 	float mouse_sens_y;
-	float climb_interpol;
 
 	int noclip;
 
@@ -53,43 +47,20 @@ namespace game {
 
 void game::init()
 {
-	player = createPlayer(D3DXVECTOR3(10, 35, 10));
+	player = createPlayer(D3DXVECTOR3(0.5, 1 , 0.5));
+	jsplayer::createPlayerObject(gScriptEngine->GetContext(), gScriptEngine->GetObject("game"), "player", player);
 	game_state = STATE_RUN;
-	settings::addsetting("game.player.speed", settings::TYPE_FLOAT, 0, NULL, NULL, &player_speed);
-	settings::addsetting("game.player.step_up", settings::TYPE_FLOAT, 0, NULL, NULL, &step_up);
-	settings::addsetting("game.player.accel", settings::TYPE_FLOAT, 0, NULL, NULL, &player_accel);
-	settings::addsetting("game.player.climb_interpol", settings::TYPE_FLOAT, 0, NULL, NULL, &climb_interpol);
-	settings::addsetting("game.player.jump_vel", settings::TYPE_FLOAT, 0, NULL, NULL, &jump_vel);
-	settings::addsetting("game.physics.gravity", settings::TYPE_FLOAT, 0, NULL, NULL, &gravity);
-	settings::addsetting("game.physics.friction", settings::TYPE_FLOAT, 0, NULL, NULL, &std_friction);
 	settings::addsetting("game.mouse.sensitivity.x", settings::TYPE_FLOAT, 0, NULL, NULL, &mouse_sens_x);
 	settings::addsetting("game.mouse.sensitivity.y", settings::TYPE_FLOAT, 0, NULL, NULL, &mouse_sens_y);
 	settings::addsetting("game.noclip", settings::TYPE_INT, 0, NULL, NULL, &noclip);
 
-	settings::addsetting("game.player.pos.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.x);
-	settings::addsetting("game.player.pos.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.y);
-	settings::addsetting("game.player.pos.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->pos.z);
-	settings::addsetting("game.player.rot.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.x);
-	settings::addsetting("game.player.rot.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.y);
-	settings::addsetting("game.player.rot.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->rot.z);
-	settings::addsetting("game.player.size.x", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.x);
-	settings::addsetting("game.player.size.y", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.y);
-	settings::addsetting("game.player.size.z", settings::TYPE_FLOAT, 0, NULL, NULL, &player->size.z);
 	settings::addsetting("game.init_command", settings::TYPE_STRING, 0, NULL, NULL, init_command);
 
-	settings::setfloat("game.player.speed", 1.0f);
 	settings::setfloat("game.mouse.sensitivity.x", 0.50f);
 	settings::setfloat("game.mouse.sensitivity.y", 1.0f);
 	init_command[0] = 0;
 
-	player_speed = 1.0f;
-	player_accel = 0.05f;
-	jump_vel = 0.7f;
-	gravity = 0.004f;
-	std_friction = 0.04f;
-	step_up = 30.0f;
 	noclip = 1;
-	climb_interpol = 0.04f;
 	
 	con::addCommand("map", con_map);
 	con::addCommand("toggle_clipping", con::toggle_int, &noclip);
@@ -233,17 +204,17 @@ bool game::startMap(char* name)
 
 	render::scene->init();
 
+	physics::acquire();
+	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
+	player->acquire();
+	render::scene->acquire();
+
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);
 	vfs::IFilePtr file = vfs::getFile(bspname);
 	if(file){
 		gScriptEngine->RunScript(file);
 	}
-
-	physics::acquire();
-	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
-	player->acquire();
-	render::scene->acquire();
 
 	return true;
 }

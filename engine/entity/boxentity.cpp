@@ -59,6 +59,12 @@ void BoxEntity::doTick()
 	//setRot((D3DXVECTOR3&)actor->getGlobalOrientation());
 }
 
+D3DXVECTOR3& BoxEntity::getPos()
+{
+	pos = (D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale;
+	return pos;
+}
+
 void BoxEntity::render()
 {
 	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture);

@@ -174,17 +174,18 @@ textures = new Array(
     "textures/house/shingle1",
     "textures/house/grass1",
     "textures/house/carpet1",
-    "textures/house/tv_front");
+    "textures/house/tv_front",
+    "textures/shaders/static");
+
+var boxes = new Object();
 
 function createBox() {
     box = createBoxEntity("box" + num_boxes++, textures[current_texture++]);
     if(current_texture >= textures.length)
         current_texture = 0;
-    
+    boxes[box.name] = box;
     system.scene.addEntity(box);
-    box.pos.x = game.player.pos.x;
-    box.pos.y = game.player.pos.y;
-    box.pos.z = game.player.pos.z;
+    box.setPos(game.player.pos);
     box.update();
     print('added box ' + box.name);
     timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
@@ -192,8 +193,12 @@ function createBox() {
 
 function bounceBox(boxName)
 {
-    var box = getEntity(boxName);
-    box.applyForce((Math.random() - 0.5) * 10, Math.random() * 50, (Math.random() - 0.5) * 10);
+    boxes[boxName].applyForce((Math.random() - 0.5) * 10, Math.random() * 50, (Math.random() - 0.5) * 10);
+}
+
+Vector.prototype.toString = function()
+{
+    return "(" + this.x + ", " + this.y + ", " + this.z + ")";
 }
 
 // log our start date and time

@@ -18,6 +18,7 @@ namespace entity {
 		void update();
 		void doTick();
 		void applyForce(const D3DXVECTOR3 &force);
+		D3DXVECTOR3& getPos();
 
 		NxActor* actor;
 		texture::DXTexture* texture;
