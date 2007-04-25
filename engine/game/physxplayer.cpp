@@ -21,7 +21,9 @@ namespace game
 		void acquire();
 		void release();
 
-		void setPos(D3DXVECTOR3& pos);
+		bool setPos(D3DXVECTOR3& pos);		
+		bool setSize(D3DXVECTOR3& size);
+		bool setStepUp(float step_up);
 
 		void doMove(t_impulse impulse);
 		void doRotation(D3DXVECTOR3& rotation);
@@ -73,10 +75,35 @@ void PhysXPlayer::acquire()
 	acquired = true;
 }
 
-void PhysXPlayer::setPos(D3DXVECTOR3& pos)
+bool PhysXPlayer::setPos(D3DXVECTOR3& pos)
 {
-	Player::setPos(pos);
-	nxc->setPosition(NxExtendedVec3(pos.x / physics::scale, pos.y / physics::scale, pos.z / physics::scale));
+	if(!Player::setPos(pos))
+		return false;
+	if(!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
+		return false;		
+	return true;
+}
+
+bool PhysXPlayer::setStepUp(float step_up)
+{
+	if(!Player::setStepUp(step_up))
+		return false;
+	
+	nxc->setStepOffset(this->step_up / physics::scale);
+		
+	return true;
+}
+
+bool PhysXPlayer::setSize(D3DXVECTOR3& size)
+{
+	if(!Player::setSize(size))
+		return false;
+
+	// TODO: figure this out
+	//if(!nxc->setExtents(this->size / physics::scale))
+	//	return false;
+
+	return true;
 }
 
 void PhysXPlayer::release()
@@ -154,16 +181,12 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 	if(moving[MOVE_BACK])
 		dis.z -= 1.0f;
 
-	D3DXVECTOR3 normal_dis;
-	D3DXVec3Normalize(&normal_dis, &dis);
-
 	D3DXMATRIX mat;	
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
+	D3DXVec3Normalize(&dis, &dis);
+	D3DXVec3TransformCoord(&dis, &dis, &mat);
 
-	D3DXVECTOR3 rotated_dis;
-	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
-
-	return rotated_dis * (timer::delta_ms / 1000.0f) * speed;
+	return dis * (timer::delta_ms / 1000.0f) * speed;
 }
 
 D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
@@ -182,18 +205,14 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 	if(moving[MOVE_BACK])
 		dis.z -= 1.0f;
 
-	D3DXVECTOR3 normal_dis;
-	D3DXVec3Normalize(&normal_dis, &dis);
-
 	D3DXMATRIX mat;	
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), 0, 0);
+	D3DXVec3Normalize(&dis, &dis);
+	D3DXVec3TransformCoord(&dis, &dis, &mat);
+	dis *= (timer::delta_ms / 1000.0f) * speed;
+	dis.y += physics::gravity * (timer::delta_ms / 1000.0f);
 
-	D3DXVECTOR3 rotated_dis;
-	D3DXVec3TransformCoord(&rotated_dis, &normal_dis, &mat);
-	rotated_dis *= (timer::delta_ms / 1000.0f) * speed;
-	rotated_dis.y += physics::gravity;
-
-	return rotated_dis;
+	return dis;
 }
 
 Player* game::createPhysXPlayer(D3DXVECTOR3& size)

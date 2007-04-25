@@ -19,10 +19,11 @@ namespace jsentity {
 	JSBool setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user);
-	JSBool posRead(JSContext* cx, JSObject* obj, void* user);
+	JSBool posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
+	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
+	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
 	JSFunctionSpec entity_functions[] = {
 		{"setPos", setPos, 3, 0, 0},
@@ -40,7 +41,7 @@ namespace jsentity {
 			JS_EnumerateStub, JS_ResolveStub,
 			JS_ConvertStub,  JS_FinalizeStub
 	};
-	jsvector::VectorOps posOps = {
+	jsvector::jsVectorOps posOps = {
 		posRead, posChanged
 	};
 };
@@ -132,7 +133,7 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 	JS_DefineProperty(cx, object, "name", name, NULL, NULL, JSPROP_READONLY);
 
 	JSObject* vec;
-	vec = jsvector::NewWrappedVector(cx, object, &entity->pos, false, &posOps, entity);
+	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &posOps, entity);
 	JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
 
 	vec = jsvector::NewWrappedVector(cx, object, &entity->rot, false);
@@ -144,27 +145,23 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 	return OBJECT_TO_JSVAL(object);
 }
 
-JSBool jsentity::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user)
+JSBool jsentity::posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
 {
 	entity::Entity* entity = (entity::Entity*)user;
-	entity->setPos(new_vec);
-	entity->update();
+	vec = entity->getPos();
 	return JS_TRUE;
 }
 
-JSBool jsentity::posRead(JSContext* cx, JSObject* obj, void* user)
+JSBool jsentity::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
 {
 	entity::Entity* entity = (entity::Entity*)user;
-	entity->getPos();
+	entity->setPos(vec);
 	return JS_TRUE;
 }
 
 JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, entity->name.c_str()));
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, getEntityReserved(cx, obj)->name.c_str()));
 
 	return JS_TRUE;
 }
@@ -172,88 +169,39 @@ JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
 
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-	
-	if(argc == 1) {
-		if(JSVAL_IS_OBJECT(argv[0])) {
-			D3DXVECTOR3 vec;
-			if(!jsvector::GetVector(cx, JSVAL_TO_OBJECT(argv[0]), vec))
-				return JS_FALSE;
-			entity->pos = vec;			
-		} else
-			return JS_FALSE;
-	}
-	else if(argc == 3) {
-		for(unsigned x = 0; x < 3; x++) {
-			jsdouble jd;
-		
-			if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-				gScriptEngine->ReportError("setPos() takes 3 doubles (x, y, z)!");
-				return JS_FALSE;
-			}
-
-			entity->pos[x] = (float)jd;
-		}
-	} else
+	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
-
+		
+	getEntityReserved(cx, obj)->setPos(vec);
+		
 	return JS_TRUE;
 }
 
 JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
 
-	if(argc != 3) {
-		gScriptEngine->ReportError("setRot() takes 3 parameters (x, y, z)!");
+	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
-	}
-
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-
-	for(unsigned x = 0; x < 3; x++) {
-		jsdouble jd;
-
-		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-			gScriptEngine->ReportError("setRot() takes 3 doubles (x, y, z)!");
-			return JS_FALSE;
-		}
-
-		entity->rot[x] = (float)jd;
-	}
-
+		
+	getEntityReserved(cx, obj)->setRot(vec);
+	
 	return JS_TRUE;
 }
 
 JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
 
-	if(argc != 3) {
-		gScriptEngine->ReportError("setScale() takes 3 parameters (x, y, z)!");
+	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
-	}
-
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-
-	for(unsigned x = 0; x < 3; x++) {
-		jsdouble jd;
-
-		if(JS_ValueToNumber(cx, argv[x], &jd) == JS_FALSE) {
-			gScriptEngine->ReportError("setScale() takes 3 doubles (x, y, z)!");
-			return JS_FALSE;
-		}
-
-		entity->scale[x] = (float)jd;
-	}
-
+		
+	getEntityReserved(cx, obj)->setScale(vec);
+	
 	return JS_TRUE;
 }
 
@@ -261,11 +209,7 @@ JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 {
 	*rval = JSVAL_VOID;
 
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-
-	entity->update();
+	getEntityReserved(cx, obj)->update();
 
 	return JS_TRUE;
 }
@@ -273,25 +217,21 @@ JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
 
-	if(argc != 3) {
-		gScriptEngine->ReportError("applyForce() takes 3 parameters (x, y, z)!");
+	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
-	}
 
-	jsval entity_object;
-	JS_GetReservedSlot(cx, obj, 0, &entity_object);
-	Entity* entity = (Entity*)JSVAL_TO_PRIVATE(entity_object);
-
-	jsdouble jd[3];
-	for(unsigned x = 0; x < 3; x++) {
-		if(JS_ValueToNumber(cx, argv[x], &jd[x]) == JS_FALSE) {
-			gScriptEngine->ReportError("setPos() takes 3 doubles (x, y, z)!");
-			return JS_FALSE;
-		}
-	}
-
-	entity->applyForce(D3DXVECTOR3(jd[0], jd[1], jd[2]));
-
+	getEntityReserved(cx, obj)->applyForce(vec);
+	
 	return JS_TRUE;
+}
+
+entity::Entity* jsentity::getEntityReserved(JSContext* cx, JSObject* obj)
+{
+	jsval entity_object;
+	if(!JS_GetReservedSlot(cx, obj, 0, &entity_object))
+		return NULL;
+	ASSERT(JSVAL_TO_PRIVATE(entity_object));
+	return (Entity*)JSVAL_TO_PRIVATE(entity_object);
 }

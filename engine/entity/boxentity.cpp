@@ -65,6 +65,26 @@ D3DXVECTOR3& BoxEntity::getPos()
 	return pos;
 }
 
+void BoxEntity::setPos(const D3DXVECTOR3& pos)
+{
+	this->pos = pos;
+	actor->setGlobalPosition((NxVec3)pos / physics::scale);
+}
+
+D3DXVECTOR3& BoxEntity::getRot()
+{
+	rot = (D3DXVECTOR3&)actor->getGlobalOrientation();
+	// TODO: convert back to degrees I guess
+	return rot;
+}
+
+void BoxEntity::setRot(const D3DXVECTOR3& rot)
+{
+	this->rot = rot;
+	// TODO: convert from vector3 to matrix
+	//actor->setGlobalOrientation((NxVec3)rot);
+}
+
 void BoxEntity::render()
 {
 	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture);

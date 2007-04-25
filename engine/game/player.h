@@ -31,13 +31,15 @@ namespace game {
 		virtual float getSpeed() { return speed; }
 		virtual void setSpeed(float speed) { this->speed = speed; }
 		virtual bool getCollide() { return collide; }
+		virtual float getStepUp() { return step_up; }		
 		virtual t_movemode getMoveMode() { return mode; }
 		
-		virtual void setPos(D3DXVECTOR3& pos) { this->pos = pos; }
-		virtual void setRot(D3DXVECTOR3& rot) { this->rot = rot; }
-		virtual void setSize(D3DXVECTOR3& size) { this->size = size; }
-		virtual void setCollide(bool collide) { this->collide = collide; }
-		virtual void setMoveMode(t_movemode mode) { this->mode = mode; }
+		virtual bool setPos(D3DXVECTOR3& pos) { this->pos = pos; return true; }
+		virtual bool setRot(D3DXVECTOR3& rot) { this->rot = rot; return true; }
+		virtual bool setSize(D3DXVECTOR3& size) { this->size = size; return true; }
+		virtual bool setStepUp(float step_up) { this->step_up = step_up; return true; }
+		virtual bool setCollide(bool collide) { this->collide = collide; return true; }
+		virtual bool setMoveMode(t_movemode mode) { this->mode = mode; return true; }
 
 		virtual void doMove(t_impulse impulse) = 0;
 		virtual void doRotation(D3DXVECTOR3& rotation) = 0;

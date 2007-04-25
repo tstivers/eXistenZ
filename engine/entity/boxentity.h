@@ -18,6 +18,9 @@ namespace entity {
 		void update();
 		void doTick();
 		void applyForce(const D3DXVECTOR3 &force);
+		void setPos(const D3DXVECTOR3& pos);
+		void setRot(const D3DXVECTOR3& rot);
+		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
 
 		NxActor* actor;
