@@ -21,6 +21,7 @@ namespace jsentity {
 	JSBool applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
+	JSBool posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
 	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
@@ -134,7 +135,7 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 
 	JSObject* vec;
 	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &posOps, entity);
-	JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
+	JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, posSet, JSPROP_PERMANENT);	
 
 	vec = jsvector::NewWrappedVector(cx, object, &entity->rot, false);
 	JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
@@ -157,6 +158,24 @@ JSBool jsentity::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void
 	entity::Entity* entity = (entity::Entity*)user;
 	entity->setPos(vec);
 	return JS_TRUE;
+}
+
+JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+{
+	D3DXVECTOR3 pos;
+	if(!jsvector::ParseVector(cx, pos, 1, vp))
+		goto error;
+
+	if(!JS_GetProperty(cx, obj, "pos", vp))
+		goto error;
+
+	getEntityReserved(cx, obj)->setPos(pos);		
+
+	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsentity::setPos] error setting entity position");
+	return JS_FALSE;
 }
 
 JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
