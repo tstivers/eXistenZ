@@ -43,4 +43,5 @@ extern ScriptEngine* gScriptEngine;
 namespace script {
 	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
 	void init();
+	void release();
 };

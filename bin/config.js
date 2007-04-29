@@ -185,8 +185,7 @@ function createBox() {
         current_texture = 0;
     boxes[box.name] = box;
     system.scene.addEntity(box);
-    box.setPos(game.player.pos);
-    box.update();
+    box.pos = game.player.pos;    
     print('added box ' + box.name);
     timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
 }

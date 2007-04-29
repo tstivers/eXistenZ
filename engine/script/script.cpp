@@ -230,6 +230,11 @@ void script::init()
 	con::addCommand("exec", script::exec);
 }
 
+void script::release()
+{
+	delete gScriptEngine;
+}
+
 void script::exec(char* cmd, char* cmdline, void* user)
 {
 	gScriptEngine->RunScript(cmdline);

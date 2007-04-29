@@ -113,9 +113,11 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	//vfs::release();
 	//jssettings::release();
 	settings::release();
+	jssettings::release();
 	//jscon::release();
 	//con::release();
 	physics::release();
+	script::release();
 	
 	//LOG2("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
 	
