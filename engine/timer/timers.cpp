@@ -6,61 +6,84 @@
 namespace timer {
 	class Timer {
 	public:
-		Timer(const std::string& name, const std::string& action, const unsigned int frequency_ms, const unsigned int next_ms) :
+		Timer(const std::string name, const std::string& action, const unsigned int frequency_ms, const unsigned int next_ms) :
 		  name(name), action(action), frequency_ms(frequency_ms), next_ms(next_ms){};
 		~Timer() {};
-
+		
 		std::string name;
 		std::string action;
 		unsigned int frequency_ms;
-		unsigned int next_ms;
-		bool operator<(const timer::Timer& right) const {return this->name < right.name;};
+		unsigned int next_ms;		
 	};
 
-	typedef std::set<Timer> timers_t;
-	timers_t timers;
+	typedef std::smart_ptr<Timer> pTimer;
+
+	struct timer_less : public std::binary_function<pTimer, pTimer, bool>
+	{
+		bool operator()(const pTimer _Left, const pTimer _Right) const
+		{
+			return (_Left->next_ms > _Right->next_ms);
+		}
+	};
+
+	typedef std::priority_queue<pTimer, std::vector<pTimer>, timer_less> timerqueue_t;
+	typedef stdext::hash_map<std::string, pTimer> timermap_t;
+	timerqueue_t timer_queue;
+	timermap_t timer_map;
 }
 
 using namespace timer;
 
 bool timer::addTimer(const std::string& name, const std::string& action, unsigned int frequency_ms /* = 0 */, unsigned int next_ms /* = 0 */)
 {
-	Timer t(name, action, frequency_ms, next_ms);
-	if(!t.next_ms)
-		t.next_ms = timer::game_ms + t.frequency_ms;
-	timers_t::iterator i = timers.find(t);
-	if(i != timers.end())
-		*i = t;
-	else
-		timers.insert(t);
+	timermap_t::iterator i = timer_map.find(name);
+	if(i != timer_map.end()) {
+		removeTimer(i->second->name);
+	}
+
+	pTimer t = new Timer(name, action, frequency_ms, next_ms);
+	timer_map.insert(timermap_t::value_type(name, t));
+	timer_queue.push(t);
 
 	return true;
 }
 
 bool timer::removeTimer(const std::string& name)
 {
-	Timer t(name, std::string(""), 0, 0);
-	timers_t::iterator i = timers.find(t);
-	if(i != timers.end())
-	{
-		timers.erase(i);
-		return true;
+	timermap_t::iterator i = timer_map.find(name);
+	if(i == timer_map.end())
+		return false;
+
+	std::vector<pTimer> temp;
+	while(timer_queue.top() != i->second) {
+		temp.push_back(timer_queue.top());
+		timer_queue.pop();
 	}
+
+	timer_queue.pop();
+
+	for(std::vector<pTimer>::iterator j = temp.begin(); j != temp.end(); j++)
+		timer_queue.push(*j);
+
+	timer_map.erase(i);
 		
 	return false;
 }
 
 void timer::fireTimers()
 {
-	for(timers_t::iterator i = timers.begin(); i != timers.end(); i++)
-	{
-		if((*i).next_ms <= timer::game_ms)
-		{
-			con::processCmd((*i).action.c_str());
-			if((*i).frequency_ms != 0)
-				(*i).next_ms = timer::game_ms + (*i).frequency_ms;
-			else
-				timers.erase(i);
+	if(timer_queue.empty())
+		return;
+
+	while(timer_queue.top()->next_ms <= game_ms) {
+		pTimer t = timer_queue.top();
+		timer_queue.pop();
+		con::processCmd(t->action.c_str());
+		if(t->frequency_ms != 0) {
+			t->next_ms = timer::game_ms + t->frequency_ms;
+			timer_queue.push(t);
+		} else {			
+			timer_map.erase(t->name);
 		}
 	}
 }
