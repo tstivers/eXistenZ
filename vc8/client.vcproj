@@ -43,7 +43,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -113,7 +113,7 @@
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -139,7 +139,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
