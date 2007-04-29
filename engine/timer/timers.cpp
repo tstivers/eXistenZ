@@ -6,7 +6,7 @@
 namespace timer {
 	class Timer {
 	public:
-		Timer(const std::string name, const std::string& action, const unsigned int frequency_ms, const unsigned int next_ms) :
+		Timer(const std::string& name, const std::string& action, const unsigned int frequency_ms, const unsigned int next_ms) :
 		  name(name), action(action), frequency_ms(frequency_ms), next_ms(next_ms){};
 		~Timer() {};
 		
@@ -26,7 +26,7 @@ namespace timer {
 		}
 	};
 
-	typedef std::priority_queue<pTimer, std::vector<pTimer>, timer_less> timerqueue_t;
+	typedef std::priority_queue<pTimer, std::deque<pTimer>, timer_less> timerqueue_t;
 	typedef stdext::hash_map<std::string, pTimer> timermap_t;
 	timerqueue_t timer_queue;
 	timermap_t timer_map;

@@ -261,6 +261,7 @@ JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsva
 			cx, &vector_class, vector_prototype, NULL, argc, argv);
 		if(!new_obj)
 			goto error;
+		setReserved(cx, new_obj, NULL, NULL, NULL);
 		*rval = OBJECT_TO_JSVAL(new_obj);
 		return JS_TRUE;
 	}
@@ -268,12 +269,14 @@ JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsva
 	/* called with new */
 	D3DXVECTOR3 vec(0,0,0);
 	if(argc == 0) {
+		setReserved(cx, obj, NULL, NULL, NULL);
 		if(!SetVector(cx, obj, vec))
 			goto error;
 		return JS_TRUE;
 	} else if (ParseVector(cx, vec, argc, argv)) {
+		setReserved(cx, obj, NULL, NULL, NULL);
 		if(!SetVector(cx, obj, vec))
-			goto error;
+			goto error;		
 		return JS_TRUE;
 	}
 	

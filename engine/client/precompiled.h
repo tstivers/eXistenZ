@@ -23,8 +23,11 @@
 #include <hash_map>
 #include <list>
 #include <deque>
+#include <queue>
 #include <vector>
 #include <set>
+#include <functional>
+#include <map>
 
 #include "platform/types.h"
 #include "common/common.h"
