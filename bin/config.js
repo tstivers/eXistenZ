@@ -187,12 +187,16 @@ function createBox() {
     system.scene.addEntity(box);
     box.pos = game.player.pos;    
     print('added box ' + box.name);
-    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
+    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 1500, 0);
 }
 
 function bounceBox(boxName)
 {
-    boxes[boxName].applyForce((Math.random() - 0.5) * 10, Math.random() * 50, (Math.random() - 0.5) * 10);
+    var vec = new Vector();
+    vec.x = game.player.pos.x - boxes[boxName].pos.x
+    vec.z = game.player.pos.z - boxes[boxName].pos.z;
+    vec.normalize();
+    boxes[boxName].applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
 }
 
 Vector.prototype.toString = function()
