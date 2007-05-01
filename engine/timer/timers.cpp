@@ -41,6 +41,9 @@ bool timer::addTimer(const std::string& name, const std::string& action, unsigne
 		removeTimer(i->second->name);
 	}
 
+	if(next_ms < game_ms)
+		next_ms = game_ms;
+
 	pTimer t = new Timer(name, action, frequency_ms, next_ms);
 	timer_map.insert(timermap_t::value_type(name, t));
 	timer_queue.push(t);
@@ -80,7 +83,9 @@ void timer::fireTimers()
 		timer_queue.pop();
 		con::processCmd(t->action.c_str());
 		if(t->frequency_ms != 0) {
-			t->next_ms = timer::game_ms + t->frequency_ms;
+			t->next_ms += t->frequency_ms;
+			if(t->next_ms <= game_ms)
+				t->next_ms = game_ms + 1;
 			timer_queue.push(t);
 		} else {			
 			timer_map.erase(t->name);

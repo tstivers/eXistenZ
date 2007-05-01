@@ -7,6 +7,7 @@ system.render.wait_vtrace = 0;
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.render.fullscreen = 0;
+system.render.multisampletype = 2; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.vfs.addPath("../data/");
 system.vfs.addPath("c:/games/eXistenZ/data");
 system.vfs.addPath("c:/games/eXistenZ/data/pak0.zip");
@@ -35,6 +36,7 @@ game.init_command = "";
 system.render.use_scenegraph = 0;
 system.render.bsp.convert = 0;
 system.render.skybox.texture = "textures/skybox/cx";
+game.player.step_up = 25;
 
 // source keys (will fix this later)
 execfile("scripts/keys.js");

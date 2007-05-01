@@ -13,7 +13,7 @@ game.player.rot.y = 0;
 game.player.rot.z = 0;
 
 // slow player down
-game.player.speed = 0.5;
+game.player.speed = 10;
 
 // turn on clipping
 game.noclip = 0;

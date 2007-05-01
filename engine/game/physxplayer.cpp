@@ -67,7 +67,7 @@ void PhysXPlayer::acquire()
 	NxBoxControllerDesc desc;	
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
-	desc.stepOffset = step_up;
+	desc.stepOffset = step_up / physics::scale;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
 	//nxc->setCollision(false);
@@ -79,8 +79,9 @@ bool PhysXPlayer::setPos(D3DXVECTOR3& pos)
 {
 	if(!Player::setPos(pos))
 		return false;
-	if(!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
-		return false;		
+	if(acquired)
+		if(!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
+			return false;		
 	return true;
 }
 
@@ -88,8 +89,9 @@ bool PhysXPlayer::setStepUp(float step_up)
 {
 	if(!Player::setStepUp(step_up))
 		return false;
-	
-	nxc->setStepOffset(this->step_up / physics::scale);
+
+	if(acquired)
+		nxc->setStepOffset(this->step_up / physics::scale);
 		
 	return true;
 }

@@ -13,6 +13,8 @@ namespace d3d {
 	D3DPRESENT_PARAMETERS d3dpp;
 };
 
+using namespace d3d;
+
 bool d3d::init()
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
@@ -24,7 +26,7 @@ bool d3d::init()
 		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
 		d3dpp.EnableAutoDepthStencil = TRUE;
 		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-		d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+		d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
 		d3dpp.BackBufferCount = 1;
 	} else {
 		d3dpp.BackBufferWidth = settings::getint("system.render.resolution.x");
@@ -58,6 +60,33 @@ bool d3d::init()
 			adapter = i;
 			devicetype = D3DDEVTYPE_REF;
 			break;
+		}
+	}
+
+	d3dpp.MultiSampleType = (D3DMULTISAMPLE_TYPE)settings::getint("system.render.multisampletype");	
+	HRESULT result;
+	char* err = "";
+	if(d3dpp.MultiSampleType) {
+		if(FAILED(result = d3d->CheckDeviceMultiSampleType(adapter, devicetype, d3dpp.BackBufferFormat, d3dpp.Windowed, d3dpp.MultiSampleType, &d3dpp.MultiSampleQuality))) {
+			switch(result) {
+				case D3DERR_INVALIDCALL:
+					err = "D3DERR_INVALIDCALL";
+					break;
+				case D3DERR_NOTAVAILABLE:
+					err = "D3DERR_NOTAVAILABLE";
+					break;
+				case D3DERR_INVALIDDEVICE:
+					err = "D3DERR_INVALIDDEVICE";
+					break;
+				default:
+					err = "UNKNOWN";
+			}
+			LOG3("[d3d::init] failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
+			d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
+			d3dpp.MultiSampleQuality = 0;
+		} else {
+			d3dpp.MultiSampleQuality -= 1; 
+			LOG3("[d3d::init] set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
 		}
 	}
 
