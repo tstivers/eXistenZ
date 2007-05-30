@@ -38,6 +38,7 @@ engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf
 engine/console/jsconsole.h eol=crlf
+engine/entity/IBoxRenderer.h -text
 engine/entity/boxentity.cpp -text
 engine/entity/boxentity.h -text
 engine/entity/entity.cpp eol=crlf
@@ -47,6 +48,8 @@ engine/entity/entitycache.h eol=crlf
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
 engine/entity/staticentity.cpp eol=crlf
+engine/entity/staticentity.h -text
+engine/excom/excom.h -text
 engine/game/bspplayer.cpp eol=crlf
 engine/game/bspplayer.h -text
 engine/game/game.cpp eol=crlf
@@ -124,6 +127,7 @@ engine/q3shader/q3shader.cpp eol=crlf
 engine/q3shader/q3shader.h eol=crlf
 engine/q3shader/q3shadercache.cpp eol=crlf
 engine/q3shader/q3shadercache.h eol=crlf
+engine/render/IRenderable.h -text
 engine/render/dx.cpp eol=crlf
 engine/render/dx.h eol=crlf
 engine/render/font.cpp eol=crlf
