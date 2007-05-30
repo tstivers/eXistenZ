@@ -15,7 +15,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\physics\physics.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\physics\physics.h" />
 		</category>
-		<category name="game" expanded="yes">
+		<category name="game" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\game\bspplayer.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\game\bspplayer.h" />
 			<localfile path="E:\Work\eXistenZ\engine\game\game.cpp" />
@@ -29,7 +29,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\game\player.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\game\player.h" />
 		</category>
-		<category name="scene" expanded="yes">
+		<category name="scene" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.h" />
 			<localfile path="E:\Work\eXistenZ\engine\scene\scene.cpp" />
@@ -65,7 +65,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\q3bsptypes.h" />
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\rendertest.cpp" />
 		</category>
-		<category name="timer" expanded="yes">
+		<category name="timer" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.h" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\timer.cpp" />
@@ -73,7 +73,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" />
 		</category>
-		<category name="script" expanded="yes">
+		<category name="script" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.h" />
 			<localfile path="E:\Work\eXistenZ\engine\script\jsscript.cpp" />
@@ -90,20 +90,29 @@
 			<localfile path="E:\Work\eXistenZ\engine\entity\entity.h" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\entitycache.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\entitycache.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\IBoxRenderer.h" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.h" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.h" />
 		</category>
-		<category name="settings" expanded="yes">
+		<category name="settings" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.h" />
 			<localfile path="E:\Work\eXistenZ\engine\settings\settings.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\settings\settings.h" />
 		</category>
+		<category name="math" expanded="yes">
+			<localfile path="E:\Work\eXistenZ\engine\math\aabb.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\math\aabb.h" />
+			<localfile path="E:\Work\eXistenZ\engine\math\math.h" />
+			<localfile path="E:\Work\eXistenZ\engine\math\vertex.h" />
+		</category>
 	</category>
 </project>
 
 <workspace version="Crimson Editor 3.60">
+	<localfile path="E:\Work\eXistenZ\crimson\eXistenZ.prj" linenum="1" placement="0:1:-1:-1:-4:-25:0:0:648:430" />
 	<localfile path="E:\Work\eXistenZ\engine\script\jsscript.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:44:48:692:478" />
 	<localfile path="E:\Work\eXistenZ\engine\script\jsscript.h" linenum="1" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
 	<localfile path="E:\Work\eXistenZ\engine\script\script.cpp" linenum="229" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
@@ -112,26 +121,33 @@
 	<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.cpp" linenum="37" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
 	<localfile path="E:\Work\eXistenZ\lib\js32\src\jsapi.c" linenum="4378" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
 	<localfile path="E:\Work\eXistenZ\engine\timer\timer.h" linenum="16" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" linenum="9" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
+	<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" linenum="7" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
 	<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.h" linenum="1" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
 	<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" linenum="35" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" linenum="25" placement="2:3:-1:-1:-4:-25:66:72:718:506" />
+	<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" linenum="25" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
 	<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.cpp" linenum="229" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
 	<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.h" linenum="4" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\entity\entity.h" linenum="24" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\entity.h" linenum="35" placement="2:3:-1:-1:-4:-25:132:144:784:578" />
 	<localfile path="E:\Work\eXistenZ\engine\game\jsgame.cpp" linenum="41" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
 	<localfile path="E:\Work\eXistenZ\engine\game\jsgame.h" linenum="1" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
 	<localfile path="E:\Work\eXistenZ\engine\game\player.cpp" linenum="25" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\game\player.h" linenum="37" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
+	<localfile path="E:\Work\eXistenZ\engine\game\player.h" linenum="56" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
 	<localfile path="E:\Work\eXistenZ\engine\game\jsplayer.cpp" linenum="92" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
 	<localfile path="E:\Work\eXistenZ\engine\game\jsplayer.h" linenum="4" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\script\jsvector.cpp" linenum="261" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
+	<localfile path="E:\Work\eXistenZ\engine\script\jsvector.cpp" linenum="340" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
 	<localfile path="E:\Work\eXistenZ\engine\script\jsvector.h" linenum="9" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
 	<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.cpp" linenum="79" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.cpp" linenum="62" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\entity\entity.cpp" linenum="24" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.cpp" linenum="86" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\entity.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
 	<localfile path="E:\Work\eXistenZ\engine\game\physxplayer.cpp" linenum="80" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
 	<localfile path="E:\Work\eXistenZ\engine\game\physxplayer.h" linenum="6" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
 	<localfile path="E:\Work\eXistenZ\engine\scene\scene.h" linenum="18" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.h" linenum="3" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.h" linenum="27" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
+	<localfile path="E:\Work\eXistenZ\engine\render\IRenderable.h" linenum="9" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.cpp" linenum="45" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
+	<localfile path="E:\Work\eXistenZ\engine\math\aabb.h" linenum="1" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
+	<localfile path="E:\Work\eXistenZ\engine\math\aabb.cpp" linenum="18" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\IBoxRenderer.h" linenum="9" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
 </workspace>
 

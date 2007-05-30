@@ -13,10 +13,26 @@ Entity::Entity(std::string name)
 	this->pos =	D3DXVECTOR3(0, 0, 0);
 	this->rot = D3DXVECTOR3(0, 0, 0);
 	this->scale = D3DXVECTOR3(1.0, 1.0, 1.0);
+	this->active = true;
+	this->acquired = false;
 }
 
 Entity::~Entity()
 {
+}
+
+bool Entity::acquire()
+{
+	ASSERT(!acquired);
+	acquired = true;
+	return true;
+}
+
+bool Entity::release()
+{
+	ASSERT(acquired);
+	acquired = false;
+	return true;
 }
 
 void Entity::activate()
@@ -27,34 +43,4 @@ void Entity::activate()
 void Entity::deactivate()
 {
 	this->active = false;
-}
-
-void Entity::update()
-{
-	D3DXQUATERNION rotq;
-	D3DXQuaternionRotationYawPitchRoll(&rotq, 
-		rot.y * (D3DX_PI / 180.0f), 
-		rot.x * (D3DX_PI / 180.0f), 
-		rot.z * (D3DX_PI / 180.0f));
-	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rotq, &pos);
-	calcAABB();
-}
-
-void Entity::doTick()
-{
-}
-
-void Entity::setQuatRot(const D3DXQUATERNION& rot)
-{
-	
-}
-
-inline_ void Entity::mark(unsigned int frame)
-{
-	this->frame = frame;
-}
-
-void Entity::applyForce(const D3DXVECTOR3 &force)
-{
-	LOG2("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
 }

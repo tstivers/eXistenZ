@@ -16,17 +16,22 @@ namespace physics {
 
 using namespace entity;
 
-BoxEntity::BoxEntity(std::string name, std::string texture) : Entity(name) 
+BoxEntity::BoxEntity(std::string name, std::string texture) : Entity(name), renderer(this)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
 
 BoxEntity::~BoxEntity()
 {
+	if(acquired)
+	 release();
 }
 
-void BoxEntity::acquire()
+bool BoxEntity::acquire()
 {
+	if(acquired)
+		return false;
+	
 	NxActorDesc actorDesc;
 	NxBodyDesc bodyDesc;
 	NxBoxShapeDesc boxDesc;
@@ -36,27 +41,23 @@ void BoxEntity::acquire()
 	actorDesc.density = 10;    
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);	
+	
 	actor = physics::gScene->createActor(actorDesc);
 	ASSERT(actor);
-	actor->setName(name.c_str());	
+	
+	actor->setName(name.c_str());
+	
+	acquired = true;
+	return true;
 }
 
-void BoxEntity::release()
+bool BoxEntity::release()
 {
+	if(!acquired)
+		return false;
 	physics::gScene->releaseActor(*actor);
-}
-
-void BoxEntity::update()
-{
-	actor->setGlobalPosition((NxVec3)pos / physics::scale);
-	//actor->setGlobalOrientation()
-}
-
-void BoxEntity::doTick()
-{	
-	//setPos((D3DXVECTOR3&)actor->getGlobalPosition());
-	//setQuatRotation((D3DXQUATERNION&)actor->getGlobalOrientationQuat());
-	//setRot((D3DXVECTOR3&)actor->getGlobalOrientation());
+	acquired = false;
+	return true;
 }
 
 D3DXVECTOR3& BoxEntity::getPos()
@@ -65,10 +66,11 @@ D3DXVECTOR3& BoxEntity::getPos()
 	return pos;
 }
 
-void BoxEntity::setPos(const D3DXVECTOR3& pos)
+bool BoxEntity::setPos(const D3DXVECTOR3& pos)
 {
 	this->pos = pos;
 	actor->setGlobalPosition((NxVec3)pos / physics::scale);
+	return true;
 }
 
 D3DXVECTOR3& BoxEntity::getRot()
@@ -78,23 +80,10 @@ D3DXVECTOR3& BoxEntity::getRot()
 	return rot;
 }
 
-void BoxEntity::setRot(const D3DXVECTOR3& rot)
+bool BoxEntity::setRot(const D3DXVECTOR3& rot)
 {
 	this->rot = rot;
 	// TODO: convert from vector3 to matrix
 	//actor->setGlobalOrientation((NxVec3)rot);
-}
-
-void BoxEntity::render()
-{
-	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture);
-}
-
-void BoxEntity::calcAABB()
-{
-}
-
-void BoxEntity::applyForce(const D3DXVECTOR3 &force)
-{
-	actor->addForce((NxVec3&)force, NX_IMPULSE);
+	return true;
 }

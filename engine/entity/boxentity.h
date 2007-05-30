@@ -13,17 +13,17 @@ namespace entity {
 		~BoxEntity();
 		void acquire();
 		void release();
-		void render();
-		void calcAABB();
-		void update();
-		void doTick();
-		void applyForce(const D3DXVECTOR3 &force);
+		ENTITY_FLAGS getFlags() { return EF_RENDERABLE | EF_DYNAMIC | EF_HASACTOR | EF_HASEVENTS; }
 		void setPos(const D3DXVECTOR3& pos);
 		void setRot(const D3DXVECTOR3& rot);
-		D3DXVECTOR3& getRot();
-		D3DXVECTOR3& getPos();
-
+		const D3DXVECTOR3& getRot();
+		const D3DXVECTOR3& getPos();
+		NxActor* getActor() { return actor; }
+		IRenderable* getRenderer() { return &renderer };
+		
+	private:
 		NxActor* actor;
 		texture::DXTexture* texture;
+		IBoxRenderer renderer;
 	};	
 }
