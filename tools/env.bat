@@ -1,1 +1,0 @@
-SET LIB=%LIB%;d:\projects\js\release;c:\dxsdk\lib;c:\program files\intel\compiler70\ia32\lib
