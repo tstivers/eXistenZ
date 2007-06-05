@@ -1,5 +1,4 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "diskpath.h"
 #include "diskfile.h"
 
@@ -11,7 +10,7 @@ vfs::Path* vfs::DiskPath::createPath(const char* path)
 	// check to see if the file/directory exists
 	DWORD att = GetFileAttributes(path);
 	if((att == -1) || !(att & FILE_ATTRIBUTE_DIRECTORY)) {
-		LOG2("couldn't locate directory \"%s\"", path);
+		LOG("couldn't locate directory \"%s\"", path);
 		return NULL;
 	}
 
@@ -70,7 +69,7 @@ U32 vfs::DiskPath::getFileList(file_list_t& file_list, const char* path, const c
 
 	sprintf(search_path, "%s\\%s", canon_path, "*");			
 
-	LOG2("searching \"%s\"", search_path);
+	LOG("searching \"%s\"", search_path);
 
 	if((hfile = _findfirst(search_path, &found)) == (intptr_t)-1)
 		return (U32)file_list.size();
@@ -80,7 +79,7 @@ U32 vfs::DiskPath::getFileList(file_list_t& file_list, const char* path, const c
 			(!(found.attrib & _A_SUBDIR) && (flags & FIND_FILE))) {
 				if(wildcmp(filespec, found.name)) {
 					sprintf(search_path, "%s\\%s", canon_path, strlower(found.name));
-					LOG2("\tfound \"%s\"", search_path);
+					LOG("\tfound \"%s\"", search_path);
 					file_list.insert(strDup(search_path));
 				}
 		}

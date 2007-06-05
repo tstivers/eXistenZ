@@ -2,7 +2,6 @@
 #include "scene/jsscene.h"
 #include "scene/scene.h"
 #include "script/script.h"
-#include "console/console.h"
 #include "entity/jsentity.h"
 #include "entity/entity.h"
 #include "render/render.h"

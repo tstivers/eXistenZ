@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"
-#include "console/console.h"
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/frustrum.h"

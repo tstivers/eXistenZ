@@ -4,7 +4,6 @@
 #include "q3bsp/bsprender.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
-#include "console/console.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
 

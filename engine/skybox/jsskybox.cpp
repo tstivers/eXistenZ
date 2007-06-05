@@ -2,7 +2,6 @@
 #include "skybox/jsskybox.h"
 #include "skybox/skybox.h"
 #include "script/script.h"
-#include "console/console.h"
 
 void jsskybox::init()
 {
@@ -13,5 +12,5 @@ JSBool jsskybox::jsreset(JSContext *cx, JSObject *obj, uintN argc,
 						  jsval *argv, jsval *rval)
 {
 	skybox::reset();
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JS_TRUE;
 }

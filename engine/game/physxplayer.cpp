@@ -3,7 +3,6 @@
 #include "game/physxplayer.h"
 #include "game/game.h"
 #include "physics/physics.h"
-#include "console/console.h"
 #include "timer/timer.h"
 #include <NxPhysics.h>
 #include <NxController.h>

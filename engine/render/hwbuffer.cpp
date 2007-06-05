@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "render/hwbuffer.h"
 #include "render/render.h"
-#include "console/console.h"
 
 namespace render {
 	class VBEntry {
@@ -22,7 +21,7 @@ namespace render {
 
 	class VBEntryTraits {
 	public:
-		inline_ bool operator()(const VBEntry& key1, const VBEntry& key2) const
+		inline bool operator()(const VBEntry& key1, const VBEntry& key2) const
 		{
 			return key1.offset < key2.offset;
 		}
@@ -30,7 +29,7 @@ namespace render {
 
 	class IBEntryTraits {
 	public:
-		inline_ bool operator()(const IBEntry& key1, const IBEntry& key2) const
+		inline bool operator()(const IBEntry& key1, const IBEntry& key2) const
 		{
 			return key1.offset < key2.offset;
 		}
@@ -155,7 +154,7 @@ void render::VB::init()
 		}
 
 	free.insert(VBEntry(0, size, NULL));
-	LOG3("[VB::init] allocated %i byte vertex buffer (fvf = %i)", size, fvf);
+	LOG("[VB::init] allocated %i byte vertex buffer (fvf = %i)", size, fvf);
 }
 
 void render::IB::init()
@@ -172,7 +171,7 @@ void render::IB::init()
 		}
 
 		free.insert(IBEntry(0, size, NULL));
-		LOG2("[IB::init] allocated %i byte index buffer", size);
+		LOG("[IB::init] allocated %i byte index buffer", size);
 }
 
 

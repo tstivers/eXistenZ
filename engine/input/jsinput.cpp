@@ -15,7 +15,7 @@ JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if(argc != 2) {
 		gScriptEngine->ReportError("bind() takes 2 arguments");
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JS_FALSE;	
 	}
 
 	int key;
@@ -25,7 +25,7 @@ JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 	function = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 
 	input::bindKey(key, function);
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JS_TRUE;
 }
 
 JSBool jsinput::jsunbind(JSContext *cx, JSObject *obj, uintN argc,
@@ -33,7 +33,7 @@ JSBool jsinput::jsunbind(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if(argc != 1) {
 		gScriptEngine->ReportError("unbind() takes 1 argument");
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JS_FALSE;	
 	}
 
 	int key;	
@@ -41,5 +41,5 @@ JSBool jsinput::jsunbind(JSContext *cx, JSObject *obj, uintN argc,
 	JS_ValueToInt32(cx, argv[0], (int32*)&key);	
 
 	input::unbind(key);
-	return BOOLEAN_TO_JSVAL(TRUE);
+	return JS_TRUE;
 }

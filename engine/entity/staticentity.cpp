@@ -6,6 +6,7 @@
 #include "mesh/meshsystemcache.h"
 #include "render/render.h"
 #include "render/shapes.h"
+#include "math/vertex.h"
 
 namespace entity {
 };

@@ -17,7 +17,7 @@ namespace render {
 	bool start(void);
 	void stop(void);
 	void render(void);
-	inline_ extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
+	inline extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
 
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
 	extern D3DXMATRIX world, view, projection;

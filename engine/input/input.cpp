@@ -8,6 +8,8 @@
 
 #define DIKBSIZE 32
 
+extern HINSTANCE gHInstance;
+
 namespace input {
 	IDirectInput* dinput;
 	IDirectInputDevice8* keyboard;
@@ -85,8 +87,8 @@ void input::init()
 	has_focus = 0;
 	ZeroMemory(kbstate, 256);
 
-	con::addCommand("binds", input::con_listBinds);
-	con::addCommand("bind", input::con_bind);
+	console::addCommand("binds", input::con_listBinds);
+	console::addCommand("bind", input::con_bind);
 }
 
 void input::acquire()

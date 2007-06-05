@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "physics/physics.h"
 #include "physics/meshdesc.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "render/render.h"
@@ -16,16 +15,16 @@
 namespace physics {
 	class PhysicsOutputStream : public NxUserOutputStream {
 		void reportError(NxErrorCode code, const char* message, const char* file, int line) {
-			LOGERROR5("[physics] ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
+			ERROR("[physics] ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
 		}
 		
 		NxAssertResponse reportAssertViolation(const char *message, const char *file,int line) {
-			LOGERROR4("[physics] ASSERT \"%s\" (%s:%d)", message, file, line);
+			ERROR("[physics] ASSERT \"%s\" (%s:%d)", message, file, line);
 			return NX_AR_CONTINUE;
 		}
 
 		void print(const char* message) {
-			LOG2("[physics] \"%s\"", message);
+			LOG("[physics] \"%s\"", message);
 		}
 
 	} physicsOutputStream;

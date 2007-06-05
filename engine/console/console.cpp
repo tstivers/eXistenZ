@@ -3,21 +3,13 @@
 #include "settings/settings.h"
 #include "script/script.h"
 
-namespace con {
-	typedef struct {
-		ConsoleCallback log;
-		void* userdef;
-	} Consumer;
-
-	typedef struct {
+namespace console {
+	struct CommandEntry {
 		ConsoleCommand cmd;
 		ConsoleCommandArgs cmd_args;
 		ConsoleCommandNoArgs cmd_noargs;
 		void* userdef;
-	} CommandEntry;
-
-	typedef std::list<Consumer*> consumer_list_t;
-	consumer_list_t consumer_list;
+	};
 
 	struct eqstr {
 		bool operator() (char* s1, char* s2) const {
@@ -25,41 +17,16 @@ namespace con {
 		}
 	};
 
-	typedef stdext::hash_map<char*, CommandEntry*, hash_char_ptr> command_map_t;
+	typedef stdext::hash_map<char*, CommandEntry*, hash_char_ptr_traits> command_map_t;
 	command_map_t command_map;
-
-	void traceLoggerCallback(U32 flags, void *userdef, const char* message);
-
-	char logfile_name[MAX_PATH];
-	U32 trace_flags;
-	bool log_frame;
-
-	void con_log_frame();
 };
 
-void con::init()
+void console::init()
 {
-	settings::addsetting("system.debug.traceflags", settings::TYPE_INT, 0, NULL, NULL, &trace_flags);
-	settings::addsetting("system.debug.logfilename", settings::TYPE_STRING, 0, NULL, NULL, logfile_name);
-	
-	settings::setint("system.debug.traceflags", 0xffff);
-
 	addCommand("commands", listCommands);
-	addCommand("log_frame", con_log_frame);
-
-	addConsumer(traceLoggerCallback, NULL);
 }
 
-void con::addConsumer(ConsoleCallback callback, void* userdef)
-{
-	Consumer* consumer = new Consumer;
-	consumer->log = callback;
-	consumer->userdef = userdef;
-
-	consumer_list.push_back(consumer);
-}
-
-void con::addCommand(char* name, ConsoleCommand command, void* userdef)
+void console::addCommand(char* name, ConsoleCommand command, void* userdef)
 {
 	CommandEntry* cmd = new CommandEntry;
 	cmd->cmd = command;
@@ -69,7 +36,7 @@ void con::addCommand(char* name, ConsoleCommand command, void* userdef)
 	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
 }
 
-void con::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
+void console::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
 {
 	CommandEntry* cmd = new CommandEntry;
 	cmd->cmd = NULL;
@@ -79,7 +46,7 @@ void con::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
 	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
 }
 
-void con::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
+void console::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
 {
 	CommandEntry* cmd = new CommandEntry;
 	cmd->cmd = NULL;
@@ -90,27 +57,27 @@ void con::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
 }
 
 
-void con::delCommand(char* name)
+void console::delCommand(char* name)
 {
 	command_map_t::iterator found = command_map.find(name);
 	if(found != command_map.end())
 		command_map.erase(found);
 }
 
-bool con::isCommand(char* name)
+bool console::isCommand(char* name)
 {
 	command_map_t::iterator found = command_map.find(name);
 	return (found != command_map.end());
 }
 
-void con::listCommands()
+void console::listCommands()
 {
 	LOG("Commands:");
 	for(command_map_t::iterator it = command_map.begin(); it != command_map.end(); it++)
-		LOG2("  %s", (*it).first);
+		LOG("  %s", (*it).first);
 }
 
-bool con::executeCommand(char* cmd)
+bool console::executeCommand(char* cmd)
 {
 	char buf[512];
 	strcpy(buf, cmd);
@@ -126,7 +93,7 @@ bool con::executeCommand(char* cmd)
 	strlower(name);
 	command_map_t::iterator found = command_map.find(name);
 	if(found == command_map.end()) {
-		LOG2("[con::executeCommand] command \"%s\" not found", name);
+		LOG("command \"%s\" not found", name);
 		return false;
 	}
 
@@ -147,25 +114,12 @@ bool con::executeCommand(char* cmd)
 	return true;
 }
 
-bool con::executeJS(char* script)
+bool console::executeJS(char* script)
 {
 	return gScriptEngine->RunScript(script);
 }
 
-void con::log(U32 flags, const char *format, ...)
-{
-	va_list args;
-	char buffer[512];
-
-	va_start(args, format);	
-	vsprintf(buffer, format, args);
-	va_end(args);
-
-	for(consumer_list_t::iterator iter = consumer_list.begin(); iter != consumer_list.end(); iter++)
-		(*iter)->log(flags, (*iter)->userdef, buffer);
-}
-
-bool con::processCmd(const char* cmd)
+bool console::processCmd(const char* cmd)
 {
 	char buffer[512];
 	strcpy(buffer, cmd);
@@ -177,22 +131,7 @@ bool con::processCmd(const char* cmd)
 		return executeJS(buffer);	
 }
 
-void con::toggle_int(char* cmd, char* args, void* user)
+void console::toggle_int(char* cmd, char* args, void* user)
 {
 	*((int*)user) = !*((int*)user);
-}
-
-void con::traceLoggerCallback(U32 flags, void *userdef, const char* message)
-{
-	if(flags & trace_flags)
-	{
-		OutputDebugString(message);
-		OutputDebugString("\n");
-	}
-}
-
-void con::con_log_frame()
-{
-	LOG("################## LOGGING FRAME ###################");
-	log_frame = true;
 }

@@ -1,6 +1,5 @@
 #include "precompiled.h"
 #include "render/meshoptimize.h"
-#include "console/console.h"
 #include "NvTriStrip.h"
 
 namespace render {
@@ -36,7 +35,7 @@ void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigne
 		}
 
 		if(vert_list.size() != *num_verts) {
-			LOG3("[render::optimizeMesh] mesh reduced from %i to %i verts", *num_verts, vert_list.size());
+			LOG("[render::optimizeMesh] mesh reduced from %i to %i verts", *num_verts, vert_list.size());
 			BSPVertex* new_verts = new BSPVertex[vert_list.size()];
 			for(unsigned i = 0; i < vert_list.size(); i++)
 				new_verts[i] = vert_list[i];

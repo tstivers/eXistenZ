@@ -5,7 +5,6 @@
 #include "mesh/meshcache.h"
 #include "vfs/vfs.h"
 #include "q3bsp/bleh.h"  // for vertex typedef
-#include "console/console.h"
 #include "texture/texturecache.h"
 
 namespace mesh {
@@ -164,7 +163,7 @@ MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
 		if(!_stricmp(this_token, "MESH:")) {
 			Mesh* mesh = getMesh(std::string(token));
 			if(!mesh) {
-				LOG3("[mesh::loadMeshSystem] failed to load mesh %s for system %s",
+				LOG("[mesh::loadMeshSystem] failed to load mesh %s for system %s",
 					token, filename.c_str());
 				continue;
 			}

@@ -2,18 +2,17 @@
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/rendergroup.h"
-#include "console/console.h"
 #include "q3bsp/bleh.h"
 #include "texture/texture.h"
 
 namespace render {
 	ID3DXLine* line = NULL;
-	typedef struct {
+	struct LineVertex {
 		D3DXVECTOR3 pos;
 		D3DCOLOR	diffuse;
-	} lineVertex;
+	};
 #define LINEVERTEXF ( D3DFVF_XYZ | D3DFVF_DIFFUSE )
-	lineVertex linebuf[30];
+	LineVertex linebuf[30];
 }
 
 using namespace render;
@@ -29,7 +28,7 @@ void render::drawLine(const D3DXVECTOR3* vertices, int verticeCount, float r, fl
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	render::device->DrawPrimitiveUP(D3DPT_LINELIST, verticeCount / 2, linebuf, sizeof(lineVertex));
+	render::device->DrawPrimitiveUP(D3DPT_LINELIST, verticeCount / 2, linebuf, sizeof(LineVertex));
 }
 
 void render::drawBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, float r, float g, float b)

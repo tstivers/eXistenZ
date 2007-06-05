@@ -123,15 +123,15 @@ void render::init()
 	settings::setint("system.render.device", 0);
 	settings::setint("system.render.backbuffercount", 2);
 
-	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
-	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
-	con::addCommand("toggle_patches", con::toggle_int, &draw_patches);
-	con::addCommand("toggle_transparency", con::toggle_int, &transparency);
-	con::addCommand("toggle_bsprender", con::toggle_int, &bsp_rendermethod);
-	con::addCommand("add_marker", render::con_add_marker, NULL);
-	con::addCommand("del_marker", render::con_del_marker, NULL);
-	con::addCommand("toggle_diffuse", con::toggle_int, &diffuse);
-	con::addCommand("toggle_entities", con::toggle_int, &draw_entities);
+	console::addCommand("toggle_wireframe", console::toggle_int, &wireframe);
+	console::addCommand("toggle_lightmap", console::toggle_int, &lightmap);
+	console::addCommand("toggle_patches", console::toggle_int, &draw_patches);
+	console::addCommand("toggle_transparency", console::toggle_int, &transparency);
+	console::addCommand("toggle_bsprender", console::toggle_int, &bsp_rendermethod);
+	console::addCommand("add_marker", render::con_add_marker, NULL);
+	console::addCommand("del_marker", render::con_del_marker, NULL);
+	console::addCommand("toggle_diffuse", console::toggle_int, &diffuse);
+	console::addCommand("toggle_entities", console::toggle_int, &draw_entities);
 
 	boost = 0;
 	gamma = 1.0;

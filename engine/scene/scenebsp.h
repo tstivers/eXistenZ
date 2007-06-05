@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/aabb.h"
+#include "math/vertex.h"
 
 namespace render {
 	class RenderGroup;

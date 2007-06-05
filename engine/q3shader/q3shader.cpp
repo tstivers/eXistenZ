@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "q3shader/q3shadercache.h"
 #include "q3shader/q3shader.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
@@ -141,7 +140,7 @@ bool Q3Shader::load(const char* filename)
 		strip(buf);
 
 		if(!buf[0]) continue;
-		//LOG2("[q3shader::parseShader] processing \"%s\"", buf);
+		//LOG("[q3shader::parseShader] processing \"%s\"", buf);
 		char* token = buf;
 		char* this_token;
 		while(this_token = getToken(&token, " \t")) {
@@ -198,7 +197,7 @@ bool Q3Shader::parse(vfs::IFilePtr file)
 
 void Q3Shader::parseLine(char* line)
 {
-	LOG2("[Q3Shader::parseLine] parsing [%s]", line);
+	LOG("[Q3Shader::parseLine] parsing [%s]", line);
 	char * name = line;
 	char* args = strchr(name, ' ');
 	int argc;
@@ -221,7 +220,7 @@ void Q3Shader::parseLine(char* line)
 		}
 
 	if(!commands[command_idx].command)
-		LOG2("[Q3Shader::parseLine] unknown command \"%s\"", name);
+		LOG("[Q3Shader::parseLine] unknown command \"%s\"", name);
 }
 
 void q3shader::parse_surfaceparm(Q3Shader* shader, int argc, char* argv[])
@@ -233,7 +232,7 @@ void q3shader::parse_surfaceparm(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_surfaceparm] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_surfaceparm] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_cull(Q3Shader* shader, int argc, char* argv[])
@@ -245,7 +244,7 @@ void q3shader::parse_cull(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_cull] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_cull] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
@@ -261,7 +260,7 @@ void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
 	if(ext)
 		*ext = 0;
 
-	//LOG4("[parse_map] %s[%i] : loading \"%s\"", shader->filename, shader->line, argv[1]);
+	//LOG("[parse_map] %s[%i] : loading \"%s\"", shader->filename, shader->line, argv[1]);
 
 	texture::DXTexture* texture = texture::getTexture(argv[1]);
 	if(texture) {
@@ -269,7 +268,7 @@ void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_map] %s[%i] : couldn't load \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_map] %s[%i] : couldn't load \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_blend(Q3Shader* shader, int argc, char* argv[])
@@ -298,14 +297,14 @@ void q3shader::parse_blend(Q3Shader* shader, int argc, char* argv[])
 	if(blend_mode != 0) {
 		shader->src_blend = blend_mode;		
 	} else {
-		LOG4("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[1]);
+		LOG("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[1]);
 	}
 
 	blend_mode = getConstant(argv[2]);
 	if(blend_mode != 0) {
 		shader->src_blend = blend_mode;		
 	} else {
-		LOG4("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[2]);
+		LOG("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[2]);
 	}
 }
 
@@ -331,7 +330,7 @@ void q3shader::parse_alphafunc(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_alphafunc] %s[%i] : unknown test mode \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_alphafunc] %s[%i] : unknown test mode \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_depthfunc(Q3Shader* shader, int argc, char* argv[])
@@ -348,7 +347,7 @@ void q3shader::parse_depthfunc(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_depthfunc] %s[%i] : unknown depth func \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_depthfunc] %s[%i] : unknown depth func \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 
@@ -359,7 +358,7 @@ void q3shader::parse_rgbgen(Q3Shader* shader, int argc, char* argv[])
 	if(!_stricmp(argv[1], "identity") || !_stricmp(argv[1], "identityLighting"))
 		return;
 
-	LOG4("[parse_rgbgen] %s[%i] : unknown rgbgen mode \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_rgbgen] %s[%i] : unknown rgbgen mode \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 

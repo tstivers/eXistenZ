@@ -3,7 +3,6 @@
 #include "entity/entity.h"
 #include "script/script.h"
 #include "script/jsvector.h"
-#include "console/console.h"
 
 namespace jsentity {
 	JSBool createStaticEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);

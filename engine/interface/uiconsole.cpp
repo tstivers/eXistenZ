@@ -16,7 +16,7 @@ void con_clear_console(int argc, char* argv[], void* user);
 
 Console::Console()
 {
-	con::addConsumer(consoleMessageCallback, this);
+	//console::addConsumer(consoleMessageCallback, this);
 
 	while(scrollback.size() < 64){
 		char* bleh = new char[512];
@@ -27,7 +27,7 @@ Console::Console()
 	cursorpos = 0;
 	wireframe = 0;
 	draw = 1;
-	con::addCommand("clear", con_clear_console, this);
+	console::addCommand("clear", con_clear_console, this);
 }
 
 Console::~Console()
@@ -131,7 +131,7 @@ void Console::clear()
 
 void Console::keypressed(char key, bool extended)
 {
-	//LOG3("[Console] key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
+	//LOG("[Console] key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
 
 	if(extended)
 		switch(key) {
@@ -182,8 +182,8 @@ void Console::keypressed(char key, bool extended)
 			}
 			if(cmd.size() > 0) {
 				if(cmdecho)
-					LOG2("> %s", cmd.c_str());
-				con::processCmd((char*)cmd.c_str());
+					LOG("> %s", cmd.c_str());
+				console::processCmd((char*)cmd.c_str());
 				history.push_front(cmd);
 				cmd.clear();
 				cursorpos = 0;

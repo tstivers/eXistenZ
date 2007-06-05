@@ -46,7 +46,7 @@ namespace entity {
 		virtual void calcAABB() = 0;
 		virtual void doTick();
 		virtual void applyForce(const D3DXVECTOR3 &force);
-		inline_ void mark(unsigned int frame);
+		inline void mark(unsigned int frame);
 		
 		std::string name;
 		ENTITY_TYPE type;

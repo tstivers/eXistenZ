@@ -10,7 +10,7 @@ namespace settings {
 		}
 	};
 
-	typedef stdext::hash_map<char*, Setting*, hash_char_ptr> settings_hash_map;
+	typedef stdext::hash_map<char*, Setting*, hash_char_ptr_traits> settings_hash_map;
 
 	bool standard_setter(char* name, void* value);
 	bool standard_getter(char* name, void* value);
@@ -21,7 +21,7 @@ namespace settings {
 
 void settings::init(void)
 {
-	con::addCommand("settings", con_settings);
+	console::addCommand("settings", con_settings);
 }
 
 void settings::release(void)
@@ -101,14 +101,14 @@ void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, ge
 	
 	settings_map.insert(settings_hash_map::value_type(setting->name, setting));
 	jssettings::addsetting(setting);
-	//con::log(con::FLAG_INFO, "[settings::addsetting] added \"%s\"", setting->name);
+	//console::log(console::FLAG_INFO, "[settings::addsetting] added \"%s\"", setting->name);
 }
 
 settings::Setting* settings::findsetting(char* name)
 {
 	settings_hash_map::iterator iter = settings_map.find(name);
 	if(iter != settings_map.end()) {
-		//con::log(con::LVL_INFO, "[settings::addsetting] looked up \"%s\"", name);
+		//console::log(console::LVL_INFO, "[settings::addsetting] looked up \"%s\"", name);
 		return (*iter).second;
 	}
 	else
@@ -250,16 +250,16 @@ void settings::dump(char* pattern, bool sort)
 		Setting* setting = (Setting*)((*iter).second);
 		switch(setting->type){
 			case TYPE_STRING:
-				con::log(con::FLAG_INFO, "%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
+				INFO("%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
 				break;
 			case TYPE_INT:
-				con::log(con::FLAG_INFO, "%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
+				INFO("%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
 				break;
 			case TYPE_FLOAT:
-				con::log(con::FLAG_INFO, "%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
+				INFO("%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
 				break;
 			default:
-				LOG2("// %s = <unkown type>", setting->name);
+				INFO("// %s = <unkown type>", setting->name);
 				break;
 		}
 	}

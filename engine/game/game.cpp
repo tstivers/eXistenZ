@@ -62,18 +62,18 @@ void game::init()
 
 	noclip = 1;
 	
-	con::addCommand("map", con_map);
-	con::addCommand("toggle_clipping", con::toggle_int, &noclip);
-	con::addCommand("toggle_movemode", toggle_movemode);
-	con::addCommand("move_up", move_up);
-	con::addCommand("move_down", move_down);
-	con::addCommand("move_left", move_left);
-	con::addCommand("move_right", move_right);
-	con::addCommand("move_forward", move_forward);
-	con::addCommand("move_back", move_back);
-	con::addCommand("move_jump", move_jump);
-	con::addCommand("quit", con_quit);
-	con::addCommand("dbg_break", con_break);
+	console::addCommand("map", con_map);
+	console::addCommand("toggle_clipping", console::toggle_int, &noclip);
+	console::addCommand("toggle_movemode", toggle_movemode);
+	console::addCommand("move_up", move_up);
+	console::addCommand("move_down", move_down);
+	console::addCommand("move_left", move_left);
+	console::addCommand("move_right", move_right);
+	console::addCommand("move_forward", move_forward);
+	console::addCommand("move_back", move_back);
+	console::addCommand("move_jump", move_jump);
+	console::addCommand("quit", con_quit);
+	console::addCommand("dbg_break", con_break);
 }
 
 void game::release()
@@ -101,10 +101,10 @@ void game::doTick()
 
 void game::processInput()
 {
-	con::log_frame = false;
+	//console::log_frame = false;
 
 	if(init_command[0]) {
-		con::processCmd(init_command);
+		console::processCmd(init_command);
 		init_command[0] = 0;
 	}
 

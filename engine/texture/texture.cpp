@@ -2,7 +2,6 @@
 #include "texture/texture.h"
 #include "texture/shader.h"
 #include "texture/texturecache.h"
-#include "console/console.h"
 #include "render/render.h"
 #include "render/dx.h"
 

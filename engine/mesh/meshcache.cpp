@@ -2,7 +2,6 @@
 #include "mesh/meshcache.h"
 #include "mesh/mesh.h"
 #include "mesh/meshload.h"
-#include "console/console.h"
 
 namespace mesh {
 
@@ -27,7 +26,7 @@ Mesh* mesh::getMesh(std::string& name)
 		return mesh;
 	}
 
-	LOG2("[mesh::getMesh] failed to find mesh \"%s\"", name.c_str());
+	LOG("[mesh::getMesh] failed to find mesh \"%s\"", name.c_str());
 
 	return NULL;
 }

@@ -1,8 +1,6 @@
 #include "precompiled.h"
 #include "timer/timer.h"
 #include "settings/settings.h"
-#include "console/console.h"
-#include <float.h>
 
 namespace timer {
 	unsigned __int64 time_hz;
@@ -56,10 +54,9 @@ void timer::doTick()
 		game_ms = (unsigned int)(game_ticks / ((float)time_hz / 1000.0f));
 		time_ms = (unsigned int)(time_ticks / ((float)time_hz / 1000.0f));
 	} while(delta_ms < min_ms);
+	
 	if(delta_ms > max_ms)
 		delta_ms = max_ms;
-
-	FRAMEDO(LOG2("[time] %f", delta_ms));
 }
 
 

@@ -2,7 +2,6 @@
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsppatch.h"
 #include "render/render.h"
-#include "console/console.h"
 #include "nvtristrip.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"

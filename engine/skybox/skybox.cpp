@@ -6,6 +6,7 @@
 #include "texture/texturecache.h"
 #include "texture/texture.h"
 #include "settings/settings.h"
+#include "math/vertex.h"
 
 namespace skybox {
 	texture::DXTexture** textures;
@@ -34,9 +35,9 @@ void skybox::init()
 	settings::addsetting("system.render.skybox.depth", settings::TYPE_INT, 0, NULL, NULL, &depth);
 	settings::addsetting("system.render.skybox.texture", settings::TYPE_STRING, 0, NULL, NULL, &texture);
 	
-	con::addCommand("toggle_sky", con::toggle_int, &draw);
-	con::addCommand("sky_reset", skybox::reset, NULL);
-	con::addCommand("sky", skybox::con_sky, NULL);
+	console::addCommand("toggle_sky", console::toggle_int, &draw);
+	console::addCommand("sky_reset", skybox::reset, NULL);
+	console::addCommand("sky", skybox::con_sky, NULL);
 
 	draw = 1;
 	acquired = false;
@@ -322,7 +323,6 @@ void skybox::render()
 	render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
 
 	render::device->SetTransform( D3DTS_WORLD, &render::world );
-	FRAMEDO(LOG("[skybox::render] sky drawn"));
 }
 
 void skybox::unacquire()

@@ -3,7 +3,6 @@
 #include "render/dx.h"
 #include "settings/settings.h"
 #include "client/appwindow.h"
-#include "console/console.h"
 #include "interface/interface.h" // hack for fullscreen reset
 
 namespace d3d {
@@ -81,12 +80,12 @@ bool d3d::init()
 				default:
 					err = "UNKNOWN";
 			}
-			LOG3("[d3d::init] failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
+			LOG("[d3d::init] failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
 			d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 			d3dpp.MultiSampleQuality = 0;
 		} else {
 			d3dpp.MultiSampleQuality -= 1; 
-			LOG3("[d3d::init] set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
+			LOG("[d3d::init] set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
 		}
 	}
 

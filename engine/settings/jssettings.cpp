@@ -1,5 +1,4 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "settings/jssettings.h"
 #include "script/script.h"
@@ -14,7 +13,7 @@ namespace jssettings {
 	JSBool dump(JSContext *cx, JSObject *obj, uintN argc,
 		jsval *argv, jsval *rval);
 
-	typedef stdext::hash_map<char*, settings::Setting*, hash_char_ptr> propmap_hash;
+	typedef stdext::hash_map<char*, settings::Setting*, hash_char_ptr_traits> propmap_hash;
 	typedef propmap_hash::iterator propmap_iterator;
 	typedef std::smart_ptr<propmap_hash> propmap_ptr;
 	typedef stdext::hash_map<JSObject*, propmap_ptr> objmap_hash;

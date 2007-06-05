@@ -2,7 +2,6 @@
 #include "physics/meshdesc.h"
 #include "physics/meshdescimpl.h"
 #include "physics/physics.h"
-#include "console/console.h"
 #include "q3bsp/bleh.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"

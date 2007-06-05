@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "entity/entity.h"
 #include "entity/boxentity.h"
-#include "console/console.h"
 
 namespace entity {
 	typedef stdext::hash_map<std::string, Entity*> EntityCache;
@@ -15,7 +14,7 @@ Entity* entity::addStaticEntity(std::string& name, std::string& meshsys, D3DXMAT
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
-		LOG2("[entity::addStaticEntity] entity \"%s\" already exists!", name.c_str());
+		LOG("[entity::addStaticEntity] entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
@@ -35,7 +34,7 @@ Entity* entity::addBoxEntity(std::string& name, std::string& texture, D3DXMATRIX
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
-		LOG2("[entity::addBoxEntity] entity \"%s\" already exists!", name.c_str());
+		LOG("[entity::addBoxEntity] entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
@@ -55,7 +54,7 @@ Entity* entity::getEntity(std::string& name)
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it == entity_cache.end()) {
-		LOG2("[entity::getEntity] entity \"%s\" doesn't exist!", name.c_str());
+		LOG("[entity::getEntity] entity \"%s\" doesn't exist!", name.c_str());
 		return NULL;
 	}
 

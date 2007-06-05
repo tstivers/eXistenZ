@@ -17,13 +17,13 @@ void input::bindKey(int key, char* cmd)
 		real_cmd++;
 
 	if(key < 0 || key >= 256) {
-		LOG3("[input::bindKey] invalid key (%i) for function \"%s\"", key, cmd);
+		LOG("[input::bindKey] invalid key (%i) for function \"%s\"", key, cmd);
 		return;
 	}
 
 	// TODO: proper command parsing
-	//if(!con::isCommand(real_cmd)) {
-	//	LOG3("[input::bindKey] tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
+	//if(!console::isCommand(real_cmd)) {
+	//	LOG("[input::bindKey] tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
 	//	return;
 	//}
 
@@ -55,11 +55,11 @@ void input::listBinds()
 	LOG("Key Bindings:");
 	for(int key_idx = 0; key_idx < 256; key_idx++) {
 		if(binds[key_idx][0][0])
-			LOG3("  [%s] = \"+%s\"", keyName(key_idx), binds[key_idx][0]);
+			LOG("  [%s] = \"+%s\"", keyName(key_idx), binds[key_idx][0]);
 		if(binds[key_idx][1][0])
-			LOG3("  [%s] = \"*%s\"", keyName(key_idx), binds[key_idx][1]);
+			LOG("  [%s] = \"*%s\"", keyName(key_idx), binds[key_idx][1]);
 		if(binds[key_idx][2][0])
-			LOG3("  [%s] = \"-%s\"", keyName(key_idx), binds[key_idx][2]);
+			LOG("  [%s] = \"-%s\"", keyName(key_idx), binds[key_idx][2]);
 	}
 }
 
@@ -67,11 +67,11 @@ void input::processBinds()
 {
 	for(int i = 0; i < 256; i++) {
 		if(KEYPRESSED(i) && binds[i][0][0])
-			con::executeCommand(&binds[i][0][0]);
+			console::executeCommand(&binds[i][0][0]);
 		if(KEYDOWN(i) && binds[i][1][0])
-			con::executeCommand(&binds[i][1][0]);
+			console::executeCommand(&binds[i][1][0]);
 		if(KEYRELEASED(i) && binds[i][2][0])
-			con::executeCommand(&binds[i][2][0]);
+			console::executeCommand(&binds[i][2][0]);
 	}
 }
 

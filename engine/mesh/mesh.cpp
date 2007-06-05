@@ -1,6 +1,7 @@
 #include "precompiled.h"
 #include "mesh/mesh.h"
 #include "render/rendergroup.h"
+#include "math/vertex.h"
 
 namespace mesh {
 };

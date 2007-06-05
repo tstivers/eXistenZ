@@ -1,5 +1,4 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "console/jsconsole.h"
 #include "script/script.h"
 
@@ -13,9 +12,9 @@ JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if(argc != 1) {
 		gScriptEngine->ReportError("log() takes 1 argument");
-		return BOOLEAN_TO_JSVAL(FALSE);	
+		return JS_FALSE;	
 	}
 
-	con::log(con::FLAG_INFO|con::FLAG_JSLOG, JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
-	return BOOLEAN_TO_JSVAL(TRUE);
+	JSINFO(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+	return JS_TRUE;
 }

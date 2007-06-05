@@ -6,7 +6,6 @@
 #include "render/render.h" // get rid of this
 #include "vfs/vfs.h"
 #include "vfs/file.h"
-#include "console/console.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
 
@@ -34,7 +33,7 @@ bool BSP::load(vfs::IFilePtr file)
 		return false;	
 
 	if(q3bsp::debug)
-		LOG2("[BSP::load] loading %s", file->filename);
+		LOG("[BSP::load] loading %s", file->filename);
 
 	tBSPHeader header;
 	tBSPLump lumps[kMaxLumps];
@@ -272,10 +271,10 @@ bool BSP::load(vfs::IFilePtr file)
 	// ------------------------- dump debug info --------------------------
 
 	if(q3bsp::debug) {
-		LOG4("[BSP::loadBSP] loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);		
-		LOG4("[BSP::loadBSP] loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
-		LOG3("[BSP::loadBSP] loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
-		LOG3("[BSP::loadBSP] loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
+		LOG("[BSP::loadBSP] loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);		
+		LOG("[BSP::loadBSP] loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
+		LOG("[BSP::loadBSP] loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
+		LOG("[BSP::loadBSP] loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
 	}
 
 	return true;

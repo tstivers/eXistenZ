@@ -19,8 +19,8 @@ namespace texture {
 		}
 	};
 
-	typedef stdext::hash_map<char*, DXTexture*, hash_char_ptr> texture_hash_map;
-	typedef stdext::hash_map<char*, Shader*, hash_char_ptr> shader_hash_map;
+	typedef stdext::hash_map<char*, DXTexture*, hash_char_ptr_traits> texture_hash_map;
+	typedef stdext::hash_map<char*, Shader*, hash_char_ptr_traits> shader_hash_map;
 
 	DXTexture* getTexture(const char* name, bool use_alias = true);
 	DXTexture* loadTexture(const char* name);	

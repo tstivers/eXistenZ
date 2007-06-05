@@ -6,13 +6,13 @@
 #include "vfs/vfs.h"
 #include "shader/simpleshader/simpleshader.h"
 #include "shader/stdshader/shader.h"
-#include "console/console.h"
+#include "misc/alias.h"
 
 namespace shader {
-	typedef stdext::hash_map<const char*, Shader*, hash_char_ptr> shader_hash_map;		
+	typedef stdext::hash_map<const char*, Shader*, hash_char_ptr_traits> shader_hash_map;		
 
 	shader_hash_map shader_cache;	
-	alias_list shader_alias;
+	misc::AliasList shader_alias;
 	int debug;
 
 	Shader* loadShader(const char* name);
@@ -36,7 +36,7 @@ void shader::release()
 void shader::acquire()
 {
 	// load alias file
-	load_alias_list(settings::getstring("system.render.texture.shader_map_file"), shader_alias);
+	shader_alias.load(settings::getstring("system.render.texture.shader_map_file"));
 }
 
 shader::Shader* shader::getShader(const char* name) 
@@ -45,10 +45,10 @@ shader::Shader* shader::getShader(const char* name)
 
 
 	// check to see if the shader is aliased	
-	if(!*(strcpy(shader_name, find_alias(name, shader_alias))))
+	if(!*(strcpy(shader_name, shader_alias.findAlias(name))))
 		strcpy(shader_name, name);
 
-	if(debug) LOG3("[shader::getShader] retrieving \"%s\" (%s)", shader_name, name);
+	if(debug) LOG("[shader::getShader] retrieving \"%s\" (%s)", shader_name, name);
 	
 	// check to see if the shader is cached
 	shader_hash_map::iterator iter = shader_cache.find(shader_name);

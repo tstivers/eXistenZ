@@ -1,11 +1,10 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "zippath.h"
 #include "zipfile.h"
 
 namespace vfs {
 #pragma pack(1)
-	typedef struct {
+	struct FileHeader {
 		U32 signature;
 		U16 version_needed;
 		U16 flag;
@@ -17,27 +16,27 @@ namespace vfs {
 		S32 uncompressed_size;
 		U16 filename_len;
 		U16 extra_field_len;
-	} FileHeader;
-};
+	};
+}
 
 vfs::Path* vfs::ZipPath::createPath(const char* path)	
 {
 	IFilePtr file = vfs::getFile(path);
 	
 	if(!file) {
-		LOG2("error opening \"%s\"", path);
+		LOG("error opening \"%s\"", path);
 		return NULL;
 	}
 
 	U32 header;
 	
 	if(file->read(&header, sizeof(header)) == 0) {
-		LOG2("error reading \"%s\"", path);		
+		LOG("error reading \"%s\"", path);		
 		return NULL;
 	}
 
 	if(header != 0x04034b50) {
-		LOG2("invalid zip header in \"%s\"", path);
+		LOG("invalid zip header in \"%s\"", path);
 		return NULL;
 	}
 
@@ -65,7 +64,7 @@ void vfs::ZipPath::readContents()
 	IFilePtr file = vfs::getFile(path);
 
 	if(!file) {
-		LOG2("error opening \"%s\"", path);
+		LOG("error opening \"%s\"", path);
 		return;
 	}	
 
@@ -89,14 +88,14 @@ void vfs::ZipPath::readContents()
 			feptr->uncompressed_size = header.uncompressed_size;
 			file_list.push_back(feptr);
 			file_hash.insert(ZipFileEntryHash::value_type(feptr->filename, &(*feptr)));
-			//LOG2(LS_VFS, LF_INFO2, "found file \"%s\"", feptr->filename);
+			//LOG(LS_VFS, LF_INFO2, "found file \"%s\"", feptr->filename);
 		}
 		else
 			break;
 	}
 
 	if(header.signature != 0x02014b50)
-		LOG2("unexpected end of archive encountered in \"%s\"", path);
+		LOG("unexpected end of archive encountered in \"%s\"", path);
 }
 
 bool vfs::ZipPath::fileExists(const char* filename)
@@ -125,7 +124,7 @@ U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const ch
 	char filepath[MAX_PATH];
 	char* filename;	
 
-	LOG3("searching \"%s\\%s\"", path, filespec);
+	LOG("searching \"%s\\%s\"", path, filespec);
 
 	for(ZipFileEntryList::iterator it = this->file_list.begin(); it != this->file_list.end(); ++it) {
 		strcpy(filepath, (*it)->filename);
@@ -141,7 +140,7 @@ U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const ch
 			if(wildcmp(filespec, (*it)->filename)) {
 				if((((*it)->compressed_size == 0) && (flags & FIND_DIRECTORY)) ||
 					(!((*it)->compressed_size == 0) && (flags & FIND_FILE))) {
-						LOG2("\tfound \"%s\"", (*it)->filename);
+						LOG("\tfound \"%s\"", (*it)->filename);
 						file_list.insert(strDup((*it)->filename));
 				}
 			}

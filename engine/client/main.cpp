@@ -50,13 +50,13 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	int exitcode = 0;
 	gHInstance = hinst;
 
-	//LOG2("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
+	//LOG("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
 
 	// initialize essention system services
 	script::init();
 	jsscript::init();
 	timer::init();
-	con::init();
+	console::init();
 	jscon::init();
 	settings::init();
 	jssettings::init();
@@ -92,7 +92,7 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	} else LOG("[eXistenZ] unable to open \"config.js\"");
 
 	// execute command line
-	con::processCmd(cmdline);
+	console::processCmd(cmdline);
 
 	// open main window and set up interface	
 	appwindow::createWindow(hinst);
@@ -115,11 +115,11 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	settings::release();
 	jssettings::release();
 	//jscon::release();
-	//con::release();
+	//console::release();
 	physics::release();
 	script::release();
 	
-	//LOG2("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
+	//LOG("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
 	
 	return exitcode;
 }

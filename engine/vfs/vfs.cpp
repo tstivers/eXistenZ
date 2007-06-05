@@ -1,5 +1,4 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "vfs/vfs.h"
 #include "vfs/path.h"
 #include "vfs/file.h"
@@ -25,13 +24,13 @@ void vfs::setRoot(const char* path)
 	char canonpath[MAX_PATH];
 	
 	if(PathCanonicalize(canonpath, sanitizePath(pathbuf, path)) != TRUE) {
-		LOG2("invalid root! \"%s\"", path);
+		LOG("invalid root! \"%s\"", path);
 		return;
 	}
 	
 	strcpy(root, path);
 
-	LOG2("root set to \"%s\"", root);
+	LOG("root set to \"%s\"", root);
 
 	// clear paths and add root
 	paths.clear();
@@ -62,7 +61,7 @@ void vfs::addPath(const char* path)
 		return;
 
 	paths.push_back(cpath);
-	LOG2("added path \"%s\"", canonpath);	
+	LOG("added path \"%s\"", canonpath);	
 }
 
 bool vfs::fileExists(const char* filename)
@@ -96,7 +95,7 @@ vfs::IFile* vfs::getFile(const char* filename)
 		if(fileExists(filename))
 			return new DiskFile(sane_path);
 		else {
-			//LOG2("unable to find file \"%s\"", filename);
+			//LOG("unable to find file \"%s\"", filename);
 			return NULL;
 		}
 	}
@@ -106,7 +105,7 @@ vfs::IFile* vfs::getFile(const char* filename)
 			return (*it)->getFile(sane_path);
 	}
 
-	//LOG2("unable to find file \"%s\"", filename);
+	//LOG("unable to find file \"%s\"", filename);
 	return NULL;
 }
 

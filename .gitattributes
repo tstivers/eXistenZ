@@ -28,12 +28,13 @@ engine/client/main.cpp eol=crlf
 engine/client/main.h eol=crlf
 engine/client/precompiled.cpp eol=crlf
 engine/client/precompiled.h eol=crlf
-engine/common/common.cpp eol=crlf
-engine/common/common.h eol=crlf
+engine/common/log.cpp -text
+engine/common/log.h -text
 engine/common/mystring.cpp eol=crlf
 engine/common/mystring.h eol=crlf
 engine/common/smart_cptr.h eol=crlf
 engine/common/smart_ptr.h eol=crlf
+engine/common/types.h -text
 engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf
@@ -90,6 +91,8 @@ engine/mesh/meshsystemcache.cpp eol=crlf
 engine/mesh/meshsystemcache.h eol=crlf
 engine/mesh/textloader.cpp eol=crlf
 engine/mesh/textloader.h eol=crlf
+engine/misc/alias.cpp -text
+engine/misc/alias.h -text
 engine/physics/meshdesc.cpp -text
 engine/physics/meshdesc.h -text
 engine/physics/meshdescimpl.h -text
@@ -97,7 +100,6 @@ engine/physics/physics.cpp -text
 engine/physics/physics.h -text
 engine/physics/stream.cpp -text
 engine/physics/stream.h -text
-engine/platform/types.h eol=crlf
 engine/q3bsp/bleh.cpp eol=crlf
 engine/q3bsp/bleh.h eol=crlf
 engine/q3bsp/bsp.cpp eol=crlf

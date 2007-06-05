@@ -2,7 +2,6 @@
 #include "render/marker.h"
 #include "render/render.h"
 #include "render/dx.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
 
@@ -32,18 +31,18 @@ namespace render {
 		4, 2, 5
 	};
 
-	typedef struct _MARKER {
+	struct MARKER {
 		char name[32];
 		D3DXVECTOR3 pos;
 		D3DCOLORVALUE color;
 		float scale;
 		float rot;
-	} MARKER;
+	};
 
 	typedef std::list<MARKER*> marker_list_t;
 	marker_list_t marker_list;
 
-};
+}
 
 void render::drawMarker(float x, float y, float z, D3DXVECTOR3 color, float scale)
 {
@@ -158,5 +157,5 @@ void render::con_del_marker(int argc, char* argv[], void* user)
 void render::con_add_marker(int argc, char* argv[], void* user)
 {
 	char* name = addMarker(NULL, cam_pos.x, cam_pos.y, cam_pos.z, 255, 0, 255);
-	LOG2("added marker \"%s\"", name);
+	LOG("added marker \"%s\"", name);
 }

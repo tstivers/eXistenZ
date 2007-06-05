@@ -1,6 +1,5 @@
 #include "precompiled.h"
 #include "entity/entity.h"
-#include "console/console.h"
 
 namespace entity {
 };
@@ -49,12 +48,12 @@ void Entity::setQuatRot(const D3DXQUATERNION& rot)
 	
 }
 
-inline_ void Entity::mark(unsigned int frame)
+inline void Entity::mark(unsigned int frame)
 {
 	this->frame = frame;
 }
 
 void Entity::applyForce(const D3DXVECTOR3 &force)
 {
-	LOG2("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
+	LOG("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
 }

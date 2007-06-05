@@ -49,11 +49,11 @@ void ui::init()
 	settings::setint("system.ui.console.filter", 0xffff);
 	settings::setint("system.ui.console.cmdecho", 1);
 	
-	con::addCommand("toggle_console", con::toggle_int, &console.draw);
-	con::addCommand("focus_console", con_focus_console);
-	con::addCommand("focus_console_slash", con_focus_console_slash);
-	con::addCommand("toggle_ui", con::toggle_int, &draw);
-	con::addCommand("toggle_pos", con::toggle_int, &pos.draw);
+	console::addCommand("toggle_console", console::toggle_int, &console.draw);
+	console::addCommand("focus_console", con_focus_console);
+	console::addCommand("focus_console_slash", con_focus_console_slash);
+	console::addCommand("toggle_ui", console::toggle_int, &draw);
+	console::addCommand("toggle_pos", console::toggle_int, &pos.draw);
 }
 
 void ui::release()
@@ -91,7 +91,7 @@ void ui::keypressed(char key, bool extended)
 	}
 
 	if(key == 0x1b && !extended) {
-		con::executeCommand("quit");
+		console::executeCommand("quit");
 	}
 
 	console.keypressed(key, extended);

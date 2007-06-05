@@ -1,6 +1,5 @@
 #pragma once
 
-#include "console/console.h"
 
 namespace q3bsp {
 
@@ -17,7 +16,7 @@ namespace q3bsp {
 		BSP* bsp;
 	};
 
-	typedef struct {
+	struct Mesh {
 		texture::DXTexture* texture;
 		texture::DXTexture* lightmap;
 		int num_indices;
@@ -26,7 +25,7 @@ namespace q3bsp {
 		unsigned short* indices;
 		IDirect3DVertexBuffer9* vertbuf;
 		IDirect3DIndexBuffer9* indexbuf;
-	} Mesh;
+	};
 
 	class BSPRenderTest : public BSPRenderer {
 	public:

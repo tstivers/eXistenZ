@@ -2,7 +2,6 @@
 #include "game/jsgame.h"
 #include "game/game.h"
 #include "script/script.h"
-#include "console/console.h"
 #include "client/appwindow.h"
 
 namespace jsgame {

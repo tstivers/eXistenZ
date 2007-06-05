@@ -2,7 +2,6 @@
 #include "texture/jstexture.h"
 #include "texture/texturecache.h"
 #include "script/script.h"
-#include "console/console.h"
 
 void jstexture::init()
 {
@@ -13,5 +12,5 @@ JSBool jstexture::jsflush(JSContext *cx, JSObject *obj, uintN argc,
 						  jsval *argv, jsval *rval)
 {
 	texture::flush();
- 	return BOOLEAN_TO_JSVAL(TRUE);
+ 	return JS_TRUE;
 }

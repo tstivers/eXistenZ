@@ -5,6 +5,8 @@
 #include "mesh/meshsystem.h"
 
 namespace mesh {
+	const static std::string EXTENSION_TEXTMESH = ".tm";
+	const static std::string EXTENSION_TEXTMESHSYSTEM = ".tms";
 };
 
 using namespace mesh;

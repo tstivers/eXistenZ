@@ -2,7 +2,9 @@
 #include "client/appwindow.h"
 #include "settings/settings.h"
 #include "interface/interface.h"
-#include "console/console.h"
+#include "resource/resource.h"
+
+extern int gActive;
 
 namespace appwindow {
 	HWND hwnd;
