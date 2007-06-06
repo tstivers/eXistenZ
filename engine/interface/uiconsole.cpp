@@ -11,13 +11,10 @@
 
 using namespace ui;
 
-void consoleMessageCallback(U32 flags, void* obj, const char* message);
 void con_clear_console(int argc, char* argv[], void* user);
 
 Console::Console()
 {
-	//console::addConsumer(consoleMessageCallback, this);
-
 	while(scrollback.size() < 64){
 		char* bleh = new char[512];
 		bleh[0] = 0;
@@ -197,11 +194,6 @@ void Console::keypressed(char key, bool extended)
 	}
 }
 
-void consoleMessageCallback(U32 flags, void* obj, const char* message)
-{	
-	if(((Console*)obj)->filter & flags)
-		((Console*)obj)->addMessage(message);
-}
 
 void con_clear_console(int argc, char* argv[], void* user)
 {

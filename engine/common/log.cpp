@@ -3,10 +3,10 @@
 
 namespace Log {
 	struct Consumer {
-		Consumer(ConsumerCallback callback, void* userdef, U32 mask) :
-			callback(callback), userdef(userdef), mask(mask) {}
+		Consumer(ConsumerCallback callback, void* user, U32 mask) :
+			callback(callback), user(user), mask(mask) {}
 		ConsumerCallback callback;
-		void* userdef;
+		void* user;
 		U32 mask;
 	};
 
@@ -39,5 +39,8 @@ void Log::log(const char* file, unsigned int line, const char* function, unsigne
 	OutputDebugString(buffer2);
 #endif
 
-
+	for(consumer_map_t::const_iterator it = consumer_map.begin(); it != consumer_map.end(); it++) {
+		if(flags & it->second.mask)
+			it->second.callback(file, line, function, flags, buffer, it->second.user);
+	}
 }

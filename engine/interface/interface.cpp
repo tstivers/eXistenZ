@@ -17,6 +17,7 @@ namespace ui {
 	int has_focus;
 	void con_focus_console();
 	void con_focus_console_slash();
+	void consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 };
 
 void ui::init()
@@ -54,6 +55,8 @@ void ui::init()
 	console::addCommand("focus_console_slash", con_focus_console_slash);
 	console::addCommand("toggle_ui", console::toggle_int, &draw);
 	console::addCommand("toggle_pos", console::toggle_int, &pos.draw);
+
+	Log::addConsumer("console", LF_ALL, consoleMessageCallback, &console);
 }
 
 void ui::release()
@@ -108,4 +111,18 @@ void ui::con_focus_console_slash()
 	input::unacquire();
 	console.draw = 1;
 	console.keypressed('/');
+}
+
+void ui::consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user)
+{	
+	if(!(((Console*)user)->filter & flags))
+		return;
+
+// 	char buffer[512];
+// 	if(function && *function)
+// 		sprintf(buffer, "[%s] %s", function, message);
+// 	else
+// 		strcpy(buffer, message);
+
+	((Console*)user)->addMessage(message);
 }
