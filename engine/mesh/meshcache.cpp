@@ -16,7 +16,7 @@ Mesh* mesh::getMesh(std::string& name)
 	// see if it's in the cache
 	MeshCache::iterator it = cache.find(name);
 	if(it != cache.end())
-		return (*it).second;
+		return it->second;
 
 	// nope, try to load it
 	Mesh* mesh = loadMesh(name);	

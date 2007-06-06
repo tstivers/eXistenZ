@@ -25,7 +25,7 @@ system.ui.console.x = 20;
 system.ui.console.y = 30;
 system.ui.console.height = system.render.resolution.y - system.ui.console.y - 50;
 system.ui.fps.x = system.render.resolution.x - 150;
-system.debug.traceflags = 0xffff; // turn on debugger tracing
+//system.debug.traceflags = 0xffff; // turn on debugger tracing
 game.camera.pos.x = 0;
 game.camera.pos.y = 0;
 game.camera.pos.z = 0;
@@ -189,16 +189,22 @@ function createBox() {
     system.scene.addEntity(box);
     box.pos = game.player.pos;    
     print('added box ' + box.name);
-    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 1500, 0);
+    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
+    box.last_y = 0;
 }
 
 function bounceBox(boxName)
 {
-    var vec = new Vector();
-    vec.x = game.player.pos.x - boxes[boxName].pos.x
-    vec.z = game.player.pos.z - boxes[boxName].pos.z;
-    vec.normalize();
-    boxes[boxName].applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
+    var box = boxes[boxName];
+    if(Math.abs(box.last_y - box.pos.y) <= 5)
+    {
+        var vec = new Vector();
+        vec.x = game.player.pos.x - box.pos.x
+        vec.z = game.player.pos.z - box.pos.z;
+        vec.normalize();
+        box.applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
+    } else 
+        box.last_y = box.pos.y;
 }
 
 Vector.prototype.toString = function()

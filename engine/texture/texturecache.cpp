@@ -285,12 +285,12 @@ void texture::con_list_textures(int argc, char* argv[], void* user)
 {
 	for(texture_hash_map::iterator it = texture_cache.begin(); it != texture_cache.end(); ++it)
 	{
-		if((argc == 1) || ((argc == 2) && wildcmp(argv[1], (*it).first)) || 
-			((argc == 3) && wildcmp(argv[1], (*it).first) && (*it).second->shader && wildcmp(argv[2], (*it).second->shader->name)))
+		if((argc == 1) || ((argc == 2) && wildcmp(argv[1], it->first)) || 
+			((argc == 3) && wildcmp(argv[1], it->first) && it->second->shader && wildcmp(argv[2], it->second->shader->name)))
 			INFO("%s %s%s%s", 
-			(*it).second->name, 
-			(*it).second->shader ? "(" : "", 
-			(*it).second->shader ? (*it).second->shader->name : "", 
-			(*it).second->shader ? ")" : "");
+			it->second->name, 
+			it->second->shader ? "(" : "", 
+			it->second->shader ? it->second->shader->name : "", 
+			it->second->shader ? ")" : "");
 	}
 }

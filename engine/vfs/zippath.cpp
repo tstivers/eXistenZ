@@ -113,10 +113,10 @@ vfs::IFile* vfs::ZipPath::getFile(const char* filename)
 		return NULL;
 
 	// don't return directories
-	if((*it).second->compressed_size == 0)
+	if(it->second->compressed_size == 0)
 		return NULL;
 
-	return new ZipFile(path, (*it).second);
+	return new ZipFile(path, it->second);
 }
 
 U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse)

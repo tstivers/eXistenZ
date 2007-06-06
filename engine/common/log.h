@@ -33,12 +33,12 @@
 #define JSDEBUG(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_SCRIPT|LF_DEBUG,__VA_ARGS__)
 
 namespace Log {
-	typedef void (* ConsumerCallback)(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* userdef);
+	typedef void (* ConsumerCallback)(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 
-	void addConsumer(const char* name, unsigned int mask, ConsumerCallback callback, void* userdef = NULL);
-	void removeConsumer(const char* name);
-	void setConsumerMask(const char* name, unsigned int mask);
-	unsigned int getConsumerMask(const char* name);
+	void addConsumer(const std::string& name, unsigned int mask, ConsumerCallback callback, void* userdef = NULL);
+	void removeConsumer(const std::string& name);
+	void setConsumerMask(const std::string& name, unsigned int mask);
+	unsigned int getConsumerMask(const std::string& name);
 
 	void log(const char* file, unsigned int line, const char* function, unsigned int flags, const char* format, ...);
 };

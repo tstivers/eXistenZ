@@ -180,7 +180,7 @@ VertexBuffer* render::VB::alloc(unsigned int size)
 	// find a spot to put it
 	VBMemMap::iterator it;
 	for(it = free.begin(); it != free.end(); it++)
-		if((*it).size >= size) 
+		if(it->size >= size) 
 				break;
 	
 	ASSERT(it != free.end());
@@ -189,7 +189,7 @@ VertexBuffer* render::VB::alloc(unsigned int size)
 	VertexBuffer* buf = new VertexBuffer;
 	buf->size = size;
 	buf->vertexbuffer = this;	
-	buf->offset = (*it).offset;
+	buf->offset = it->offset;
 
 	// update our memory map
 	VBEntry old_entry = (*it);
@@ -201,8 +201,8 @@ VertexBuffer* render::VB::alloc(unsigned int size)
 	// update largest_free
 	largest_free = 0;
 	for(it = free.begin(); it != free.end(); it++)
-		if((*it).size > largest_free)
-			largest_free = (*it).size;
+		if(it->size > largest_free)
+			largest_free = it->size;
 
 	return buf;
 }
@@ -212,7 +212,7 @@ IndexBuffer* render::IB::alloc(unsigned int size)
 	// find a spot to put it
 	IBMemMap::iterator it;
 	for(it = free.begin(); it != free.end(); it++)
-		if((*it).size >= size)
+		if(it->size >= size)
 				break;
 
 	ASSERT(it != free.end());
@@ -221,7 +221,7 @@ IndexBuffer* render::IB::alloc(unsigned int size)
 	IndexBuffer* buf = new IndexBuffer;
 	buf->size = size;
 	buf->indexbuffer = this;	
-	buf->offset = (*it).offset;
+	buf->offset = it->offset;
 
 	// update our memory map
 	IBEntry old_entry = (*it);
@@ -233,8 +233,8 @@ IndexBuffer* render::IB::alloc(unsigned int size)
 	// update largest_free
 	largest_free = 0;
 	for(it = free.begin(); it != free.end(); it++)
-		if((*it).size > largest_free)
-			largest_free = (*it).size;
+		if(it->size > largest_free)
+			largest_free = it->size;
 
 	return buf;
 }

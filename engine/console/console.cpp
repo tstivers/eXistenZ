@@ -74,7 +74,7 @@ void console::listCommands()
 {
 	LOG("Commands:");
 	for(command_map_t::iterator it = command_map.begin(); it != command_map.end(); it++)
-		LOG("  %s", (*it).first);
+		LOG("  %s", it->first);
 }
 
 bool console::executeCommand(char* cmd)

@@ -58,5 +58,5 @@ Entity* entity::getEntity(std::string& name)
 		return NULL;
 	}
 
-	return (*it).second;
+	return it->second;
 }
