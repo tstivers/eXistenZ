@@ -5,19 +5,15 @@
 
 namespace console {
 	struct CommandEntry {
+		CommandEntry(ConsoleCommand cmd, ConsoleCommandArgs cmd_args, ConsoleCommandNoArgs cmd_noargs, void* user) :
+			cmd(cmd), cmd_args(cmd_args), cmd_noargs(cmd_noargs), user(user) {};
 		ConsoleCommand cmd;
 		ConsoleCommandArgs cmd_args;
 		ConsoleCommandNoArgs cmd_noargs;
-		void* userdef;
+		void* user;
 	};
 
-	struct eqstr {
-		bool operator() (char* s1, char* s2) const {
-			return strcmp(s1, s2) == 0;
-		}
-	};
-
-	typedef stdext::hash_map<char*, CommandEntry*, hash_char_ptr_traits> command_map_t;
+	typedef stdext::hash_map<std::string, CommandEntry> command_map_t;
 	command_map_t command_map;
 };
 
@@ -26,34 +22,19 @@ void console::init()
 	addCommand("commands", listCommands);
 }
 
-void console::addCommand(char* name, ConsoleCommand command, void* userdef)
+void console::addCommand(char* name, ConsoleCommand command, void* user)
 {
-	CommandEntry* cmd = new CommandEntry;
-	cmd->cmd = command;
-	cmd->cmd_args = NULL;
-	cmd->cmd_noargs = NULL;
-	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(name, CommandEntry(command, NULL, NULL, user)));
 }
 
-void console::addCommand(char* name, ConsoleCommandArgs command, void* userdef)
+void console::addCommand(char* name, ConsoleCommandArgs command, void* user)
 {
-	CommandEntry* cmd = new CommandEntry;
-	cmd->cmd = NULL;
-	cmd->cmd_args = command;
-	cmd->cmd_noargs = NULL;
-	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(name, CommandEntry(NULL, command, NULL, user)));
 }
 
-void console::addCommand(char* name, ConsoleCommandNoArgs command, void* userdef)
+void console::addCommand(char* name, ConsoleCommandNoArgs command, void* user)
 {
-	CommandEntry* cmd = new CommandEntry;
-	cmd->cmd = NULL;
-	cmd->cmd_args = NULL;
-	cmd->cmd_noargs = command;
-	cmd->userdef = userdef;
-	command_map.insert(command_map_t::value_type(strlower(_strdup(name)), cmd));
+	command_map.insert(command_map_t::value_type(name, CommandEntry(NULL, NULL, command, user)));
 }
 
 
@@ -97,15 +78,15 @@ bool console::executeCommand(char* cmd)
 		return false;
 	}
 
-	CommandEntry* cmdentry = (*found).second;
+	CommandEntry* cmdentry = &found->second;
 	if(cmdentry->cmd_args) {
 		argv[0] = name;
 		argc = countArgs(args) + 1;
 		for(int arg_idx = 1; arg_idx < argc; arg_idx++)
 			argv[arg_idx] = getToken(&args, " \t");
-		cmdentry->cmd_args(argc, argv, cmdentry->userdef);
+		cmdentry->cmd_args(argc, argv, cmdentry->user);
 	} else if(cmdentry->cmd) {
-		cmdentry->cmd(name, args, cmdentry->userdef);
+		cmdentry->cmd(name, args, cmdentry->user);
 	}
 	else if(cmdentry->cmd_noargs) {
 		cmdentry->cmd_noargs();
