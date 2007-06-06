@@ -298,10 +298,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="platform"
+			Name="misc"
 			>
 			<File
-				RelativePath="..\engine\platform\types.h"
+				RelativePath="..\engine\misc\alias.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\misc\alias.h"
 				>
 			</File>
 		</Filter>
@@ -845,11 +849,11 @@
 			Name="common"
 			>
 			<File
-				RelativePath="..\engine\common\common.cpp"
+				RelativePath="..\engine\common\log.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\engine\common\common.h"
+				RelativePath="..\engine\common\log.h"
 				>
 			</File>
 			<File
@@ -866,6 +870,10 @@
 			</File>
 			<File
 				RelativePath="..\engine\common\smart_ptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\types.h"
 				>
 			</File>
 		</Filter>
