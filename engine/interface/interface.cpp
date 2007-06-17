@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "interface/interface.h"
 #include "render/render.h"
@@ -23,6 +17,7 @@ namespace ui {
 	int has_focus;
 	void con_focus_console();
 	void con_focus_console_slash();
+	void consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 };
 
 void ui::init()
@@ -55,11 +50,13 @@ void ui::init()
 	settings::setint("system.ui.console.filter", 0xffff);
 	settings::setint("system.ui.console.cmdecho", 1);
 	
-	con::addCommand("toggle_console", con::toggle_int, &console.draw);
-	con::addCommand("focus_console", con_focus_console);
-	con::addCommand("focus_console_slash", con_focus_console_slash);
-	con::addCommand("toggle_ui", con::toggle_int, &draw);
-	con::addCommand("toggle_pos", con::toggle_int, &pos.draw);
+	console::addCommand("toggle_console", console::toggle_int, &console.draw);
+	console::addCommand("focus_console", con_focus_console);
+	console::addCommand("focus_console_slash", con_focus_console_slash);
+	console::addCommand("toggle_ui", console::toggle_int, &draw);
+	console::addCommand("toggle_pos", console::toggle_int, &pos.draw);
+
+	Log::addConsumer("console", LF_ALL, consoleMessageCallback, &console);
 }
 
 void ui::release()
@@ -97,7 +94,7 @@ void ui::keypressed(char key, bool extended)
 	}
 
 	if(key == 0x1b && !extended) {
-		con::executeCommand("quit");
+		console::executeCommand("quit");
 	}
 
 	console.keypressed(key, extended);
@@ -114,4 +111,18 @@ void ui::con_focus_console_slash()
 	input::unacquire();
 	console.draw = 1;
 	console.keypressed('/');
+}
+
+void ui::consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user)
+{	
+	if(!(((Console*)user)->filter & flags))
+		return;
+
+// 	char buffer[512];
+// 	if(function && *function)
+// 		sprintf(buffer, "[%s] %s", function, message);
+// 	else
+// 		strcpy(buffer, message);
+
+	((Console*)user)->addMessage(message);
 }

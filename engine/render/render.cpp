@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.cpp
-// rendering system implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "render/render.h"
 #include "settings/settings.h"
@@ -40,6 +34,7 @@ namespace render {
 	int tesselation;
 	int transparency;
 	int draw_patches;
+	int draw_entities = 1;
 	int wait_vtrace;
 	bool sky_visible;
 	IDirect3DDevice9* device;
@@ -63,7 +58,7 @@ namespace render {
 	unsigned int frame;
 	texture::DXTexture* current_texture;
 	texture::DXTexture* current_lightmap;
-	const D3DXMATRIX* current_transform;
+	D3DXMATRIX current_transform;
 
 	unsigned int frame_polys;
 	unsigned int frame_texswaps;
@@ -84,6 +79,8 @@ void render::init()
 	settings::addsetting("system.render.fullscreen", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.wait_vtrace", settings::TYPE_INT, 0, NULL, NULL, &wait_vtrace);
 	settings::addsetting("system.render.bsp_rendermethod", settings::TYPE_INT, 0, NULL, NULL, &bsp_rendermethod);
+	settings::addsetting("system.render.draw_entities", settings::TYPE_INT, 0, NULL, NULL, &draw_entities);
+	settings::addsetting("system.render.multisampletype", settings::TYPE_INT, 0, NULL, NULL, NULL);
 
 	settings::setint("system.render.resolution.x", 800);
 	settings::setint("system.render.resolution.y", 600);
@@ -126,14 +123,15 @@ void render::init()
 	settings::setint("system.render.device", 0);
 	settings::setint("system.render.backbuffercount", 2);
 
-	con::addCommand("toggle_wireframe", con::toggle_int, &wireframe);
-	con::addCommand("toggle_lightmap", con::toggle_int, &lightmap);
-	con::addCommand("toggle_patches", con::toggle_int, &draw_patches);
-	con::addCommand("toggle_transparency", con::toggle_int, &transparency);
-	con::addCommand("toggle_bsprender", con::toggle_int, &bsp_rendermethod);
-	con::addCommand("add_marker", render::con_add_marker, NULL);
-	con::addCommand("del_marker", render::con_del_marker, NULL);
-	con::addCommand("toggle_diffuse", con::toggle_int, &diffuse);
+	console::addCommand("toggle_wireframe", console::toggle_int, &wireframe);
+	console::addCommand("toggle_lightmap", console::toggle_int, &lightmap);
+	console::addCommand("toggle_patches", console::toggle_int, &draw_patches);
+	console::addCommand("toggle_transparency", console::toggle_int, &transparency);
+	console::addCommand("toggle_bsprender", console::toggle_int, &bsp_rendermethod);
+	console::addCommand("add_marker", render::con_add_marker, NULL);
+	console::addCommand("del_marker", render::con_del_marker, NULL);
+	console::addCommand("toggle_diffuse", console::toggle_int, &diffuse);
+	console::addCommand("toggle_entities", console::toggle_int, &draw_entities);
 
 	boost = 0;
 	gamma = 1.0;
@@ -213,8 +211,7 @@ void render::render()
 	frame++;	
 	sky_visible = true;
 	current_texture = NULL;
-	current_lightmap = NULL;
-	current_transform = NULL;
+	current_lightmap = NULL;	
 	current_vb = NULL;
 	current_ib = NULL;
 	frame_polys = 0;
@@ -283,13 +280,13 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 		frame_texswaps++;
 	}
 
-	if(transform != current_transform) {
+	if(transform && *transform != current_transform) {
 		if(transform)
 			device->SetTransform( D3DTS_WORLD, transform );
 		else
 			device->SetTransform( D3DTS_WORLD, &world );
 
-		current_transform = transform;
+		current_transform = *transform;
 	}
 
 	render::device->DrawIndexedPrimitive(

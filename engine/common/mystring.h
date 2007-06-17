@@ -34,11 +34,11 @@ public:
 	}
 };
 
-class set_char_ptr_traits {
+class char_ptr_less {
 public:
-	bool operator()(const char* keyval1,
-		const char* keyval2) const
+	bool operator()(const char* val1,
+		const char* val2) const
 	{
-		return strcmp(keyval1, keyval2) < 0; //<
+		return strcmp(val1, val2) < 0; //<
 	}
 };

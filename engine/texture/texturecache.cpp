@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
@@ -13,6 +7,7 @@
 #include "settings/settings.h"
 #include "render/render.h"
 #include "render/dx.h"
+#include "misc/alias.h"
 
 namespace texture {
 	int debug;
@@ -20,9 +15,9 @@ namespace texture {
 	int use_default;
 	texture_hash_map texture_cache;
 	shader_hash_map shader_cache;
-	alias_list texture_alias;
-	alias_list shader_alias;
-	alias_list shader_map;
+	misc::AliasList texture_alias;
+	misc::AliasList shader_alias;
+	misc::AliasList shader_map;
 
 	void load_maps();
 	DXTexture* active_texture;
@@ -48,7 +43,7 @@ void texture::init()
 	settings::setstring("system.render.texture.shader_map_file", "textures/shader_map.txt");
 	active_texture = NULL;
 	active_shader = NULL;
-	con::addCommand("list_textures", con_list_textures, NULL);
+	console::addCommand("list_textures", con_list_textures, NULL);
 }
 
 void texture::release()
@@ -62,9 +57,9 @@ void texture::acquire()
 
 void texture::load_maps()
 {
-	load_alias_list(settings::getstring("system.render.texture.shader_map_file"), shader_map);
-	load_alias_list(settings::getstring("system.render.texture.texture_alias_file"), texture_alias);
-	load_alias_list(settings::getstring("system.render.texture.shader_alias_file"), shader_alias);
+	shader_map.load(settings::getstring("system.render.texture.shader_map_file"));
+	texture_alias.load(settings::getstring("system.render.texture.texture_alias_file"));
+	shader_alias.load(settings::getstring("system.render.texture.shader_alias_file"));
 }
 
 texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
@@ -72,8 +67,8 @@ texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 	char name[MAX_PATH];
 
 	// check to see if texture is aliased	
-	if(use_alias && find_alias(texname, texture_alias))
-		strcpy(name, find_alias(texname, texture_alias));
+	if(use_alias && texture_alias.findAlias(texname))
+		strcpy(name, texture_alias.findAlias(texname));
 	else
 		strcpy(name, texname);
 
@@ -96,7 +91,7 @@ texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 		if(texture) {
 			// set the fake name
 			free(texture->name);
-			texture->name = strdup(name);
+			texture->name = _strdup(name);
 			texture_cache.insert(texture_hash_map::value_type(texture->name, texture));
 			return texture;
 		}
@@ -164,7 +159,7 @@ found:
 		goto err;
 	
 	if(debug) {
-		LOG2("[texture::loadTexture] loaded %s", name);
+		LOG("[texture::loadTexture] loaded %s", name);
 	}
 
 shader:
@@ -172,7 +167,7 @@ shader:
 	file = vfs::getFile(buf);
 	if(!file) {
 		// check the shader map
-		file = vfs::getFile(find_alias(name, shader_map));
+		file = vfs::getFile(shader_map.findAlias(name));
 	}
 
 	if(!file) 
@@ -187,7 +182,7 @@ done:
 	DXTexture* dxtex = new DXTexture();
 	dxtex->texture = texture;
 	dxtex->shader = shader;
-	dxtex->name = strdup(name);
+	dxtex->name = _strdup(name);
 	if(shader)
 		shader->init(dxtex);
 
@@ -195,7 +190,7 @@ done:
 
 err:	
 //	if(debug) 
-		LOG2("[texture::loadTexture] failed to load %s", name);
+		LOG("[texture::loadTexture] failed to load %s", name);
 
 	return NULL;
 }
@@ -231,7 +226,7 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 		}
 
 		if(bleh.Pitch != 512) {
-			LOG2("[texture::genLightmap] generation failed (pitch = %i)", bleh.Pitch);
+			LOG("[texture::genLightmap] generation failed (pitch = %i)", bleh.Pitch);
 			return NULL;
 		}
 		
@@ -268,7 +263,7 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 				dstbits[row][col][1] = (byte)g;
 				dstbits[row][col][0] = (byte)b;
 
-				//con::log(con::FLAG_DEBUG, "[dst] %i, %i, %i, %i", dstbits[row][col][0], dstbits[row][col][1], dstbits[row][col][2], dstbits[row][col][3]);
+				//console::log(console::FLAG_DEBUG, "[dst] %i, %i, %i, %i", dstbits[row][col][0], dstbits[row][col][1], dstbits[row][col][2], dstbits[row][col][3]);
 			}
 		}
 		memcpy(bleh.pBits, dstbits, 128 * 128 * 4);
@@ -290,12 +285,12 @@ void texture::con_list_textures(int argc, char* argv[], void* user)
 {
 	for(texture_hash_map::iterator it = texture_cache.begin(); it != texture_cache.end(); ++it)
 	{
-		if((argc == 1) || ((argc == 2) && wildcmp(argv[1], (*it).first)) || 
-			((argc == 3) && wildcmp(argv[1], (*it).first) && (*it).second->shader && wildcmp(argv[2], (*it).second->shader->name)))
-			con::log(con::FLAG_INFO, "%s %s%s%s", 
-			(*it).second->name, 
-			(*it).second->shader ? "(" : "", 
-			(*it).second->shader ? (*it).second->shader->name : "", 
-			(*it).second->shader ? ")" : "");
+		if((argc == 1) || ((argc == 2) && wildcmp(argv[1], it->first)) || 
+			((argc == 3) && wildcmp(argv[1], it->first) && it->second->shader && wildcmp(argv[2], it->second->shader->name)))
+			INFO("%s %s%s%s", 
+			it->second->name, 
+			it->second->shader ? "(" : "", 
+			it->second->shader ? it->second->shader->name : "", 
+			it->second->shader ? ")" : "");
 	}
 }

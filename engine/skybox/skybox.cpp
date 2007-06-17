@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "skybox/skybox.h"
 #include "render/render.h"
@@ -12,12 +6,13 @@
 #include "texture/texturecache.h"
 #include "texture/texture.h"
 #include "settings/settings.h"
+#include "math/vertex.h"
 
 namespace skybox {
 	texture::DXTexture** textures;
 
 	D3DXVECTOR3 min, max;
-	SkyVertex *verts;
+	SkyVertex *verts = NULL;
 
 	int draw;
 	int width, height, depth;
@@ -30,6 +25,8 @@ namespace skybox {
 	void con_sky(int argc, char* argv[], void* user);
 };
 
+using namespace skybox;
+
 void skybox::init()
 {
 	settings::addsetting("system.render.skybox.draw", settings::TYPE_INT, 0, NULL, NULL, &draw);
@@ -38,9 +35,9 @@ void skybox::init()
 	settings::addsetting("system.render.skybox.depth", settings::TYPE_INT, 0, NULL, NULL, &depth);
 	settings::addsetting("system.render.skybox.texture", settings::TYPE_STRING, 0, NULL, NULL, &texture);
 	
-	con::addCommand("toggle_sky", con::toggle_int, &draw);
-	con::addCommand("sky_reset", skybox::reset, NULL);
-	con::addCommand("sky", skybox::con_sky, NULL);
+	console::addCommand("toggle_sky", console::toggle_int, &draw);
+	console::addCommand("sky_reset", skybox::reset, NULL);
+	console::addCommand("sky", skybox::con_sky, NULL);
 
 	draw = 1;
 	acquired = false;
@@ -62,7 +59,7 @@ void skybox::acquire()
 	acquired = true;
 
 	// get memory for verts
-	verts = new SkyVertex[4 * 6];
+	skybox::verts = new SkyVertex[4 * 6];
 
 	// generate our vertexes
 	genBox();
@@ -85,6 +82,7 @@ void skybox::acquire()
 	}
 	memcpy(vertbuf, verts, 4 * 6 * sizeof(SkyVertex));
 	dxvertbuf->Unlock();
+	delete [] skybox::verts;
 
 	// load our textures
 	char texbuf[MAX_PATH];	
@@ -103,7 +101,7 @@ void skybox::acquire()
 	strcpy(ext, "up");
 	textures[BOX_TOP] = texture::getTexture(texbuf);
 	strcpy(ext, "dn");
-	textures[BOX_BOTTOM] = texture::getTexture(texbuf);
+	textures[BOX_BOTTOM] = texture::getTexture(texbuf);	
 }
 
 void skybox::reset()
@@ -325,7 +323,6 @@ void skybox::render()
 	render::device->DrawPrimitive(D3DPT_TRIANGLEFAN, 20, 2);
 
 	render::device->SetTransform( D3DTS_WORLD, &render::world );
-	FRAMEDO(LOG("[skybox::render] sky drawn"));
 }
 
 void skybox::unacquire()

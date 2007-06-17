@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3bsp/bspcache.h"
 #include "q3bsp/bleh.h"
@@ -30,8 +24,8 @@ void q3bsp::init()
 	settings::addsetting("system.render.bsp.draw", settings::TYPE_INT, 0, NULL, NULL, &draw);
 	settings::addsetting("system.render.bsp.convert", settings::TYPE_INT, 0, NULL, NULL, &convert);
 	settings::setstring("system.render.bsp.bsp_path", "/maps");
-	con::addCommand("list_maps", con_list_maps);
-	con::addCommand("toggle_bsp", con::toggle_int, &draw);
+	console::addCommand("list_maps", con_list_maps);
+	console::addCommand("toggle_bsp", console::toggle_int, &draw);
 	debug = 0;
 	draw = 1;
 	convert = 1;
@@ -49,7 +43,7 @@ bool q3bsp::loadBSP(char* filename)
 	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!bsp->load(file))
 	{
-		LOG2("[q3bsp::loadBSP] unable to load \"%s\"", filename);
+		LOG("[q3bsp::loadBSP] unable to load \"%s\"", filename);
 		delete bsp;
 		bsp = NULL;
 		return false;
@@ -73,5 +67,5 @@ void q3bsp::con_list_maps(int argc, char* argv[], void* user)
 	vfs::getFileList(map_list, settings::getstring("system.render.bsp.bsp_path"), "*.bsp");
 	LOG("Map List:");
 	for(vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
-		LOG2("  %s", (*it));
+		LOG("  %s", (*it));
 }

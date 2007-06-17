@@ -3,17 +3,17 @@
 #include "path.h"
 
 namespace vfs {
-	typedef struct _ZipFileEntry {
-		~_ZipFileEntry() { delete [] filename; };
+	struct ZipFileEntry {
+		~ZipFileEntry() { delete [] filename; };
 		char* filename;
 		U32 compressed_size;
 		U32 uncompressed_size;
 		U32 offset;
-	} ZipFileEntry;
+	};
 	
 	typedef std::smart_ptr<ZipFileEntry> ZipFileEntryPtr;
 	typedef std::vector<ZipFileEntryPtr> ZipFileEntryList;
-	typedef stdext::hash_map<const char*, ZipFileEntry*, hash_char_ptr> ZipFileEntryHash;
+	typedef stdext::hash_map<const char*, ZipFileEntry*, hash_char_ptr_traits> ZipFileEntryHash;
 
 	class ZipPath : public Path {	
 	public:

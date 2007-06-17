@@ -2,10 +2,9 @@ game.player.pos.x = 675;
 game.player.pos.y = 35;
 game.player.pos.z = 2200;
 game.player.rot.x = 180;
-game.noclip = 0;
 
 
-for(z = -2000; z <= 0; z += 200)
+/*for(z = -2000; z <= 0; z += 200)
 {
 	for(x = 2000; x >= 0; x -= 200)
 	{	
@@ -29,3 +28,4 @@ bleh.rot.x = 180
 bleh.pos.y = 2050
 bleh.update()
 system.scene.addEntity(bleh)
+*/

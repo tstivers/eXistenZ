@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #pragma once
 
 #define KEYDOWN(key) ((input::kbstate[key] == 2) || (input::kbstate[key] == 1)) 

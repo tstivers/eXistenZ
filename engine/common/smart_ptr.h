@@ -82,15 +82,14 @@ std::smart_ptr<T>& std::smart_ptr<T>::operator=(const smart_ptr<T>& other)
 template <class T> 
 std::smart_ptr<T>& std::smart_ptr<T>::operator=(T* other)
 {
-	if (m_pointed) {
-		if (m_counter) {
-			--(*m_counter);
-			if ( *m_counter == 0 ) {
-				delete m_pointed;
-				delete m_counter;
-			}
+	if (m_counter) {
+		--(*m_counter);
+		if ( *m_counter == 0 ) {
+			delete m_pointed;
+			delete m_counter;
 		}
 	}
+
 	m_pointed = other;
 	m_counter = new unsigned int(1);	
 	return *this;

@@ -3,10 +3,11 @@ log("loading configuration...");
 // standard config settings
 system.render.resolution.bitdepth = 32;
 system.render.resolution.refreshrate = 60;
-system.render.wait_vtrace = 1;
-system.render.resolution.x = 1280;
-system.render.resolution.y = 1024;
-system.render.fullscreen = 1;
+system.render.wait_vtrace = 0;
+system.render.resolution.x = 1024;
+system.render.resolution.y = 768;
+system.render.fullscreen = 0;
+system.render.multisampletype = 2; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.vfs.addPath("../data/");
 system.vfs.addPath("c:/games/eXistenZ/data");
 system.vfs.addPath("c:/games/eXistenZ/data/pak0.zip");
@@ -24,7 +25,7 @@ system.ui.console.x = 20;
 system.ui.console.y = 30;
 system.ui.console.height = system.render.resolution.y - system.ui.console.y - 50;
 system.ui.fps.x = system.render.resolution.x - 150;
-system.debug.traceflags = 0xffff; // turn on debugger tracing
+//system.debug.traceflags = 0xffff; // turn on debugger tracing
 game.camera.pos.x = 0;
 game.camera.pos.y = 0;
 game.camera.pos.z = 0;
@@ -35,6 +36,7 @@ game.init_command = "";
 system.render.use_scenegraph = 0;
 system.render.bsp.convert = 0;
 system.render.skybox.texture = "textures/skybox/cx";
+game.player.step_up = 25;
 
 // source keys (will fix this later)
 execfile("scripts/keys.js");
@@ -79,9 +81,14 @@ bind(MWHEELDN, "exec print(\"mousewheel down\")");
 bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
+bind(KEY_N, "exec createBox()");
+bind(KEY_V, "*exec createBox()");
+bind(KEY_E, "toggle_entities");
+bind(KEY_F, "toggle_movemode");
 
 // functions
 
+var message;
 function print(message) {
 	log(message);
 }
@@ -160,6 +167,49 @@ function markerfun() {
 	bind(BUTTON_0, "*add_marker");
 	bind(BUTTON_2, "*del_marker");
 	print("go go gadget markers");
+}
+
+num_boxes = 0;
+current_texture = 0;
+textures = new Array(
+    "textures/house/metal1",
+    "textures/house/shingle1",
+    "textures/house/grass1",
+    "textures/house/carpet1",
+    "textures/house/tv_front",
+    "textures/shaders/static");
+
+var boxes = new Object();
+
+function createBox() {
+    box = createBoxEntity("box" + num_boxes++, textures[current_texture++]);
+    if(current_texture >= textures.length)
+        current_texture = 0;
+    boxes[box.name] = box;
+    system.scene.addEntity(box);
+    box.pos = game.player.pos;    
+    print('added box ' + box.name);
+    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
+    box.last_y = 0;
+}
+
+function bounceBox(boxName)
+{
+    var box = boxes[boxName];
+    if(Math.abs(box.last_y - box.pos.y) <= 5)
+    {
+        var vec = new Vector();
+        vec.x = game.player.pos.x - box.pos.x
+        vec.z = game.player.pos.z - box.pos.z;
+        vec.normalize();
+        box.applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
+    } else 
+        box.last_y = box.pos.y;
+}
+
+Vector.prototype.toString = function()
+{
+    return "(" + this.x + ", " + this.y + ", " + this.z + ")";
 }
 
 // log our start date and time

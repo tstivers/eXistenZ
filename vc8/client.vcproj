@@ -43,7 +43,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -69,7 +69,7 @@
 				Name="VCLinkerTool"
 				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -113,7 +113,7 @@
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -136,17 +136,14 @@
 				Optimization="3"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
+				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
-				EnableFiberSafeOptimizations="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
 				StringPooling="true"
-				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
-				EnableFunctionLevelLinking="true"
-				EnableEnhancedInstructionSet="1"
+				EnableEnhancedInstructionSet="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
 				AssemblerOutput="4"
@@ -166,11 +163,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -205,6 +203,18 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}"
+			RelativePathToProject="..\lib\js32\js32.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{4B3A1F6D-AEE3-4C47-A34A-531563F91758}"
+			RelativePathToProject="..\lib\nvtristrip\nvtristrip.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}"
+			RelativePathToProject="..\lib\zlib\zlib.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -255,11 +265,27 @@
 			Name="script"
 			>
 			<File
+				RelativePath="..\engine\script\JSArgumentList.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\JSArgumentList.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\script\jsscript.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\script\jsscript.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\jsvector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\jsvector.h"
 				>
 			</File>
 			<File
@@ -272,10 +298,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="platform"
+			Name="misc"
 			>
 			<File
-				RelativePath="..\engine\platform\types.h"
+				RelativePath="..\engine\misc\alias.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\misc\alias.h"
 				>
 			</File>
 		</Filter>
@@ -471,19 +501,19 @@
 			Name="render"
 			>
 			<File
-				RelativePath="..\engine\render\d3dfont.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\render\d3dfont.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\render\dx.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\render\dx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\font.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\font.h"
 				>
 			</File>
 			<File
@@ -583,11 +613,27 @@
 			Name="timer"
 			>
 			<File
+				RelativePath="..\engine\timer\jstimers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\jstimers.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\timer\timer.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\timer\timer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\timers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\timer\timers.h"
 				>
 			</File>
 		</Filter>
@@ -735,6 +781,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\game\jsplayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\jsplayer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\physxplayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\game\physxplayer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\game\player.cpp"
 				>
 			</File>
@@ -784,98 +846,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="shader"
-			>
-			<File
-				RelativePath="..\engine\shader\shader.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\engine\shader\shader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\shader\shadercache.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\shader\shadercache.h"
-				>
-			</File>
-			<Filter
-				Name="stdshader"
-				>
-				<File
-					RelativePath="..\engine\shader\stdshader\pass.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\engine\shader\stdshader\pass.h"
-					>
-				</File>
-				<File
-					RelativePath="..\engine\shader\stdshader\shader.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)2.obj"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)2.obj"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\engine\shader\stdshader\shader.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="simpleshader"
-				>
-				<File
-					RelativePath="..\engine\shader\simpleshader\simpleshader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\engine\shader\simpleshader\simpleshader.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
 			Name="common"
 			>
 			<File
-				RelativePath="..\engine\common\common.cpp"
+				RelativePath="..\engine\common\log.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\engine\common\common.h"
+				RelativePath="..\engine\common\log.h"
 				>
 			</File>
 			<File
@@ -894,72 +872,8 @@
 				RelativePath="..\engine\common\smart_ptr.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="mesh"
-			>
 			<File
-				RelativePath="..\engine\mesh\mesh.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\mesh.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshcache.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshcache.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshload.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshload.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshsystem.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshsystem.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshsystemcache.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\meshsystemcache.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\textloader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\mesh\textloader.h"
+				RelativePath="..\engine\common\types.h"
 				>
 			</File>
 		</Filter>
@@ -1055,6 +969,14 @@
 			Name="entity"
 			>
 			<File
+				RelativePath="..\engine\entity\boxentity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\boxentity.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\entity.cpp"
 				>
 			</File>
@@ -1080,6 +1002,190 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\staticentity.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="physics"
+			>
+			<File
+				RelativePath="..\engine\physics\meshdesc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\meshdesc.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\meshdescimpl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\physics.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\physics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\stream.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\stream.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="shader"
+			>
+			<File
+				RelativePath="..\engine\shader\shader.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\engine\shader\shader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\shader\shadercache.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\shader\shadercache.h"
+				>
+			</File>
+			<Filter
+				Name="stdshader"
+				>
+				<File
+					RelativePath="..\engine\shader\stdshader\pass.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\shader\stdshader\pass.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\shader\stdshader\shader.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)2.obj"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)2.obj"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\engine\shader\stdshader\shader.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="simpleshader"
+				>
+				<File
+					RelativePath="..\engine\shader\simpleshader\simpleshader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\shader\simpleshader\simpleshader.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="mesh"
+			>
+			<File
+				RelativePath="..\engine\mesh\mesh.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\mesh.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshcache.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshcache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshload.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshload.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshsystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshsystem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshsystemcache.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\meshsystemcache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\textloader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\mesh\textloader.h"
 				>
 			</File>
 		</Filter>

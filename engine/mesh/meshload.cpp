@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "mesh/meshload.h"
 #include "mesh/textloader.h"
@@ -11,6 +5,8 @@
 #include "mesh/meshsystem.h"
 
 namespace mesh {
+	const static std::string EXTENSION_TEXTMESH = ".tm";
+	const static std::string EXTENSION_TEXTMESHSYSTEM = ".tms";
 };
 
 using namespace mesh;

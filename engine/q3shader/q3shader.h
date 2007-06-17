@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #pragma once
 #include "vfs/vfs.h"
 #include "texture/texture.h"

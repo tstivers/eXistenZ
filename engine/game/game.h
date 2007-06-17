@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #pragma once
 
 namespace game {
@@ -20,18 +14,12 @@ namespace game {
 	};
 
 	extern int game_state;
-	extern float gravity;
-	extern float std_friction;
-	extern float air_friction;
-	extern float player_accel;
-	extern float player_speed;
-	extern float jump_vel;
 	extern float mouse_sens_x;
 	extern float mouse_sens_y;
-	extern float step_up;
-	extern float climb_interpol;
 	extern int noclip;	
 
 	// console commands
 	void con_map(char* cmd, char* cmdline, void* user);
+	class Player;
+	extern Player* player;
 };

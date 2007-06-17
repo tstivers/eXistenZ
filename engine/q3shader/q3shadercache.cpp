@@ -1,32 +1,26 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3shader/q3shadercache.h"
 #include "q3shader/q3shader.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
 #include "texture/texture.h"
 #include "texture/texturecache.h"
+#include "misc/alias.h"
 
 namespace q3shader {
 	struct eqstr {
 		bool operator() (const char* s1, const char* s2) const {
-			return stricmp(s1, s2) == 0;
+			return _stricmp(s1, s2) == 0;
 		}
 	};
 
-	typedef stdext::hash_map<const char*, Q3Shader*, hash_char_ptr> shader_hash_map;	
-	typedef stdext::hash_map<const char*, char*, hash_char_ptr> alias_hash_map;
+	typedef stdext::hash_map<const char*, Q3Shader*, hash_char_ptr_traits> shader_hash_map;	
+	typedef stdext::hash_map<const char*, char*, hash_char_ptr_traits> alias_hash_map;
 
 	shader_hash_map shader_cache;
 	alias_hash_map shader_file_map;
-	alias_list shader_alias;
+	misc::AliasList shader_alias;
 	int debug;
 
 	void loadShaderList();
@@ -74,7 +68,7 @@ void q3shader::parseShader(char* filename)
 	int line = 0;
 	int level = 0;
 
-	//LOG2("[q3shader::parseShader] parsing %s...", filename);
+	//LOG("[q3shader::parseShader] parsing %s...", filename);
 
 	while(file->readLine(buf, 1024)) {
 		
@@ -86,7 +80,7 @@ void q3shader::parseShader(char* filename)
 		strip(buf);
 
 		if(!buf[0]) continue;
-		//LOG2("[q3shader::parseShader] processing \"%s\"", buf);
+		//LOG("[q3shader::parseShader] processing \"%s\"", buf);
 		char* token = buf;
 		char* this_token;
 		while(this_token = getToken(&token, " \t")) {
@@ -95,8 +89,8 @@ void q3shader::parseShader(char* filename)
 			else if(this_token[0] == '}')
 				level--;
 			else if(this_token[0] && level == 0) {
-				LOG2("[q3shader::parseShader] adding \"%s\"", this_token);
-				shader_file_map.insert(alias_hash_map::value_type(strdup(this_token), strdup(filename)));
+				LOG("[q3shader::parseShader] adding \"%s\"", this_token);
+				shader_file_map.insert(alias_hash_map::value_type(_strdup(this_token), _strdup(filename)));
 			}
 		}
 	}
@@ -112,7 +106,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 	if(!name || !*name)
 		return NULL;
 
-	//LOG2("[q3shader::getShader] looking for \"%s\"", name);
+	//LOG("[q3shader::getShader] looking for \"%s\"", name);
 
 	// check cache
 	shader_hash_map::iterator cache_iter = shader_cache.find(name);
@@ -127,9 +121,9 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 		// shader was in list, create it
 		//LOG("[q3shader::getShader] found in list");
 		Q3Shader* shader = new Q3Shader(name);
-		LOG3("[q3shader::getShader] loading %s from file %s", name, (*map_iter).second);
+		LOG("[q3shader::getShader] loading %s from file %s", name, (*map_iter).second);
 		shader->load((*map_iter).second);
-		shader_cache.insert(shader_hash_map::value_type(strdup(name), shader));		
+		shader_cache.insert(shader_hash_map::value_type(_strdup(name), shader));		
 		return shader;
 	}
 
@@ -140,7 +134,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 		Q3Shader* shader = new Q3Shader(name);
 		shader->texture.push_back(texture);
 		shader->flags = FLAG_STD_TEXTURE;
-		shader_cache.insert(shader_hash_map::value_type(strdup(name), shader));
+		shader_cache.insert(shader_hash_map::value_type(_strdup(name), shader));
 		return shader;
 	}
 	

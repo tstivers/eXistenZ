@@ -39,7 +39,21 @@ void Entity::update()
 	calcAABB();
 }
 
-inline_ void Entity::mark(unsigned int frame)
+void Entity::doTick()
+{
+}
+
+void Entity::setQuatRot(const D3DXQUATERNION& rot)
+{
+	
+}
+
+inline void Entity::mark(unsigned int frame)
 {
 	this->frame = frame;
+}
+
+void Entity::applyForce(const D3DXVECTOR3 &force)
+{
+	LOG("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
 }

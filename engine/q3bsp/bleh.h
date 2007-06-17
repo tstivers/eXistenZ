@@ -1,21 +1,16 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #pragma once
 
 #include "texture/texture.h"
 #include "q3bsp/bspcache.h"
 #include "q3bsp/bspcollide.h"
+#include "math/vertex.h"
 #include "vfs/vfs.h"
 
 namespace q3bsp {
 	
 	class BSPRenderer;
 
-	typedef struct {
+	struct BSPFace {
 		int type;
 		int vertex;
 		int numverts;
@@ -25,17 +20,17 @@ namespace q3bsp {
 		int texture;
 		int lightmap;
 		int size[2];
-	} BSPFace;
+	};
 
-	typedef struct {
+	struct BSPNode {
 		int plane;
 		int front;
 		int back;
 		D3DXVECTOR3 min;
 		D3DXVECTOR3 max;
-	} BSPNode; 
+	}; 
 
-	typedef struct {
+	struct BSPLeaf {
 		int cluster;
 		int leafface;
 		int numleaffaces;
@@ -43,36 +38,36 @@ namespace q3bsp {
 		int numleafbrushes;
 		D3DXVECTOR3 min;
 		D3DXVECTOR3 max;
-	} BSPLeaf; 
+	}; 
 
-	typedef struct {
+	struct BSPPlane {
 		D3DXVECTOR3 nrm;
 		float dst;
-	} BSPPlane;
+	};
 
-	typedef struct {
+	struct BSPBrush {
 		int brushside;
 		int numbrushsides;
 		int texture;		
-	} BSPBrush;
+	};
 
-	typedef struct {
+	struct BSPBrushSide {
 		int plane;
 		int texture;		
-	} BSPBrushSide; 
+	}; 
 
-	typedef struct {
+	struct BSPTexture {
 		char name[64];
 		int flags;
 		int contents;
-	} BSPTexture;
+	};
 
-	typedef struct {
+	struct face_sort_t {
 		int face_index;
 		int texture_index;
 		int lightmap_index;
 		BSPFace* face_address;
-	} face_sort_t;
+	};
 
 	class BSP {
 	public:

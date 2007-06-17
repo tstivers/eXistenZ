@@ -1,12 +1,5 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.cpp
-// rendering system implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "math/aabb.h"
-#include "console/console.h"
 
 	
 AABB::AABB()
@@ -26,8 +19,8 @@ AABB::~AABB()
 
 void AABB::reset() {
 	ZeroMemory(this, sizeof(AABB));
-	min = D3DXVECTOR3(BIGFLOAT, BIGFLOAT, BIGFLOAT);
-	max = D3DXVECTOR3(-BIGFLOAT, -BIGFLOAT, -BIGFLOAT);
+	min = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);
+	max = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 }
 
 void AABB::extend(const D3DXVECTOR3* min, const D3DXVECTOR3* max)
@@ -78,14 +71,14 @@ void AABB::recalc()
 
 void AABB::debugPrint()
 {
-	LOG7("[AABB] min: {%.2f, %.2f, %.2f}  max: {%.2f, %.2f, %.2f}",
+	LOG("[AABB] min: {%.2f, %.2f, %.2f}  max: {%.2f, %.2f, %.2f}",
 		min.x, min.y, min.z,
 		max.x, max.y, max.z);
-	LOG7("[AABB] pos: {%.2f, %.2f, %.2f}  extents: {%.2f, %.2f, %.2f}",
+	LOG("[AABB] pos: {%.2f, %.2f, %.2f}  extents: {%.2f, %.2f, %.2f}",
 		pos.x, pos.y, pos.z,
 		extents.x, extents.y, extents.z);
-	LOG2("[AABB] cdist: %.2f", cdist);
-	LOG7("[AABB] pdist: {%.2f, %.2f, %.2f, %.2f, %.2f, %.2f}",
+	LOG("[AABB] cdist: %.2f", cdist);
+	LOG("[AABB] pdist: {%.2f, %.2f, %.2f, %.2f, %.2f, %.2f}",
 		pdist[0], pdist[1], pdist[2], pdist[3], pdist[4], pdist[5]);
 }
 

@@ -1,0 +1,118 @@
+<project version="Crimson Editor 3.60">
+	<category name="engine" expanded="yes">
+		<category name="client" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\client\appwindow.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\client\appwindow.h" />
+			<localfile path="E:\Work\eXistenZ\engine\client\main.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\client\main.h" />
+			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.h" />
+		</category>
+		<category name="physics" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.h" />
+			<localfile path="E:\Work\eXistenZ\engine\physics\meshdescimpl.h" />
+			<localfile path="E:\Work\eXistenZ\engine\physics\physics.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\physics\physics.h" />
+		</category>
+		<category name="game" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\game\bspplayer.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\bspplayer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\game\game.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\game.h" />
+			<localfile path="E:\Work\eXistenZ\engine\game\jsgame.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\jsgame.h" />
+			<localfile path="E:\Work\eXistenZ\engine\game\jsplayer.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\jsplayer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\game\physxplayer.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\physxplayer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\game\player.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\game\player.h" />
+		</category>
+		<category name="scene" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.h" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scene.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scene.h" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scenebsp.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scenebsp.h" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\sceneportal.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\sceneportal.h" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scenetree.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\scene\scenetree.h" />
+		</category>
+		<category name="q3bsp" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bleh.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bleh.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.cpp.bak" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.h.bak" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspcache.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspcache.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspcollide.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspcollide.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspconvert.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspconvert.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspload.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspload.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsppatch.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsppatch.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsprender.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsprender.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\patch.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\patch.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\q3bsptypes.h" />
+			<localfile path="E:\Work\eXistenZ\engine\q3bsp\rendertest.cpp" />
+		</category>
+		<category name="timer" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.h" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timer.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" />
+		</category>
+		<category name="script" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.h" />
+			<localfile path="E:\Work\eXistenZ\engine\script\jsscript.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\script\jsscript.h" />
+			<localfile path="E:\Work\eXistenZ\engine\script\jsvector.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\script\jsvector.h" />
+			<localfile path="E:\Work\eXistenZ\engine\script\script.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\script\script.h" />
+		</category>
+		<category name="entity" expanded="yes">
+			<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\entity.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\entity.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\entitycache.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\entitycache.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\IBoxRenderer.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.h" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.h" />
+		</category>
+		<category name="settings" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.h" />
+			<localfile path="E:\Work\eXistenZ\engine\settings\settings.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\settings\settings.h" />
+		</category>
+		<category name="math" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\math\aabb.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\math\aabb.h" />
+			<localfile path="E:\Work\eXistenZ\engine\math\math.h" />
+			<localfile path="E:\Work\eXistenZ\engine\math\vertex.h" />
+		</category>
+	</category>
+</project>
+
+<workspace version="Crimson Editor 3.60">
+	<localfile path="E:\Work\eXistenZ\engine\common\log.h" linenum="8" placement="2:3:-1:-1:-4:-25:22:24:670:454" />
+	<localfile path="E:\Work\eXistenZ\engine\entity\entity.h" linenum="1" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
+</workspace>
+

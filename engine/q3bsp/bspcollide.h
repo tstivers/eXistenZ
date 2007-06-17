@@ -1,13 +1,7 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #pragma once
 
 namespace q3bsp {
-	typedef struct {
+	struct collider_t {
 		D3DXVECTOR3 start;
 		D3DXVECTOR3 end;
 
@@ -20,5 +14,5 @@ namespace q3bsp {
 		int brush_id;
 		int brush_contents;
 		bool in_solid;
-	} collider_t;
+	};
 };

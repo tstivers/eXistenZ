@@ -1,8 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// main.cpp
-// contains the program entry point as well as all globals
-// $Id$
-//
 #include "precompiled.h"
 #include "client/main.h"
 #include "console/console.h"
@@ -17,6 +12,8 @@
 #include "render/render.h"
 #include "interface/interface.h"
 #include "timer/timer.h"
+#include "timer/timers.h"
+#include "timer/jstimers.h"
 #include "q3bsp/bleh.h"
 #include "q3shader/q3shadercache.h"
 #include "input/input.h"
@@ -31,11 +28,13 @@
 #include "scene/scene.h"
 #include "scene/jsscene.h"
 #include "entity/jsentity.h"
+#include "physics/physics.h"
+#include "script/jsvector.h"
 
 //extern unsigned long  _build_num;
 
 // hack
-ScriptEngine gScriptEngine;
+ScriptEngine* gScriptEngine;
 HINSTANCE gHInstance;
 int gActive = 0;
 
@@ -51,13 +50,13 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	int exitcode = 0;
 	gHInstance = hinst;
 
-	//LOG2("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
+	//LOG("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
 
 	// initialize essention system services
 	script::init();
 	jsscript::init();
 	timer::init();
-	con::init();
+	console::init();
 	jscon::init();
 	settings::init();
 	jssettings::init();
@@ -76,6 +75,9 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	scene::init();
 	jsscene::init();
 	jsentity::init();
+	physics::init();
+	jstimer::init();
+	//jsvector::init();
 
 	// add some generic system settings
 	addSystemSettings();
@@ -86,11 +88,11 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	// load and execute the config script
 	vfs::IFilePtr file = vfs::getFile("config.js");
 	if(file){
-		gScriptEngine.RunScript(file);		
+		gScriptEngine->RunScript(file);		
 	} else LOG("[eXistenZ] unable to open \"config.js\"");
 
 	// execute command line
-	con::processCmd(cmdline);
+	console::processCmd(cmdline);
 
 	// open main window and set up interface	
 	appwindow::createWindow(hinst);
@@ -111,10 +113,13 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	//vfs::release();
 	//jssettings::release();
 	settings::release();
+	jssettings::release();
 	//jscon::release();
-	//con::release();
+	//console::release();
+	physics::release();
+	script::release();
 	
-	//LOG2("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
+	//LOG("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
 	
 	return exitcode;
 }
@@ -164,10 +169,14 @@ int mainloop()
 		if(!gActive)
 			WaitMessage();
 		else {
-			timer::doTick();
+			timer::doTick();			
 			input::doTick();
+			physics::getResults();
+			timer::fireTimers();
 			game::doTick();
+			physics::startSimulation();
 			render::render();
+			JS_MaybeGC(gScriptEngine->GetContext());
 		}
 	}
 }

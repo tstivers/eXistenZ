@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"
-#include "console/console.h"
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/frustrum.h"
@@ -14,6 +13,10 @@
 
 namespace scene {
 };
+
+namespace render {
+	extern int draw_entities;
+}
 
 using namespace scene;
 
@@ -228,10 +231,13 @@ void SceneBSP::render()
 			render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup);
 		}
 
-	unsigned num_entities = entities.size();
-	for(unsigned i = 0; i < num_entities; i++) {
-		if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
-			entities[i]->render();
+	if(render::draw_entities) {
+		unsigned num_entities = entities.size();
+		for(unsigned i = 0; i < num_entities; i++) {
+			entities[i]->doTick();
+			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
+				entities[i]->render();
+		}
 	}
 }
 

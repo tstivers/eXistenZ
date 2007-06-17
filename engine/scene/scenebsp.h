@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/aabb.h"
+#include "math/vertex.h"
 
 namespace render {
 	class RenderGroup;
@@ -20,6 +21,7 @@ namespace scene {
 
 	class BSPFace {
 	public:
+		~BSPFace() { delete [] vertices; }
 		int texture;
 		int lightmap;
 		int type; // remove?

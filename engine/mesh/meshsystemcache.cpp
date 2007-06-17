@@ -1,14 +1,7 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "mesh/meshsystemcache.h"
 #include "mesh/meshsystem.h"
 #include "mesh/meshload.h"
-#include "console/console.h"
 
 namespace mesh {
 
@@ -23,7 +16,7 @@ MeshSystem* mesh::getMeshSystem(std::string& name)
 	// see if it's in the cache
 	MeshSystemCache::iterator it = cache.find(name);
 	if(it != cache.end())
-		return (*it).second;
+		return it->second;
 
 	// nope, try to load it
 	MeshSystem* mesh = loadMeshSystem(name);	
@@ -33,7 +26,7 @@ MeshSystem* mesh::getMeshSystem(std::string& name)
 		return mesh;
 	}
 
-	LOG2("[mesh::getMeshSystem] failed to find meshsystem \"%s\"", name.c_str());
+	LOG("[mesh::getMeshSystem] failed to find meshsystem \"%s\"", name.c_str());
 
 	return NULL;
 }

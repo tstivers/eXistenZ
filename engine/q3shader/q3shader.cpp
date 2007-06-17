@@ -1,13 +1,6 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3shader/q3shadercache.h"
 #include "q3shader/q3shader.h"
-#include "console/console.h"
 #include "settings/settings.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
@@ -101,7 +94,7 @@ using namespace q3shader;
 
 Q3Shader::Q3Shader(const char* name)
 {
-	this->name = strdup(name);
+	this->name = _strdup(name);
 	this->flags = 0;
 	this->surfaceparms = 0;
 	this->passes = 0;
@@ -110,8 +103,8 @@ Q3Shader::Q3Shader(const char* name)
 
 Q3Shader::Q3Shader(const char* name, const char* filename)
 {
-	this->name = strdup(name);
-	this->filename = strdup(filename);
+	this->name = _strdup(name);
+	this->filename = _strdup(filename);
 	this->flags = 0;
 	this->surfaceparms = 0;
 	this->passes = 0;
@@ -131,7 +124,7 @@ bool Q3Shader::load(const char* filename)
 	if(!file)
 		return false;
 
-	this->filename = strdup(filename);
+	this->filename = _strdup(filename);
 
 	char buf[1024];
 	line = 0;
@@ -147,7 +140,7 @@ bool Q3Shader::load(const char* filename)
 		strip(buf);
 
 		if(!buf[0]) continue;
-		//LOG2("[q3shader::parseShader] processing \"%s\"", buf);
+		//LOG("[q3shader::parseShader] processing \"%s\"", buf);
 		char* token = buf;
 		char* this_token;
 		while(this_token = getToken(&token, " \t")) {
@@ -156,7 +149,7 @@ bool Q3Shader::load(const char* filename)
 			else if(this_token[0] == '}')
 				level--;
 			else if(this_token[0] && level == 0) {
-				if(!stricmp(this_token, this->name)) {
+				if(!_stricmp(this_token, this->name)) {
 					file->readLine(buf, 1024);
 					line++;
 					parse(file);
@@ -204,7 +197,7 @@ bool Q3Shader::parse(vfs::IFilePtr file)
 
 void Q3Shader::parseLine(char* line)
 {
-	LOG2("[Q3Shader::parseLine] parsing [%s]", line);
+	LOG("[Q3Shader::parseLine] parsing [%s]", line);
 	char * name = line;
 	char* args = strchr(name, ' ');
 	int argc;
@@ -227,7 +220,7 @@ void Q3Shader::parseLine(char* line)
 		}
 
 	if(!commands[command_idx].command)
-		LOG2("[Q3Shader::parseLine] unknown command \"%s\"", name);
+		LOG("[Q3Shader::parseLine] unknown command \"%s\"", name);
 }
 
 void q3shader::parse_surfaceparm(Q3Shader* shader, int argc, char* argv[])
@@ -239,7 +232,7 @@ void q3shader::parse_surfaceparm(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_surfaceparm] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_surfaceparm] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_cull(Q3Shader* shader, int argc, char* argv[])
@@ -251,14 +244,14 @@ void q3shader::parse_cull(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_cull] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_cull] %s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
 {
 	strip(argv[1]);
 	
-	if(!stricmp(argv[1], "$lightmap")) {
+	if(!_stricmp(argv[1], "$lightmap")) {
 		shader->texture.push_back((texture::DXTexture*) 0x01);
 		return;
 	}
@@ -267,7 +260,7 @@ void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
 	if(ext)
 		*ext = 0;
 
-	//LOG4("[parse_map] %s[%i] : loading \"%s\"", shader->filename, shader->line, argv[1]);
+	//LOG("[parse_map] %s[%i] : loading \"%s\"", shader->filename, shader->line, argv[1]);
 
 	texture::DXTexture* texture = texture::getTexture(argv[1]);
 	if(texture) {
@@ -275,26 +268,26 @@ void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
 		return;
 	}
 
-	LOG4("[parse_map] %s[%i] : couldn't load \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_map] %s[%i] : couldn't load \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_blend(Q3Shader* shader, int argc, char* argv[])
 {
 	strip(argv[1]);
 	
-	if(!stricmp(argv[1], "add")) {
+	if(!_stricmp(argv[1], "add")) {
 		shader->src_blend = D3DBLEND_ONE;
 		shader->dest_blend = D3DBLEND_ONE;
 		return;
 	}
 
-	if(!stricmp(argv[1], "filter")) {
+	if(!_stricmp(argv[1], "filter")) {
 		shader->src_blend = D3DBLEND_ZERO;
 		shader->dest_blend = D3DBLEND_SRCCOLOR;
 		return;
 	}
 
-	if(!stricmp(argv[1], "blend")) {
+	if(!_stricmp(argv[1], "blend")) {
 		shader->src_blend = D3DBLEND_SRCALPHA;
 		shader->dest_blend = D3DBLEND_INVSRCALPHA;
 		return;
@@ -304,14 +297,14 @@ void q3shader::parse_blend(Q3Shader* shader, int argc, char* argv[])
 	if(blend_mode != 0) {
 		shader->src_blend = blend_mode;		
 	} else {
-		LOG4("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[1]);
+		LOG("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[1]);
 	}
 
 	blend_mode = getConstant(argv[2]);
 	if(blend_mode != 0) {
 		shader->src_blend = blend_mode;		
 	} else {
-		LOG4("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[2]);
+		LOG("[parse_blend] %s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[2]);
 	}
 }
 
@@ -319,42 +312,42 @@ void q3shader::parse_alphafunc(Q3Shader* shader, int argc, char* argv[])
 {
 	strip(argv[1]);
 
-	if(!stricmp(argv[1], "gt0")) {
+	if(!_stricmp(argv[1], "gt0")) {
 		shader->alpharef = 0;
 		shader->alphafunc = D3DCMP_GREATER;		
 		return;
 	}
 
-	if(!stricmp(argv[1], "lt128")) {
+	if(!_stricmp(argv[1], "lt128")) {
 		shader->alpharef = 128;
 		shader->alphafunc = D3DCMP_LESS;		
 		return;
 	}
 
-	if(!stricmp(argv[1], "ge128")) {
+	if(!_stricmp(argv[1], "ge128")) {
 		shader->alpharef = 128;
 		shader->alphafunc = D3DCMP_GREATEREQUAL;		
 		return;
 	}
 
-	LOG4("[parse_alphafunc] %s[%i] : unknown test mode \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_alphafunc] %s[%i] : unknown test mode \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 void q3shader::parse_depthfunc(Q3Shader* shader, int argc, char* argv[])
 {
 	strip(argv[1]);
 
-	if(!stricmp(argv[1], "lequal")) {		
+	if(!_stricmp(argv[1], "lequal")) {		
 		shader->depthfunc = D3DCMP_LESSEQUAL;		
 		return;
 	}
 
-	if(!stricmp(argv[1], "equal")) {		
+	if(!_stricmp(argv[1], "equal")) {		
 		shader->alphafunc = D3DCMP_EQUAL;		
 		return;
 	}
 
-	LOG4("[parse_depthfunc] %s[%i] : unknown depth func \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_depthfunc] %s[%i] : unknown depth func \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 
@@ -362,23 +355,23 @@ void q3shader::parse_rgbgen(Q3Shader* shader, int argc, char* argv[])
 {
 	strip(argv[1]);
 
-	if(!stricmp(argv[1], "identity") || !stricmp(argv[1], "identityLighting"))
+	if(!_stricmp(argv[1], "identity") || !_stricmp(argv[1], "identityLighting"))
 		return;
 
-	LOG4("[parse_rgbgen] %s[%i] : unknown rgbgen mode \"%s\"", shader->filename, shader->line, argv[1]);
+	LOG("[parse_rgbgen] %s[%i] : unknown rgbgen mode \"%s\"", shader->filename, shader->line, argv[1]);
 }
 
 
 int q3shader::getConstant(const char* key)
 {
 	for(int const_idx = 0; constants[const_idx].key; const_idx++)
-		if(!stricmp(key, constants[const_idx].key))
+		if(!_stricmp(key, constants[const_idx].key))
 			return constants[const_idx].value;
 
 	return 0;
 }
 
-#define BLEH if(!stricmp(this->name, "textures/base_wall/protobanner"))
+#define BLEH if(!_stricmp(this->name, "textures/base_wall/protobanner"))
 
 bool Q3Shader::activate(texture::DXTexture* lightmap, int pass)
 {

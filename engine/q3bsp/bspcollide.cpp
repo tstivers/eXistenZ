@@ -1,13 +1,6 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3bsp/bspcollide.h"
 #include "q3bsp/bleh.h"
-#include "console/console.h"
 
 //#define SMALL_FLOAT (0.001f)
 #define SMALL_FLOAT (0.01f)
@@ -140,15 +133,17 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 		BSPBrush& brush = brushes[brush_index];
 		
 		// this needs to be figured out
-		if(bsptextures[brush.texture].flags == 16528) // ignore the 'hint' texture
+		/*if(bsptextures[brush.texture].flags == 16528) // ignore the 'hint' texture
 			continue;
 
 		if(bsptextures[brush.texture].flags == 16544) // ignore the 'cluster portal' texture
 			continue;
 
 		if(bsptextures[brush.texture].flags == 16512) // ignore the 'nodrawsolid' texture
-			continue;
+			continue; */
 
+		if(bsptextures[brush.texture].flags & 0x4000) // ignore the 'hint' texture
+			continue;
 
 		int side_start = brush.brushside;
 		int side_index = brush.numbrushsides;
@@ -160,7 +155,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 		bool full_out = false;
 
 		D3DXVECTOR3 hit_normal(0, 0, 0);
-		//LOG2("[BSP::collideLeaf] checking brush %i", brush_index);
+		//LOG("[BSP::collideLeaf] checking brush %i", brush_index);
 
 		while(side_index--) { // loop through sides of the brush
 			BSPPlane& plane = planes[brushsides[side_start + side_index].plane];
@@ -184,7 +179,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 			if(d1 >= -SMALL_FLOAT) start_out = true;
 			if(d2 >= SMALL_FLOAT) end_out = true;
 
-			//if(1) con::log(con::FLAG_DEBUG, "[bspcollide] d1,d2 = (%f, %f)", d1, d2);
+			//if(1) console::log(console::FLAG_DEBUG, "[bspcollide] d1,d2 = (%f, %f)", d1, d2);
 
 			if((d1 >= -SMALL_FLOAT) && (d2 >= -SMALL_FLOAT)) { // both in front, not in this brush
 				full_out = true;
@@ -215,9 +210,9 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 				collider.brush_contents = brush.texture;
 				collider.brush_id = brush_index;
 				collider.in_solid = true;
-				FRAMEDO(LOG3("[q3bsp::collideLeaf] ERROR: totally in \"%s\" (%i)", 
-					bsptextures[brush.texture].name, 
-					bsptextures[brush.texture].flags));
+// 				FRAMEDO(LOG("[q3bsp::collideLeaf] ERROR: totally in \"%s\" (%i)", 
+// 					bsptextures[brush.texture].name, 
+// 					bsptextures[brush.texture].flags));
 				return;
 			}
 
@@ -229,7 +224,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 						collider.normal = hit_normal;
 						collider.brush_contents = brush.texture;
 						collider.brush_id = brush_index;
-						//LOG3("[bspcollide] collided with \"%s\" (%i)", bsp_textures[brush.texture].strName, bsp_textures[brush.texture].flags);
+						//LOG("[bspcollide] collided with \"%s\" (%i)", bsp_textures[brush.texture].strName, bsp_textures[brush.texture].flags);
 				}
 			}
 		}

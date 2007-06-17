@@ -1,11 +1,6 @@
-/////////////////////////////////////////////////////////////////////////////
-// script.cpp
-// script engine class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "script/script.h"
+#include "script/jsvector.h"
 #include "console/console.h"
 #include "vfs/file.h"
 
@@ -14,6 +9,8 @@
 namespace script {
 	void exec(char* cmd, char* cmdline, void* user);
 };
+
+using namespace script;
 
 ScriptEngine::ScriptEngine()
 {	
@@ -28,16 +25,17 @@ ScriptEngine::ScriptEngine()
 
 	rt = JS_NewRuntime(1000000L);
 	if ( rt == NULL ) {
-		con::log(con::FLAG_ERROR, "[ScriptEngine::ScriptEngine()] unable to create runtime");
+		ERROR("unable to create runtime");
 	}
 
 	cx = JS_NewContext(rt, 8192);
     if ( cx == NULL ) {
-		con::log(con::FLAG_ERROR, "[ScriptEngine::ScriptEngine()] unable to create context");
+		ERROR("unable to create context");
     }
 	
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
 	JS_InitStandardClasses(cx, globalObj);
+	jsvector::initVectorClass(cx, globalObj);
 
 	SetErrorReporter(NULL);
 }
@@ -170,7 +168,7 @@ JSObject* ScriptEngine::GetObject(char* name, bool create)
 			if(JSVAL_IS_OBJECT(prop))
 				currobj = JSVAL_TO_OBJECT(prop);
 			else {
-				con::log(con::FLAG_ERROR, "[ScriptEngine::GetOBject] failed getting \"%s\"", name);				
+				ERROR("failed getting \"%s\"", name);				
 				return NULL;
 			}
 		}
@@ -212,7 +210,7 @@ void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* 
 		JS_IdToValue(cx, ida->vector[i], &val);		
 		JSString* bleh = JS_ValueToString(cx, val);
 		GetProperty(obj, JS_GetStringBytes(bleh), &maybeobj);
-		con::log(con::FLAG_INFO, "%s%s%s (%s) = %s", name, *name ? "." : "", JS_GetStringBytes(bleh), JS_GetTypeName(cx, JS_TypeOfValue(cx, maybeobj)), JS_GetStringBytes(JS_ValueToString(cx, maybeobj)));
+		INFO("%s%s%s (%s) = %s", name, *name ? "." : "", JS_GetStringBytes(bleh), JS_GetTypeName(cx, JS_TypeOfValue(cx, maybeobj)), JS_GetStringBytes(JS_ValueToString(cx, maybeobj)));
 		if(JSVAL_IS_OBJECT(maybeobj) && recurse)			
 			DumpObject(JSVAL_TO_OBJECT(maybeobj), true, JS_GetStringBytes(bleh), name);
 	}
@@ -221,17 +219,22 @@ void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* 
 void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
 {
 	if(report->linebuf)
-		con::log(con::FLAG_ERROR, "[ScriptEngine] %s(%i) : %s", report->filename, report->lineno, report->linebuf);		
-	con::log(con::FLAG_ERROR, "[ScriptEngine] %s(%i) : %s", report->filename, report->lineno, message);
-	//DebugBreak();
+		Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, report->linebuf);		
+	Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, message);
 }
 
 void script::init()
 {
-	con::addCommand("exec", script::exec);
+	gScriptEngine = new ScriptEngine();
+	console::addCommand("exec", script::exec);
+}
+
+void script::release()
+{
+	delete gScriptEngine;
 }
 
 void script::exec(char* cmd, char* cmdline, void* user)
 {
-	gScriptEngine.RunScript(cmdline);
+	gScriptEngine->RunScript(cmdline);
 }

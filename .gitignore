@@ -1,6 +1,9 @@
 /*.ncb
+bin/*.DPRul
+bin/*.DPSup
 bin/*.DPbcd
 bin/*.NLB
+bin/*.dll
 bin/*.dpprf
 bin/*.exe
 bin/*.exp
@@ -15,13 +18,13 @@ bin/*.pdb
 bin/BuildLog.htm
 bin/engine_debug
 bin/engine_release
+bin/js32_debug
+bin/js32_release
 bin/maya_debug
 bin/maya_release
 data/*
 data/textures/*
 /eXistenZ[!!-~]Engine.ncb
-vc7/*.ncb
-vc7/*.suo
 vc8/*.ncb
 vc8/*.suo
 vc8/*.vcproj.*

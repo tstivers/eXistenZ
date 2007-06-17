@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// script.h
-// script engine class definition
-// $Id$
-//
-
 #pragma once
 
 #include "vfs/vfs.h"
@@ -43,9 +37,11 @@ public:
 	void DumpObject(JSObject* obj, bool recurse = false, char* objname = "", char* name = "");
 };
 
-extern ScriptEngine gScriptEngine;
+// hack, replace with getScriptEngine()
+extern ScriptEngine* gScriptEngine;
 
 namespace script {
 	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
 	void init();
+	void release();
 };

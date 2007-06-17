@@ -1,5 +1,4 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "vfs.h"
 #include "diskfile.h"
 
@@ -16,7 +15,7 @@ vfs::DiskFile::DiskFile(const char* filename, bool write) : IFile(filename, writ
 		hfile = CreateFile(filename, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, 0, NULL);
 
 	if(hfile == INVALID_HANDLE_VALUE) {
-		LOG2("error opening \"%s\"", filename);
+		LOG("error opening \"%s\"", filename);
 		assert(hfile != INVALID_HANDLE_VALUE);
 		return;
 	}

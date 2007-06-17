@@ -1,9 +1,13 @@
 #include "precompiled.h"
-#include "console/console.h"
 #include "vfs.h"
 #include "zipfile.h"
+#include "zlib/src/zlib.h"
+
+#define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+#define MAX(X,Y) ((X) > (Y) ? (X) : (Y))
 
 namespace vfs {
+
 };
 
 vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
@@ -13,7 +17,7 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 	IFilePtr file = getFile(archivename);
 
 	if(!file) {
-		LOG2("error opening \"%s\"", archivename);
+		LOG("error opening \"%s\"", archivename);
 		assert("couldn't open archive");
 		return;
 	}
@@ -38,12 +42,12 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 		stream.avail_out = header->uncompressed_size;
 
 		if(inflateInit2(&stream, -MAX_WBITS) != Z_OK) {
-			LOG2("error reading deflate header in \"%s\"", filename);
+			LOG("error reading deflate header in \"%s\"", filename);
 			size = 0;
 		}
 
 		if(inflate(&stream, Z_FINISH) != Z_STREAM_END) {
-			LOG2("error decompressing \"%s\"", filename);
+			LOG("error decompressing \"%s\"", filename);
 			size = 0;
 		}
 
@@ -61,7 +65,7 @@ U32 vfs::ZipFile::read(void* buffer, U32 size)
 {
 	byte* buf = (byte*)this->buffer;
 	byte* src = (byte*)bufptr;
-	byte* end = min((src + size), (buf + this->size));
+	byte* end = MIN((src + size), (buf + this->size));
 	memcpy(buffer, src, end - src);
 	bufptr = (void*)end;
 	return (U32)(end - src);

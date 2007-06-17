@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "input/input.h"
 #include "input/bind.h"
@@ -13,6 +7,8 @@
 #include "settings/settings.h"
 
 #define DIKBSIZE 32
+
+extern HINSTANCE gHInstance;
 
 namespace input {
 	IDirectInput* dinput;
@@ -91,8 +87,8 @@ void input::init()
 	has_focus = 0;
 	ZeroMemory(kbstate, 256);
 
-	con::addCommand("binds", input::con_listBinds);
-	con::addCommand("bind", input::con_bind);
+	console::addCommand("binds", input::con_listBinds);
+	console::addCommand("bind", input::con_bind);
 }
 
 void input::acquire()

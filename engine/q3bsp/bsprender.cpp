@@ -1,9 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// interface.cpp
-// interface rendering implementation
-// $Id$
-//
-
 #include "precompiled.h"
 #include "q3bsp/bleh.h"
 #include "q3bsp/bspcache.h"
@@ -12,7 +6,6 @@
 #include "render/frustrum.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
-#include "console/console.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
 
@@ -90,7 +83,7 @@ void BSP::initDeviceObjects()
 	transparent_faces = new int[num_faces];
 
 	if(q3bsp::debug) {
-		LOG3("[BSP::initDeviceObjects] allocated %ikb vertex buffer, %ikb index buffer",
+		LOG("[BSP::initDeviceObjects] allocated %ikb vertex buffer, %ikb index buffer",
 			num_verts * sizeof(BSPVertex) / 1024,
 			num_indices * sizeof(int) / 1024);
 	}

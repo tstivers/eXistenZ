@@ -1,22 +1,27 @@
-/////////////////////////////////////////////////////////////////////////////
-// console.cpp
-// console class
-// $Id$
-//
-
 #include "precompiled.h"
 #include "console/console.h"
 #include "settings/settings.h"
 #include "settings/jssettings.h"
 
 namespace settings {
+	struct eqstr {
+		bool operator() (char* s1, char* s2) const {
+			return strcmp(s1, s2) == 0;
+		}
+	};
+
+	typedef stdext::hash_map<char*, Setting*, hash_char_ptr_traits> settings_hash_map;
+
+	bool standard_setter(char* name, void* value);
+	bool standard_getter(char* name, void* value);
+
 	settings_hash_map settings_map;
 	void con_settings(int argc, char* argv[], void* user);
 };
 
 void settings::init(void)
 {
-	con::addCommand("settings", con_settings);
+	console::addCommand("settings", con_settings);
 }
 
 void settings::release(void)
@@ -33,7 +38,7 @@ void settings::release(void)
 void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, getFunction getter, void* data)
 {
 	Setting* setting = new Setting();
-	setting->name = strdup(name);
+	setting->name = _strdup(name);
 	setting->type = type;
 	setting->flags = flags;
 	setting->data = data;
@@ -96,14 +101,14 @@ void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, ge
 	
 	settings_map.insert(settings_hash_map::value_type(setting->name, setting));
 	jssettings::addsetting(setting);
-	//con::log(con::FLAG_INFO, "[settings::addsetting] added \"%s\"", setting->name);
+	//console::log(console::FLAG_INFO, "[settings::addsetting] added \"%s\"", setting->name);
 }
 
 settings::Setting* settings::findsetting(char* name)
 {
 	settings_hash_map::iterator iter = settings_map.find(name);
 	if(iter != settings_map.end()) {
-		//con::log(con::LVL_INFO, "[settings::addsetting] looked up \"%s\"", name);
+		//console::log(console::LVL_INFO, "[settings::addsetting] looked up \"%s\"", name);
 		return (*iter).second;
 	}
 	else
@@ -245,16 +250,16 @@ void settings::dump(char* pattern, bool sort)
 		Setting* setting = (Setting*)((*iter).second);
 		switch(setting->type){
 			case TYPE_STRING:
-				con::log(con::FLAG_INFO, "%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
+				INFO("%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
 				break;
 			case TYPE_INT:
-				con::log(con::FLAG_INFO, "%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
+				INFO("%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
 				break;
 			case TYPE_FLOAT:
-				con::log(con::FLAG_INFO, "%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
+				INFO("%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
 				break;
 			default:
-				LOG2("// %s = <unkown type>", setting->name);
+				INFO("// %s = <unkown type>", setting->name);
 				break;
 		}
 	}

@@ -1,15 +1,8 @@
-/////////////////////////////////////////////////////////////////////////////
-// render.h
-// rendering system interface
-// $Id$
-//
-
 #include "precompiled.h"
 #include "shader/shader.h"
 #include "shader/simpleshader/simpleshader.h"
 #include "texture/texturecache.h"
 #include "render/render.h"
-#include "console/console.h"
 
 using namespace shader;
 
@@ -27,7 +20,7 @@ bool SimpleShader::load(const char* filename) {
 	if(!texture)
 		return false;
 
-	if(debug) LOG2("[SimpleShader::load] loaded \"%s\"", texture->name);
+	if(debug) LOG("[SimpleShader::load] loaded \"%s\"", texture->name);
 
 	return true;
 }

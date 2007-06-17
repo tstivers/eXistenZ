@@ -38,6 +38,6 @@ namespace vfs {
 		FIND_FILE = 1,
 		FIND_DIRECTORY = 1 << 1
 	};
-	typedef std::set<std::smart_cptr, set_char_ptr_traits> file_list_t;
+	typedef std::set<std::smart_cptr, char_ptr_less> file_list_t;
 	U32 getFileList(file_list_t& file_list, const char* path, const char* filespec = "*", U32 flags = FIND_FILE, bool recurse = false);
 };

@@ -13,12 +13,13 @@ namespace entity {
 		EF_DRAW = 1<<2,
 		EF_COLLIDE = 1<<3,
 		EF_THINKS = 1<<4,
-		EF_MOBILE = 1<<5,
+		EF_DYNAMIC = 1<<5,
 		EF_END = 0xffff
 	};
 
 	enum ENTITY_TYPE {
 		ET_STATIC,
+		ET_DYNAMIC,
 		ET_TRIGGER,
 		ET_END = 0xffff
 	};
@@ -29,12 +30,13 @@ namespace entity {
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
-		virtual D3DXVECTOR3 getPos() { return pos; };
-		virtual D3DXVECTOR3 getRot() { return rot; };
-		virtual D3DXVECTOR3 getScale() { return scale; };
+		virtual D3DXVECTOR3& getPos() { return pos; };
+		virtual D3DXVECTOR3& getRot() { return rot; };
+		virtual D3DXVECTOR3& getScale() { return scale; };
 		virtual D3DXMATRIX getTransform() { return transform; };
 		virtual void setPos(const D3DXVECTOR3& pos) { this->pos = pos; };
 		virtual void setRot(const D3DXVECTOR3& rot) { this->rot = rot; };
+		virtual void setQuatRot(const D3DXQUATERNION& rot);
 		virtual void setScale(const D3DXVECTOR3& scale) { this->scale = scale; };
 		virtual void setTransform(const D3DXMATRIX& transform) { this->transform = transform; };
 		virtual void activate();
@@ -42,7 +44,9 @@ namespace entity {
 		virtual void render() = 0;
 		virtual void update();
 		virtual void calcAABB() = 0;
-		inline_ void mark(unsigned int frame);
+		virtual void doTick();
+		virtual void applyForce(const D3DXVECTOR3 &force);
+		inline void mark(unsigned int frame);
 		
 		std::string name;
 		ENTITY_TYPE type;
@@ -68,5 +72,5 @@ namespace entity {
 
 		std::string meshname;
 		mesh::MeshSystem* meshsys;
-	};
+	};	
 };
