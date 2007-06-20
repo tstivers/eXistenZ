@@ -1,87 +1,34 @@
 #include "precompiled.h"
 #include "client/main.h"
-#include "console/console.h"
-#include "console/jsconsole.h"
-#include "script/script.h"
-#include "script/jsscript.h"
-#include "settings/settings.h"
-#include "settings/jssettings.h"
 #include "vfs/vfs.h"
-#include "vfs/jsvfs.h"
+#include "settings/settings.h"
+#include "console/console.h"
+#include "script/script.h"
 #include "client/appwindow.h"
-#include "render/render.h"
-#include "interface/interface.h"
-#include "timer/timer.h"
-#include "timer/timers.h"
-#include "timer/jstimers.h"
-#include "q3bsp/bleh.h"
-#include "q3shader/q3shadercache.h"
 #include "input/input.h"
-#include "input/jsinput.h"
-#include "game/game.h"
-#include "game/jsgame.h"
 #include "texture/texturecache.h"
-#include "texture/jstexture.h"
+#include "render/render.h"
 #include "shader/shadercache.h"
-#include "mesh/meshcache.h"
-#include "mesh/meshsystemcache.h"
-#include "scene/scene.h"
-#include "scene/jsscene.h"
-#include "entity/jsentity.h"
+#include "timer/timer.h"
 #include "physics/physics.h"
-#include "script/jsvector.h"
+#include "timer/timers.h"
+#include "game/game.h"
 
-//extern unsigned long  _build_num;
-
-// hack
-ScriptEngine* gScriptEngine;
-HINSTANCE gHInstance;
+ScriptEngine* gScriptEngine = NULL;
+HINSTANCE gHInstance = 0;
 int gActive = 0;
 
 void addSystemSettings();
 int mainloop();
 
-//////////////////////////////////////////////////////////
-// Client Entry Point
-//
-int WINAPI
-WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
+int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 {
 	int exitcode = 0;
 	gHInstance = hinst;
 
-	//LOG("\n\n-------------- eXistenZ client build %i starting --------------\n", _build_num);
-
-	// initialize essention system services
-	script::init();
-	jsscript::init();
-	timer::init();
-	console::init();
-	jscon::init();
-	settings::init();
-	jssettings::init();
-	vfs::init();
-	jsvfs::init();
-	appwindow::init();
-	render::init();
-	ui::init();
-	game::init();
-	jsgame::init();
-	texture::init();
-	jstexture::init();
-	jsinput::init();
-	q3bsp::init();
-	shader::init();
-	scene::init();
-	jsscene::init();
-	jsentity::init();
-	physics::init();
-	jstimer::init();
-	//jsvector::init();
-
-	// add some generic system settings
-	addSystemSettings();
-
+	// execute registered startup functions
+	registeredfunctions::fireStartupFunctions();
+	
 	// set vfs root so we can load the main config file
 	vfs::setRoot(settings::getstring("system.env.exepath"));
 	
@@ -94,6 +41,8 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	// execute command line
 	console::processCmd(cmdline);
 
+	// TODO: everything from here on down should be driven by a script
+	
 	// open main window and set up interface	
 	appwindow::createWindow(hinst);
 	appwindow::showWindow(true);
@@ -112,17 +61,19 @@ WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmdshow)
 	appwindow::release();
 	//vfs::release();
 	//jssettings::release();
-	settings::release();
-	jssettings::release();
+	//settings::release();
+	//jssettings::release();
 	//jscon::release();
 	//console::release();
-	physics::release();
-	script::release();
+	//physics::release();
+	//script::release();
 	
 	//LOG("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
 	
 	return exitcode;
 }
+
+REGISTER_STARTUP_FUNCTION(client, addSystemSettings, 10);
 
 void addSystemSettings()
 {

@@ -19,6 +19,8 @@ namespace settings {
 	void con_settings(int argc, char* argv[], void* user);
 };
 
+REGISTER_STARTUP_FUNCTION(settings, settings::init, 10);
+
 void settings::init(void)
 {
 	console::addCommand("settings", con_settings);

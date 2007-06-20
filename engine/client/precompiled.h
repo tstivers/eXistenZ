@@ -30,6 +30,8 @@
 #include "common/smart_ptr.h"
 #include "common/smart_cptr.h"
 #include "common/mystring.h"
+#include "common/FastDelegate.h"
+#include "common/registeredfunctions.h"
 
 #define DIK_BUTTON0 0xF0
 #define DIK_BUTTON1 0xF1

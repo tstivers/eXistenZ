@@ -6,6 +6,8 @@
 
 #pragma warning( disable : 4311 4312 )
 
+REGISTER_STARTUP_FUNCTION(jsscript, jsscript::init, 10);
+
 void jsscript::init()
 {
 	gScriptEngine->AddFunction("execfile", 1, jsscript::jsexecfile);

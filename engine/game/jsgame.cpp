@@ -11,6 +11,8 @@ namespace jsgame {
                              jsval *argv, jsval *rval);
 }
 
+REGISTER_STARTUP_FUNCTION(jsgame, jsgame::init, 10);
+
 void jsgame::init()
 {
 	gScriptEngine->AddFunction("game.startMap", 1, jsgame::jsstartMap);

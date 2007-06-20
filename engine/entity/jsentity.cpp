@@ -49,6 +49,8 @@ namespace jsentity {
 using namespace jsentity;
 using namespace entity;
 
+REGISTER_STARTUP_FUNCTION(jsentity, jsentity::init, 10);
+
 void jsentity::init()
 {
 	gScriptEngine->AddFunction("createStaticEntity", 2, jsentity::createStaticEntity);

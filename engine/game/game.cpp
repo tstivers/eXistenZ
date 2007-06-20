@@ -45,6 +45,8 @@ namespace game {
 	Player* player;
 };
 
+REGISTER_STARTUP_FUNCTION(game, game::init, 10);
+
 void game::init()
 {
 	player = createPlayer(D3DXVECTOR3(0.5, 1 , 0.5));

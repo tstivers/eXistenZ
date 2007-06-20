@@ -18,6 +18,8 @@ namespace shader {
 	Shader* loadShader(const char* name);
 }
 
+REGISTER_STARTUP_FUNCTION(shader, shader::init, 10);
+
 void shader::init()
 {
 	settings::addsetting("system.render.shader.shaderpath", settings::TYPE_STRING, 0, NULL, NULL, NULL);

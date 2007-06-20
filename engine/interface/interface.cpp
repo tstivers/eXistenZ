@@ -20,6 +20,8 @@ namespace ui {
 	void consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 };
 
+REGISTER_STARTUP_FUNCTION(ui, ui::init, 10);
+
 void ui::init()
 {
 	// TODO: move console crap into interface/console.cpp and interface/jsconsole.cpp

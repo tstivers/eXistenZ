@@ -70,6 +70,8 @@ namespace render {
 
 using namespace render;
 
+REGISTER_STARTUP_FUNCTION(render, render::init, 10);
+
 void render::init()
 {
 	settings::addsetting("system.render.resolution.x", settings::TYPE_INT, 0, NULL, NULL, &xres);

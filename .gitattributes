@@ -28,10 +28,13 @@ engine/client/main.cpp eol=crlf
 engine/client/main.h eol=crlf
 engine/client/precompiled.cpp eol=crlf
 engine/client/precompiled.h eol=crlf
+engine/common/FastDelegate.h -text
 engine/common/log.cpp -text
 engine/common/log.h -text
 engine/common/mystring.cpp eol=crlf
 engine/common/mystring.h eol=crlf
+engine/common/registeredfunctions.cpp -text
+engine/common/registeredfunctions.h -text
 engine/common/smart_cptr.h eol=crlf
 engine/common/smart_ptr.h eol=crlf
 engine/common/types.h -text

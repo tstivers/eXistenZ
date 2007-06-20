@@ -2,6 +2,8 @@
 #include "console/jsconsole.h"
 #include "script/script.h"
 
+REGISTER_STARTUP_FUNCTION(jscon, jscon::init, 10);
+
 void jscon::init()
 {
 	gScriptEngine->AddFunction("log", 1, jscon::jslog);

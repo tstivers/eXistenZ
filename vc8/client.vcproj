@@ -849,6 +849,10 @@
 			Name="common"
 			>
 			<File
+				RelativePath="..\engine\common\FastDelegate.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\common\log.cpp"
 				>
 			</File>
@@ -862,6 +866,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\common\mystring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\registeredfunctions.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\registeredfunctions.h"
 				>
 			</File>
 			<File

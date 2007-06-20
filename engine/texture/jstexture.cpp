@@ -3,6 +3,8 @@
 #include "texture/texturecache.h"
 #include "script/script.h"
 
+REGISTER_STARTUP_FUNCTION(jstexture, jstexture::init, 10);
+
 void jstexture::init()
 {
 	gScriptEngine->AddFunction("system.render.texture.flush", 0, jstexture::jsflush);

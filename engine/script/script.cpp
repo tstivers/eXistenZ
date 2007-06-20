@@ -7,10 +7,13 @@
 #pragma warning( disable : 4311 4312 )
 
 namespace script {
+	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
 	void exec(char* cmd, char* cmdline, void* user);
-};
+}
 
 using namespace script;
+
+REGISTER_STARTUP_FUNCTION(script, script::init, 0);
 
 ScriptEngine::ScriptEngine()
 {	
