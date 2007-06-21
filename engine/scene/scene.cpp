@@ -24,6 +24,8 @@ Scene* Scene::load(const std::string& name, SCENE_TYPE type)
 	return SceneBSP::loadBSP(name);	
 }
 
+REGISTER_STARTUP_FUNCTION(scene, scene::init, 10);
+
 void scene::init()
 {
 	settings::addsetting("system.scene.optimize_bsp", settings::TYPE_INT, 0, NULL, NULL, &optimize_bsp);

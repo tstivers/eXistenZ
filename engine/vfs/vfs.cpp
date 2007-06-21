@@ -13,6 +13,8 @@ namespace vfs {
 	char root[MAX_PATH];
 };
 
+REGISTER_STARTUP_FUNCTION(vfs, vfs::init, 10);
+
 void vfs::init()
 {
 	root[0] = 0;	

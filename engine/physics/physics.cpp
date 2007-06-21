@@ -52,6 +52,8 @@ namespace physics {
 
 using namespace physics;
 
+REGISTER_STARTUP_FUNCTION(physics, physics::init, 10);
+
 void physics::init() {
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
 	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);

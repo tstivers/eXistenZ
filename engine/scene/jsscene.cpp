@@ -15,6 +15,8 @@ namespace jsscene {
 using namespace jsscene;
 using namespace scene;
 
+REGISTER_STARTUP_FUNCTION(jsscene, jsscene::init, 10);
+
 void jsscene::init()
 {
 	gScriptEngine->AddFunction("system.scene.addEntity", 1, jsscene::addEntity);	

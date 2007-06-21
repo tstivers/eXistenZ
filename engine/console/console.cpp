@@ -17,6 +17,8 @@ namespace console {
 	command_map_t command_map;
 };
 
+REGISTER_STARTUP_FUNCTION(console, console::init, 10);
+
 void console::init()
 {
 	addCommand("commands", listCommands);

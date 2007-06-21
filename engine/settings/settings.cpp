@@ -4,12 +4,6 @@
 #include "settings/jssettings.h"
 
 namespace settings {
-	struct eqstr {
-		bool operator() (char* s1, char* s2) const {
-			return strcmp(s1, s2) == 0;
-		}
-	};
-
 	typedef stdext::hash_map<char*, Setting*, hash_char_ptr_traits> settings_hash_map;
 
 	bool standard_setter(char* name, void* value);
@@ -18,6 +12,8 @@ namespace settings {
 	settings_hash_map settings_map;
 	void con_settings(int argc, char* argv[], void* user);
 };
+
+REGISTER_STARTUP_FUNCTION(settings, settings::init, 10);
 
 void settings::init(void)
 {

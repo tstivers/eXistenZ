@@ -4,13 +4,38 @@
 #include "console/console.h"
 #include "vfs/file.h"
 
-#pragma warning( disable : 4311 4312 )
-
 namespace script {
+	void init();
+	void release();
 	void exec(char* cmd, char* cmdline, void* user);
-};
+	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );	
+}
 
 using namespace script;
+
+REGISTER_STARTUP_FUNCTION(script, script::init, 0);
+void script::init()
+{
+	gScriptEngine = new ScriptEngine();
+	console::addCommand("exec", script::exec);
+}
+
+void script::release()
+{
+	delete gScriptEngine;
+}
+
+void script::exec(char* cmd, char* cmdline, void* user)
+{
+	gScriptEngine->RunScript(cmdline);
+}
+
+void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
+{
+	if(report->linebuf)
+		Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, report->linebuf);		
+	Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, message);
+}
 
 ScriptEngine::ScriptEngine()
 {	
@@ -46,7 +71,7 @@ ScriptEngine::~ScriptEngine()
     JS_DestroyRuntime(rt);
 }
 
-JSErrorReporter ScriptEngine::SetErrorReporter(JSErrorReporter reporter)
+JSErrorReporter ScriptEngine::setErrorReporter(JSErrorReporter reporter)
 {
 	JSErrorReporter prev_reporter = this->reporter;
 	if(reporter) {
@@ -61,29 +86,29 @@ JSErrorReporter ScriptEngine::SetErrorReporter(JSErrorReporter reporter)
 	return prev_reporter;
 }
 
-bool ScriptEngine::RunScript(char* script)
+bool ScriptEngine::runScript(const char* script)
 {
 	jsval retval;
-	return RunScript(script, &retval);
+	return runScript(script, &retval);
 }
 
-bool ScriptEngine::RunScript(char* script, jsval* retval)
+bool ScriptEngine::runScript(const char* script, jsval* retval)
 {
-	return RunScript("script", 1, script, retval);
+	return runScript("script", 1, script, retval);
 }
 
-bool ScriptEngine::RunScript(char* name, uintN lineno, char* script)
+bool ScriptEngine::runScript(const char* name, uintN lineno, const char* script)
 {
 	jsval retval;
-	return RunScript(name, lineno, script, &retval);
+	return runScript(name, lineno, script, &retval);
 }
 
-bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retval)
+bool ScriptEngine::runScript(const char* name, uintN lineno, const char* script, jsval* retval)
 {	
 	return (JS_TRUE == JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval));
 }
 
-bool ScriptEngine::RunScript(vfs::IFilePtr file)
+bool ScriptEngine::runScript(vfs::IFilePtr file)
 {	
 	char *script = (char*)malloc(file->size + 1);
 	file->read(script, file->size);
@@ -93,12 +118,7 @@ bool ScriptEngine::RunScript(vfs::IFilePtr file)
 	return retval;
 }
 
-JSFunction* ScriptEngine::AddFunction(JSObject* obj, char* name, uintN argc, JSNative call)
-{
-	return JS_DefineFunction(cx, obj, name, call, argc, 0);
-}
-
-JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
+bool ScriptEngine::addFunction(const char* name, uintN argc, JSNative call)
 {
 	JSObject* obj = globalObj;
 	char buf[512];
@@ -109,15 +129,20 @@ JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
 	if(funcname) {
 		*funcname = 0;
 		funcname++;
-		obj = GetObject(buf, true);
+		obj = getObject(buf, true);
 	}
 	else
 		funcname = name;
 
-	return AddFunction(obj, funcname, argc, call);
+	if(!JS_DefineFunction(cx, obj, funcname, call, argc, 0)) {
+		ERROR("failed to define function \"%s\", name);
+		return false;
+	}
+	
+	return true;
 }
 
-void ScriptEngine::ReportError(char* format, ...)
+void ScriptEngine::reportError(const char* format, ...)
 {
 	va_list args;
 	char buffer[512];
@@ -130,7 +155,7 @@ void ScriptEngine::ReportError(char* format, ...)
 }
 
 
-JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
+JSObject* ScriptEngine::addObject(const char* name, JSObject* parent)
 {
 	static JSClass def_class = 
 	{
@@ -142,13 +167,16 @@ JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
 	};
 
 	JSObject* obj = JS_DefineObject(cx, parent, name, &def_class, NULL, JSPROP_ENUMERATE | JSPROP_EXPORTED);
-	if(obj)
-		JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(NULL));
-
+	if(!obj) {
+		ERROR("failed to create object \"%s\", name);
+		return NULL;
+	}
+	
+	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(NULL));
 	return obj;
 }
 
-JSObject* ScriptEngine::GetObject(char* name, bool create)
+JSObject* ScriptEngine::getObject(const char* name, bool create)
 {
 	char namebuf[512];
 	char* next = namebuf;
@@ -164,17 +192,21 @@ JSObject* ScriptEngine::GetObject(char* name, bool create)
 			next++;
 		}
 		// check for existing property name
-		if(GetProperty(currobj, curr, &prop)) {
+		if(JS_GetProperty(cx, currobj, curr, &prop)) {
 			if(JSVAL_IS_OBJECT(prop))
 				currobj = JSVAL_TO_OBJECT(prop);
 			else {
-				ERROR("failed getting \"%s\"", name);				
+				ERROR("failed to get object \"%s\"", name);				
 				return NULL;
 			}
 		}
 		else {
-			if(create)// didn't exist, add it
-				currobj = AddObject(curr, currobj);
+			if(create) { // didn't exist, add it
+				currobj = addObject(curr, currobj);
+				if(!currobj) {
+					return NULL;
+				}
+			}
 			else
 				return NULL;
 		}
@@ -184,57 +216,53 @@ JSObject* ScriptEngine::GetObject(char* name, bool create)
 	return currobj;
 }
 
-
-bool ScriptEngine::AddProperty(JSObject* obj, char* name, jsval value, JSPropertyOp getter, JSPropertyOp setter, uintN flags)
-{	
-	return (JS_DefineProperty(cx, obj, name, value, getter, setter, flags) == JS_TRUE);
-}
-
-bool ScriptEngine::GetProperty(JSObject* parent, char* name, jsval* object)
-{	
-	return ((JS_GetProperty(cx, parent, name, object) == JS_TRUE) && !JSVAL_IS_VOID(*object));
-}
-
-void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* prevname)
+bool addProperty(const char* name, void* var, PROP_TYPE type, bool readonly, GetterOp getter, SetterOp setter)
 {
-	char name[512] = "";
-	JSIdArray* ida = JS_Enumerate(cx, obj);
-	JSIdArray* idb = JS_Enumerate(cx, globalObj);
-	jsval val, maybeobj;
-	
-	strcat(name, prevname);
-	if(*prevname) strcat(name, ".");
-	strcat(name, objname);
+	JSObject* obj = globalObj;
+	char buf[512];
+	char* propname;
 
-	for(int i = 0; i < ida->length; i++) {
-		JS_IdToValue(cx, ida->vector[i], &val);		
-		JSString* bleh = JS_ValueToString(cx, val);
-		GetProperty(obj, JS_GetStringBytes(bleh), &maybeobj);
-		INFO("%s%s%s (%s) = %s", name, *name ? "." : "", JS_GetStringBytes(bleh), JS_GetTypeName(cx, JS_TypeOfValue(cx, maybeobj)), JS_GetStringBytes(JS_ValueToString(cx, maybeobj)));
-		if(JSVAL_IS_OBJECT(maybeobj) && recurse)			
-			DumpObject(JSVAL_TO_OBJECT(maybeobj), true, JS_GetStringBytes(bleh), name);
+	strcpy(buf, name);
+	propname = strrchr(buf, '.');
+	if(propname) {
+		*propname = 0;
+		funcname++;
+		obj = getObject(buf, true);
 	}
+	else
+		propname = name;
+
+	if(!JS_DefineProperty(cx, obj, propname, JSVAL_NUL, PropertyGetter, PropertySetter, readonly ? JSPROP_READONLY : 0)) {
+		ERROR("unable to create property \"%s\"", name);
+		return false;
+	}
+	
+	PropertyMapPtr pm;
+	ObjectMap::iterator i = object_map.find(obj);
+	if(i == object_map.end()) {
+		pm = new PropertyMap();
+		object_map.insert(ObjectMap::value_type(obj, pm));
+	} else {
+		pm = i->second;
+	}
+	
+	PropertyPtr p = new Property(propname, type, data, getter, setter);
+	pm->insert(PropertyMap::value_type(p->name, p))
 }
 
-void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
+Property::Property(const char* name, PROP_TYPE type, void* data, GetterOp getter, SetterOp setter) :
+	type(type), data(data), getter(getter), setter(setter)
 {
-	if(report->linebuf)
-		Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, report->linebuf);		
-	Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, message);
+	this->name = strdup(name);
 }
 
-void script::init()
+Property::~Property()
 {
-	gScriptEngine = new ScriptEngine();
-	console::addCommand("exec", script::exec);
+	free(name);
 }
 
-void script::release()
+bool addProperty(const char* name, int* var, bool readonly, GetterOp getter, SetterOp setter)
 {
-	delete gScriptEngine;
+	return addProperty(name, var, PROP_TYPE_INT, readonly, getter, setter);	
 }
 
-void script::exec(char* cmd, char* cmdline, void* user)
-{
-	gScriptEngine->RunScript(cmdline);
-}

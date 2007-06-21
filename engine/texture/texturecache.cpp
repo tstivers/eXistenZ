@@ -13,6 +13,10 @@ namespace texture {
 	int debug;
 	int draw_unknown;
 	int use_default;
+	
+	typedef stdext::hash_map<char*, DXTexture*, hash_char_ptr_traits> texture_hash_map;
+	typedef stdext::hash_map<char*, Shader*, hash_char_ptr_traits> shader_hash_map;
+	
 	texture_hash_map texture_cache;
 	shader_hash_map shader_cache;
 	misc::AliasList texture_alias;
@@ -20,10 +24,12 @@ namespace texture {
 	misc::AliasList shader_map;
 
 	void load_maps();
+	void init();
 	DXTexture* active_texture;
 	Shader* active_shader;
 };
 
+REGISTER_STARTUP_FUNCTION(texture, texture::init, 10);
 
 void texture::init()
 {

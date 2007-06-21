@@ -22,6 +22,8 @@ HWND appwindow::getHwnd()
 	return hwnd; 
 }
 
+REGISTER_STARTUP_FUNCTION(appwindow, appwindow::init, 10);
+
 void appwindow::init()
 {
 	settings::addsetting("system.window.position.x", settings::TYPE_INT, 0, NULL, NULL, NULL);

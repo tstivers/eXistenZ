@@ -4,6 +4,8 @@
 #include "input/input.h"
 #include "input/bind.h"
 
+REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
+
 void jsinput::init()
 {
 	gScriptEngine->AddFunction("bind", 2, jsinput::jsbind);

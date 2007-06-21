@@ -16,6 +16,8 @@ namespace q3bsp {
 	void con_list_maps(int argc, char* argv[], void* user);
 };
 
+REGISTER_STARTUP_FUNCTION(q3bsp, q3bsp::init, 10);
+
 void q3bsp::init()
 {
 	bsp = NULL;

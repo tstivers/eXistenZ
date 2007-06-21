@@ -17,6 +17,8 @@ namespace timer {
 	float max_ms;
 };
 
+REGISTER_STARTUP_FUNCTION(timer, timer::init, 10);
+
 void timer::init()
 {		
 	time_ms = 0;
@@ -27,7 +29,7 @@ void timer::init()
 	min_ms = 0.0f;
 	max_ms = FLT_MAX;
 
-	QueryPerformanceFrequency((LARGE_INTEGER*)&time_hz);		
+	QueryPerformanceFrequency((LARGE_INTEGER*)&time_hz);
 	doTick();
 	doTick();
 
@@ -37,7 +39,6 @@ void timer::init()
 	settings::addsetting("system.time.sim_tps", settings::TYPE_INT, 0, NULL, NULL, &sim_tps);
 	settings::addsetting("system.time.min_ms", settings::TYPE_FLOAT, 0, NULL, NULL, &min_ms);
 	settings::addsetting("system.time.max_ms", settings::TYPE_FLOAT, 0, NULL, NULL, &max_ms);
-
 }
 
 void timer::doTick()

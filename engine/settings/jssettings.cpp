@@ -4,12 +4,6 @@
 #include "script/script.h"
 
 namespace jssettings {
-	struct eqstr {
-		bool operator() (char* s1, char* s2) const {
-			return strcmp(s1, s2) == 0;
-		}
-	};
-
 	JSBool dump(JSContext *cx, JSObject *obj, uintN argc,
 		jsval *argv, jsval *rval);
 
@@ -22,6 +16,8 @@ namespace jssettings {
 	JSBool jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	objmap_hash object_map;
 }
+
+REGISTER_STARTUP_FUNCTION(jssettings, jssettings::init, 10);
 
 void jssettings::init()
 {

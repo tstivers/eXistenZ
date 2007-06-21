@@ -9,6 +9,8 @@ namespace jstimer {
 	JSBool jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
+REGISTER_STARTUP_FUNCTION(jstimer, jstimer::init, 10);
+
 void jstimer::init()
 {
 	gScriptEngine->AddFunction("timer.addTimer", 4, jstimer::jsAddTimer);
