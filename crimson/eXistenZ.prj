@@ -1,14 +1,6 @@
 <project version="Crimson Editor 3.60">
 	<category name="engine" expanded="yes">
-		<category name="client" expanded="yes">
-			<localfile path="E:\Work\eXistenZ\engine\client\appwindow.cpp" />
-			<localfile path="E:\Work\eXistenZ\engine\client\appwindow.h" />
-			<localfile path="E:\Work\eXistenZ\engine\client\main.cpp" />
-			<localfile path="E:\Work\eXistenZ\engine\client\main.h" />
-			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.cpp" />
-			<localfile path="E:\Work\eXistenZ\engine\client\precompiled.h" />
-		</category>
-		<category name="physics" expanded="yes">
+		<category name="physics" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdesc.h" />
 			<localfile path="E:\Work\eXistenZ\engine\physics\meshdescimpl.h" />
@@ -29,7 +21,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\game\player.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\game\player.h" />
 		</category>
-		<category name="scene" expanded="yes">
+		<category name="scene" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.h" />
 			<localfile path="E:\Work\eXistenZ\engine\scene\scene.cpp" />
@@ -65,7 +57,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\q3bsptypes.h" />
 			<localfile path="E:\Work\eXistenZ\engine\q3bsp\rendertest.cpp" />
 		</category>
-		<category name="timer" expanded="yes">
+		<category name="timer" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.h" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\timer.cpp" />
@@ -73,7 +65,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\timer\timers.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\timer\timers.h" />
 		</category>
-		<category name="script" expanded="yes">
+		<category name="script" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.h" />
 			<localfile path="E:\Work\eXistenZ\engine\script\jsscript.cpp" />
@@ -83,7 +75,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\script\script.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\script\script.h" />
 		</category>
-		<category name="entity" expanded="yes">
+		<category name="entity" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\boxentity.h" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\entity.cpp" />
@@ -96,7 +88,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\entity\staticentity.h" />
 		</category>
-		<category name="settings" expanded="yes">
+		<category name="settings" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.h" />
 			<localfile path="E:\Work\eXistenZ\engine\settings\settings.cpp" />
@@ -108,7 +100,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\math\math.h" />
 			<localfile path="E:\Work\eXistenZ\engine\math\vertex.h" />
 		</category>
-		<category name="common" expanded="yes">
+		<category name="common" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\common\FastDelegate.h" />
 			<localfile path="E:\Work\eXistenZ\engine\common\log.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\common\log.h" />
@@ -127,7 +119,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\console\jsconsole.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\console\jsconsole.h" />
 		</category>
-		<category name="vfs" expanded="yes">
+		<category name="vfs" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\vfs\diskfile.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\vfs\diskfile.h" />
 			<localfile path="E:\Work\eXistenZ\engine\vfs\diskpath.cpp" />
@@ -191,7 +183,7 @@
 			<localfile path="E:\Work\eXistenZ\engine\texture\texturecache.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\texture\texturecache.h" />
 		</category>
-		<category name="input" expanded="yes">
+		<category name="input" expanded="no">
 			<localfile path="E:\Work\eXistenZ\engine\input\bind.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\input\bind.h" />
 			<localfile path="E:\Work\eXistenZ\engine\input\input.cpp" />
@@ -206,61 +198,17 @@
 			<localfile path="E:\Work\eXistenZ\engine\shader\shadercache.cpp" />
 			<localfile path="E:\Work\eXistenZ\engine\shader\shadercache.h" />
 		</category>
+		<category name="main" expanded="no">
+			<localfile path="E:\Work\eXistenZ\engine\main\appwindow.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\main\appwindow.h" />
+			<localfile path="E:\Work\eXistenZ\engine\main\main.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\main\main.h" />
+			<localfile path="E:\Work\eXistenZ\engine\main\precompiled.cpp" />
+			<localfile path="E:\Work\eXistenZ\engine\main\precompiled.h" />
+		</category>
 	</category>
 </project>
 
 <workspace version="Crimson Editor 3.60">
-	<localfile path="E:\Work\eXistenZ\engine\client\precompiled.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:88:96:736:526" />
-	<localfile path="E:\Work\eXistenZ\engine\client\precompiled.h" linenum="20" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\common\registeredfunctions.h" linenum="1" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\common\smart_ptr.h" linenum="1" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\common\FastDelegate.h" linenum="1738" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\common\registeredfunctions.cpp" linenum="47" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\client\main.cpp" linenum="22" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\script\script.cpp" linenum="22" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\script\script.h" linenum="46" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\script\jsscript.h" linenum="11" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
-	<localfile path="E:\Work\eXistenZ\engine\script\jsscript.cpp" linenum="9" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\timer\timer.cpp" linenum="26" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\console\console.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\console\jsconsole.cpp" linenum="5" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\console\jsconsole.h" linenum="1" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.cpp" linenum="17" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\settings\settings.cpp" linenum="22" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\vfs\vfs.cpp" linenum="23" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\vfs\jsvfs.cpp" linenum="17" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
-	<localfile path="E:\Work\eXistenZ\engine\client\appwindow.cpp" linenum="23" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\render\render.cpp" linenum="73" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\interface\interface.cpp" linenum="23" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\game\game.cpp" linenum="48" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\game\jsgame.cpp" linenum="14" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\render\dx.cpp" linenum="122" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\settings\settings.h" linenum="45" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\settings\jssettings.h" linenum="1" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\crimson\eXistenZ.prj" linenum="1" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\texture\texture.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\texture\texturecache.cpp" linenum="51" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\texture\texturecache.h" linenum="14" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\texture\jstexture.h" linenum="1" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
-	<localfile path="E:\Work\eXistenZ\engine\texture\jstexture.cpp" linenum="6" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\input\jsinput.cpp" linenum="7" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bleh.cpp" linenum="18" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bsp.cpp" linenum="1" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\q3bsp\bspcache.cpp" linenum="19" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\shader\shadercache.h" linenum="1" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\shader\shadercache.cpp" linenum="21" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\scene\scene.cpp" linenum="27" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\scene\jsscene.cpp" linenum="19" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
-	<localfile path="E:\Work\eXistenZ\engine\entity\jsentity.cpp" linenum="52" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\physics\physics.cpp" linenum="55" placement="0:1:-1:-1:-4:-25:132:144:784:578" />
-	<localfile path="E:\Work\eXistenZ\engine\timer\jstimers.cpp" linenum="12" placement="0:1:-1:-1:-4:-25:154:168:806:602" />
-	<localfile path="E:\Work\eXistenZ\engine\input\input.cpp" linenum="169" placement="0:1:-1:-1:-4:-25:176:192:828:626" />
-	<localfile path="E:\Work\eXistenZ\engine\client\main.h" linenum="1" placement="0:1:-1:-1:-4:-25:0:0:652:434" />
-	<localfile path="E:\Work\eXistenZ\engine\vfs\file.h" linenum="1" placement="0:1:-1:-1:-4:-25:22:24:674:458" />
-	<localfile path="E:\Work\eXistenZ\engine\vfs\vfs.h" linenum="32" placement="0:1:-1:-1:-4:-25:44:48:696:482" />
-	<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.h" linenum="1" placement="0:1:-1:-1:-4:-25:66:72:718:506" />
-	<localfile path="E:\Work\eXistenZ\engine\script\JSArgumentList.cpp" linenum="22" placement="0:1:-1:-1:-4:-25:88:96:740:530" />
-	<localfile path="E:\Work\eXistenZ\engine\common\types.h" linenum="1" placement="0:1:-1:-1:-4:-25:110:120:762:554" />
-	<localfile path="E:\Work\eXistenZ\engine\common\mystring.h" linenum="21" placement="2:3:-1:-1:-4:-25:132:144:784:578" />
 </workspace>
 

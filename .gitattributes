@@ -22,12 +22,6 @@ data/textures/shaders/nodraw.shader eol=crlf
 data/textures/shaders/sky.shader eol=crlf
 data/textures/shaders/static.shader eol=crlf
 data/textures/texture_alias.txt eol=crlf
-engine/client/appwindow.cpp eol=crlf
-engine/client/appwindow.h eol=crlf
-engine/client/main.cpp eol=crlf
-engine/client/main.h eol=crlf
-engine/client/precompiled.cpp eol=crlf
-engine/client/precompiled.h eol=crlf
 engine/common/FastDelegate.h -text
 engine/common/log.cpp -text
 engine/common/log.h -text
@@ -78,6 +72,12 @@ engine/interface/pos.cpp eol=crlf
 engine/interface/pos.h eol=crlf
 engine/interface/uiconsole.cpp eol=crlf
 engine/interface/uiconsole.h eol=crlf
+engine/main/appwindow.cpp eol=crlf
+engine/main/appwindow.h eol=crlf
+engine/main/main.cpp eol=crlf
+engine/main/main.h eol=crlf
+engine/main/precompiled.cpp eol=crlf
+engine/main/precompiled.h eol=crlf
 engine/math/aabb.cpp eol=crlf
 engine/math/aabb.h eol=crlf
 engine/math/math.h eol=crlf
