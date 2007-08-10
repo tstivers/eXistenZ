@@ -1013,6 +1013,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\entity\sphereentity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\sphereentity.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\staticentity.cpp"
 				>
 			</File>

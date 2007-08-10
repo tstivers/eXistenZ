@@ -50,6 +50,8 @@ engine/entity/entitycache.cpp eol=crlf
 engine/entity/entitycache.h eol=crlf
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
+engine/entity/sphereentity.cpp -text
+engine/entity/sphereentity.h -text
 engine/entity/staticentity.cpp eol=crlf
 engine/game/bspplayer.cpp eol=crlf
 engine/game/bspplayer.h -text

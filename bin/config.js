@@ -71,7 +71,7 @@ bind(KEY_D, "dbg_break");
 bind(KEY_U, "toggle_ui");
 bind(KEY_SPACE, "log_frame");
 bind(KEY_LCONTROL, "*log_frame");
-bind(KEY_B, "toggle_bsp");
+//bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
 bind(KEY_K, "toggle_diffuse");
 bind(KEY_S, "toggle_sky");
@@ -83,6 +83,7 @@ bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
 bind(KEY_N, "exec createBox()");
 bind(KEY_V, "*exec createBox()");
+bind(KEY_B, "*exec createSphere()");
 bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
 
@@ -169,7 +170,7 @@ function markerfun() {
 	print("go go gadget markers");
 }
 
-num_boxes = 0;
+num_entities = 0;
 current_texture = 0;
 textures = new Array(
     "textures/house/metal1",
@@ -179,13 +180,13 @@ textures = new Array(
     "textures/house/tv_front",
     "textures/shaders/static");
 
-var boxes = new Object();
+var entities = new Object();
 
 function createBox() {
-    box = createBoxEntity("box" + num_boxes++, textures[current_texture++]);
+    box = createBoxEntity("box" + num_entities++, textures[current_texture++]);
     if(current_texture >= textures.length)
         current_texture = 0;
-    boxes[box.name] = box;
+    entities[box.name] = box;
     system.scene.addEntity(box);
     box.pos = game.player.pos;    
     print('added box ' + box.name);
@@ -193,18 +194,30 @@ function createBox() {
     box.last_y = 0;
 }
 
-function bounceBox(boxName)
+function createSphere() {
+    sphere = createSphereEntity("sphere" + num_entities++, textures[current_texture++]);
+    if(current_texture >= textures.length)
+        current_texture = 0;
+    entities[sphere.name] = sphere;
+    system.scene.addEntity(sphere);
+    sphere.pos = game.player.pos;    
+    print('added sphere ' + sphere.name);
+    timer.addTimer("sphere" + num_boxes + "_timer", "bounceEntity('" + box.name + "');", 500, 0);
+    sphere.last_y = 0;
+}
+
+function bounceEntity(entityName)
 {
-    var box = boxes[boxName];
-    if(Math.abs(box.last_y - box.pos.y) <= 5)
+    var entity = entities[entityName];
+    if(Math.abs(entity.last_y - entity.pos.y) <= 5)
     {
         var vec = new Vector();
-        vec.x = game.player.pos.x - box.pos.x
-        vec.z = game.player.pos.z - box.pos.z;
+        vec.x = game.player.pos.x - entity.pos.x
+        vec.z = game.player.pos.z - entity.pos.z;
         vec.normalize();
-        box.applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
+        entity.applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
     } else 
-        box.last_y = box.pos.y;
+        entity.last_y = entity.pos.y;
 }
 
 Vector.prototype.toString = function()
