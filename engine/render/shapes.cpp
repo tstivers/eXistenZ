@@ -2,8 +2,10 @@
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/rendergroup.h"
+#include "render/hwbuffer.h"
 #include "q3bsp/bleh.h"
 #include "texture/texture.h"
+#include "texture/material.h"
 
 namespace render {
 	ID3DXLine* line = NULL;
@@ -24,11 +26,26 @@ void render::drawLine(const D3DXVECTOR3* vertices, int verticeCount, float r, fl
 		linebuf[i].diffuse = D3DXCOLOR(r, g, b, 1.0f);
 	}
 
+	DWORD fvf, colorop, colorarg1, colorop1;
+	render::device->GetFVF(&fvf);
+	render::device->GetTextureStageState(0, D3DTSS_COLOROP, &colorop);
+	render::device->GetTextureStageState(0, D3DTSS_COLORARG1, &colorarg1);
+	render::device->GetTextureStageState(1, D3DTSS_COLOROP, &colorop1);
+	render::device->SetRenderState( D3DRS_LIGHTING, FALSE );
+
 	render::device->SetFVF(LINEVERTEXF);
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->DrawPrimitiveUP(D3DPT_LINELIST, verticeCount / 2, linebuf, sizeof(LineVertex));
+
+	render::device->SetFVF(fvf);
+	render::device->SetTextureStageState(0, D3DTSS_COLOROP, colorop);
+	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, colorarg1);
+	render::device->SetTextureStageState(1, D3DTSS_COLOROP, colorop1);
+
+	render::current_ib = NULL;
+	render::current_vb = NULL;
 }
 
 void render::drawBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, float r, float g, float b)
@@ -127,7 +144,7 @@ short boxIndices[] = {
 	22, 23, 20
 };
 
-void render::drawBox(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const D3DXVECTOR3& scale, texture::DXTexture* texture)
+void render::drawBox(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const D3DXVECTOR3& scale, texture::DXTexture* texture, texture::Material* lighting)
 {
 	static RenderGroup* rg = NULL;
 	if(!rg) {
@@ -142,6 +159,7 @@ void render::drawBox(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const D3
 	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rot, &pos);
 
 	rg->texture = texture;
+	rg->material = lighting;
 
 	render::drawGroup(rg, &transform);
 }
@@ -491,7 +509,7 @@ struct SphereVertex {
 	{D3DXVECTOR3(0.000000,1.000000,0.000000),       D3DXVECTOR3(0.000000,1.000000,0.000000),      D3DXVECTOR2(0.000000,-1.000000)}
 };
 
-void render::drawSphere(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const D3DXVECTOR3& scale, texture::DXTexture* texture)
+void render::drawSphere(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const D3DXVECTOR3& scale, texture::DXTexture* texture, texture::Material* material)
 {
 	static RenderGroup* rg = NULL;
 	if (!rg) {
@@ -509,6 +527,13 @@ void render::drawSphere(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const
 	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rot, &pos);
 
 	rg->texture = texture;
+	rg->material = material;
 
 	render::drawGroup(rg, &transform);
+
+	/*D3DXVECTOR3 line[2];
+	D3DXVECTOR3 dir = material->light.Direction;
+	line[0] = pos;
+	line[1] = pos + (dir * 50);
+	drawLine(line, 2, material->light.Diffuse.r, material->light.Diffuse.g, material->light.Diffuse.b);*/
 }

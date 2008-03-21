@@ -2,6 +2,7 @@
 
 namespace texture {
 	class DXTexture;
+	struct Material;
 }
 
 namespace render {
@@ -21,6 +22,7 @@ namespace render {
 
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
+		texture::Material* material;
 
 		DWORD fvf;
 		unsigned int stride;		

@@ -16,13 +16,15 @@ namespace physics {
 
 using namespace entity;
 
-BoxEntity::BoxEntity(std::string name, std::string texture) : Entity(name) 
+BoxEntity::BoxEntity(std::string name, std::string texture) : Entity(name), actor(NULL)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
 
 BoxEntity::~BoxEntity()
 {
+	if(actor)
+		physics::gScene->releaseActor(*actor);
 }
 
 void BoxEntity::acquire()
@@ -33,7 +35,7 @@ void BoxEntity::acquire()
 	boxDesc.dimensions.set(0.5,0.5,0.5);
 	actorDesc.shapes.pushBack(&boxDesc);    
 	actorDesc.body = &bodyDesc;    
-	actorDesc.density = 10;    
+	actorDesc.density = 100;    
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);	
 	actor = physics::gScene->createActor(actorDesc);
@@ -44,6 +46,7 @@ void BoxEntity::acquire()
 void BoxEntity::release()
 {
 	physics::gScene->releaseActor(*actor);
+	actor = NULL;
 }
 
 void BoxEntity::update()
@@ -85,9 +88,9 @@ void BoxEntity::setRot(const D3DXVECTOR3& rot)
 	//actor->setGlobalOrientation((NxVec3)rot);
 }
 
-void BoxEntity::render()
+void BoxEntity::render(texture::Material* lighting)
 {
-	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture);
+	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture, lighting);
 }
 
 void BoxEntity::calcAABB()
@@ -97,4 +100,17 @@ void BoxEntity::calcAABB()
 void BoxEntity::applyForce(const D3DXVECTOR3 &force)
 {
 	actor->addForce((NxVec3&)force, NX_IMPULSE);
+}
+
+void BoxEntity::setSleeping(bool asleep)
+{
+	if(asleep)
+		actor->putToSleep();
+	else
+		actor->wakeUp();
+}
+
+bool BoxEntity::getSleeping()
+{
+	return actor->isSleeping();
 }

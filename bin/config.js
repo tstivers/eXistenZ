@@ -4,19 +4,27 @@ log("loading configuration...");
 system.render.resolution.bitdepth = 32;
 system.render.resolution.refreshrate = 60;
 system.render.wait_vtrace = 0;
+
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.render.fullscreen = 0;
+
+system.render.resolution.x = 1280;
+system.render.resolution.y = 1024;
+system.render.fullscreen = 1;
+system.render.wait_vtrace = 1;
+
+system.render.refdevice = 0;
 system.render.multisampletype = 2; // 2 = 2x antialiasing, 4 = 4x, etc.
-system.vfs.addPath("../data/");
-system.vfs.addPath("c:/games/eXistenZ/data");
-system.vfs.addPath("c:/games/eXistenZ/data/pak0.zip");
+system.vfs.addPath("../data");
+system.vfs.addPath("../data/pak0.zip");
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
 system.render.bsp.debug = 1;
 system.render.boost = 0;
 system.render.gamma = 2.0;
 system.render.transparency = 1;
+system.render.lighting = 1;
 system.window.position.x = 20;
 system.window.position.y = 20;
 system.window.title = "eXistenZ";
@@ -55,7 +63,7 @@ bind(KEY_NUMPAD2, "*move_back");
 bind(KEY_NUMPAD4, "*move_left");
 bind(KEY_NUMPAD6, "*move_right");
 bind(KEY_NUMPAD0, "move_jump");
-bind(BUTTON_0, "*move_jump");
+//bind(BUTTON_0, "*move_jump");
 bind(BUTTON_1, "move_jump");
 
 bind(KEY_W, "toggle_wireframe");
@@ -74,18 +82,23 @@ bind(KEY_LCONTROL, "*log_frame");
 //bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
 bind(KEY_K, "toggle_diffuse");
-bind(KEY_S, "toggle_sky");
+//bind(KEY_S, "toggle_sky");
 bind(KEY_Z, "*exec move_up()");
 bind(MWHEELUP, "exec print(\"mousewheel up\")");
 bind(MWHEELDN, "exec print(\"mousewheel down\")");
 bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
-bind(KEY_N, "exec createBox()");
+//bind(KEY_N, "exec createBox()");
 bind(KEY_V, "*exec createBox()");
 bind(KEY_B, "*exec createSphere()");
 bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
+bind(KEY_Q, "exec doIt()");
+bind(KEY_X, "exec explodeEverything()");
+bind(KEY_R, "exec eraseEverything()");
+bind(BUTTON_0, "*exec playerShootSphere()");
+bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 
 // functions
 
@@ -173,12 +186,22 @@ function markerfun() {
 num_entities = 0;
 current_texture = 0;
 textures = new Array(
-    "textures/house/metal1",
-    "textures/house/shingle1",
-    "textures/house/grass1",
-    "textures/house/carpet1",
-    "textures/house/tv_front",
-    "textures/shaders/static");
+    "textures/gothic_block/block10d",
+    "textures/gothic_block/blocks10",
+    "textures/gothic_block/blocks11b",
+    "textures/gothic_block/blocks11bbroke",
+    "textures/gothic_block/blocks11bbroke3",
+    "textures/gothic_block/blocks11d",
+    "textures/gothic_block/blocks15",
+    "textures/gothic_block/blocks15_blue",
+    "textures/gothic_block/blocks15_c",
+    "textures/gothic_block/blocks15_iron_r",
+    "textures/gothic_block/blocks17",
+    "textures/gothic_block/blocks17e",
+    "textures/gothic_block/blocks17g",
+    "textures/gothic_block/blocks17i",
+    "textures/gothic_block/blocks17j",
+    "textures/gothic_block/blocks17k");
 
 var entities = new Object();
 
@@ -190,7 +213,7 @@ function createBox() {
     system.scene.addEntity(box);
     box.pos = game.player.pos;    
     print('added box ' + box.name);
-    timer.addTimer("box" + num_boxes + "_timer", "bounceBox('" + box.name + "');", 500, 0);
+    timer.addTimer("box" + num_entities + "_timer", "bounceEntity('" + box.name + "');", 500, 0);
     box.last_y = 0;
 }
 
@@ -202,8 +225,39 @@ function createSphere() {
     system.scene.addEntity(sphere);
     sphere.pos = game.player.pos;    
     print('added sphere ' + sphere.name);
-    timer.addTimer("sphere" + num_boxes + "_timer", "bounceEntity('" + box.name + "');", 500, 0);
+    timer.addTimer("sphere" + num_entities + "_timer", "bounceEntity('" + sphere.name + "');", 500, 0);
     sphere.last_y = 0;
+}
+
+function shootSphere(pos, direction, speed)
+{
+    var sphere = createSphereEntity("sphere" + num_entities++, textures[++current_texture % textures.length]);
+    entities[sphere.name] = sphere;
+    system.scene.addEntity(sphere);
+    sphere.pos = pos;
+    //direction.mul(speed);
+    sphere.applyForce(direction.mul(speed));
+    return sphere;
+}
+
+var shootspeed = 100;
+var shootvelo = 2500;
+var lastshot = 0;
+
+function playerShootSphere()
+{
+    if(lastshot + shootspeed < system.time.ms)
+        lastshot = system.time.ms;
+    else
+        return;
+        
+    var direction = new Vector(0, 0, 1);
+    direction.rotate(game.player.rot);
+    var pos = new Vector(direction);
+    pos.mul(50);
+    pos.add(game.player.pos);
+    var sphere = shootSphere(pos, direction, shootvelo);
+    timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
 }
 
 function bounceEntity(entityName)
@@ -225,5 +279,117 @@ Vector.prototype.toString = function()
     return "(" + this.x + ", " + this.y + ", " + this.z + ")";
 }
 
+Vector.prototype.mul = function(length)
+{
+    this.x *= length;
+    this.y *= length;
+    this.z *= length;
+    return this;
+}
+
+Vector.prototype.sub = function(other)
+{
+    this.x -= other.x;
+    this.y -= other.y;
+    this.z -= other.z;
+    return this;
+} 
+
+Vector.prototype.add = function(other)
+{
+    this.x += other.x;
+    this.y += other.y;
+    this.z += other.z;
+    return this;
+} 
+
+function createBoxStack(pos, height, width)
+{
+    for(i = 0; i < width; i++)
+        for(j = 0; j < height; j++)
+        {
+            box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
+            system.scene.addEntity(box);
+            box.pos.x = pos.x + (i * 30);
+            box.pos.y = pos.y + (j * 30);
+            box.pos.z = pos.z;
+        }
+}
+
+function createBoxPyramid(pos, width)
+{
+    for(i = 0; i < width; i++)
+        for(j = 0; j < width - i; j++)
+        {
+            box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
+            system.scene.addEntity(box);
+            entities[box.name] = box;
+            box.pos.x = pos.x + ((j * 40) + (i * 20));
+            box.pos.y = pos.y + (i * 30);
+            box.pos.z = pos.z;
+            box.sleeping = true;
+        }
+}
+
+var stackwidth = 40;
+var stackheight = 20;
+
+function explodeEverything()
+{
+    for(i in entities)
+        entities[i].applyForce((Math.random() * 100) - 50, Math.random() * 100, (Math.random() * 100) - 50);
+}
+
+function removeEntity(name)
+{
+    if(entities[name])
+    {
+        system.scene.removeEntity(entities[name]);
+        delete entities[name];
+    }
+}
+
+function eraseEverything()
+{
+    for(i in entities)
+    {
+        system.scene.removeEntity(entities[i]);
+        delete entities[i];
+    }
+}
+
+function doIt()
+{
+    var vec = new Vector(game.player.pos);
+    vec.z -= 300;
+    vec.y -= 15;
+    //createBoxStack(vec, 10, 10);
+    createBoxPyramid(vec, stackwidth);
+}
+
+var fountains = new Array();
+var fountain_speed = 75;
+
+function fountain(pos, rot)
+{
+    var fountain = new Object();
+    fountain.pos = new Vector(pos);
+    fountain.direction = new Vector(0, 0, 1);
+    fountain.direction.rotate(rot);
+    fountain.last_shot = 0;
+    fountain.speed = fountain_speed;
+    timer.addTimer("fountain" + fountains.length + "_timer", "fireFountain(" + fountains.length + ");", fountain_speed, 0);
+    fountains.push(fountain);
+}
+
+function fireFountain(index)
+{
+    var fountain = fountains[index];
+    var direction = new Vector(fountain.direction);
+    direction.rotate((Math.random() * 60) - 30, (Math.random() * 60) - 30, 0);
+    var sphere = shootSphere(fountain.pos, direction, 500 + (Math.random() * 250));
+    //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
+}
+    
 // log our start date and time
 print("eXistenZ engine started on " + Date());

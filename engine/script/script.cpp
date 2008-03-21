@@ -26,7 +26,8 @@ ScriptEngine::ScriptEngine()
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 
-	rt = JS_NewRuntime(1000000L);
+	//rt = JS_Init(1000000L);
+	rt = JS_Init(33554432L);
 	if ( rt == NULL ) {
 		ERROR("unable to create runtime");
 	}

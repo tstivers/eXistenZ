@@ -43,7 +43,7 @@ void StaticEntity::release()
 	meshsys->release();
 }
 
-void StaticEntity::render()
+void StaticEntity::render(texture::Material* lighting)
 {
 	for(unsigned i = 0; i < meshsys->meshes.size(); i++)
 		render::drawGroup(meshsys->meshes[i].mesh->rendergroup, &transform);

@@ -45,7 +45,7 @@ namespace physics {
 	int debug = 1;
 	bool acquired = false;
 	float scale = 30.0f;
-	float gravity = -9.8f;
+	float gravity = -9.81f;
 
 	bool setGravity(settings::Setting* setting, void* value);
 }
@@ -99,7 +99,10 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
-	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.0f);
+	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.05f / scale);
+	//bool				ccdEnabled = 1;
+	//gPhysicsSDK->setParameter(NX_CONTINUOUS_CD, ccdEnabled);
+	//gPhysicsSDK->setParameter(NX_CCD_EPSILON, 0.01f);
 	//gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
 	//gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
 	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
@@ -111,9 +114,9 @@ void physics::acquire() {
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
-	defaultMaterial->setRestitution(0.5);
-	defaultMaterial->setStaticFriction(0.5);
-	defaultMaterial->setDynamicFriction(0.5);
+	defaultMaterial->setRestitution(0.0f);
+	defaultMaterial->setStaticFriction(0.5f);
+	defaultMaterial->setDynamicFriction(0.5f);
 
 	gManager = NxCreateControllerManager(&myAllocator);
 

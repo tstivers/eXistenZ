@@ -7,7 +7,7 @@ namespace entity {
 	Entity* addBoxEntity(std::string& name, std::string& texture, D3DXMATRIX* transform = NULL);
 	Entity* addSphereEntity(std::string& name, std::string& texture, D3DXMATRIX* transform = NULL);
 
-	void delEntity(std::string& name);
+	void removeEntity(Entity* entity);
 	Entity* getEntity(std::string& name);	
 	void clearEntities();
 }

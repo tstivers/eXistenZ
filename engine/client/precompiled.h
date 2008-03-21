@@ -17,6 +17,7 @@
 #include <set>
 #include <functional>
 #include <map>
+#include <algorithm>
 
 #include "d3d9.h"
 #include "d3dx9core.h"

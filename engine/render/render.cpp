@@ -13,6 +13,7 @@
 #include "render/hwbuffer.h"
 #include "render/rendergroup.h"
 #include "texture/texture.h"
+#include "texture/material.h"
 
 namespace render {
 	int xres;
@@ -58,6 +59,7 @@ namespace render {
 	unsigned int frame;
 	texture::DXTexture* current_texture;
 	texture::DXTexture* current_lightmap;
+	texture::Material* current_material;
 	D3DXMATRIX current_transform;
 
 	unsigned int frame_polys;
@@ -213,7 +215,8 @@ void render::render()
 	frame++;	
 	sky_visible = true;
 	current_texture = NULL;
-	current_lightmap = NULL;	
+	current_lightmap = NULL;
+	current_material = NULL;
 	current_vb = NULL;
 	current_ib = NULL;
 	frame_polys = 0;
@@ -289,6 +292,31 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 			device->SetTransform( D3DTS_WORLD, &world );
 
 		current_transform = *transform;
+	}
+	HRESULT hr;
+
+	texture::Material m;
+	if(rg->material)
+	{
+		if((!current_material || (*current_material != *rg->material)) && render::lighting)
+		{
+			device->SetRenderState(D3DRS_LIGHTING, TRUE);
+			device->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+			device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);		
+			//device->SetRenderState(D3DRS_AMBIENT, D3DCOLOR_XRGB(0, 0, 0));	
+			device->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+			//device->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
+			m = *rg->material;
+			device->SetLight(0, &rg->material->light);
+			device->LightEnable(0, TRUE);
+		}
+		current_material = &m;
+	} 
+	else if(current_material)
+	{
+		device->SetRenderState(D3DRS_LIGHTING, FALSE);
+		current_material = rg->material;
 	}
 
 	render::device->DrawIndexedPrimitive(

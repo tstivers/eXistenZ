@@ -11,7 +11,9 @@ namespace jsentity {
 	JSBool getEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 	// entity property callbacks
-	JSBool getName(JSContext *cx, JSObject *obj, jsval id, jsval *vp);	
+	JSBool getName(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	JSBool getSleeping(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	JSBool setSleeping(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	// entity function callbacks
 	JSBool setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -166,7 +168,9 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 	JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
 
 	vec = jsvector::NewWrappedVector(cx, object, &entity->scale, false);
-	JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
+	JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
+
+	JS_DefineProperty(cx, object, "sleeping", JSVAL_FALSE, getSleeping, setSleeping, JSPROP_PERMANENT); 
 
 	return OBJECT_TO_JSVAL(object);
 }
@@ -206,6 +210,26 @@ error:
 JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, getEntityReserved(cx, obj)->name.c_str()));
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::getSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
+{
+	if(getEntityReserved(cx, obj)->getSleeping())
+		*vp = JSVAL_TRUE;
+	else
+		*vp = JSVAL_FALSE;
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::setSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
+{
+	if(!JSVAL_IS_BOOLEAN(*vp))
+		return JS_FALSE;
+	else
+		getEntityReserved(cx, obj)->setSleeping(JSVAL_TO_BOOLEAN(*vp));
 
 	return JS_TRUE;
 }

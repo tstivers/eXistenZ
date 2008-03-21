@@ -33,7 +33,7 @@ namespace scene {
 		//TODO: virtual addEntity(std::string name, int type,
 		virtual void addEntity(entity::Entity* entity) = 0;
 		// virtual void updateEntity(const Entity* entity);
-		// virtual void removeEntity(const Entity* entity);
+		virtual void removeEntity(entity::Entity* entity) = 0;
 
 		// movement/collision crap (or let game:: handle movement and collide:: handle collision?)
 		// maybe collision:: looks like addCollider(Collider& col) and there are ColliderMesh, ColliderBox(trigger), ColliderBSP, etc.

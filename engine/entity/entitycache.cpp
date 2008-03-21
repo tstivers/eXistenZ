@@ -81,3 +81,9 @@ Entity* entity::getEntity(std::string& name)
 
 	return it->second;
 }
+
+void entity::removeEntity(entity::Entity* entity)
+{
+	entity_cache.erase(entity->name);
+	delete entity;
+}

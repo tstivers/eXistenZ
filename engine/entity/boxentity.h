@@ -4,6 +4,7 @@ class NxActor;
 
 namespace texture {;
 	class DXTexture;
+	struct Material;
 }
 
 namespace entity {
@@ -13,7 +14,7 @@ namespace entity {
 		~BoxEntity();
 		void acquire();
 		void release();
-		void render();
+		void render(texture::Material* lighting);
 		void calcAABB();
 		void update();
 		void doTick();
@@ -22,6 +23,8 @@ namespace entity {
 		void setRot(const D3DXVECTOR3& rot);
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
+		bool getSleeping();
+		void setSleeping(bool asleep);
 
 		NxActor* actor;
 		texture::DXTexture* texture;

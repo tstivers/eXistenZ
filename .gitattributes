@@ -196,6 +196,8 @@ engine/skybox/skybox.cpp eol=crlf
 engine/skybox/skybox.h eol=crlf
 engine/texture/jstexture.cpp eol=crlf
 engine/texture/jstexture.h eol=crlf
+engine/texture/material.cpp -text
+engine/texture/material.h -text
 engine/texture/shader.cpp eol=crlf
 engine/texture/shader.h eol=crlf
 engine/texture/texture.cpp eol=crlf

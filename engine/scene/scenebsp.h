@@ -17,6 +17,10 @@ namespace entity {
 	typedef std::vector<Entity*> EntityList;
 };
 
+namespace texture {
+	struct Material;
+}
+
 namespace scene {
 
 	class BSPFace {
@@ -57,7 +61,9 @@ namespace scene {
 		void release();
 		void reload(unsigned int flags = 0);
 		void render();
+		void getEntityLighting(texture::Material* material, entity::Entity* entity);
 		void addEntity(entity::Entity* entity);
+		void removeEntity(entity::Entity* entity);
 
 		// new stuff
 		static SceneBSP* loadBSP(const std::string& name);

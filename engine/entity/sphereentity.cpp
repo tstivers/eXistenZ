@@ -16,13 +16,15 @@ namespace physics {
 
 using namespace entity;
 
-SphereEntity::SphereEntity(std::string name, std::string texture) : Entity(name) 
+SphereEntity::SphereEntity(std::string name, std::string texture) : Entity(name), actor(NULL)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
 
 SphereEntity::~SphereEntity()
 {
+	if(actor)
+		physics::gScene->releaseActor(*actor);
 }
 
 void SphereEntity::acquire()
@@ -33,7 +35,7 @@ void SphereEntity::acquire()
 	sphereDesc.radius = 0.5;
 	actorDesc.shapes.pushBack(&sphereDesc);    
 	actorDesc.body = &bodyDesc;    
-	actorDesc.density = 10;    
+	actorDesc.density = 100;    
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);	
 	actor = physics::gScene->createActor(actorDesc);
@@ -44,6 +46,7 @@ void SphereEntity::acquire()
 void SphereEntity::release()
 {
 	physics::gScene->releaseActor(*actor);
+	actor = NULL;
 }
 
 void SphereEntity::update()
@@ -85,9 +88,9 @@ void SphereEntity::setRot(const D3DXVECTOR3& rot)
 	//actor->setGlobalOrientation((NxVec3)rot);
 }
 
-void SphereEntity::render()
+void SphereEntity::render(texture::Material* lighting)
 {
-	render::drawSphere((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale / 2, physics::scale / 2, physics::scale / 2), texture);
+	render::drawSphere((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale / 2, physics::scale / 2, physics::scale / 2), texture, lighting);
 }
 
 void SphereEntity::calcAABB()

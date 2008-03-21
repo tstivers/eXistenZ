@@ -10,6 +10,7 @@
 #include "q3bsp/bsppatch.h"
 #include "render/meshoptimize.h"
 #include "entity/entity.h"
+#include "texture/material.h"
 
 namespace scene {
 };
@@ -231,14 +232,108 @@ void SceneBSP::render()
 			render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup);
 		}
 
+	texture::Material lighting;
 	if(render::draw_entities) {
 		unsigned num_entities = entities.size();
 		for(unsigned i = 0; i < num_entities; i++) {
 			entities[i]->doTick();
+			lighting.reset();
+			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
-				entities[i]->render();
+			entities[i]->render(&lighting);
 		}
 	}
+}
+
+void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* entity)
+{
+	D3DXVECTOR3 origin(entity->getPos());
+	std::swap(origin.y, origin.z);
+	float gridsize[] = { 64, 64, 128 };
+	int pos[3];
+	int gridstep[3];
+	D3DXVECTOR3 frac(0,0,0), amb(0,0,0), color(0,0,0), direction(0,0,0);
+
+	origin -= bsp->lightgrid_origin;
+	for(int i = 0; i < 3; i++)
+	{
+		float v = origin[i] / gridsize[i];
+		pos[i] = floor(v);
+		frac[i] = v - pos[i];
+		if(pos[i] < 0)
+			pos[i] = 0;
+		else if(pos[i] > bsp->lightgrid_bounds[i] - 1)
+			pos[i] = bsp->lightgrid_bounds[i] - 1;
+	}
+	
+	gridstep[0] = 1;
+	gridstep[1] = 1 * bsp->lightgrid_bounds[0];
+	gridstep[2] = 1 * bsp->lightgrid_bounds[0] * bsp->lightgrid_bounds[1];
+	int start_index = pos[0] * gridstep[0] + pos[1] * gridstep[1] + pos[2] * gridstep[2];
+
+	float totalfactor = 0;
+	for(int i = 0; i < 8; i++)
+	{
+		float factor = 1.0f;
+		int index = start_index;
+		for(int j = 0; j < 3; j++)
+		{
+			if(i & (1 << j))
+			{
+				factor *= frac[j];
+				index += gridstep[j];
+			}
+			else
+				factor *= (1.0f - frac[j]);
+		}
+
+		if(index < 0 || index >= bsp->num_lights)
+			continue;
+
+		q3bsp::BSPLight* l = &bsp->lights[index];
+
+		if(!(l->ambient[0] + l->ambient[1] + l->ambient[2]))
+			continue;
+
+		totalfactor += factor;
+
+		for(int x = 0; x < 3; x++)
+		{
+			amb[x] += factor * (l->ambient[x]);
+			color[x] += factor * (l->directional[x]);
+		}
+
+		D3DXVECTOR3 normal;
+		normal.x = cos(((float)l->direction[1] / 255.0f) * (2.0f * D3DX_PI)) * sin(((float)l->direction[0] / 255.0f) * (2.0f * D3DX_PI));
+		normal.z = sin(((float)l->direction[1] / 255.0f) * (2.0f * D3DX_PI)) * sin(((float)l->direction[0] / 255.0f) * (2.0f * D3DX_PI));
+		normal.y = cos(((float)l->direction[0] / 255.0f) * (2.0f * D3DX_PI));
+
+		direction += (normal * factor);
+	}
+
+	if(totalfactor > 0 && totalfactor < 0.99)
+	{
+		totalfactor = 1.0f / totalfactor;
+		amb *= totalfactor;
+		color *= totalfactor;
+	}
+
+	D3DXVec3Normalize(&direction, &direction);
+
+	//INFO("amb = (%2.2f, %2.2f, %2.2f)", amb.x, amb.y, amb.z);
+
+	D3DXCOLOR c(amb.x / 255.0f, amb.y / 255.0f, amb.z / 255.0f, 1.0f);
+	material->ambient = c;
+	D3DXCOLOR v(color.x / 255.0f, color.y / 255.0f, color.z / 255.0f, 1.0f);
+	material->light.Diffuse = v;
+	//material->light.Ambient = v;
+	//material->light.Specular = v;
+	material->light.Direction = direction * -1;
+	material->light.Type = D3DLIGHT_DIRECTIONAL;
+	material->light.Range = 100.0f;
+	material->light.Position = entity->pos + (direction * 50);;
+	material->light.Diffuse.a = 1.0f;
+	//INFO("nrm = (%2.2f, %2.2f, %2.2f)", direction.x, direction.y, direction.z);
 }
 
 SceneBSP* SceneBSP::loadBSP(const std::string& name)
@@ -259,4 +354,14 @@ void SceneBSP::addEntity(entity::Entity* entity)
 	entities.push_back(entity);
 	if(acquired)
 		entity->acquire();
+}
+
+void SceneBSP::removeEntity(entity::Entity* entity)
+{
+	for(entity::EntityList::iterator it = entities.begin(); it != entities.end(); it++)
+		if(*it == entity)
+		{
+			entities.erase(it);
+			return;
+		}
 }

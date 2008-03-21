@@ -10,6 +10,7 @@
 #include "texture/texture.h"
 
 using namespace q3bsp;
+void R_ColorShiftLightingBytes( byte *in) ;
 
 BSP* BSP::load(const std::string& filename)
 {
@@ -261,13 +262,39 @@ bool BSP::load(vfs::IFilePtr file)
 
 	delete [] tmp_lightmaps;
 
-	// turn curved surfaces into normal polys
-	if(q3bsp::debug) {
-		LOG("[BSP::loadBSP] converting patches");
-	}
-	
-	//generatePatches();
+	// -------------------------- load models --------------------------
+	num_models = lumps[kModels].length / sizeof(BSPModel);
+	ASSERT(lumps[kModels].length % sizeof(BSPModel) == 0);
+	models = new BSPModel[num_models];
+	file->seek(lumps[kModels].offset, FILE_BEGIN);
+	file->read((void*)models, lumps[kModels].length);
 
+	// ------------------------- load lights ---------------------------
+	num_lights = lumps[kLightVolumes].length / sizeof(BSPLight);
+	ASSERT(lumps[kLightVolumes].length % sizeof(BSPLight) == 0);
+	lights = new BSPLight[num_lights];
+	file->seek(lumps[kLightVolumes].offset, FILE_BEGIN);
+	file->read((void*)lights, lumps[kLightVolumes].length);
+
+	// ------------------------ calc some lightgrid stuffs -------------
+	float gridsize[] = { 64, 64, 128 };
+	D3DXVECTOR3 max;
+	for(int i = 0; i < 3; i++)
+	{
+		lightgrid_origin[i] = gridsize[i] * ceil(models[0].min[i] / gridsize[i]);
+		max[i] = gridsize[i] * floor(models[0].max[i] / gridsize[i]);
+		lightgrid_bounds[i] = (max[i] - lightgrid_origin[i]) / gridsize[i] + 1;
+	}
+
+	for(int i = 0; i < num_lights; i++)
+	{
+		R_ColorShiftLightingBytes(&lights[i].ambient[0]);
+		R_ColorShiftLightingBytes(&lights[i].directional[0]);
+		//INFO("normals: %d, %d", lights[i].direction[0], lights[i].direction[1]);
+	}
+
+	int numgridpoints = lightgrid_bounds[0] * lightgrid_bounds[1] * lightgrid_bounds[2];
+	
 	// ------------------------- dump debug info --------------------------
 
 	if(q3bsp::debug) {
@@ -275,7 +302,36 @@ bool BSP::load(vfs::IFilePtr file)
 		LOG("[BSP::loadBSP] loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
 		LOG("[BSP::loadBSP] loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
 		LOG("[BSP::loadBSP] loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
+		LOG("[BSP::loadBSP] loaded %i models, %i lights", num_models, num_lights);
 	}
 
 	return true;
+}
+
+void R_ColorShiftLightingBytes( byte* in) 
+{
+	int		shift, r, g, b;
+
+	// shift the color data based on overbright range
+	shift = 1;
+
+	// shift the data based on overbright range
+	r = in[0] << shift;
+	g = in[1] << shift;
+	b = in[2] << shift;
+	
+	// normalize by color instead of saturating to white
+	if ( ( r | g | b ) > 255 ) {
+		int		max;
+
+		max = r > g ? r : g;
+		max = max > b ? max : b;
+		r = r * 255 / max;
+		g = g * 255 / max;
+		b = b * 255 / max;
+	}
+
+	in[0] = r;
+	in[1] = g;
+	in[2] = b;	
 }

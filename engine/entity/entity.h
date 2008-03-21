@@ -7,6 +7,10 @@ namespace mesh {
 	class MeshSystem;
 };
 
+namespace texture {
+	struct Material;
+};
+
 namespace entity {
 	enum ENTITY_FLAG {
 		EF_MESH = 1<<1,
@@ -41,11 +45,13 @@ namespace entity {
 		virtual void setTransform(const D3DXMATRIX& transform) { this->transform = transform; };
 		virtual void activate();
 		virtual void deactivate();
-		virtual void render() = 0;
+		virtual void render(texture::Material* lighting) = 0;
 		virtual void update();
 		virtual void calcAABB() = 0;
 		virtual void doTick();
 		virtual void applyForce(const D3DXVECTOR3 &force);
+		virtual bool getSleeping();
+		virtual void setSleeping(bool asleep);
 		inline void mark(unsigned int frame);
 		
 		std::string name;
@@ -65,7 +71,7 @@ namespace entity {
 		~StaticEntity();
 		void acquire();
 		void release();
-		void render();
+		void render(texture::Material* lighting);
 		void calcAABB();
 
 		static StaticEntity* create(std::string name, std::string meshname);

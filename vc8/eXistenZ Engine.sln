@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Libs", "External Libs", "{67764B00-DAA7-4B94-80FA-67E675AEB3D9}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eXistenZ Engine Client", "client.vcproj", "{C90A2469-27AD-4BF6-94FF-75657AE13D25}"
 	ProjectSection(ProjectDependencies) = postProject
 		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {D9BE4917-EFC7-495B-AB71-6F5CFD99B682}
@@ -16,8 +18,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "js32", "..\lib\js32\js32.vc
 	ProjectSection(ProjectDependencies) = postProject
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {215F4C42-EFF3-4495-9FBD-2BD636A8D841}
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Libs", "External Libs", "{67764B00-DAA7-4B94-80FA-67E675AEB3D9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\js32\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
 EndProject
@@ -86,9 +86,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{4B3A1F6D-AEE3-4C47-A34A-531563F91758} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
-		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution

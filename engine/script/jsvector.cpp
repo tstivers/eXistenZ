@@ -7,6 +7,7 @@ namespace jsvector {
 	
 	JSObject* initVectorClass(JSContext* cx, JSObject* obj);
 	JSBool vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);	
 	JSBool wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
@@ -23,6 +24,7 @@ namespace jsvector {
 
 	JSFunctionSpec vector_methods[] = { 
 		{"normalize",	vector_normalize,	0,0,0 },
+		{"rotate",		vector_rotate,		3,0,0 },	
 //		{"toString",	vector_toString,	0,0,0 },
 		{0,0,0,0,0}
 	};	
@@ -300,6 +302,44 @@ JSBool jsvector::vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsva
 
 error:
 	JS_ReportError(cx, "[jsvector::vector_normalize] call failed");
+	return JS_FALSE;
+}
+
+JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	D3DXVECTOR3 vec;
+	if(!GetVector(cx, obj, vec))
+		goto error;
+
+	D3DXVECTOR3 rot;
+	if(argc == 1)
+	{
+		if(!GetVector(cx, JSVAL_TO_OBJECT(argv[0]), rot))
+			goto error;
+	} else if (argc == 3)
+	{
+		for(int i = 0; i < 3; i++)
+		{
+			jsdouble d;
+			if(!JS_ValueToNumber(cx, argv[i], &d))
+				goto error;
+			rot[i] = d;
+		}
+	}
+	else
+		goto error;
+
+	D3DXMATRIX mat;
+	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
+	D3DXVec3TransformCoord(&vec, &vec, &mat);
+	
+	if(!SetVector(cx, obj, vec))
+		goto error;
+
+	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsvector::vector_rotate] call failed");
 	return JS_FALSE;
 }
 

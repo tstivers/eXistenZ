@@ -62,6 +62,23 @@ namespace q3bsp {
 		int contents;
 	};
 
+	struct BSPModel
+	{
+		float min[3];                // min position for the bounding box
+		float max[3];               // max position for the bounding box.
+		int faceIndex;               // first face index in the model
+		int numOfFaces;           // number of faces in the model
+		int brushIndex;             // first brush index in the model
+		int numOfBrushes;       // number brushes for the model
+	};
+
+	struct BSPLight
+	{
+		byte ambient[3];     // This is the ambient color in RGB
+		byte directional[3]; // This is the directional color in RGB
+		byte direction[2];   // The direction of the light: [phi,theta]
+	};
+
 	struct face_sort_t {
 		int face_index;
 		int texture_index;
@@ -111,6 +128,8 @@ namespace q3bsp {
 		int num_clusters;
 		int num_textures;
 		int num_lightmaps;
+		int num_models;
+		int num_lights;
 
 		int cluster_size;
 
@@ -126,6 +145,11 @@ namespace q3bsp {
 		BSPPlane		*planes;		
 		byte			*clusters;
 		BSPTexture		*bsptextures;
+		BSPLight		*lights;
+		BSPModel		*models;
+
+		D3DXVECTOR3 lightgrid_origin;
+		D3DXVECTOR3 lightgrid_bounds;
 
 		texture::DXTexture** textures;
 		texture::DXTexture** lightmaps;

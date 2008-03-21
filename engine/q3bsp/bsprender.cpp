@@ -182,7 +182,7 @@ inline void BSP::initRenderState(void)
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
 
-	if(render::lighting) {
+	/*if(render::lighting) {
 		render::device->SetRenderState( D3DRS_LIGHTING, TRUE );
 		D3DLIGHT9 light;
 		ZeroMemory(&light, sizeof(D3DLIGHT9));
@@ -217,7 +217,21 @@ inline void BSP::initRenderState(void)
 		render::device->SetMaterial(&mtrl);
 		render::device->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
 
-	}
+	}*/
+
+	D3DMATERIAL9 mtrl;
+	ZeroMemory( &mtrl, sizeof(mtrl) );
+	mtrl.Ambient.r = 1.0;
+	mtrl.Ambient.g = 1.0;
+	mtrl.Ambient.b = 1.0;
+	mtrl.Ambient.a = 1.0;
+	mtrl.Diffuse.r = 1.0;
+	mtrl.Diffuse.g = 1.0;
+	mtrl.Diffuse.b = 1.0;
+	mtrl.Diffuse.a = 1.0;
+
+	render::device->SetMaterial(&mtrl);
+	render::device->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
 
 	if(render::wireframe) {
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);		

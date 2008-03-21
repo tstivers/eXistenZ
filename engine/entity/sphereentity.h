@@ -2,8 +2,9 @@
 
 class NxActor;
 
-namespace texture {;
+namespace texture {
 	class DXTexture;
+	struct Material;
 }
 
 namespace entity {
@@ -13,7 +14,7 @@ namespace entity {
 		~SphereEntity();
 		void acquire();
 		void release();
-		void render();
+		void render(texture::Material* lighting);
 		void calcAABB();
 		void update();
 		void doTick();
