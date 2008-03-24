@@ -1,27 +1,27 @@
 namespace std {
 
 	template <class T> 
-	class smart_ptr {
+	class shared_ptr {
 	public:
 		typedef T element_t;
 
 	public:
-		inline smart_ptr();
-		inline smart_ptr(T* pointed);
-		inline smart_ptr(const smart_ptr& other);
-		inline ~smart_ptr();
+		inline shared_ptr();
+		inline shared_ptr(T* pointed);
+		inline shared_ptr(const shared_ptr& other);
+		inline ~shared_ptr();
 
 		const T* c_ptr() { return m_pointed; };
 		operator bool() { return m_pointed != 0; };
-		inline smart_ptr& operator= (const smart_ptr& other);
-		inline smart_ptr& operator= (T* other);
+		inline shared_ptr& operator= (const shared_ptr& other);
+		inline shared_ptr& operator= (T* other);
 		T& operator* (void) const { return *m_pointed; };
 		T* operator-> (void) const { return m_pointed; };
-		bool operator== (const smart_ptr& other) const { return m_pointed == other.m_pointed; };
+		bool operator== (const shared_ptr& other) const { return m_pointed == other.m_pointed; };
 		bool operator== (const T* other) const { return m_pointed == other; };
-		bool operator!= (const smart_ptr& other) const { return m_pointed != other.m_pointed; };
+		bool operator!= (const shared_ptr& other) const { return m_pointed != other.m_pointed; };
 		bool operator!= (const T* other) const { return m_pointed != other; };
-		bool operator< (const smart_ptr& other) const { return m_pointed < other.m_pointed; };
+		bool operator< (const shared_ptr& other) const { return m_pointed < other.m_pointed; };
 		bool operator< (const T* other) const { return m_pointed < other; };
 
 	private:
@@ -31,26 +31,26 @@ namespace std {
 };
 
 template <class T> 
-std::smart_ptr<T>::smart_ptr()
+shared_ptr<T>::shared_ptr()
 : m_pointed(NULL), m_counter(0)
 {
 }
 
 template <class T> 
-std::smart_ptr<T>::smart_ptr(T* pointed)
+shared_ptr<T>::shared_ptr(T* pointed)
 : m_pointed(pointed), m_counter(new unsigned int(1))
 {
 }
 
 template <class T> 
-std::smart_ptr<T>::smart_ptr(const smart_ptr<T>& other)
+shared_ptr<T>::shared_ptr(const shared_ptr<T>& other)
 : m_pointed(other.m_pointed), m_counter(other.m_counter)
 {
 	if (m_counter) ++(*m_counter);
 }
 
 template <class T> 
-std::smart_ptr<T>::~smart_ptr(void)
+shared_ptr<T>::~shared_ptr(void)
 {
 	if (m_counter) {
 		--(*m_counter);
@@ -62,7 +62,7 @@ std::smart_ptr<T>::~smart_ptr(void)
 }
 
 template <class T> 
-std::smart_ptr<T>& std::smart_ptr<T>::operator=(const smart_ptr<T>& other)
+shared_ptr<T>& shared_ptr<T>::operator=(const shared_ptr<T>& other)
 {
 	if (m_pointed) {
 		if (m_counter) {
@@ -80,7 +80,7 @@ std::smart_ptr<T>& std::smart_ptr<T>::operator=(const smart_ptr<T>& other)
 }
 
 template <class T> 
-std::smart_ptr<T>& std::smart_ptr<T>::operator=(T* other)
+shared_ptr<T>& shared_ptr<T>::operator=(T* other)
 {
 	if (m_counter) {
 		--(*m_counter);

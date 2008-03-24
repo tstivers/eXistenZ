@@ -13,7 +13,7 @@ namespace entity {
 
 using namespace entity;
 
-StaticEntity* StaticEntity::create(std::string name, std::string meshname)
+StaticEntity* StaticEntity::create(string name, string meshname)
 {
 	mesh::MeshSystem* meshsys = mesh::getMeshSystem(meshname);
 	if(!meshsys)
@@ -24,7 +24,7 @@ StaticEntity* StaticEntity::create(std::string name, std::string meshname)
 	return entity;
 }
 
-StaticEntity::StaticEntity(std::string name) : Entity(name) 
+StaticEntity::StaticEntity(string name) : Entity(name) 
 {
 }
 

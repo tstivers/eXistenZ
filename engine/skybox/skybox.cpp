@@ -67,7 +67,7 @@ void skybox::acquire()
 	// create our vertex buffer
 	if(FAILED(render::device->CreateVertexBuffer(4 * 6 * sizeof(SkyVertex),
 		D3DUSAGE_WRITEONLY,
-		SkyVertex.FVF,
+		SkyVertex::FVF,
 		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
@@ -278,7 +278,7 @@ void skybox::render()
 		acquire();
 
 	render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(SkyVertex));
-	render::device->SetFVF(SkyVertex.FVF);
+	render::device->SetFVF(SkyVertex::FVF);
 	//render::device->SetMaterial( &mtrl );
 	render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
 	render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
@@ -330,7 +330,6 @@ void skybox::unacquire()
 	if(!acquired)
 		return;
 
-	delete [] verts;
 	if(dxvertbuf)
 		dxvertbuf->Release();
 	

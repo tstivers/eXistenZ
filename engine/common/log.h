@@ -35,10 +35,10 @@
 namespace Log {
 	typedef void (* ConsumerCallback)(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 
-	void addConsumer(const std::string& name, unsigned int mask, ConsumerCallback callback, void* userdef = NULL);
-	void removeConsumer(const std::string& name);
-	void setConsumerMask(const std::string& name, unsigned int mask);
-	unsigned int getConsumerMask(const std::string& name);
+	void addConsumer(const string& name, unsigned int mask, ConsumerCallback callback, void* userdef = NULL);
+	void removeConsumer(const string& name);
+	void setConsumerMask(const string& name, unsigned int mask);
+	unsigned int getConsumerMask(const string& name);
 
 	void log(const char* file, unsigned int line, const char* function, unsigned int flags, const char* format, ...);
 };

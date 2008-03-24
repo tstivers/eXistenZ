@@ -6,7 +6,7 @@ namespace entity {
 
 using namespace entity;
 
-Entity::Entity(std::string name)
+Entity::Entity(string name)
 {
 	this->name = name;
 	this->pos =	D3DXVECTOR3(0, 0, 0);

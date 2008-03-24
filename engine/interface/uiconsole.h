@@ -24,14 +24,14 @@ namespace ui {
 		U32 filter;		
 		CD3DFont* d3dfont;
 
-		std::deque<char*> scrollback;
-		std::deque<std::string> history;
-		std::string cmd;
+		deque<char*> scrollback;
+		deque<string> history;
+		string cmd;
 		unsigned int cursorpos;
 		unsigned int historypos;
 		int wireframe;
 		int draw;
 
-		typedef std::deque<char*>::iterator scrollback_iter;
+		typedef deque<char*>::iterator scrollback_iter;
 	};
 };	

@@ -226,21 +226,21 @@ float settings::getfloat(char* name)
 
 void settings::dump(char* pattern, bool sort)
 {
-	std::list<std::string> blah;
+	list<string> blah;
 
 	if(pattern) {
 		for(settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
 			if(wildcmp(pattern, ((Setting*)((*iter).second))->name))
-				blah.push_back((std::string)((Setting*)((*iter).second))->name);
+				blah.push_back((string)((Setting*)((*iter).second))->name);
 	} else {
 	for(settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
-		blah.push_back((std::string)((Setting*)((*iter).second))->name);
+		blah.push_back((string)((Setting*)((*iter).second))->name);
 	}
 
 	if(sort)
 		blah.sort();
 
-	for(std::list<std::string>::iterator li = blah.begin(); li != blah.end(); li++)
+	for(list<string>::iterator li = blah.begin(); li != blah.end(); li++)
 	{
 		settings_hash_map::iterator iter = settings_map.find((char*)(*li).c_str());		
 		Setting* setting = (Setting*)((*iter).second);

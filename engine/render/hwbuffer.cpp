@@ -35,8 +35,8 @@ namespace render {
 		}
 	};
 
-	typedef std::set<VBEntry, VBEntryTraits> VBMemMap;
-	typedef std::set<IBEntry, IBEntryTraits> IBMemMap;
+	typedef set<VBEntry, VBEntryTraits> VBMemMap;
+	typedef set<IBEntry, IBEntryTraits> IBMemMap;
 
 	class VB {
 	public:
@@ -69,8 +69,8 @@ namespace render {
 	};
 
 
-	typedef std::vector<VB*> VBCache;
-	typedef std::vector<IB*> IBCache;
+	typedef vector<VB*> VBCache;
+	typedef vector<IB*> IBCache;
 
 	VBCache vbcache;
 	IBCache ibcache;

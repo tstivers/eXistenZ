@@ -12,7 +12,7 @@ namespace script {
 		JSArgumentList& addParam(double d);
 		JSArgumentList& addParam(bool b);
 		JSArgumentList& addParam(const char* str);
-		JSArgumentList& addParam(std::string& str);
+		JSArgumentList& addParam(string& str);
 		
 		void clear();
 		int getCount();
@@ -23,7 +23,7 @@ namespace script {
 	
 	private:
 		JSContext* cx;
-		typedef std::vector<jsval> vec_jsval;
+		typedef vector<jsval> vec_jsval;
 		vec_jsval roots;
 		vec_jsval argv;		
 	};

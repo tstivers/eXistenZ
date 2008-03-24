@@ -14,7 +14,7 @@ namespace q3bsp {
 namespace entity {
 	class Entity;
 
-	typedef std::vector<Entity*> EntityList;
+	typedef vector<Entity*> EntityList;
 };
 
 namespace texture {
@@ -38,7 +38,7 @@ namespace scene {
 		render::RenderGroup* rendergroup;
 	};	
 
-	typedef std::vector<BSPFace*> BSPFacePtrList;
+	typedef vector<BSPFace*> BSPFacePtrList;
 
 	class BSPCluster {
 	public:
@@ -66,7 +66,7 @@ namespace scene {
 		void removeEntity(entity::Entity* entity);
 
 		// new stuff
-		static SceneBSP* loadBSP(const std::string& name);
+		static SceneBSP* loadBSP(const string& name);
 		q3bsp::BSP *bsp;
 
 		unsigned int num_clusters;

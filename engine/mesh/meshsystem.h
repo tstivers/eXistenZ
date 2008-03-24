@@ -16,7 +16,7 @@ namespace mesh {
 		Mesh* mesh;
 	};
 
-	typedef std::vector<MeshEntry> MeshList;
+	typedef vector<MeshEntry> MeshList;
 
 	class MeshSystem {
 	public:
@@ -26,7 +26,7 @@ namespace mesh {
 		void release();
 
 		bool acquired;
-		std::string name;
+		string name;
 		int refcount;
 
 		// rendered geometry

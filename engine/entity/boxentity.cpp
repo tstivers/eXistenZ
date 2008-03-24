@@ -16,7 +16,7 @@ namespace physics {
 
 using namespace entity;
 
-BoxEntity::BoxEntity(std::string name, std::string texture) : Entity(name), actor(NULL)
+BoxEntity::BoxEntity(string name, string texture) : Entity(name), actor(NULL), size(30,30,30)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
@@ -32,7 +32,7 @@ void BoxEntity::acquire()
 	NxActorDesc actorDesc;
 	NxBodyDesc bodyDesc;
 	NxBoxShapeDesc boxDesc;
-	boxDesc.dimensions.set(0.5,0.5,0.5);
+	boxDesc.dimensions.set((size / physics::scale) / 2);
 	actorDesc.shapes.pushBack(&boxDesc);    
 	actorDesc.body = &bodyDesc;    
 	actorDesc.density = 100;    
@@ -76,21 +76,26 @@ void BoxEntity::setPos(const D3DXVECTOR3& pos)
 
 D3DXVECTOR3& BoxEntity::getRot()
 {
-	rot = (D3DXVECTOR3&)actor->getGlobalOrientation();
-	// TODO: convert back to degrees I guess
+	D3DXQUATERNION q = (D3DXQUATERNION&)actor->getGlobalOrientationQuat();
+	D3DXMATRIX m;
+	D3DXMatrixIdentity(&m);
+	D3DXMatrixRotationQuaternion(&m, &q);
+	MatrixToYawPitchRoll(&m, &rot);
+
 	return rot;
 }
 
 void BoxEntity::setRot(const D3DXVECTOR3& rot)
 {
 	this->rot = rot;
-	// TODO: convert from vector3 to matrix
-	//actor->setGlobalOrientation((NxVec3)rot);
+	D3DXQUATERNION q;
+	D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
+	actor->setGlobalOrientationQuat((NxQuat&)q);
 }
 
 void BoxEntity::render(texture::Material* lighting)
 {
-	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale, physics::scale, physics::scale), texture, lighting);
+	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), size, texture, lighting);
 }
 
 void BoxEntity::calcAABB()
@@ -99,11 +104,13 @@ void BoxEntity::calcAABB()
 
 void BoxEntity::applyForce(const D3DXVECTOR3 &force)
 {
+	ASSERT(actor);
 	actor->addForce((NxVec3&)force, NX_IMPULSE);
 }
 
 void BoxEntity::setSleeping(bool asleep)
 {
+	ASSERT(actor);
 	if(asleep)
 		actor->putToSleep();
 	else
@@ -112,5 +119,13 @@ void BoxEntity::setSleeping(bool asleep)
 
 bool BoxEntity::getSleeping()
 {
+	ASSERT(actor);
 	return actor->isSleeping();
+}
+
+void BoxEntity::setSize(const D3DXVECTOR3& size)
+{
+	ASSERT(actor);
+	((NxBoxShape*)actor->getShapes()[0])->setDimensions(NxVec3(size));
+	this->size = size;
 }

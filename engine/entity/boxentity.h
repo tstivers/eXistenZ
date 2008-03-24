@@ -10,7 +10,7 @@ namespace texture {;
 namespace entity {
 	class BoxEntity : public Entity {
 	public:
-		BoxEntity(std::string name, std::string texture);
+		BoxEntity(string name, string texture);
 		~BoxEntity();
 		void acquire();
 		void release();
@@ -26,7 +26,11 @@ namespace entity {
 		bool getSleeping();
 		void setSleeping(bool asleep);
 
+		void setSize(const D3DXVECTOR3& size);
+		D3DXVECTOR3 getSize() { return size; }
+
 		NxActor* actor;
 		texture::DXTexture* texture;
+		D3DXVECTOR3 size;
 	};	
 }

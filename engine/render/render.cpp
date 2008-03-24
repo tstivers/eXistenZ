@@ -136,6 +136,7 @@ void render::init()
 	console::addCommand("del_marker", render::con_del_marker, NULL);
 	console::addCommand("toggle_diffuse", console::toggle_int, &diffuse);
 	console::addCommand("toggle_entities", console::toggle_int, &draw_entities);
+	console::addCommand("toggle_lighting", console::toggle_int, &lighting);
 
 	boost = 0;
 	gamma = 1.0;
@@ -279,8 +280,19 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	if(rg->lightmap != current_lightmap) {
 		if(current_lightmap)
 			current_lightmap->deactivate();
-		if(rg->lightmap)
+		if(rg->lightmap && render::lightmap)
+		{
 			rg->lightmap->activate();
+			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+		}
+		else
+		{
+			if(render::diffuse)
+			//if(!rg->texture->is_transparent)
+				render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
+			//else
+			//	render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+		}
 		current_lightmap = rg->lightmap;
 		frame_texswaps++;
 	}
@@ -298,7 +310,7 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	texture::Material m;
 	if(rg->material)
 	{
-		if((!current_material || (*current_material != *rg->material)) && render::lighting)
+		if((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
 		{
 			device->SetRenderState(D3DRS_LIGHTING, TRUE);
 			device->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);

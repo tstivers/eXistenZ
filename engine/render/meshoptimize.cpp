@@ -14,8 +14,8 @@ void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigne
 		return;
 
 	if(dupecheck) {
-		std::vector<BSPVertex> vert_list;
-		std::vector<unsigned short> index_map;
+		vector<BSPVertex> vert_list;
+		vector<unsigned short> index_map;
 
 		for(unsigned i = 0; i < *num_verts; i++) {
 

@@ -11,7 +11,7 @@ namespace physics {
 	void destroy();
 	void startSimulation();
 	void getResults();
-	void addStaticMesh(std::string name, scene::SceneBSP* scene);
+	void addStaticMesh(string name, scene::SceneBSP* scene);
 
 	extern float scale;
 }

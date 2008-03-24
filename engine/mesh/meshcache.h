@@ -4,9 +4,9 @@ namespace mesh {
 	
 	class Mesh;
 
-	Mesh* getMesh(std::string& name);
+	Mesh* getMesh(string& name);
 	bool addMesh(Mesh* mesh);
 	bool delMesh(Mesh* mesh);
-	bool delMesh(std::string& name);
+	bool delMesh(string& name);
 	unsigned int clearMeshCache();
 };

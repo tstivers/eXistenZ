@@ -18,6 +18,9 @@
 #include <functional>
 #include <map>
 #include <algorithm>
+#include <utility>
+#include <tuple>
+#include <memory>
 
 #include "d3d9.h"
 #include "d3dx9core.h"
@@ -26,13 +29,17 @@
 
 #include "js32.h"
 
+using namespace std;
+using namespace tr1;
+
 #include "common/types.h"
 #include "common/log.h"
-#include "common/smart_ptr.h"
-#include "common/smart_cptr.h"
+//#include "common/shared_ptr.h"
+//#include "common/smart_cptr.h"
 #include "common/mystring.h"
-#include "common/FastDelegate.h"
+//#include "common/FastDelegate.h"
 #include "common/registeredfunctions.h"
+#include "math/math.h"
 
 #define DIK_BUTTON0 0xF0
 #define DIK_BUTTON1 0xF1

@@ -3,6 +3,7 @@
 #include "settings/settings.h"
 #include "interface/interface.h"
 #include "resource/resource.h"
+#include "vfs/watchfile.h"
 
 extern int gActive;
 
@@ -15,6 +16,8 @@ namespace appwindow {
 	LONG onChar(WPARAM wparam, LPARAM lparam);
 	LONG onKey(WPARAM wparam, LPARAM lparam);
 	LONG onActivateApp(WPARAM wparam, LPARAM lparam);
+	LONG onFileChange(WPARAM wparam, LPARAM lparam);
+	LONG onFileChangeDelay(WPARAM wparam, LPARAM lparam);
 };
 
 HWND appwindow::getHwnd() 
@@ -141,6 +144,18 @@ LONG appwindow::onActivateApp(WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
+LONG appwindow::onFileChange(WPARAM wparam, LPARAM lparam)
+{
+	vfs::fileChange((HANDLE)wparam);
+	return 0;
+}
+
+LONG appwindow::onFileChangeDelay(WPARAM wparam, LPARAM lparam)
+{
+	vfs::fileChangeDelay((HANDLE)wparam);
+	return 0;
+}
+
 #define ON_MESSAGE(msgid, fnctn) case msgid: return appwindow::fnctn(wparam, lparam);
 #define IGNORE_MESSAGE(msgid) case msgid: return 0;
 #define DEFAULT_RETURN(msgid) return DefWindowProc(hwnd, msgid, wparam, lparam);
@@ -153,6 +168,8 @@ LONG CALLBACK appwindow::appwndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		ON_MESSAGE(WM_CHAR, onChar)
 		ON_MESSAGE(WM_KEYDOWN, onKey)
 		ON_MESSAGE(WM_ACTIVATEAPP, onActivateApp)
+		ON_MESSAGE(WM_FILECHANGE, onFileChange)
+		ON_MESSAGE(WM_FILECHANGEDELAY, onFileChangeDelay)
 		/*ON_MESSAGE(WM_SYSCOMMAND, OnSystemCommand)
 		ON_MESSAGE(WM_SETFOCUS, OnSetFocus)
 		IGNORE_MESSAGE(WM_SYSKEYDOWN)

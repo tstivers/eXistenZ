@@ -4,14 +4,14 @@
 #include "entity/sphereentity.h"
 
 namespace entity {
-	typedef stdext::hash_map<std::string, Entity*> EntityCache;
+	typedef stdext::hash_map<string, Entity*> EntityCache;
 
 	EntityCache entity_cache;
 };
 
 using namespace entity;
 
-Entity* entity::addStaticEntity(std::string& name, std::string& meshsys, D3DXMATRIX* transform) 
+Entity* entity::addStaticEntity(string& name, string& meshsys, D3DXMATRIX* transform) 
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
@@ -31,7 +31,7 @@ Entity* entity::addStaticEntity(std::string& name, std::string& meshsys, D3DXMAT
 	return entity;
 }
 
-Entity* entity::addBoxEntity(std::string& name, std::string& texture, D3DXMATRIX* transform /* = NULL */)
+Entity* entity::addBoxEntity(string& name, string& texture, D3DXMATRIX* transform /* = NULL */)
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
@@ -51,7 +51,7 @@ Entity* entity::addBoxEntity(std::string& name, std::string& texture, D3DXMATRIX
 	return entity;
 }
 
-Entity* entity::addSphereEntity(std::string& name, std::string& texture, D3DXMATRIX* transform /* = NULL */)
+Entity* entity::addSphereEntity(string& name, string& texture, D3DXMATRIX* transform /* = NULL */)
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
@@ -71,7 +71,7 @@ Entity* entity::addSphereEntity(std::string& name, std::string& texture, D3DXMAT
 	return entity;
 }
 
-Entity* entity::getEntity(std::string& name)
+Entity* entity::getEntity(string& name)
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it == entity_cache.end()) {

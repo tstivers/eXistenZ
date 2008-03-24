@@ -5,13 +5,13 @@
 
 namespace mesh {
 
-	typedef stdext::hash_map<std::string, Mesh*> MeshCache;
+	typedef stdext::hash_map<string, Mesh*> MeshCache;
 	MeshCache cache;
 };
 
 using namespace mesh;
 
-Mesh* mesh::getMesh(std::string& name)
+Mesh* mesh::getMesh(string& name)
 {
 	// see if it's in the cache
 	MeshCache::iterator it = cache.find(name);

@@ -1,6 +1,8 @@
 #include "precompiled.h"
 #include "entity/jsentity.h"
 #include "entity/entity.h"
+#include "entity/sphereentity.h"
+#include "entity/boxentity.h"
 #include "script/script.h"
 #include "script/jsvector.h"
 
@@ -14,6 +16,8 @@ namespace jsentity {
 	JSBool getName(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	JSBool getSleeping(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	JSBool setSleeping(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	JSBool getRadius(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	JSBool setRadius(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	// entity function callbacks
 	JSBool setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -24,15 +28,17 @@ namespace jsentity {
 	JSBool posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-
+	JSBool getRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
+	JSBool setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
+	JSBool rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
 	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
 	JSFunctionSpec entity_functions[] = {
-		{"setPos", setPos, 3, 0, 0},
-		{"setRot", setRot, 3, 0, 0},
-		{"setScale", setScale, 3, 0, 0},
-		{"update", update, 0, 0, 0},
+		//{"setPos", setPos, 3, 0, 0},
+		//{"setRot", setRot, 3, 0, 0},			this junk isn't needed anymore...?
+		//{"setScale", setScale, 3, 0, 0},
+		//{"update", update, 0, 0, 0},
 		{"applyForce", applyForce, 3, 0, 0},
 		{NULL, NULL, 0, 0, 0}
 	};
@@ -44,9 +50,15 @@ namespace jsentity {
 			JS_EnumerateStub, JS_ResolveStub,
 			JS_ConvertStub,  JS_FinalizeStub
 	};
+
 	jsvector::jsVectorOps posOps = {
 		posRead, posChanged
 	};
+
+	jsvector::jsVectorOps rotOps = {
+		getRot, setRot
+	};
+
 };
 
 using namespace jsentity;
@@ -71,8 +83,8 @@ JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, js
 		return JS_FALSE;	
 	}
 
-	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-	std::string meshname = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string meshname = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 	
 	Entity* new_entity = entity::addStaticEntity(name, meshname);
 	if(!new_entity) {
@@ -94,8 +106,8 @@ JSBool jsentity::createBoxEntity(JSContext* cx, JSObject* obj, uintN argc, jsval
 		return JS_FALSE;	
 	}
 
-	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-	std::string texture = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string texture = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 
 	Entity* new_entity = entity::addBoxEntity(name, texture);
 	if(!new_entity) {
@@ -117,8 +129,8 @@ JSBool jsentity::createSphereEntity(JSContext* cx, JSObject* obj, uintN argc, js
 		return JS_FALSE;	
 	}
 
-	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-	std::string texture = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string texture = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 
 	Entity* new_entity = entity::addSphereEntity(name, texture);
 	if(!new_entity) {
@@ -127,6 +139,9 @@ JSBool jsentity::createSphereEntity(JSContext* cx, JSObject* obj, uintN argc, js
 	}
 
 	*rval = createEntityObject(cx, new_entity);
+	JSObject* object = JSVAL_TO_OBJECT(*rval);
+
+	JS_DefineProperty(cx, object, "radius", JSVAL_NULL, getRadius, setRadius, JSPROP_PERMANENT);
 
 	return JS_TRUE;
 }
@@ -140,7 +155,7 @@ JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv
 		return JS_FALSE;	
 	}
 
-	Entity* entity = entity::getEntity(std::string(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))));
+	Entity* entity = entity::getEntity(string(JS_GetStringBytes(JS_ValueToString(cx, argv[0]))));
 	if(!entity) {
 		gScriptEngine->ReportError("getEntity() couldn't find entity");		
 		return JS_FALSE;	
@@ -164,8 +179,8 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &posOps, entity);
 	JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, posSet, JSPROP_PERMANENT);	
 
-	vec = jsvector::NewWrappedVector(cx, object, &entity->rot, false);
-	JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);	
+	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &rotOps, entity);
+	JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, rotSet, JSPROP_PERMANENT);	
 
 	vec = jsvector::NewWrappedVector(cx, object, &entity->scale, false);
 	JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
@@ -189,6 +204,20 @@ JSBool jsentity::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void
 	return JS_TRUE;
 }
 
+JSBool jsentity::getRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
+{
+	entity::Entity* entity = (entity::Entity*)user;
+	vec = entity->getRot();
+	return JS_TRUE;
+}
+
+JSBool jsentity::setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
+{
+	entity::Entity* entity = (entity::Entity*)user;
+	entity->setRot(vec);
+	return JS_TRUE;
+}
+
 JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 {
 	D3DXVECTOR3 pos;
@@ -204,6 +233,24 @@ JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 
 error:
 	JS_ReportError(cx, "[jsentity::setPos] error setting entity position");
+	return JS_FALSE;
+}
+
+JSBool jsentity::rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+{
+	D3DXVECTOR3 rot;
+	if(!jsvector::ParseVector(cx, rot, 1, vp))
+		goto error;
+
+	if(!JS_GetProperty(cx, obj, "rot", vp))
+		goto error;
+
+	getEntityReserved(cx, obj)->setRot(rot);		
+
+	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsentity::rotSet] error setting entity rotation");
 	return JS_FALSE;
 }
 
@@ -233,6 +280,23 @@ JSBool jsentity::setSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 
 	return JS_TRUE;
 }
+
+JSBool jsentity::getRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
+{
+	return JS_NewNumberValue(cx, ((SphereEntity*)getEntityReserved(cx, obj))->getRadius(), vp);
+}
+
+JSBool jsentity::setRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
+{
+	jsdouble d;
+	if(!JS_ValueToNumber(cx, *vp, &d))
+		return JS_FALSE;
+	else
+		((SphereEntity*)getEntityReserved(cx, obj))->setRadius(d);
+
+	return JS_TRUE;
+}
+
 
 JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {

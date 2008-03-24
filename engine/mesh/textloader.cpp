@@ -67,9 +67,9 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 	}
 }
 
-Mesh* mesh::loadTextMesh(const std::string& filename)
+Mesh* mesh::loadTextMesh(const string& filename)
 {	
-	vfs::IFile* file = vfs::getFile(filename.c_str());
+	vfs::IFilePtr file = vfs::getFile(filename.c_str());
 	if(!file)
 		return NULL;
 
@@ -133,9 +133,9 @@ Mesh* mesh::loadTextMesh(const std::string& filename)
 	return mesh;
 }
 
-MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
+MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 {
-	vfs::IFile* file = vfs::getFile(filename.c_str());
+	vfs::IFilePtr file = vfs::getFile(filename.c_str());
 	if(!file)
 		return NULL;
 
@@ -161,7 +161,7 @@ MeshSystem* mesh::loadTextMeshSystem(const std::string& filename)
 		this_token = getToken(&token, " ");
 
 		if(!_stricmp(this_token, "MESH:")) {
-			Mesh* mesh = getMesh(std::string(token));
+			Mesh* mesh = getMesh(string(token));
 			if(!mesh) {
 				LOG("[mesh::loadMeshSystem] failed to load mesh %s for system %s",
 					token, filename.c_str());

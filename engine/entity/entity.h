@@ -30,7 +30,7 @@ namespace entity {
 
 	class Entity {
 	public:
-		Entity(std::string name);
+		Entity(string name);
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
@@ -54,7 +54,7 @@ namespace entity {
 		virtual void setSleeping(bool asleep);
 		inline void mark(unsigned int frame);
 		
-		std::string name;
+		string name;
 		ENTITY_TYPE type;
 		unsigned int flags;
 		bool active;
@@ -67,16 +67,16 @@ namespace entity {
 
 	class StaticEntity : public Entity {
 	public:
-		StaticEntity(std::string name);
+		StaticEntity(string name);
 		~StaticEntity();
 		void acquire();
 		void release();
 		void render(texture::Material* lighting);
 		void calcAABB();
 
-		static StaticEntity* create(std::string name, std::string meshname);
+		static StaticEntity* create(string name, string meshname);
 
-		std::string meshname;
+		string meshname;
 		mesh::MeshSystem* meshsys;
 	};	
 };

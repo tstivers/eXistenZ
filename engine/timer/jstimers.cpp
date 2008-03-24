@@ -26,8 +26,8 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 		return JS_FALSE;
 	}
 
-	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-	std::string action = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string action = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 	jsdouble frequency, start;
 
 	if(JS_ValueToNumber(cx, argv[2], &frequency) == JS_FALSE) {
@@ -54,7 +54,7 @@ JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 		return JS_FALSE;
 	}
 
-	std::string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));	
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));	
 
 	timer::removeTimer(name);
 

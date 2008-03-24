@@ -10,16 +10,16 @@ namespace Log {
 		U32 mask;
 	};
 
-	typedef std::map<std::string, Consumer> consumer_map_t;
+	typedef map<string, Consumer> consumer_map_t;
 	consumer_map_t consumer_map;
 }
 
-void Log::addConsumer(const std::string& name, unsigned int mask, ConsumerCallback callback, void* userdef /* = NULL */)
+void Log::addConsumer(const string& name, unsigned int mask, ConsumerCallback callback, void* userdef /* = NULL */)
 {
 	consumer_map.insert(consumer_map_t::value_type(name, Consumer(callback, userdef, mask)));
 }
 
-void Log::removeConsumer(const std::string& name)
+void Log::removeConsumer(const string& name)
 {
 	consumer_map.erase(name);
 }

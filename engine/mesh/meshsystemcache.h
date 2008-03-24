@@ -4,10 +4,10 @@ namespace mesh {
 
 	class MeshSystem;
 
-	MeshSystem* getMeshSystem(std::string& name);
+	MeshSystem* getMeshSystem(string& name);
 	bool addMeshSystem(MeshSystem* meshsys);
 	bool delMeshSystem(MeshSystem* meshsys);
-	bool delMeshSystem(std::string& name);
+	bool delMeshSystem(string& name);
 	unsigned int clearMeshSystemCache();
 
 };

@@ -17,10 +17,10 @@ namespace mesh {
 		void acquire();
 		void release();
 
-		std::string name;
+		string name;
 		int refcount;
 
-		std::string material_name;
+		string material_name;
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
 		

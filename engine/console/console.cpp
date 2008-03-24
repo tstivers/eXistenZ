@@ -13,7 +13,7 @@ namespace console {
 		void* user;
 	};
 
-	typedef stdext::hash_map<std::string, CommandEntry> command_map_t;
+	typedef stdext::hash_map<string, CommandEntry> command_map_t;
 	command_map_t command_map;
 };
 

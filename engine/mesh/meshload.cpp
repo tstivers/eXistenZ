@@ -5,15 +5,15 @@
 #include "mesh/meshsystem.h"
 
 namespace mesh {
-	const static std::string EXTENSION_TEXTMESH = ".tm";
-	const static std::string EXTENSION_TEXTMESHSYSTEM = ".tms";
+	const static string EXTENSION_TEXTMESH = ".tm";
+	const static string EXTENSION_TEXTMESHSYSTEM = ".tms";
 };
 
 using namespace mesh;
 
-Mesh* mesh::loadMesh(const std::string& name)
+Mesh* mesh::loadMesh(const string& name)
 {
-	std::string filename;
+	string filename;
 	Mesh* mesh;
 
 	// try to load a text mesh;
@@ -27,9 +27,9 @@ Mesh* mesh::loadMesh(const std::string& name)
 	return NULL;
 }
 
-MeshSystem* mesh::loadMeshSystem(const std::string& name)
+MeshSystem* mesh::loadMeshSystem(const string& name)
 {
-	std::string filename;
+	string filename;
 	MeshSystem* meshsys;
 
 	// try to load a text mesh;

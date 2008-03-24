@@ -4,7 +4,7 @@
 
 using namespace misc;
 
-void AliasList::load(const std::string& filename)
+void AliasList::load(const string& filename)
 {
 	list.clear();
 

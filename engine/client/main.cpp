@@ -33,12 +33,16 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 	vfs::setRoot(settings::getstring("system.env.exepath"));
 	
 	// load and execute the config script
-	vfs::IFilePtr file = vfs::getFile("config.js");
-	if(file){
-		LOG("reading config from \"%s\"", file->filename);
-		gScriptEngine->RunScript(file);
-	} else LOG("[eXistenZ] unable to open \"config.js\"");
-
+	{
+		vfs::IFilePtr file = vfs::getFile("config.js");
+		if(file)
+		{
+			LOG("reading config from \"%s\"", file->filename);
+			gScriptEngine->RunScript(file);
+			file.reset();
+		} 
+		else LOG("[eXistenZ] unable to open \"config.js\"");
+	}
 	// execute command line
 	console::processCmd(cmdline);
 

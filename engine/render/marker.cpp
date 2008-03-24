@@ -39,7 +39,7 @@ namespace render {
 		float rot;
 	};
 
-	typedef std::list<MARKER*> marker_list_t;
+	typedef list<MARKER*> marker_list_t;
 	marker_list_t marker_list;
 
 }

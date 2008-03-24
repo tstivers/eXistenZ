@@ -6,8 +6,8 @@
 
 namespace vfs {
 
-	typedef std::smart_ptr<Path> PathPtr;
-	typedef std::vector<PathPtr> PathList;
+	typedef shared_ptr<Path> PathPtr;
+	typedef vector<PathPtr> PathList;
 
 	PathList paths;
 	char root[MAX_PATH];
@@ -58,12 +58,25 @@ void vfs::addPath(const char* path)
 
 	PathCanonicalize(canonpath, searchpath);
 
-	Path* cpath = Path::createPath(canonpath);
+	PathPtr cpath(Path::createPath(canonpath));
 	if(!cpath)
 		return;
 
 	paths.push_back(cpath);
 	LOG("added path \"%s\"", canonpath);	
+}
+
+vector<string> vfs::getPathsForFile(const string &name)
+{
+	vector<string> pathlist;
+	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it)
+	{
+		string path = string((*it)->path) + "\\" + name;
+		if(IsFile(path) || IsDirectory(path))
+			pathlist.push_back(path);
+	}
+
+	return pathlist;
 }
 
 bool vfs::fileExists(const char* filename)
@@ -84,31 +97,31 @@ bool vfs::fileExists(const char* filename)
 	return false;
 }
 
-vfs::IFile* vfs::getFile(const char* filename) 
+vfs::IFilePtr vfs::getFile(const char* filename) 
 {
 	char sane_path[MAX_PATH];
 	
 	if(!filename || !*filename)
-		return NULL;
+		return IFilePtr();
 
 	sanitizePath(sane_path, filename);
 
 	if(sane_path[1] == ':') { // absolute
 		if(fileExists(filename))
-			return new DiskFile(sane_path);
+			return IFilePtr(new DiskFile(sane_path));
 		else {
 			//LOG("unable to find file \"%s\"", filename);
-			return NULL;
+			return IFilePtr();
 		}
 	}
 
 	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it) {
 		if((*it)->fileExists(sane_path))
-			return (*it)->getFile(sane_path);
+			return IFilePtr((*it)->getFile(sane_path));
 	}
 
 	//LOG("unable to find file \"%s\"", filename);
-	return NULL;
+	return IFilePtr();
 }
 
 vfs::IFile* vfs::createFile(const char* filename)
@@ -134,4 +147,16 @@ U32 vfs::getFileList(file_list_t& file_list, const char* path, const char* files
 		(*it)->getFileList(file_list, path, filespec, flags, recurse);
 
 	return (U32)file_list.size();
+}
+
+bool vfs::IsDirectory(const string& path)
+{
+	DWORD d = GetFileAttributes(path.c_str());
+	return ((d != INVALID_FILE_ATTRIBUTES) && (d & FILE_ATTRIBUTE_DIRECTORY));	
+}
+
+bool vfs::IsFile(const string& path)
+{
+	DWORD d = GetFileAttributes(path.c_str());
+	return ((d != INVALID_FILE_ATTRIBUTES) && !(d & FILE_ATTRIBUTE_DIRECTORY));	
 }

@@ -10,7 +10,7 @@ namespace texture {
 namespace entity {
 	class SphereEntity : public Entity {
 	public:
-		SphereEntity(std::string name, std::string texture);
+		SphereEntity(string name, string texture);
 		~SphereEntity();
 		void acquire();
 		void release();
@@ -21,10 +21,15 @@ namespace entity {
 		void applyForce(const D3DXVECTOR3 &force);
 		void setPos(const D3DXVECTOR3& pos);
 		void setRot(const D3DXVECTOR3& rot);
+
+		void setRadius(const float radius);
+		float getRadius() { return radius; }
+
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
 
 		NxActor* actor;
 		texture::DXTexture* texture;
+		float radius;
 	};	
 }

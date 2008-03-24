@@ -20,22 +20,22 @@ namespace registeredfunctions {
 	void fireShutdownFunctions();
 	void fireScriptFunctions(ScriptEngine* se);
 		
-	typedef fastdelegate::FastDelegate0<> voidFunction;
-	typedef fastdelegate::FastDelegate1<ScriptEngine*> scriptFunction;
+	typedef function<void(void)> voidFunction;
+	typedef function<void(ScriptEngine*)> scriptFunction;
 	
 	template <typename T>
 	class OrderedFunction {
 	public:
-		std::string name;
+		string name;
 		int order;
 		T func;
-		OrderedFunction(std::string name, T func, int order) : name(name), func(func), order(order){};
+		OrderedFunction(string name, T func, int order) : name(name), func(func), order(order){};
 		bool operator< (const OrderedFunction<T>& other) const {return order < other.order;}
 	};
-		
+
 	class StartupFunction : public OrderedFunction<voidFunction> {
 	public:
-		StartupFunction(std::string name, voidFunction func, int order) :
+		StartupFunction(string name, voidFunction func, int order) :
 			OrderedFunction(name, func, order)
 		{
 			addStartupFunction(*this);
@@ -44,7 +44,7 @@ namespace registeredfunctions {
 	
 	class ShutdownFunction : public OrderedFunction<voidFunction> {
 	public:
-		ShutdownFunction(std::string name, voidFunction func, int order) :
+		ShutdownFunction(string name, voidFunction func, int order) :
 			OrderedFunction(name, func, order)
 		{
 			addShutdownFunction(*this);
@@ -53,7 +53,7 @@ namespace registeredfunctions {
 	
 	class ScriptFunction : public OrderedFunction<scriptFunction> {
 	public:
-		ScriptFunction(std::string name, scriptFunction func, int order) :
+		ScriptFunction(string name, scriptFunction func, int order) :
 			OrderedFunction(name, func, order)
 		{
 			addScriptFunction(*this);

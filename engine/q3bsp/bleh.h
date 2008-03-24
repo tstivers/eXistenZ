@@ -93,7 +93,7 @@ namespace q3bsp {
 
 	public:
 		bool load(vfs::IFilePtr file);
-		static BSP* load(const std::string& filename);
+		static BSP* load(const string& filename);
 
 		// render functions
 		void initDeviceObjects();

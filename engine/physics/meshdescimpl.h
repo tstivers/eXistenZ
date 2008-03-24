@@ -17,8 +17,8 @@ namespace physics {
 	
 	protected:
 		NxTriangleMeshDesc desc;		
-		std::vector<D3DXVECTOR3> vertices;
-		std::vector<unsigned int> indices;
+		vector<D3DXVECTOR3> vertices;
+		vector<unsigned int> indices;
 		NxTriangleMesh* mesh;
 	};
 	

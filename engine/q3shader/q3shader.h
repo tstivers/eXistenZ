@@ -33,8 +33,8 @@ namespace q3shader {
 		int alphafunc;
 		int depthfunc;
 
-		std::vector<texture::DXTexture*> texture;
-		std::vector<Q3Shader*> pass;
+		vector<texture::DXTexture*> texture;
+		vector<Q3Shader*> pass;
 		texture::DXTexture* lightmap;
 
 		Q3Shader(const char* name);

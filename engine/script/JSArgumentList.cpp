@@ -73,7 +73,7 @@ JSArgumentList& JSArgumentList::addParam(bool b)
 	return addParam(BOOLEAN_TO_JSVAL(b));
 }
 
-JSArgumentList& JSArgumentList::addParam(std::string& str)
+JSArgumentList& JSArgumentList::addParam(string& str)
 {
 	return addParam(str.c_str());
 }

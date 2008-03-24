@@ -112,12 +112,12 @@ error:
 JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 {
 	ASSERT((JSVAL_TO_INT(id) >= 0) && (JSVAL_TO_INT(id) <= 2));
-	
+	D3DXVECTOR3 vec;
+
 	jsdouble d;
 	if(!JS_ValueToNumber(cx, *vp, &d))
 		goto error;
 		
-	D3DXVECTOR3 vec;
 	D3DXVECTOR3* wrapped_vec;
 	jsVectorOps* ops;
 	void* user;
@@ -257,6 +257,8 @@ JSBool jsvector::getReserved(JSContext* cx, JSObject* obj, D3DXVECTOR3** vec, js
 
 JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
+	D3DXVECTOR3 vec(0,0,0);
+
 	/* called as a function */
 	if (!(cx->fp->flags & JSFRAME_CONSTRUCTING)) {
 		JSObject* new_obj = JS_ConstructObjectWithArguments(
@@ -269,7 +271,6 @@ JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsva
 	}
 	
 	/* called with new */
-	D3DXVECTOR3 vec(0,0,0);
 	if(argc == 0) {
 		setReserved(cx, obj, NULL, NULL, NULL);
 		if(!SetVector(cx, obj, vec))
@@ -308,10 +309,12 @@ error:
 JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	D3DXVECTOR3 vec;
+	D3DXVECTOR3 rot;
+	D3DXMATRIX mat;
+
 	if(!GetVector(cx, obj, vec))
 		goto error;
 
-	D3DXVECTOR3 rot;
 	if(argc == 1)
 	{
 		if(!GetVector(cx, JSVAL_TO_OBJECT(argv[0]), rot))
@@ -329,7 +332,6 @@ JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *
 	else
 		goto error;
 
-	D3DXMATRIX mat;
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
 	D3DXVec3TransformCoord(&vec, &vec, &mat);
 	

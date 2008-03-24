@@ -151,7 +151,7 @@ void SceneBSP::acquire()
 			if(face.rendergroup)
 				continue;
 
-			face.rendergroup = render::getRenderGroup(BSPVertex.FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
+			face.rendergroup = render::getRenderGroup(BSPVertex::FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
 			face.rendergroup->texture = bsp->textures[face.texture];
 			if((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
 				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
@@ -248,7 +248,7 @@ void SceneBSP::render()
 void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* entity)
 {
 	D3DXVECTOR3 origin(entity->getPos());
-	std::swap(origin.y, origin.z);
+	swap(origin.y, origin.z);
 	float gridsize[] = { 64, 64, 128 };
 	int pos[3];
 	int gridstep[3];
@@ -336,7 +336,7 @@ void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* en
 	//INFO("nrm = (%2.2f, %2.2f, %2.2f)", direction.x, direction.y, direction.z);
 }
 
-SceneBSP* SceneBSP::loadBSP(const std::string& name)
+SceneBSP* SceneBSP::loadBSP(const string& name)
 {
 	q3bsp::BSP* bsp = q3bsp::BSP::load(name.c_str());
 

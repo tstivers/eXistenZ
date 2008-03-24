@@ -12,7 +12,7 @@
 using namespace q3bsp;
 void R_ColorShiftLightingBytes( byte *in) ;
 
-BSP* BSP::load(const std::string& filename)
+BSP* BSP::load(const string& filename)
 {
 	vfs::IFilePtr file = vfs::getFile(filename.c_str());
 

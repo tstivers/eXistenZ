@@ -82,6 +82,7 @@ engine/interface/uiconsole.cpp eol=crlf
 engine/interface/uiconsole.h eol=crlf
 engine/math/aabb.cpp eol=crlf
 engine/math/aabb.h eol=crlf
+engine/math/math.cpp -text
 engine/math/math.h eol=crlf
 engine/math/vertex.h eol=crlf
 engine/mesh/mesh.cpp eol=crlf
@@ -222,6 +223,8 @@ engine/vfs/path.cpp eol=crlf
 engine/vfs/path.h eol=crlf
 engine/vfs/vfs.cpp eol=crlf
 engine/vfs/vfs.h eol=crlf
+engine/vfs/watchfile.cpp -text
+engine/vfs/watchfile.h -text
 engine/vfs/zipfile.cpp eol=crlf
 engine/vfs/zipfile.h eol=crlf
 engine/vfs/zippath.cpp eol=crlf

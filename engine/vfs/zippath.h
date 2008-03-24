@@ -11,8 +11,8 @@ namespace vfs {
 		U32 offset;
 	};
 	
-	typedef std::smart_ptr<ZipFileEntry> ZipFileEntryPtr;
-	typedef std::vector<ZipFileEntryPtr> ZipFileEntryList;
+	typedef shared_ptr<ZipFileEntry> ZipFileEntryPtr;
+	typedef vector<ZipFileEntryPtr> ZipFileEntryList;
 	typedef stdext::hash_map<const char*, ZipFileEntry*, hash_char_ptr_traits> ZipFileEntryHash;
 
 	class ZipPath : public Path {	

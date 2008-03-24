@@ -19,7 +19,7 @@ namespace scene {
 		virtual ~Scene();
 
 		// loading/init
-		static Scene* load(const std::string& name, SCENE_TYPE type = ST_AUTO);
+		static Scene* load(const string& name, SCENE_TYPE type = ST_AUTO);
 		virtual void init() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
@@ -30,7 +30,7 @@ namespace scene {
 		virtual void render() = 0;		
 
 		// entity crap
-		//TODO: virtual addEntity(std::string name, int type,
+		//TODO: virtual addEntity(string name, int type,
 		virtual void addEntity(entity::Entity* entity) = 0;
 		// virtual void updateEntity(const Entity* entity);
 		virtual void removeEntity(entity::Entity* entity) = 0;
@@ -40,7 +40,7 @@ namespace scene {
 
 		// lots of other stuff i'm forgetting: sky
 
-		std::string name;
+		string name;
 		int type;
 		bool acquired;
 		bool initialized;

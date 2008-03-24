@@ -16,7 +16,7 @@ namespace physics {
 
 using namespace entity;
 
-SphereEntity::SphereEntity(std::string name, std::string texture) : Entity(name), actor(NULL)
+SphereEntity::SphereEntity(string name, string texture) : Entity(name), actor(NULL), radius(15)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
@@ -32,7 +32,7 @@ void SphereEntity::acquire()
 	NxActorDesc actorDesc;
 	NxBodyDesc bodyDesc;
 	NxSphereShapeDesc sphereDesc;
-	sphereDesc.radius = 0.5;
+	sphereDesc.radius = radius / physics::scale;
 	actorDesc.shapes.pushBack(&sphereDesc);    
 	actorDesc.body = &bodyDesc;    
 	actorDesc.density = 100;    
@@ -76,21 +76,26 @@ void SphereEntity::setPos(const D3DXVECTOR3& pos)
 
 D3DXVECTOR3& SphereEntity::getRot()
 {
-	rot = (D3DXVECTOR3&)actor->getGlobalOrientation();
-	// TODO: convert back to degrees I guess
+	D3DXQUATERNION q = (D3DXQUATERNION&)actor->getGlobalOrientationQuat();
+	D3DXMATRIX m;
+	D3DXMatrixIdentity(&m);
+	D3DXMatrixRotationQuaternion(&m, &q);
+	MatrixToYawPitchRoll(&m, &rot);
+
 	return rot;
 }
 
 void SphereEntity::setRot(const D3DXVECTOR3& rot)
 {
 	this->rot = rot;
-	// TODO: convert from vector3 to matrix
-	//actor->setGlobalOrientation((NxVec3)rot);
+	D3DXQUATERNION q;
+	D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
+	actor->setGlobalOrientationQuat((NxQuat&)q);
 }
 
 void SphereEntity::render(texture::Material* lighting)
 {
-	render::drawSphere((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(physics::scale / 2, physics::scale / 2, physics::scale / 2), texture, lighting);
+	render::drawSphere((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), D3DXVECTOR3(radius, radius, radius), texture, lighting);
 }
 
 void SphereEntity::calcAABB()
@@ -99,5 +104,13 @@ void SphereEntity::calcAABB()
 
 void SphereEntity::applyForce(const D3DXVECTOR3 &force)
 {
+	ASSERT(actor);
 	actor->addForce((NxVec3&)force, NX_IMPULSE);
+}
+
+void SphereEntity::setRadius(const float radius)
+{
+	ASSERT(actor);
+	((NxSphereShape*)actor->getShapes()[0])->setRadius(radius / physics::scale);
+	this->radius = radius;
 }

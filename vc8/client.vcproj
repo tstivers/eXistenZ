@@ -42,19 +42,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
-				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;STATIC_JS_API"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -68,12 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
-				LinkIncremental="2"
-				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -81,7 +72,6 @@
 				SubSystem="2"
 				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -113,7 +103,7 @@
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
-			WholeProgramOptimization="0"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -140,17 +130,15 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;STATIC_JS_API"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableEnhancedInstructionSet="2"
+				FloatingPointModel="2"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
-				AssemblerOutput="4"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -164,20 +152,19 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				UseLibraryDependencyInputs="true"
 				AdditionalOptions=""
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
 				OutputFile="$(OutDir)/client.release.exe"
-				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				OptimizeForWindows98="1"
+				OptimizeForWindows98="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
+				Profile="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -398,6 +385,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\vfs\vfs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\vfs\watchfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\vfs\watchfile.h"
 				>
 			</File>
 			<File
@@ -950,6 +945,10 @@
 			</File>
 			<File
 				RelativePath="..\engine\math\aabb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\math\math.cpp"
 				>
 			</File>
 			<File

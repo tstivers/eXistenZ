@@ -9,10 +9,10 @@ system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.render.fullscreen = 0;
 
-system.render.resolution.x = 1280;
-system.render.resolution.y = 1024;
-system.render.fullscreen = 1;
-system.render.wait_vtrace = 1;
+//system.render.resolution.x = 1280;
+//system.render.resolution.y = 1024;
+//system.render.fullscreen = 1;
+//system.render.wait_vtrace = 1;
 
 system.render.refdevice = 0;
 system.render.multisampletype = 2; // 2 = 2x antialiasing, 4 = 4x, etc.
@@ -23,8 +23,10 @@ system.render.texture.debug = 0;
 system.render.bsp.debug = 1;
 system.render.boost = 0;
 system.render.gamma = 2.0;
-system.render.transparency = 1;
 system.render.lighting = 1;
+system.render.diffuse = 1;
+system.render.lightmaps = 1;
+system.render.transparency = 1;
 system.window.position.x = 20;
 system.window.position.y = 20;
 system.window.title = "eXistenZ";
@@ -43,7 +45,10 @@ system.render.tesselation = 6;
 game.init_command = "";
 system.render.use_scenegraph = 0;
 system.render.bsp.convert = 0;
-system.render.skybox.texture = "textures/skybox/cx";
+system.render.skybox.width = 10;
+system.render.skybox.depth = 10;
+system.render.skybox.height = 10;
+system.render.skybox.texture = "textures/skybox/pondnight/";
 game.player.step_up = 25;
 
 // source keys (will fix this later)
@@ -82,6 +87,7 @@ bind(KEY_LCONTROL, "*log_frame");
 //bind(KEY_B, "toggle_bsp");
 bind(KEY_H, "toggle_pos");
 bind(KEY_K, "toggle_diffuse");
+bind(KEY_J, "toggle_lighting");
 //bind(KEY_S, "toggle_sky");
 bind(KEY_Z, "*exec move_up()");
 bind(MWHEELUP, "exec print(\"mousewheel up\")");
@@ -101,6 +107,12 @@ bind(BUTTON_0, "*exec playerShootSphere()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 
 // functions
+
+function onConfigChange()
+{
+    print("config file changed rarr23howdy");
+ 
+}
 
 var message;
 function print(message) {
@@ -235,6 +247,7 @@ function shootSphere(pos, direction, speed)
     entities[sphere.name] = sphere;
     system.scene.addEntity(sphere);
     sphere.pos = pos;
+    sphere.radius = (Math.random() * 12) + 3;
     //direction.mul(speed);
     sphere.applyForce(direction.mul(speed));
     return sphere;
@@ -257,7 +270,8 @@ function playerShootSphere()
     pos.mul(50);
     pos.add(game.player.pos);
     var sphere = shootSphere(pos, direction, shootvelo);
-    timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
+    //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
+    print('created sphere "' + sphere.name + '"');
 }
 
 function bounceEntity(entityName)
@@ -337,7 +351,7 @@ var stackheight = 20;
 function explodeEverything()
 {
     for(i in entities)
-        entities[i].applyForce((Math.random() * 100) - 50, Math.random() * 100, (Math.random() * 100) - 50);
+        entities[i].applyForce((Math.random() * 2500) - 1250, Math.random() * 2500, (Math.random() * 2500) - 1250);
 }
 
 function removeEntity(name)
@@ -388,7 +402,17 @@ function fireFountain(index)
     var direction = new Vector(fountain.direction);
     direction.rotate((Math.random() * 60) - 30, (Math.random() * 60) - 30, 0);
     var sphere = shootSphere(fountain.pos, direction, 500 + (Math.random() * 250));
+    sphere.radius = (Math.random() * 12) + 3;
     //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
+}
+
+function boxTower(center, radius, height, boxsize, stagger)
+{
+    offset = 0;
+    for(i = 0; i < height; i++)
+    {
+        
+    }
 }
     
 // log our start date and time

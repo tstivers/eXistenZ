@@ -2,9 +2,9 @@
 #include "registeredfunctions.h"
 
 namespace registeredfunctions {
-	typedef std::multiset<StartupFunction> startup_list_t;
-	typedef std::multiset<ShutdownFunction> shutdown_list_t;
-	typedef std::multiset<ScriptFunction> script_list_t;
+	typedef multiset<StartupFunction> startup_list_t;
+	typedef multiset<ShutdownFunction> shutdown_list_t;
+	typedef multiset<ScriptFunction> script_list_t;
 	
 	startup_list_t& getStartupList();
 	shutdown_list_t& getShutdownList();
@@ -63,5 +63,7 @@ void registeredfunctions::fireShutdownFunctions()
 void registeredfunctions::fireScriptFunctions(ScriptEngine* se)
 {
 	for(script_list_t::iterator it = getScriptList().begin(); it != getScriptList().end(); it++)
+	{
 		it->func(se);
+	}	
 }

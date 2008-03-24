@@ -19,7 +19,7 @@ Scene::~Scene()
 {
 }
 
-Scene* Scene::load(const std::string& name, SCENE_TYPE type)
+Scene* Scene::load(const string& name, SCENE_TYPE type)
 {
 	return SceneBSP::loadBSP(name);	
 }

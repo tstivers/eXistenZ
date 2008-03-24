@@ -196,3 +196,20 @@ char* strDup(const char* src)
 	strcpy(dst, src);
 	return dst;
 }
+
+string StripPathFromFileName(const string& filename)
+{
+	string::const_iterator it = filename.begin();
+	size_t pos = filename.find_last_of("/\\");
+	if (pos != string::npos)
+		it += pos + 1;
+
+	return string(it, filename.end());
+}
+
+string StripFileNameFromPath(const string& filename)
+{	
+	size_t pos = filename.find_last_of("/\\");
+	assert(pos != string::npos);
+	return string(filename.begin(), filename.begin() + pos);
+}

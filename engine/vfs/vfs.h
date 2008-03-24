@@ -22,7 +22,7 @@ namespace vfs {
 		void writeLine(const char* linebuf, bool flush = true);
 	};
 
-	typedef std::smart_ptr<IFile> IFilePtr;
+	typedef shared_ptr<IFile> IFilePtr;
 
 	void init();
 
@@ -30,14 +30,20 @@ namespace vfs {
 	const char* getRoot();
 	void addPath(const char* path);
 
-	IFile* getFile(const char* filename);
+	IFilePtr getFile(const char* filename);
 	IFile* createFile(const char* filename);
 	bool fileExists(const char* filename);
+	vector<string> getPathsForFile(const string& name);
+	bool IsDirectory(const string& path);
+	bool IsFile(const string& path);
+
+	typedef function<void(const string&, void*)> WatchCallback;
+	void watchFile(const string& filename, WatchCallback callback, void* user);
 
 	enum {
 		FIND_FILE = 1,
 		FIND_DIRECTORY = 1 << 1
 	};
-	typedef std::set<std::smart_cptr, char_ptr_less> file_list_t;
+	typedef set<string> file_list_t;
 	U32 getFileList(file_list_t& file_list, const char* path, const char* filespec = "*", U32 flags = FIND_FILE, bool recurse = false);
 };

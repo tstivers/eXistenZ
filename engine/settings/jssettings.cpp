@@ -9,7 +9,7 @@ namespace jssettings {
 
 	typedef stdext::hash_map<char*, settings::Setting*, hash_char_ptr_traits> propmap_hash;
 	typedef propmap_hash::iterator propmap_iterator;
-	typedef std::smart_ptr<propmap_hash> propmap_ptr;
+	typedef shared_ptr<jssettings::propmap_hash> propmap_ptr;
 	typedef stdext::hash_map<JSObject*, propmap_ptr> objmap_hash;
 
 	JSBool jsgetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
@@ -83,7 +83,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	propmap_ptr p;
 	objmap_hash::iterator i = object_map.find(obj);
 	if(i == object_map.end()){
-		p = new propmap_hash;
+		p = propmap_ptr(new propmap_hash());
 		object_map.insert(objmap_hash::value_type(obj, p));
 	} else {
 		p = i->second;

@@ -163,6 +163,6 @@ void physics::release() {
 	acquired = false;
 }
 
-void physics::addStaticMesh(std::string name, scene::SceneBSP* scene) {
+void physics::addStaticMesh(string name, scene::SceneBSP* scene) {
 	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
 }
