@@ -66,19 +66,6 @@ void vfs::addPath(const char* path)
 	LOG("added path \"%s\"", canonpath);	
 }
 
-vector<string> vfs::getPathsForFile(const string &name)
-{
-	vector<string> pathlist;
-	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it)
-	{
-		string path = string((*it)->path) + "\\" + name;
-		if(IsFile(path) || IsDirectory(path))
-			pathlist.push_back(path);
-	}
-
-	return pathlist;
-}
-
 bool vfs::fileExists(const char* filename)
 {
 	char sane_path[MAX_PATH];
@@ -147,6 +134,16 @@ U32 vfs::getFileList(file_list_t& file_list, const char* path, const char* files
 		(*it)->getFileList(file_list, path, filespec, flags, recurse);
 
 	return (U32)file_list.size();
+}
+
+vector<string> vfs::getDirectoriesForPath(const string& path)
+{
+	vector<string> found_paths;
+	for(PathList::iterator it = paths.begin(); it != paths.end(); ++it)
+		if((*it)->pathExists(path.c_str()))
+			found_paths.push_back(string((*it)->path) + "\\" + path);
+
+	return found_paths;
 }
 
 bool vfs::IsDirectory(const string& path)

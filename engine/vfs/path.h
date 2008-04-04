@@ -18,5 +18,6 @@ namespace vfs {
 		virtual bool fileExists(const char* filename) = 0;
 		virtual IFile* getFile(const char* filename) = 0;
 		virtual U32 getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse = false) = 0;
+		virtual bool pathExists(const char* path) = 0;
 	};
 };

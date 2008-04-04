@@ -19,7 +19,7 @@ vfs::Path* vfs::DiskPath::createPath(const char* path)
 
 vfs::DiskPath::DiskPath(const char* path) :
 	Path(path)
-{	
+{
 }
 
 vfs::DiskPath::~DiskPath()
@@ -37,6 +37,17 @@ bool vfs::DiskPath::fileExists(const char* filename)
 	DWORD att = GetFileAttributes(canon_path);
 
 	return (att != -1);
+}
+
+bool vfs::DiskPath::pathExists(const char* path)
+{
+	char search_path[MAX_PATH];
+	char canon_path[MAX_PATH];
+
+	sprintf(search_path, "%s/%s", this->path, path);
+	PathCanonicalize(canon_path, search_path);
+
+	return IsDirectory(canon_path);
 }
 
 vfs::IFile* vfs::DiskPath::getFile(const char* filename)

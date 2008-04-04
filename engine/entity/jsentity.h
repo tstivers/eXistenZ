@@ -3,5 +3,5 @@
 namespace jsentity {
 	void init();
 
-	extern JSClass JSEntity;
+	extern JSClass entity_class;
 };

@@ -24,7 +24,7 @@
 #define INFO(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_INFO,__VA_ARGS__)
 #define WARNING(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_WARNING,__VA_ARGS__)
 #define ERROR(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_ERROR,__VA_ARGS__)
-#define DEBUG(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_DEBUG,__VA_ARGS__)
+//#define DEBUG(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_DEBUG,__VA_ARGS__)
 
 #define JSLOG(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_SCRIPT|LF_INFO,__VA_ARGS__)
 #define JSINFO(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_SCRIPT|LF_INFO,__VA_ARGS__)

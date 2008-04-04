@@ -305,9 +305,8 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 
 		current_transform = *transform;
 	}
-	HRESULT hr;
 
-	texture::Material m;
+	static texture::Material m;
 	if(rg->material)
 	{
 		if((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
@@ -328,7 +327,7 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	else if(current_material)
 	{
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
-		current_material = rg->material;
+		current_material = NULL;
 	}
 
 	render::device->DrawIndexedPrimitive(

@@ -36,8 +36,11 @@ ScriptEngine::ScriptEngine()
     if ( cx == NULL ) {
 		ERROR("unable to create context");
     }
+
+	//JS_SetGCZeal(cx, 2); //debug allocations
 	
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
+	//JS_AddRoot(cx, globalObj);
 	JS_InitStandardClasses(cx, globalObj);
 	jsvector::initVectorClass(cx, globalObj);
 
@@ -240,5 +243,8 @@ void script::release()
 
 void script::exec(char* cmd, char* cmdline, void* user)
 {
+	if(!cmdline)
+		return;
+
 	gScriptEngine->RunScript(cmdline);
 }

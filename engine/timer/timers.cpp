@@ -75,10 +75,8 @@ bool timer::removeTimer(const string& name)
 
 void timer::fireTimers()
 {
-	if(timer_queue.empty())
-		return;
-
-	while(timer_queue.top()->next_ms <= game_ms) {
+	while(!timer_queue.empty() && (timer_queue.top()->next_ms <= game_ms)) 
+	{
 		pTimer t = timer_queue.top();
 		timer_queue.pop();
 		console::processCmd(t->action.c_str());

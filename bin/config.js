@@ -15,7 +15,7 @@ system.render.fullscreen = 0;
 //system.render.wait_vtrace = 1;
 
 system.render.refdevice = 0;
-system.render.multisampletype = 2; // 2 = 2x antialiasing, 4 = 4x, etc.
+system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.vfs.addPath("../data");
 system.vfs.addPath("../data/pak0.zip");
 system.vfs.debug = 0;
@@ -108,10 +108,12 @@ bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 
 // functions
 
-function onConfigChange()
+system.vfs.watchFile("scripts/*.js", onScriptChange);
+
+function onScriptChange(filename)
 {
-    print("config file changed rarr23howdy");
- 
+    print('script "' + filename.slice(filename.lastIndexOf('\\') + 1) + '" changed, reloading');
+    execfile(filename);
 }
 
 var message;
@@ -164,7 +166,7 @@ function normal() {
 }
 
 function bullet_time_on() {
-	system.time.scale = 0.2;
+	system.time.scale = 0.1;
 	print("bullet time enabled!");
 }
 
@@ -270,8 +272,8 @@ function playerShootSphere()
     pos.mul(50);
     pos.add(game.player.pos);
     var sphere = shootSphere(pos, direction, shootvelo);
-    //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
-    print('created sphere "' + sphere.name + '"');
+    timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
+    //print('created sphere "' + sphere.name + '"');
 }
 
 function bounceEntity(entityName)
@@ -295,6 +297,14 @@ Vector.prototype.toString = function()
 
 Vector.prototype.mul = function(length)
 {
+    if(length.x)
+    {
+        this.x *= length.x;
+        this.y *= length.y;
+        this.z *= length.z;
+        return this;
+    }
+    
     this.x *= length;
     this.y *= length;
     this.z *= length;
@@ -316,37 +326,6 @@ Vector.prototype.add = function(other)
     this.z += other.z;
     return this;
 } 
-
-function createBoxStack(pos, height, width)
-{
-    for(i = 0; i < width; i++)
-        for(j = 0; j < height; j++)
-        {
-            box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
-            system.scene.addEntity(box);
-            box.pos.x = pos.x + (i * 30);
-            box.pos.y = pos.y + (j * 30);
-            box.pos.z = pos.z;
-        }
-}
-
-function createBoxPyramid(pos, width)
-{
-    for(i = 0; i < width; i++)
-        for(j = 0; j < width - i; j++)
-        {
-            box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
-            system.scene.addEntity(box);
-            entities[box.name] = box;
-            box.pos.x = pos.x + ((j * 40) + (i * 20));
-            box.pos.y = pos.y + (i * 30);
-            box.pos.z = pos.z;
-            box.sleeping = true;
-        }
-}
-
-var stackwidth = 40;
-var stackheight = 20;
 
 function explodeEverything()
 {
@@ -370,15 +349,6 @@ function eraseEverything()
         system.scene.removeEntity(entities[i]);
         delete entities[i];
     }
-}
-
-function doIt()
-{
-    var vec = new Vector(game.player.pos);
-    vec.z -= 300;
-    vec.y -= 15;
-    //createBoxStack(vec, 10, 10);
-    createBoxPyramid(vec, stackwidth);
 }
 
 var fountains = new Array();
@@ -406,14 +376,7 @@ function fireFountain(index)
     //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
 }
 
-function boxTower(center, radius, height, boxsize, stagger)
-{
-    offset = 0;
-    for(i = 0; i < height; i++)
-    {
-        
-    }
-}
-    
+execfile("scripts/stacks.js");
+
 // log our start date and time
 print("eXistenZ engine started on " + Date());

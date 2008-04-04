@@ -132,7 +132,7 @@ int mainloop()
 			game::doTick();
 			physics::startSimulation();
 			render::render();
-			JS_MaybeGC(gScriptEngine->GetContext());
+			//JS_MaybeGC(gScriptEngine->GetContext());
 		}
 	}
 }

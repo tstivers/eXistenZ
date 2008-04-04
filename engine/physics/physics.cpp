@@ -110,7 +110,8 @@ void physics::acquire() {
 	NxSceneDesc sceneDesc;
 	NxVec3 gDefaultGravity(0, gravity, 0);
 	sceneDesc.gravity = gDefaultGravity;
-	gScene = gPhysicsSDK->createScene(sceneDesc);	
+	gScene = gPhysicsSDK->createScene(sceneDesc);
+	gScene->setTiming(1.0/240.0, 32);
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);

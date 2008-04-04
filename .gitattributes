@@ -6,6 +6,7 @@ data/scripts/keys.js eol=crlf
 data/scripts/q3dm1.js eol=crlf
 data/scripts/q3dm13.js eol=crlf
 data/scripts/q3dm14.js eol=crlf
+data/scripts/stacks.js -text
 data/textures/shader_alias.txt eol=crlf
 data/textures/shader_map.txt eol=crlf
 data/textures/shaders/add_blend.shader eol=crlf
@@ -28,7 +29,6 @@ engine/client/main.cpp eol=crlf
 engine/client/main.h eol=crlf
 engine/client/precompiled.cpp eol=crlf
 engine/client/precompiled.h eol=crlf
-engine/common/FastDelegate.h -text
 engine/common/log.cpp -text
 engine/common/log.h -text
 engine/common/mystring.cpp eol=crlf
@@ -38,6 +38,8 @@ engine/common/registeredfunctions.h -text
 engine/common/smart_cptr.h eol=crlf
 engine/common/smart_ptr.h eol=crlf
 engine/common/types.h -text
+engine/common/utfstring.cpp -text
+engine/common/utfstring.h -text
 engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf

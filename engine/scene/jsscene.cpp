@@ -43,7 +43,7 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 	}
 
 	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	if(JS_InstanceOf(cx, entity_obj, &jsentity::JSEntity, NULL) == JS_FALSE) {
+	if(JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE) {
 		gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
 		return JS_FALSE;
 	}
@@ -76,7 +76,7 @@ JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
 	}
 
 	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	if(JS_InstanceOf(cx, entity_obj, &jsentity::JSEntity, NULL) == JS_FALSE) {
+	if(JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE) {
 		gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
 		return JS_FALSE;
 	}

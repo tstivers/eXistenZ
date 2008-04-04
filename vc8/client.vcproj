@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;STATIC_JS_API"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;STATIC_JS_API;DEBUG"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="2"
@@ -139,6 +139,7 @@
 				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -157,6 +158,7 @@
 				OutputFile="$(OutDir)/client.release.exe"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -164,7 +166,6 @@
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
 				TargetMachine="1"
-				Profile="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -432,6 +433,10 @@
 				</File>
 				<File
 					RelativePath="..\data\scripts\q3dm1.js"
+					>
+				</File>
+				<File
+					RelativePath="..\data\scripts\stacks.js"
 					>
 				</File>
 			</Filter>
@@ -852,10 +857,6 @@
 			Name="common"
 			>
 			<File
-				RelativePath="..\engine\common\FastDelegate.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\common\log.cpp"
 				>
 			</File>
@@ -889,6 +890,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\common\types.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\utfstring.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\utfstring.h"
 				>
 			</File>
 		</Filter>
@@ -1216,6 +1225,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

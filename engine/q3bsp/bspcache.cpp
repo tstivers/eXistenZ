@@ -69,5 +69,5 @@ void q3bsp::con_list_maps(int argc, char* argv[], void* user)
 	vfs::getFileList(map_list, settings::getstring("system.render.bsp.bsp_path"), "*.bsp");
 	LOG("Map List:");
 	for(vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
-		LOG("  %s", (*it));
+		LOG("  %s", (*it).c_str());
 }

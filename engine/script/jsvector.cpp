@@ -44,41 +44,36 @@ JSObject* jsvector::initVectorClass(JSContext* cx, JSObject* obj)
 
 JSObject* jsvector::NewVector(JSContext* cx, JSObject* parent /* = NULL */, D3DXVECTOR3& vec)
 {
+	JS_EnterLocalRootScope(cx);
+
 	JSObject* obj = JS_NewObject(cx, &vector_class, vector_prototype, parent);
+	ASSERT(obj);
 	
-	if(!obj)
-		return NULL;
+	setReserved(cx, obj, NULL, NULL, NULL);
+	SetVector(cx, obj, vec);
 	
-	if(!setReserved(cx, obj, NULL, NULL, NULL))
-		return NULL;
-		
-	if(!SetVector(cx, obj, vec))
-		return NULL;
-	
+	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;
 }
 
 JSObject* jsvector::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR3* vec, bool readonly /* = false */, jsVectorOps* ops /* = NULL */, void* user /* = NULL */)
 {
 	ASSERT(vec || ops);
+	JS_EnterLocalRootScope(cx);
+
 	JSObject* obj = JS_NewObject(cx, &vector_class, vector_prototype, parent);
-	
-	if(!obj)
-		return NULL;
+	ASSERT(obj);
 
 	uintN attrs = 0;
 	if(readonly)
 		attrs |= JSPROP_READONLY;
 		
-	if(!JS_DefinePropertyWithTinyId(cx, obj, "x", 0, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs))
-		return NULL;
-	if(!JS_DefinePropertyWithTinyId(cx, obj, "y", 1, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs))
-		return NULL;
-	if(!JS_DefinePropertyWithTinyId(cx, obj, "z", 2, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs))
-		return NULL;
-	if(!setReserved(cx, obj, vec, ops, user))
-		return NULL;
+	JS_DefinePropertyWithTinyId(cx, obj, "x", 0, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs);
+	JS_DefinePropertyWithTinyId(cx, obj, "y", 1, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs);
+	JS_DefinePropertyWithTinyId(cx, obj, "z", 2, JSVAL_NULL, wrapped_vector_get, wrapped_vector_set, attrs);
+	setReserved(cx, obj, vec, ops, user);
 
+	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;
 }
 

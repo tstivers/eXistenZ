@@ -25,7 +25,7 @@ vfs::DiskFile::DiskFile(const char* filename, bool write) : IFile(filename, writ
 
 vfs::DiskFile::~DiskFile()
 {
-	INFO("closing %s", filename);
+	//INFO("closing %s", filename);
 	CloseHandle(hfile);
 }
 

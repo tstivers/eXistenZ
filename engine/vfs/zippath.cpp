@@ -105,6 +105,11 @@ bool vfs::ZipPath::fileExists(const char* filename)
 	return it != file_hash.end();
 }
 
+bool vfs::ZipPath::pathExists(const char* path)
+{
+	return false; // TODO: fix this
+}
+
 vfs::IFile* vfs::ZipPath::getFile(const char* filename)
 {
 	ZipFileEntryHash::iterator it = file_hash.find(filename);	

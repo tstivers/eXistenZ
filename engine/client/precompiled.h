@@ -21,6 +21,7 @@
 #include <utility>
 #include <tuple>
 #include <memory>
+#include <unordered_map>
 
 #include "d3d9.h"
 #include "d3dx9core.h"

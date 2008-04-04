@@ -33,7 +33,7 @@ namespace vfs {
 	IFilePtr getFile(const char* filename);
 	IFile* createFile(const char* filename);
 	bool fileExists(const char* filename);
-	vector<string> getPathsForFile(const string& name);
+	vector<string> getDirectoriesForPath(const string& path);
 	bool IsDirectory(const string& path);
 	bool IsFile(const string& path);
 

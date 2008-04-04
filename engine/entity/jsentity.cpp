@@ -34,7 +34,10 @@ namespace jsentity {
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
 	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
-	JSFunctionSpec entity_functions[] = {
+
+	JSObject* entity_prototype = NULL;
+
+	JSFunctionSpec entity_methods[] = {
 		//{"setPos", setPos, 3, 0, 0},
 		//{"setRot", setRot, 3, 0, 0},			this junk isn't needed anymore...?
 		//{"setScale", setScale, 3, 0, 0},
@@ -43,7 +46,7 @@ namespace jsentity {
 		{NULL, NULL, 0, 0, 0}
 	};
 
-	JSClass JSEntity = {
+	JSClass entity_class = {
 		"Entity", JSCLASS_HAS_RESERVED_SLOTS(1),
 			JS_PropertyStub,  JS_PropertyStub,
 			JS_PropertyStub, JS_PropertyStub,
@@ -72,6 +75,9 @@ void jsentity::init()
 	gScriptEngine->AddFunction("createBoxEntity", 2, jsentity::createBoxEntity);
 	gScriptEngine->AddFunction("createSphereEntity", 2, jsentity::createSphereEntity);
 	gScriptEngine->AddFunction("getEntity", 1, jsentity::getEntity);
+
+	entity_prototype = JS_InitClass(gScriptEngine->GetContext(), gScriptEngine->GetGlobal(), NULL, &entity_class, NULL, 0, NULL, entity_methods, NULL, NULL);
+	ASSERT(entity_prototype);
 }
 
 JSBool jsentity::createStaticEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
@@ -168,8 +174,9 @@ JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv
 
 jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 {
-	JSObject* object = JS_NewObject(cx, &JSEntity, NULL, NULL);
-	JS_DefineFunctions(cx, object, entity_functions);
+	JS_EnterLocalRootScope(cx);
+	JSObject* object = JS_NewObject(cx, &entity_class, entity_prototype, gScriptEngine->GetGlobal());
+	JS_DefineFunctions(cx, object, entity_methods);
 	JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity));
 
 	jsval name = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, entity->name.c_str()));
@@ -187,6 +194,7 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 
 	JS_DefineProperty(cx, object, "sleeping", JSVAL_FALSE, getSleeping, setSleeping, JSPROP_PERMANENT); 
 
+	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(object));
 	return OBJECT_TO_JSVAL(object);
 }
 
