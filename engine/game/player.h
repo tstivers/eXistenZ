@@ -46,10 +46,12 @@ namespace game {
 		virtual void updatePos() = 0;
 		D3DXVECTOR3 pos, rot, vel, size;
 		bool collide;
+		bool on_ground;
 		t_movemode mode;
 		float speed;
 		float step_up;
 		float step_down;
+		float jump_velocity;
 	};
 
 	Player* createPlayer(D3DXVECTOR3& size);

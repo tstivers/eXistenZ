@@ -18,7 +18,7 @@ namespace texture {
 
 		DXTexture();
 		~DXTexture();
-		bool activate();
+		bool activate(bool deactivate_current = true);
 		void deactivate();
 		void acquire();
 		void release();

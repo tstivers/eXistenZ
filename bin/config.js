@@ -19,7 +19,7 @@ system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.vfs.addPath("../data");
 system.vfs.addPath("../data/pak0.zip");
 system.vfs.debug = 0;
-system.render.texture.debug = 0;
+system.render.texture.debug = 1;
 system.render.bsp.debug = 1;
 system.render.boost = 0;
 system.render.gamma = 2.0;
@@ -49,7 +49,8 @@ system.render.skybox.width = 10;
 system.render.skybox.depth = 10;
 system.render.skybox.height = 10;
 system.render.skybox.texture = "textures/skybox/pondnight/";
-game.player.step_up = 25;
+game.player.step_up = 0.75;
+game.player.jump_velocity = 2;
 
 // source keys (will fix this later)
 execfile("scripts/keys.js");
@@ -97,7 +98,7 @@ bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
 //bind(KEY_N, "exec createBox()");
 bind(KEY_V, "*exec createBox()");
-bind(KEY_B, "*exec createSphere()");
+bind(KEY_B, "exec createSphere()");
 bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
 bind(KEY_Q, "exec doIt()");
@@ -232,15 +233,18 @@ function createBox() {
 }
 
 function createSphere() {
-    sphere = createSphereEntity("sphere" + num_entities++, textures[current_texture++]);
-    if(current_texture >= textures.length)
-        current_texture = 0;
+    var sphere = createSphereEntity("sphere" + num_entities++, textures[++current_texture % textures.length]);
     entities[sphere.name] = sphere;
     system.scene.addEntity(sphere);
-    sphere.pos = game.player.pos;    
+    var direction = new Vector(0, 0, 1);
+    direction.rotate(game.player.rot);
+    var pos = new Vector(direction);
+    pos.mul(100);
+    pos.add(game.player.pos);
+    sphere.pos = pos;
     print('added sphere ' + sphere.name);
-    timer.addTimer("sphere" + num_entities + "_timer", "bounceEntity('" + sphere.name + "');", 500, 0);
-    sphere.last_y = 0;
+//    timer.addTimer("sphere" + num_entities + "_timer", "bounceEntity('" + sphere.name + "');", 500, 0);
+//    sphere.last_y = 0;
 }
 
 function shootSphere(pos, direction, speed)
@@ -249,14 +253,14 @@ function shootSphere(pos, direction, speed)
     entities[sphere.name] = sphere;
     system.scene.addEntity(sphere);
     sphere.pos = pos;
-    sphere.radius = (Math.random() * 12) + 3;
+    sphere.radius = ((Math.random() * 12) + 3) * 0.03;
     //direction.mul(speed);
     sphere.applyForce(direction.mul(speed));
     return sphere;
 }
 
 var shootspeed = 100;
-var shootvelo = 2500;
+var shootvelo = 15;
 var lastshot = 0;
 
 function playerShootSphere()
@@ -269,7 +273,7 @@ function playerShootSphere()
     var direction = new Vector(0, 0, 1);
     direction.rotate(game.player.rot);
     var pos = new Vector(direction);
-    pos.mul(50);
+    pos.mul(2);
     pos.add(game.player.pos);
     var sphere = shootSphere(pos, direction, shootvelo);
     timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
@@ -371,8 +375,8 @@ function fireFountain(index)
     var fountain = fountains[index];
     var direction = new Vector(fountain.direction);
     direction.rotate((Math.random() * 60) - 30, (Math.random() * 60) - 30, 0);
-    var sphere = shootSphere(fountain.pos, direction, 500 + (Math.random() * 250));
-    sphere.radius = (Math.random() * 12) + 3;
+    var sphere = shootSphere(fountain.pos, direction, 10 + (Math.random() * 5));
+    sphere.radius = (Math.random() + 0.5) / 2;
     //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
 }
 

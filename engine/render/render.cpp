@@ -158,7 +158,7 @@ void render::init()
 	cam_rot.z = 0;
 
 	cam_offset.x = 0;
-	cam_offset.y = 25;
+	cam_offset.y = 25 * 0.03f;
 	cam_offset.z = 0;
 
 	skybox::init();
@@ -203,7 +203,7 @@ void render::setMatrices()
 	view *= rotx;
 	view *= roty;
 
-	D3DXMatrixPerspectiveFovLH( &projection, D3DX_PI/4, (float)xres / (float)yres, 1.0f, 10000.0f );
+	D3DXMatrixPerspectiveFovLH( &projection, D3DX_PI/4, (float)xres / (float)yres, 0.1f, 10000.0f );
 
 	device->SetTransform( D3DTS_WORLD, &world );
 	device->SetTransform( D3DTS_VIEW, &view );
@@ -215,8 +215,8 @@ void render::render()
 {
 	frame++;	
 	sky_visible = true;
-	current_texture = NULL;
-	current_lightmap = NULL;
+	//current_texture = NULL;
+	//current_lightmap = NULL;
 	current_material = NULL;
 	current_vb = NULL;
 	current_ib = NULL;
@@ -268,33 +268,31 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 {
 	activateBuffers(rg->vertexbuffer, rg->indexbuffer);
 	
-	if(rg->texture != current_texture) {
-		if(current_texture)
-			current_texture->deactivate();
+	if(rg->texture != current_texture) 
+	{
 		if(rg->texture)
 			rg->texture->activate();
-		current_texture = rg->texture;
-		frame_texswaps++;
+		else if(current_texture)
+			current_texture->deactivate();
 	}
 
-	if(rg->lightmap != current_lightmap) {
-		if(current_lightmap)
-			current_lightmap->deactivate();
+	if(rg->lightmap != current_lightmap)
+	{
 		if(rg->lightmap && render::lightmap)
-		{
 			rg->lightmap->activate();
-			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
-		}
 		else
-		{
-			if(render::diffuse)
-			//if(!rg->texture->is_transparent)
-				render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
-			//else
-			//	render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
-		}
-		current_lightmap = rg->lightmap;
-		frame_texswaps++;
+			if(current_lightmap)
+				current_lightmap->deactivate();
+	}
+
+	if (rg->texture && rg->texture->is_transparent && (!rg->lightmap || !render::lightmap))
+	{
+		render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+	}
+
+	if ((!rg->lightmap || !render::lightmap) && !rg->material && !rg->texture->is_transparent && render::diffuse) 
+	{
+		render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
 	}
 
 	if(transform && *transform != current_transform) {
@@ -307,16 +305,12 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	}
 
 	static texture::Material m;
-	if(rg->material)
+	if(rg->material && !rg->texture->is_transparent)
 	{
 		if((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
 		{
 			device->SetRenderState(D3DRS_LIGHTING, TRUE);
-			device->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 			device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);		
-			//device->SetRenderState(D3DRS_AMBIENT, D3DCOLOR_XRGB(0, 0, 0));	
-			device->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
-			//device->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
 			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
 			m = *rg->material;
 			device->SetLight(0, &rg->material->light);

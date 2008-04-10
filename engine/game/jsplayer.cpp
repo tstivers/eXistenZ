@@ -11,6 +11,7 @@ namespace jsplayer {
 	JSBool setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setStepUp(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool setJumpVelocity(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	game::Player* getPlayerReserved(JSContext* cx, JSObject* obj);
 	
 	JSClass player_class = {
@@ -64,7 +65,11 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 
 	jsval step_up;
 	JS_NewNumberValue(cx, player->getStepUp(), &step_up);
-	JS_DefineProperty(cx, pobj, "step_up", speed, NULL, setStepUp, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "step_up", step_up, NULL, setStepUp, JSPROP_PERMANENT);
+
+	jsval jump_velocity;
+	JS_NewNumberValue(cx, player->jump_velocity, &jump_velocity);
+	JS_DefineProperty(cx, pobj, "jump_velocity", step_up, NULL, setJumpVelocity, JSPROP_PERMANENT);
 	
 	JS_LeaveLocalRootScope(cx);
 	return JS_TRUE;
@@ -153,4 +158,15 @@ game::Player* jsplayer::getPlayerReserved(JSContext* cx, JSObject* obj)
 	if(!JS_GetReservedSlot(cx, obj, 0, &val))
 		return NULL;	
 	return (game::Player*)JSVAL_TO_PRIVATE(val);
+}
+
+JSBool jsplayer::setJumpVelocity(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+{
+	jsdouble d;
+	if(!JS_ValueToNumber(cx, *vp, &d))
+		return JS_FALSE;
+
+	getPlayerReserved(cx, obj)->jump_velocity = d;
+
+	return JS_TRUE;
 }

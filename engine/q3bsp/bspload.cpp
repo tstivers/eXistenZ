@@ -54,9 +54,9 @@ bool BSP::load(vfs::IFilePtr file)
 	ZeroMemory(verts, num_verts * sizeof(BSPVertex));
 
 	for(int i = 0; i < num_verts; i++) {
-		verts[i].pos.x = tmp_verts[i].vPosition[0];
-		verts[i].pos.y = tmp_verts[i].vPosition[2];
-		verts[i].pos.z = tmp_verts[i].vPosition[1];
+		verts[i].pos.x = tmp_verts[i].vPosition[0] * 0.03f;
+		verts[i].pos.y = tmp_verts[i].vPosition[2] * 0.03f;
+		verts[i].pos.z = tmp_verts[i].vPosition[1] * 0.03f;
 
 		verts[i].nrm.x = tmp_verts[i].vNormal[0];
 		verts[i].nrm.y = tmp_verts[i].vNormal[2];
@@ -149,12 +149,12 @@ bool BSP::load(vfs::IFilePtr file)
 		leafs[i].leafbrush = tmp_leafs[i].leafBrush;
 		leafs[i].numleafbrushes = tmp_leafs[i].numOfLeafBrushes;
 
-		leafs[i].min.x = (float)tmp_leafs[i].min[0];
-		leafs[i].min.y = (float)tmp_leafs[i].min[2];
-		leafs[i].min.z = (float)tmp_leafs[i].min[1];
-		leafs[i].max.x = (float)tmp_leafs[i].max[0];
-		leafs[i].max.y = (float)tmp_leafs[i].max[2];
-		leafs[i].max.z = (float)tmp_leafs[i].max[1];
+		leafs[i].min.x = (float)tmp_leafs[i].min[0] * 0.03f;
+		leafs[i].min.y = (float)tmp_leafs[i].min[2] * 0.03f;
+		leafs[i].min.z = (float)tmp_leafs[i].min[1] * 0.03f;
+		leafs[i].max.x = (float)tmp_leafs[i].max[0] * 0.03f;
+		leafs[i].max.y = (float)tmp_leafs[i].max[2] * 0.03f;
+		leafs[i].max.z = (float)tmp_leafs[i].max[1] * 0.03f;
 	}
 
 	delete [] tmp_leafs;
@@ -217,7 +217,7 @@ bool BSP::load(vfs::IFilePtr file)
 		planes[i].nrm.x = tmp_planes[i].vNormal[0];
 		planes[i].nrm.y = tmp_planes[i].vNormal[2];
 		planes[i].nrm.z = tmp_planes[i].vNormal[1];
-		planes[i].dst = tmp_planes[i].d;
+		planes[i].dst = tmp_planes[i].d * 0.03f;
 	}
 
 	delete [] tmp_planes;
@@ -269,6 +269,16 @@ bool BSP::load(vfs::IFilePtr file)
 	file->seek(lumps[kModels].offset, FILE_BEGIN);
 	file->read((void*)models, lumps[kModels].length);
 
+	for(int i = 0; i < num_models; i++)
+	{
+		models[i].min[0] *= 0.03f;
+		models[i].min[1] *= 0.03f;
+		models[i].min[2] *= 0.03f;
+		models[i].max[0] *= 0.03f;
+		models[i].max[1] *= 0.03f;
+		models[i].max[2] *= 0.03f;
+	}
+
 	// ------------------------- load lights ---------------------------
 	num_lights = lumps[kLightVolumes].length / sizeof(BSPLight);
 	ASSERT(lumps[kLightVolumes].length % sizeof(BSPLight) == 0);
@@ -277,7 +287,7 @@ bool BSP::load(vfs::IFilePtr file)
 	file->read((void*)lights, lumps[kLightVolumes].length);
 
 	// ------------------------ calc some lightgrid stuffs -------------
-	float gridsize[] = { 64, 64, 128 };
+	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	D3DXVECTOR3 max;
 	for(int i = 0; i < 3; i++)
 	{

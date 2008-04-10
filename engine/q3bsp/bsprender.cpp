@@ -181,6 +181,9 @@ inline void BSP::initRenderState(void)
 	render::device->SetRenderState( D3DRS_ZENABLE, TRUE );
 	render::device->SetRenderState( D3DRS_ZWRITEENABLE, TRUE);
 	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+	render::device->SetRenderState( D3DRS_SHADEMODE, D3DSHADE_GOURAUD );
+	render::device->SetRenderState( D3DRS_NORMALIZENORMALS, TRUE );
+
 
 	/*if(render::lighting) {
 		render::device->SetRenderState( D3DRS_LIGHTING, TRUE );
@@ -234,14 +237,10 @@ inline void BSP::initRenderState(void)
 	render::device->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
 
 	if(render::wireframe) {
-		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);		
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	} else {
-		if(!render::diffuse)
-			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
-		else
-			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
-	
 		render::device->SetTextureStageState( 0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 		render::device->SetTextureStageState( 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE );
 		render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);

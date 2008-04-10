@@ -881,14 +881,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\engine\common\smart_cptr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\common\smart_ptr.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\common\types.h"
 				>
 			</File>

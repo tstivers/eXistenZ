@@ -356,7 +356,7 @@ void texture::activate_chain(Shader* shader, DXTexture* texture)
 	if(shader->chain_current >= shader->chain_frames)
 		shader->chain_current = 0;
 
-	shader->textures[shader->chain_current]->activate();
+	shader->textures[shader->chain_current]->activate(false);
 }
 
 void texture::activate_ttransform(Shader* shader, DXTexture* texture)

@@ -5,6 +5,7 @@
 #include "q3bsp/bleh.h"
 #include "scene/scene.h"
 #include "scene/scenebsp.h"
+#include "render/rendergroup.h"
 #include "NxPhysics.h"
 #include "NxCooking.h"
 
@@ -49,6 +50,14 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 
 		//if(scene->bsp->bsptextures[scene->faces[i].texture].flags & 0x4000)
 			//continue;
+		if(!scene->faces[i].rendergroup)
+			continue;
+
+		if(scene->faces[i].rendergroup->texture->is_transparent)
+			continue;
+
+		if(!scene->faces[i].rendergroup->texture->draw)
+			continue;
 
 		unsigned int offset = vertices.size();
 		for(int j = 0;j < scene->faces[i].num_vertices; j++)

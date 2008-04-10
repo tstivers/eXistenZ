@@ -16,7 +16,7 @@ namespace physics {
 
 using namespace entity;
 
-SphereEntity::SphereEntity(string name, string texture) : Entity(name), actor(NULL), radius(15)
+SphereEntity::SphereEntity(string name, string texture) : Entity(name), actor(NULL), radius(physics::scale / 2.0f)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
@@ -33,11 +33,12 @@ void SphereEntity::acquire()
 	NxBodyDesc bodyDesc;
 	NxSphereShapeDesc sphereDesc;
 	sphereDesc.radius = radius / physics::scale;
+	sphereDesc.materialIndex = 1;
 	actorDesc.shapes.pushBack(&sphereDesc);    
-	actorDesc.body = &bodyDesc;    
-	actorDesc.density = 100;    
+	actorDesc.body = &bodyDesc;
+	actorDesc.density = 1;
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
-	actorDesc.userData = dynamic_cast<Entity*>(this);	
+	actorDesc.userData = dynamic_cast<Entity*>(this);
 	actor = physics::gScene->createActor(actorDesc);
 	ASSERT(actor);
 	actor->setName(name.c_str());	

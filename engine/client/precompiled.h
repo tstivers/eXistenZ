@@ -35,10 +35,7 @@ using namespace tr1;
 
 #include "common/types.h"
 #include "common/log.h"
-//#include "common/shared_ptr.h"
-//#include "common/smart_cptr.h"
 #include "common/mystring.h"
-//#include "common/FastDelegate.h"
 #include "common/registeredfunctions.h"
 #include "math/math.h"
 

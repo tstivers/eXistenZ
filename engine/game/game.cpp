@@ -207,9 +207,9 @@ bool game::startMap(char* name)
 	render::scene->init();
 
 	physics::acquire();
-	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
 	player->acquire();
 	render::scene->acquire();
+	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);

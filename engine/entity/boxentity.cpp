@@ -16,7 +16,7 @@ namespace physics {
 
 using namespace entity;
 
-BoxEntity::BoxEntity(string name, string texture) : Entity(name), actor(NULL), size(30,30,30)
+BoxEntity::BoxEntity(string name, string texture) : Entity(name), actor(NULL), size(physics::scale,physics::scale,physics::scale)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
@@ -35,7 +35,7 @@ void BoxEntity::acquire()
 	boxDesc.dimensions.set((size / physics::scale) / 2);
 	actorDesc.shapes.pushBack(&boxDesc);    
 	actorDesc.body = &bodyDesc;    
-	actorDesc.density = 100;    
+	actorDesc.density = 10;    
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);	
 	actor = physics::gScene->createActor(actorDesc);

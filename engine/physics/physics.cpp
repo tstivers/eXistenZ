@@ -44,8 +44,8 @@ namespace physics {
 	NxControllerManager* gManager;
 	int debug = 1;
 	bool acquired = false;
-	float scale = 30.0f;
-	float gravity = -9.81f;
+	float scale = 1.0f;
+	float gravity = -9.8f;
 
 	bool setGravity(settings::Setting* setting, void* value);
 }
@@ -99,7 +99,7 @@ void physics::acquire() {
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
-	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.05f / scale);
+	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.0005f);
 	//bool				ccdEnabled = 1;
 	//gPhysicsSDK->setParameter(NX_CONTINUOUS_CD, ccdEnabled);
 	//gPhysicsSDK->setParameter(NX_CCD_EPSILON, 0.01f);
@@ -110,12 +110,20 @@ void physics::acquire() {
 	NxSceneDesc sceneDesc;
 	NxVec3 gDefaultGravity(0, gravity, 0);
 	sceneDesc.gravity = gDefaultGravity;
+	//sceneDesc.upAxis = 1;
+	//sceneDesc.maxBounds->min.x = render::scene->
 	gScene = gPhysicsSDK->createScene(sceneDesc);
-	gScene->setTiming(1.0/240.0, 32);
+	//gScene->setTiming(1.0/240.0, 32);
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.0f);
+	defaultMaterial->setStaticFriction(0.5f);
+	defaultMaterial->setDynamicFriction(0.5f);
+
+	// Create a bouncy material for spheres
+	NxMaterial* bouncyMaterial = gScene->getMaterialFromIndex(1);
+	defaultMaterial->setRestitution(0.75f);
 	defaultMaterial->setStaticFriction(0.5f);
 	defaultMaterial->setDynamicFriction(0.5f);
 
@@ -130,7 +138,7 @@ void physics::startSimulation() {
 	if(!acquired)
 		return;		
 	
-	gScene->simulate(timer::delta_ms / 1000.0f);
+	gScene->simulate(timer::delta_s);
 	gScene->flushStream();
 
 	if(NX_DBG_IS_CONNECTED()) {

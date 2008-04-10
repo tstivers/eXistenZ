@@ -23,11 +23,31 @@ models/mapobjects/flares/electric	textures/shaders/flare_billboard.shader
 models/mapobjects/slamp/slamp3	textures/shaders/flare_billboard.shader
 models/mapobjects/baph/bapholamp* textures/shaders/flare_billboard.shader
 models/mapobjects/baph/wrist  textures/shaders/flare_billboard.shader
+models/mapobjects/lamps/*flare*			textures/shaders/flare_billboard.shader
+models/mapobjects/slamp/slamp2			textures/shaders/flare_billboard.shader
+models/mapobjects/slamp/slamp3			textures/shaders/flare_billboard.shader
+models/mapobjects/teleporter/transparency	textures/shaders/flare_billboard.shader
+models/mapobjects/teleporter/energy*		textures/shaders/flare_billboard.shader
+models/mapobjects/teleporter/transparency*	textures/shaders/flare_billboard.shader
+models/mapobjects/teleporter/widget*		textures/shaders/flare_billboard.shader
+textures/sfx/proto*				textures/shaders/flare_billboard.shader
+textures/sfx/electric*				textures/shaders/flare_billboard.shader
+textures/sfx/holo*				textures/shaders/flare_billboard.shader
+models/mapobjects/bitch/orb			textures/shaders/flare_billboard.shadermodels/mapobjects/bitch/forearm			textures/shaders/flare_billboard.shader
+textures/sfx/tesla*				textures/shaders/flare_billboard.shader
+//textures/sfx/*fog*				textures/shaders/flare_billboard.shader
+//textures/liquids/*lavahell*			textures/shaders/flare_billboard.shader
+//textures/liquids/*fog*			textures/shaders/flare_billboard.shader
+
+
 
 // light beams
 textures/sfx/beam*				textures/shaders/lightbeam.shader
 textures/sfx/lavabeam				textures/shaders/lightbeam.shader
 models/mapobjects/spotlamp/beam			textures/shaders/lightbeam.shader
+models/mapobjects/lamps/beam			textures/shaders/lightbeam.shader
+textures/sfx/*fog*				textures/shaders/lightbeam.shader
+textures/liquids/*				textures/shaders/lightbeam.shader
 
 // animated fire shader
 textures/shaders/fire1		textures/shaders/fire1.shader
@@ -57,6 +77,7 @@ textures/base_support/x_support			textures/shaders/alphatest08.shader
 textures/base_support/x_support2		textures/shaders/alphatest08.shader
 textures/base_support/x_support3		textures/shaders/alphatest08.shader
 textures/base_support/z_support			textures/shaders/alphatest08.shader
+textures/base_support/cable_trans		textures/shaders/alphatest08.shader
 textures/base_trim/proto_fence			textures/shaders/alphatest08.shader
 textures/base_trim/wires01				textures/shaders/alphatest08.shader
 textures/base_trim/wires01_ass			textures/shaders/alphatest08.shader
@@ -66,8 +87,8 @@ textures/base_wall/girders1i_yellodark_fin	textures/shaders/alphatest08.shader
 textures/base_wall/glass_frame	textures/shaders/alphatest08.shader
 textures/base_wall/protobanner_ow	textures/shaders/alphatest08.shader
 textures/gothic_trim/gothgrate2	textures/shaders/alphatest08.shader
-textures/sfx/fan							textures/shaders/alphatest08.shader
-textures/sfx/fan_grate						textures/shaders/alphatest08.shader
+textures/sfx/fan 			textures/shaders/alphatest08.shader
+textures/sfx/fan_grate			textures/shaders/alphatest08.shader
 models/mapobjects/chain/chain				textures/shaders/alphatest08.shader
 models/mapobjects/console/under	textures/shaders/alphatest08.shader
 models/mapobjects/corpse/chain	textures/shaders/alphatest08.shader
@@ -84,6 +105,11 @@ models/mapobjects/Skull/monkeyhead2	textures/shaders/alphatest08.shader
 models/mapobjects/Skull/ribcage	textures/shaders/alphatest08.shader
 models/mapobjects/spotlamp/spotlamp	textures/shaders/alphatest08.shader
 models/mapobjects/timlamp/timlamp	textures/shaders/alphatest08.shader
+models/mapobjects/eagleban		textures/shaders/alphatest08.shader
+models/mapobjects/flag/*		textures/shaders/alphatest08.shader
+models/mapobjects/corpse/torso		textures/shaders/alphatest08.shader
+models/mapobjects/corpse/intestine*		textures/shaders/alphatest08.shader
+models/mapobjects/corpse/spine			textures/shaders/alphatest08.shader
 
 // glass texture
 textures/house/glass	textures/shaders/glass.shader

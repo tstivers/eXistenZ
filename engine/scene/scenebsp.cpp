@@ -17,6 +17,7 @@ namespace scene {
 
 namespace render {
 	extern int draw_entities;
+	vector<RenderGroup*> alpha_groups;
 }
 
 using namespace scene;
@@ -192,8 +193,6 @@ void SceneBSP::reload(unsigned int flags)
 
 void SceneBSP::render()
 {
-	bsp->initRenderState();
-
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
@@ -226,30 +225,43 @@ void SceneBSP::render()
 		}
 	}
 
+	bsp->initRenderState();
+	render::alpha_groups.clear();
+
 	for(unsigned i = 0; i < num_faces; i++)
 		if(faces[bsp->sorted_faces[i]].frame == render::frame) {
 			render::frame_faces++;
-			render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup);
+			if(faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
+				render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
+			else
+				render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
 		}
 
 	texture::Material lighting;
 	if(render::draw_entities) {
 		unsigned num_entities = entities.size();
 		for(unsigned i = 0; i < num_entities; i++) {
-			entities[i]->doTick();
-			lighting.reset();
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
 			entities[i]->render(&lighting);
 		}
 	}
+
+	for(int i = render::alpha_groups.size(); i > 0; i--)
+		render::drawGroup(render::alpha_groups[i - 1], &render::world);
+
+	if(render::current_texture)
+		render::current_texture->deactivate();
+
+	if(render::current_lightmap)
+		render::current_lightmap->deactivate();
 }
 
 void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* entity)
 {
 	D3DXVECTOR3 origin(entity->getPos());
 	swap(origin.y, origin.z);
-	float gridsize[] = { 64, 64, 128 };
+	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	int pos[3];
 	int gridstep[3];
 	D3DXVECTOR3 frac(0,0,0), amb(0,0,0), color(0,0,0), direction(0,0,0);
@@ -330,9 +342,9 @@ void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* en
 	//material->light.Specular = v;
 	material->light.Direction = direction * -1;
 	material->light.Type = D3DLIGHT_DIRECTIONAL;
-	material->light.Range = 100.0f;
-	material->light.Position = entity->pos + (direction * 50);;
-	material->light.Diffuse.a = 1.0f;
+	//material->light.Range = 100.0f;
+	//material->light.Position = entity->pos + (direction * 50);;
+	//material->light.Diffuse.a = 1.0f;
 	//INFO("nrm = (%2.2f, %2.2f, %2.2f)", direction.x, direction.y, direction.z);
 }
 

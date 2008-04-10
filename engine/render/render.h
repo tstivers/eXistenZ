@@ -4,6 +4,11 @@ namespace scene {
 	class Scene;
 }
 
+namespace texture {
+	class DXTexture;
+	class Material;
+}
+
 namespace render {
 	class RenderGroup;
 
@@ -56,6 +61,11 @@ namespace render {
 	extern unsigned int frame_drawcalls;
 
 	extern scene::Scene* scene;
+
+	extern texture::DXTexture* current_texture;
+	extern texture::DXTexture* current_lightmap;
+	extern texture::Material* current_material;
+	extern D3DXMATRIX current_transform;
 
 	class CFrustum;
 	extern CFrustum frustum;
