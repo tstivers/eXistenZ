@@ -15,6 +15,7 @@ bin/*.obj
 bin/*.pcc
 bin/*.pch
 bin/*.pdb
+bin/*.suo
 bin/BuildLog.htm
 bin/engine_debug
 bin/engine_release
@@ -28,5 +29,7 @@ data/textures/*
 vc8/*.ncb
 vc8/*.suo
 vc8/*.vcproj.*
+vc8/Debug
+vc8/Release
 vc8/debug
 vc8/release
