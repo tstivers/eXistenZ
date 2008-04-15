@@ -175,7 +175,7 @@ JSBool jsentity::getEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv
 jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 {
 	JS_EnterLocalRootScope(cx);
-	JSObject* object = JS_NewObject(cx, &entity_class, entity_prototype, gScriptEngine->GetGlobal());
+	JSObject* object = JS_NewObject(cx, &entity_class, entity_prototype, NULL);
 	JS_DefineFunctions(cx, object, entity_methods);
 	JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity));
 
