@@ -12,8 +12,8 @@ namespace timer {
 		
 		string name;
 		string action;
-		unsigned int frequency_ms;
-		unsigned int next_ms;		
+		float frequency_ms;
+		float next_ms;		
 	};
 
 	typedef shared_ptr<Timer> pTimer;
@@ -34,8 +34,10 @@ namespace timer {
 
 using namespace timer;
 
-bool timer::addTimer(const string& name, const string& action, unsigned int frequency_ms /* = 0 */, unsigned int next_ms /* = 0 */)
+bool timer::addTimer(const string& name, const string& action, float frequency_ms /* = 0 */, float next_ms /* = 0 */)
 {
+	ASSERT(frequency_ms >= 0.0f);
+
 	timermap_t::iterator i = timer_map.find(name);
 	if(i != timer_map.end()) {
 		removeTimer(i->second->name);
@@ -80,10 +82,10 @@ void timer::fireTimers()
 		pTimer t = timer_queue.top();
 		timer_queue.pop();
 		console::processCmd(t->action.c_str());
-		if(t->frequency_ms != 0) {
+		if(t->frequency_ms != 0.0f) {
 			t->next_ms += t->frequency_ms;
 			if(t->next_ms <= game_ms)
-				t->next_ms = game_ms + 1;
+				t->next_ms = game_ms + 1.0f;
 			timer_queue.push(t);
 		} else {			
 			timer_map.erase(t->name);
