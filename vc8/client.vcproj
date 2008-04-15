@@ -436,6 +436,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\data\scripts\shoot.js"
+					>
+				</File>
+				<File
 					RelativePath="..\data\scripts\stacks.js"
 					>
 				</File>

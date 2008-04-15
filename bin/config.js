@@ -104,7 +104,6 @@ bind(KEY_F, "toggle_movemode");
 bind(KEY_Q, "exec doIt()");
 bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
-bind(BUTTON_0, "*exec playerShootSphere()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 
 // functions
@@ -187,7 +186,8 @@ function bullet_time_toggle() {
 
 function dump(obj) {
 	for (i in obj) {
-		print(typeof(obj[i]) + "." + i + " = " + obj[i]);
+		print(obj + "." + i + " = (" + typeof(obj[i]) + ") " + obj[i]);
+		if(typeof(i) == "object")
 			dump(i);
 	}
 }
@@ -247,38 +247,6 @@ function createSphere() {
 //    sphere.last_y = 0;
 }
 
-function shootSphere(pos, direction, speed)
-{
-    var sphere = createSphereEntity("sphere" + num_entities++, textures[++current_texture % textures.length]);
-    entities[sphere.name] = sphere;
-    system.scene.addEntity(sphere);
-    sphere.pos = pos;
-    sphere.radius = ((Math.random() * 12) + 3) * 0.03;
-    //direction.mul(speed);
-    sphere.applyForce(direction.mul(speed));
-    return sphere;
-}
-
-var shootspeed = 100;
-var shootvelo = 15;
-var lastshot = 0;
-
-function playerShootSphere()
-{
-    if(lastshot + shootspeed < system.time.ms)
-        lastshot = system.time.ms;
-    else
-        return;
-        
-    var direction = new Vector(0, 0, 1);
-    direction.rotate(game.player.rot);
-    var pos = new Vector(direction);
-    pos.mul(2);
-    pos.add(game.player.pos);
-    var sphere = shootSphere(pos, direction, shootvelo);
-    timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
-    //print('created sphere "' + sphere.name + '"');
-}
 
 function bounceEntity(entityName)
 {
@@ -381,6 +349,7 @@ function fireFountain(index)
 }
 
 execfile("scripts/stacks.js");
+execfile("scripts/shoot.js");
 
 // log our start date and time
 print("eXistenZ engine started on " + Date());
