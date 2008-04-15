@@ -17,6 +17,10 @@ JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
 		return JS_FALSE;	
 	}
 
-	JSINFO(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+	JSString* s = JS_ValueToString(cx, argv[0]);
+	if(!s)
+		return JS_FALSE;
+
+	JSINFO(JS_GetStringBytes(s));
 	return JS_TRUE;
 }
