@@ -235,7 +235,11 @@ JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 	if(!JS_GetProperty(cx, obj, "pos", vp))
 		goto error;
 
-	getEntityReserved(cx, obj)->setPos(pos);		
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		goto error;
+
+	entity->setPos(pos);		
 
 	return JS_TRUE;
 
@@ -250,10 +254,11 @@ JSBool jsentity::rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 	if(!jsvector::ParseVector(cx, rot, 1, vp))
 		goto error;
 
-	if(!JS_GetProperty(cx, obj, "rot", vp))
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
 		goto error;
 
-	getEntityReserved(cx, obj)->setRot(rot);		
+	entity->setRot(rot);		
 
 	return JS_TRUE;
 
@@ -264,14 +269,26 @@ error:
 
 JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, getEntityReserved(cx, obj)->name.c_str()));
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		goto error;
+
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, entity->name.c_str()));
 
 	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsentity::getName] error getting entity name");
+	return JS_FALSE;
 }
 
 JSBool jsentity::getSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
-	if(getEntityReserved(cx, obj)->getSleeping())
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	if(entity->getSleeping())
 		*vp = JSVAL_TRUE;
 	else
 		*vp = JSVAL_FALSE;
@@ -281,17 +298,25 @@ JSBool jsentity::getSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 
 JSBool jsentity::setSleeping(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
 	if(!JSVAL_IS_BOOLEAN(*vp))
 		return JS_FALSE;
 	else
-		getEntityReserved(cx, obj)->setSleeping(JSVAL_TO_BOOLEAN(*vp));
+		entity->setSleeping(JSVAL_TO_BOOLEAN(*vp));
 
 	return JS_TRUE;
 }
 
 JSBool jsentity::getRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
-	return JS_NewNumberValue(cx, ((SphereEntity*)getEntityReserved(cx, obj))->getRadius(), vp);
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	return JS_NewNumberValue(cx, ((SphereEntity*)entity)->getRadius(), vp);
 }
 
 JSBool jsentity::setRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
@@ -299,8 +324,12 @@ JSBool jsentity::setRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 	jsdouble d;
 	if(!JS_ValueToNumber(cx, *vp, &d))
 		return JS_FALSE;
-	else
-		((SphereEntity*)getEntityReserved(cx, obj))->setRadius(d);
+	
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	((SphereEntity*)entity)->setRadius(d);
 
 	return JS_TRUE;
 }
@@ -313,8 +342,12 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 
 	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
-		
-	getEntityReserved(cx, obj)->setPos(vec);
+	
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	entity->setPos(vec);
 		
 	return JS_TRUE;
 }
@@ -327,7 +360,11 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
 		
-	getEntityReserved(cx, obj)->setRot(vec);
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	entity->setRot(vec);
 	
 	return JS_TRUE;
 }
@@ -340,7 +377,11 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
 		
-	getEntityReserved(cx, obj)->setScale(vec);
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	entity->setScale(vec);
 	
 	return JS_TRUE;
 }
@@ -349,7 +390,11 @@ JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 {
 	*rval = JSVAL_VOID;
 
-	getEntityReserved(cx, obj)->update();
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	entity->update();
 
 	return JS_TRUE;
 }
@@ -362,16 +407,19 @@ JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 	if(!jsvector::ParseVector(cx, vec, argc, argv))
 		return JS_FALSE;
 
-	getEntityReserved(cx, obj)->applyForce(vec);
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if(!entity)
+		return JS_FALSE;
+
+	entity->applyForce(vec);
 	
 	return JS_TRUE;
 }
 
 entity::Entity* jsentity::getEntityReserved(JSContext* cx, JSObject* obj)
 {
-	jsval entity_object;
-	if(!JS_GetReservedSlot(cx, obj, 0, &entity_object))
-		return NULL;
-	ASSERT(JSVAL_TO_PRIVATE(entity_object));
+	jsval entity_object = JSVAL_NULL;
+	JS_GetReservedSlot(cx, obj, 0, &entity_object);
+	
 	return (Entity*)JSVAL_TO_PRIVATE(entity_object);
 }
