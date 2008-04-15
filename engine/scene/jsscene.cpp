@@ -86,6 +86,8 @@ JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
 	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
 	render::scene->removeEntity(entity);
 	entity::removeEntity(entity);
+	JS_ClearScope(cx, entity_obj);
+	JS_SetReservedSlot(cx, entity_obj, 0, JSVAL_NULL);
 
 	return JS_TRUE;
 }
