@@ -223,6 +223,16 @@ void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* 
 	}
 }
 
+const char* ScriptEngine::GetClassName(JSObject* obj)
+{
+	JSClass* c = JS_GET_CLASS(cx, obj);
+
+	if(c)
+		return c->name;
+
+	return "none";
+}
+
 void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
 {
 	if(report->linebuf)

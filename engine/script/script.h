@@ -33,6 +33,7 @@ public:
 	bool GetProperty(JSObject* parent, char* name, jsval* object);
 
 	JSObject* GetObject(char* name, bool create = false);
+	const char* GetClassName(JSObject* obj);
 	
 	void DumpObject(JSObject* obj, bool recurse = false, char* objname = "", char* name = "");
 };
