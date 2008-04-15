@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "timer/timer.h"
 #include "timer/timers.h"
-#include "timer/jstimers.h"
 #include "console/console.h"
 
 namespace timer {
@@ -83,7 +82,6 @@ bool timer::removeTimer(const string& name)
 		timer_queue.push(*j);
 
 	timer_map.erase(i);
-	jstimer::removeTimerCallback(name);
 		
 	return false;
 }
@@ -105,7 +103,6 @@ void timer::fireTimers()
 			timer_queue.push(t);
 		} else {			
 			timer_map.erase(t->name);
-			jstimer::removeTimerCallback(t->name);
 		}
 	}
 }

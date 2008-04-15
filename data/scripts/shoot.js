@@ -2,7 +2,14 @@ var shootspeed = 100;
 var shootvelo = 15;
 var lastshot = 0;
 
-bind(BUTTON_0, "*exec playerShootSphere()");
+game.player.shoot = function()
+{
+    this.shootFunction();
+}
+
+unbind(BUTTON_0);
+bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
+game.player.shootFunction = playerShootSphere;
 
 function shootSphere(pos, direction, speed)
 {

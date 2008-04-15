@@ -5,7 +5,8 @@
 #include "console/console.h"
 
 namespace input {
-	char binds[256][3][128] = {0};	
+	char binds[256][3][128] = {0};
+	function<void(char, KEY_STATE)> f_binds[256][3];
 	char* keyName(int id);
 	int keyCode(char* name);
 }
@@ -43,11 +44,37 @@ void input::bindKey(int key, char* cmd)
 	}
 }
 
+void input::bindKey(int key, function<void(char, KEY_STATE)> fun, KEY_STATE state)
+{
+	if(key < 0 || key >= 256) {
+		LOG("[input::bindKey] invalid key (%i)", key);
+		return;
+	}
+
+	switch(state) {
+		case STATE_PRESSED:
+			f_binds[key][2] = fun;
+			break;
+		case STATE_DOWN:
+			f_binds[key][1] = fun;
+			break;
+		case STATE_RELEASED:
+			f_binds[key][0] = fun;
+			break;
+		default:
+			f_binds[key][0] = fun;
+			break;
+	}
+}
+
 void input::unbind(int key)
 {
 	binds[key][0][0] = 0;
 	binds[key][1][0] = 0;
 	binds[key][2][0] = 0;
+	f_binds[key][0] = NULL;
+	f_binds[key][1] = NULL;
+	f_binds[key][2] = NULL;
 }
 
 void input::listBinds()
@@ -60,6 +87,12 @@ void input::listBinds()
 			LOG("  [%s] = \"*%s\"", keyName(key_idx), binds[key_idx][1]);
 		if(binds[key_idx][2][0])
 			LOG("  [%s] = \"-%s\"", keyName(key_idx), binds[key_idx][2]);
+		if(f_binds[key_idx][0])
+			LOG("  [%s] = \"+%s\"", keyName(key_idx), "native");
+		if(f_binds[key_idx][1])
+			LOG("  [%s] = \"*%s\"", keyName(key_idx), "native");
+		if(f_binds[key_idx][2])
+			LOG("  [%s] = \"-%s\"", keyName(key_idx), "native");
 	}
 }
 
@@ -72,6 +105,12 @@ void input::processBinds()
 			console::executeCommand(&binds[i][1][0]);
 		if(KEYRELEASED(i) && binds[i][2][0])
 			console::executeCommand(&binds[i][2][0]);
+		if(KEYPRESSED(i) && f_binds[i][0])
+			f_binds[i][0](i, STATE_PRESSED);
+		if(KEYDOWN(i) && f_binds[i][1])
+			f_binds[i][1](i, STATE_DOWN);
+		if(KEYRELEASED(i) && f_binds[i][2])
+			f_binds[i][2](i, STATE_RELEASED);
 	}
 }
 

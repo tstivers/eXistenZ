@@ -171,6 +171,13 @@ const KEY_DOWNARROW    =   KEY_DOWN    ;        /* DownArrow on arrow keypad */
 const KEY_PGDN         =   KEY_NEXT    ;        /* PgDn on arrow keypad */
 
 /*
+ *  Key States
+ */
+const STATE_PRESSED = 0;
+const STATE_DOWN = 1;
+const STATE_RELEASED = 2;
+
+/*
  *	DirectX defines for video modes
  */
  

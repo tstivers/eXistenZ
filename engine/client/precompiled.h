@@ -32,6 +32,7 @@
 
 using namespace std;
 using namespace tr1;
+using namespace std::tr1::placeholders;
 
 #include "common/types.h"
 #include "common/log.h"

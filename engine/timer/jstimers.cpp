@@ -44,12 +44,6 @@ namespace jstimer {
 		jsval fun;
 		JSObject* par;
 	};
-
-	typedef shared_ptr<JSTimerFunctionCall> pJSTimerFunctionCall;
-	typedef unordered_map<string, pJSTimerFunctionCall> jstimermap_t;
-	jstimermap_t jstimermap;
-
-	void jsCallTimer(const string& timer_name);
 }
 
 REGISTER_STARTUP_FUNCTION(jstimer, jstimer::init, 10);
@@ -88,14 +82,13 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	if(JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[1])))
 	{		
-		jstimermap.insert(make_pair(name, pJSTimerFunctionCall(new JSTimerFunctionCall(cx, NULL, argv[1]))));
-		timer::addTimer(name, jsCallTimer, frequency, start);
+		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, NULL, argv[1]));
+		timer::addTimer(name, bind(&JSTimerFunctionCall::call, call, _1), frequency, start);
 	}
 	else if((argc >= 3) && JSVAL_IS_OBJECT(argv[1]) && JSVAL_IS_OBJECT(argv[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[2])))
 	{
-		jstimermap.insert(make_pair(name, pJSTimerFunctionCall(new JSTimerFunctionCall(cx, JSVAL_TO_OBJECT(argv[1]), argv[2]))));
-		timer::addTimer(name, jsCallTimer, frequency, start);
-		opt_start = 3;
+		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, JSVAL_TO_OBJECT(argv[1]), argv[2]));
+		timer::addTimer(name, bind(&JSTimerFunctionCall::call, call, _1), frequency, start);
 	}
 	else
 	{
@@ -120,17 +113,4 @@ JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 	timer::removeTimer(name);
 
 	return JS_TRUE;
-}
-
-void jstimer::jsCallTimer(const string& timer_name)
-{
-	jstimermap_t::const_iterator it = jstimermap.find(timer_name);
-	ASSERT(it != jstimermap.end());
-
-	it->second->call(timer_name);
-}
-
-void jstimer::removeTimerCallback(const string& name)
-{
-	jstimermap.erase(name);
 }
