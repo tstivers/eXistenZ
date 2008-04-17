@@ -23,6 +23,17 @@
 #include <memory>
 #include <unordered_map>
 
+#include <boost/static_assert.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/count_if.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/function_types/parameter_types.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+
 #include "d3d9.h"
 #include "d3dx9core.h"
 #define DIRECTINPUT_VERSION 0x0800

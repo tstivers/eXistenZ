@@ -3,47 +3,14 @@
 #include "timer/timer.h"
 #include "timer/timers.h"
 #include "script/script.h"
+#include "script/jsfunction.h"
 
-namespace jstimer {
+namespace jstimer 
+{
 	JSBool jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-
-	class JSTimerFunctionCall
-	{
-	public:
-		JSTimerFunctionCall(JSContext* cx, JSObject* par, jsval fun) :
-			cx(cx), par(par), fun(fun)
-		{
-			JSObject* fo = JSVAL_TO_OBJECT(fun);
-			JS_AddRoot(cx, &fo);
-			if(par)
-				JS_AddRoot(cx, &par);
-		}
-
-		~JSTimerFunctionCall()
-		{
-			JSObject* fo = JSVAL_TO_OBJECT(fun);
-			JS_RemoveRoot(cx, &fo);
-			if(par)
-				JS_RemoveRoot(cx, &par);
-		}
-
-		void call(const string& timer_name)
-		{
-			jsval argv, rval;
-			JSString* s = JS_NewStringCopyZ(cx, timer_name.c_str());
-			argv = STRING_TO_JSVAL(s);
-			//JS_CallFunction(cx, parent, f, 1, &argv, &rval);
-			if(!par)
-				JS_CallFunctionValue(cx, JS_GetParent(cx, JSVAL_TO_OBJECT(fun)), fun, 1, &argv, &rval);
-			else
-				JS_CallFunctionValue(cx, par, fun, 1, &argv, &rval);
-		}
-
-		JSContext* cx;
-		jsval fun;
-		JSObject* par;
-	};
+	
+	typedef jsscript::jsfunction<void(string)> JSTimerFunctionCall;
 }
 
 REGISTER_STARTUP_FUNCTION(jstimer, jstimer::init, 10);
@@ -83,12 +50,12 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 	if(JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[1])))
 	{		
 		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, NULL, argv[1]));
-		timer::addTimer(name, bind(&JSTimerFunctionCall::call, call, _1), frequency, start);
+		timer::addTimer(name, bind(&JSTimerFunctionCall::operator(), call, _1), frequency, start);
 	}
 	else if((argc >= 3) && JSVAL_IS_OBJECT(argv[1]) && JSVAL_IS_OBJECT(argv[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[2])))
 	{
 		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, JSVAL_TO_OBJECT(argv[1]), argv[2]));
-		timer::addTimer(name, bind(&JSTimerFunctionCall::call, call, _1), frequency, start);
+		timer::addTimer(name, bind(&JSTimerFunctionCall::operator(), call, _1), frequency, start);
 	}
 	else
 	{

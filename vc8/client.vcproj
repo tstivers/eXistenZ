@@ -261,6 +261,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\script\jsfunction.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\jsfunctioncall.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\script\jsscript.cpp"
 				>
 			</File>

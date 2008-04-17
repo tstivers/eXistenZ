@@ -3,46 +3,13 @@
 #include "input/jsinput.h"
 #include "input/input.h"
 #include "input/bind.h"
+#include "script/jsfunction.h"
 
 REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
 
 namespace jsinput
 {
-	class JSBindFunctionCall
-	{
-	public:
-		JSBindFunctionCall(JSContext* cx, JSObject* par, jsval fun) :
-		  cx(cx), par(par), fun(fun)
-		  {
-			  JSObject* fo = JSVAL_TO_OBJECT(fun);
-			  JS_AddRoot(cx, &fo);
-			  if(par)
-				  JS_AddRoot(cx, &par);
-		  }
-
-		  ~JSBindFunctionCall()
-		  {
-			  JSObject* fo = JSVAL_TO_OBJECT(fun);
-			  JS_RemoveRoot(cx, &fo);
-			  if(par)
-				  JS_RemoveRoot(cx, &par);
-		  }
-
-		  void call(int key, input::KEY_STATE state)
-		  {
-			  jsval argv[2], rval;
-			  argv[0] = INT_TO_JSVAL(key);
-			  argv[1] = INT_TO_JSVAL(state);
-			  if(!par)
-				  JS_CallFunctionValue(cx, JS_GetParent(cx, JSVAL_TO_OBJECT(fun)), fun, 2, &argv[0], &rval);
-			  else
-				  JS_CallFunctionValue(cx, par, fun, 2, &argv[0], &rval);
-		  }
-
-		  JSContext* cx;
-		  jsval fun;
-		  JSObject* par;
-	};
+	typedef jsscript::jsfunction<void(int, int)> JSBindFunctionCall;
 }
 
 void jsinput::init()
@@ -70,14 +37,14 @@ JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 		if(argc == 3)
 			JS_ValueToInt32(cx, argv[2], (int32*)&state);
 		shared_ptr<JSBindFunctionCall> call(new JSBindFunctionCall(cx, NULL, argv[1]));
-		input::bindKey(key, bind(&JSBindFunctionCall::call, call, _1, _2), state);
+		input::bindKey(key, bind(&JSBindFunctionCall::operator(), call, _1, _2), state);
 	}
 	else if((argc >= 3) && JSVAL_IS_OBJECT(argv[1]) && JSVAL_IS_OBJECT(argv[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[2])))
 	{
 		if(argc == 4)
 			JS_ValueToInt32(cx, argv[3], (int32*)&state);
 		shared_ptr<JSBindFunctionCall> call(new JSBindFunctionCall(cx, JSVAL_TO_OBJECT(argv[1]), argv[2]));
-		input::bindKey(key, bind(&JSBindFunctionCall::call, call, _1, _2), state);
+		input::bindKey(key, bind(&JSBindFunctionCall::operator(), call, _1, _2), state);
 	}
 	else
 	{
