@@ -27,14 +27,14 @@ void Log::removeConsumer(const string& name)
 void Log::log(const char* file, unsigned int line, const char* function, unsigned int flags, const char* format, ...)
 {
 	va_list args;
-	char buffer[512];
+	char buffer[4096];
 
 	va_start(args, format);	
 	vsprintf(buffer, format, args);
 	va_end(args);
 
 #ifdef _DEBUG
-	char buffer2[512];
+	char buffer2[4096];
 	sprintf(buffer2, "%s:%i(%s) %s\n", file, line, function, buffer);
 	OutputDebugString(buffer2);
 #endif
