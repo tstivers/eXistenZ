@@ -45,4 +45,5 @@ namespace script {
 	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
 	void init();
 	void release();
+	JSObject* GetObject(const string& name);
 };

@@ -26,8 +26,8 @@ ScriptEngine::ScriptEngine()
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 
-	//rt = JS_Init(1000000L);
-	rt = JS_Init(33554432L);
+	rt = JS_NewRuntime(1024 * 1024); // 1mb until gc is triggered
+	
 	if ( rt == NULL ) {
 		ERROR("unable to create runtime");
 	}
@@ -43,6 +43,9 @@ ScriptEngine::ScriptEngine()
 	//JS_AddRoot(cx, globalObj);
 	JS_InitStandardClasses(cx, globalObj);
 	jsvector::initVectorClass(cx, globalObj);
+
+	JS_SetVersion(cx, JSVERSION_LATEST);
+	INFO("Javascript Engine version %s loaded", JS_VersionToString(JS_GetVersion(cx)));
 
 	SetErrorReporter(NULL);
 }
@@ -184,6 +187,40 @@ JSObject* ScriptEngine::GetObject(char* name, bool create)
 				currobj = AddObject(curr, currobj);
 			else
 				return NULL;
+		}
+		curr = next;
+	}
+
+	return currobj;
+}
+
+// TODO: this is only for the function wrapper stuff, fix it
+JSObject* script::GetObject(const string& name)
+{
+	char namebuf[512];
+	char* next = namebuf;
+	char* curr = namebuf;
+	JSObject* currobj = gScriptEngine->GetGlobal();
+	strcpy(namebuf, name.c_str());
+	jsval prop;
+
+	while(curr && *curr) {
+		next = strchr(next, '.');
+		if(next) {
+			*next = 0;
+			next++;
+		}
+		// check for existing property name
+		if(gScriptEngine->GetProperty(currobj, curr, &prop)) {
+			if(JSVAL_IS_OBJECT(prop))
+				currobj = JSVAL_TO_OBJECT(prop);
+			else {
+				ERROR("failed getting \"%s\"", name);				
+				return NULL;
+			}
+		}
+		else {
+			return NULL;
 		}
 		curr = next;
 	}
