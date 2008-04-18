@@ -43,12 +43,13 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;STATIC_JS_API;DEBUG"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;STATIC_JS_API;DEBUG"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
 				DebugInformationFormat="3"
+				EnablePREfast="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
