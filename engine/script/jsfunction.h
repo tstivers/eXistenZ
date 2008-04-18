@@ -69,33 +69,45 @@ namespace jsscript
 		jsfunction(JSContext* cx, JSObject* par, jsval fun)
 		{
 			this->cx = cx;
-			this->par = par;
 			this->fun = fun;
-
-			JSObject* fo = JSVAL_TO_OBJECT(fun);
-			JS_AddRoot(cx, &fo);
-			if(!par)
-				this->par = JS_GetParent(cx, fo);
-			if(par)
-				JS_AddRoot(cx, &par);
+			this->par = par ? par : JS_GetParent(cx, JSVAL_TO_OBJECT(fun));
+			acquire_locks();
 		}
 		
 		jsfunction(JSContext* cx, jsval fun)
 		{
 			this->cx = cx;
 			this->fun = fun;
+			this->par = JS_GetParent(cx, JSVAL_TO_OBJECT(fun));
+			acquire_locks();
+		}
 
-			JSObject* fo = JSVAL_TO_OBJECT(fun);
-			JS_AddRoot(cx, &fo);
-			this->par = JS_GetParent(cx, fo);
+		jsfunction(JSContext* cx, const string& function_name)
+		{
+			this->fun = 0;
+			this->cx = cx;
+			JSObject* fo = script::GetObject(function_name);
+			assert(fo);
+			if(JS_ObjectIsFunction(cx, fo))
+			{
+				this->fun = OBJECT_TO_JSVAL(fo);
+				this->par = JS_GetParent(cx, JSVAL_TO_OBJECT(fun));
+			}
+
+			assert(fun);
+			acquire_locks();
+		}
+
+		void acquire_locks()
+		{
+			JS_AddRoot(cx, &fun);
 			if(par)
 				JS_AddRoot(cx, &par);
 		}
 
 		~jsfunction()
 		{
-			JSObject* fo = JSVAL_TO_OBJECT(fun);
-			JS_RemoveRoot(cx, &fo);
+			JS_RemoveRoot(cx, &fun);
 			if(par)
 				JS_RemoveRoot(cx, &par);
 		}

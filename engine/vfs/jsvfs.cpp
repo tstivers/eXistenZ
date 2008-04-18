@@ -47,8 +47,8 @@ JSBool jsvfs::addFileWatch(JSContext *cx, JSObject *obj, uintN argc,
 		return JS_FALSE;
 	}
 
-	// protect closures
-	JS_AddRoot(cx, callback);
+	// protect closures (wrong way to do this)
+	//JS_AddRoot(cx, callback);
 
 	vfs::watchFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), jsWatchCallback, (void*)argv[1]); 
 
