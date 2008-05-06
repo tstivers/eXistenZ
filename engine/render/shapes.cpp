@@ -6,6 +6,7 @@
 #include "q3bsp/bleh.h"
 #include "texture/texture.h"
 #include "texture/material.h"
+#include "game/game.h"
 
 namespace render {
 	ID3DXLine* line = NULL;
@@ -15,40 +16,84 @@ namespace render {
 	};
 #define LINEVERTEXF ( D3DFVF_XYZ | D3DFVF_DIFFUSE )
 	LineVertex linebuf[30];
+	ID3DXLine* D3DXLine = NULL;
+
+	void clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color);
 }
 
 using namespace render;
 
-void render::drawLine(const D3DXVECTOR3* vertices, int verticeCount, float r, float g, float b)
+void render::clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color)
 {
-	for(int i = 0; i < verticeCount; i++) {
-		linebuf[i].pos =  vertices[i];
-		linebuf[i].diffuse = D3DXCOLOR(r, g, b, 1.0f);
+	ASSERT(count > 1);
+
+	D3DXPLANE p;
+	D3DXMATRIX m;
+	D3DXVECTOR3 start, end, nrm(0,0,1.0f);
+	D3DXMatrixRotationYawPitchRoll(&m, cam_rot.x * (D3DX_PI / 180.0f), cam_rot.y * (D3DX_PI / 180.0f), cam_rot.z * (D3DX_PI / 180.0f));
+	D3DXVec3TransformCoord(&nrm, &nrm, &m);
+	D3DXPlaneFromPointNormal(&p, &cam_pos, &nrm);
+
+	bool in_front = false;
+	vector<D3DXVECTOR3> output;
+	D3DXVECTOR3 last_behind;
+	for(int i = 0; i < count; i++)
+	{
+		if(D3DXPlaneDotCoord(&p, &vertices[i]) >= 0.0)
+		{
+			if((!in_front) && i) // transitioning from back to front
+			{
+				D3DXPlaneIntersectLine(&start, &p, &last_behind, &vertices[i]);
+				output.push_back(start + (nrm * 0.1));
+			}
+			in_front = true;			
+			output.push_back(vertices[i]);
+		} else {
+			if(in_front) // transitioning from front to back
+			{
+				D3DXPlaneIntersectLine(&end, &p, &output[output.size() - 1], &vertices[i]);
+				output.push_back(end + (nrm * 0.1));
+				drawLine(&output[0], output.size(), color, false);
+				output.clear();
+				in_front = false;
+			}
+			last_behind = vertices[i];
+		}
 	}
 
-	DWORD fvf, colorop, colorarg1, colorop1;
-	render::device->GetFVF(&fvf);
-	render::device->GetTextureStageState(0, D3DTSS_COLOROP, &colorop);
-	render::device->GetTextureStageState(0, D3DTSS_COLORARG1, &colorarg1);
-	render::device->GetTextureStageState(1, D3DTSS_COLOROP, &colorop1);
-	render::device->SetRenderState( D3DRS_LIGHTING, FALSE );
+	ASSERT(output.size() != 1);
 
-	render::device->SetFVF(LINEVERTEXF);
-	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	render::device->DrawPrimitiveUP(D3DPT_LINELIST, verticeCount / 2, linebuf, sizeof(LineVertex));
-
-	render::device->SetFVF(fvf);
-	render::device->SetTextureStageState(0, D3DTSS_COLOROP, colorop);
-	render::device->SetTextureStageState(0, D3DTSS_COLORARG1, colorarg1);
-	render::device->SetTextureStageState(1, D3DTSS_COLOROP, colorop1);
-
-	render::current_ib = NULL;
-	render::current_vb = NULL;
+	if(output.size() > 1)
+		drawLine(&output[0], output.size(), color, false);
 }
 
-void render::drawBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, float r, float g, float b)
+void render::drawLine(const D3DXVECTOR3* vertices, int count, D3DCOLOR color, bool clip)
+{
+	ASSERT(count > 1);
+
+	if(!D3DXLine)
+	{
+		HRESULT r = D3DXCreateLine(render::device, &D3DXLine);
+		ASSERT(r == D3D_OK);
+	}
+
+	if(clip)
+		return clipsegments(vertices, count, color);
+
+	D3DXMATRIX m = render::world * render::view * render::projection;
+	HRESULT r = D3DXLine->DrawTransform(vertices, count, &m, color);
+	ASSERT(r == D3D_OK);
+}
+
+void render::drawLines(const D3DXVECTOR3* segments, int count, D3DCOLOR color)
+{
+	for(int i = 0; i < count; i++)
+	{
+		drawLine(&segments[i << 1], 2, color);
+	}
+}
+
+void render::drawAABBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, D3DCOLOR color)
 {
 	D3DXVECTOR3 segments[24];
 
@@ -81,7 +126,7 @@ void render::drawBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, float r, fl
 	segments[22] = D3DXVECTOR3(min->x, max->y, max->z);
 	segments[23] = D3DXVECTOR3(min->x, min->y, max->z);
 
-	drawLine(&segments[0], 24, r, g, b);
+	drawLines(&segments[0], 12, color);
 }
 
 #define BOXFVF ( D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0) )
