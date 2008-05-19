@@ -26,7 +26,7 @@ MeshSystem* mesh::getMeshSystem(string& name)
 		return mesh;
 	}
 
-	LOG("[mesh::getMeshSystem] failed to find meshsystem \"%s\"", name.c_str());
+	LOG("failed to find meshsystem \"%s\"", name.c_str());
 
 	return NULL;
 }

@@ -44,13 +44,13 @@ void BSP::initDeviceObjects()
 		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
-			LOG("[BSP::initDeviceObjects] failed to create vertex buffer");
+			LOG("failed to create vertex buffer");
 			return;
 	}
 
 	void* vertbuf;
 	if(FAILED(dxvertbuf->Lock(0, num_verts * sizeof(BSPVertex), &vertbuf, D3DLOCK_DISCARD))) {
-		LOG("[BSP::initDeviceObjects] failed to lock vertex buffer");
+		LOG("failed to lock vertex buffer");
 		return;
 	}
 	
@@ -64,13 +64,13 @@ void BSP::initDeviceObjects()
 		D3DPOOL_MANAGED,
 		&dxindexbuf,
 		NULL))) {
-			LOG("[BSP::initDeviceObjects] failed to create index buffer");
+			LOG("failed to create index buffer");
 			return;
 		}
 
 	void* indexbuf;
 	if(FAILED(dxindexbuf->Lock(0, num_indices * sizeof(int), &indexbuf, D3DLOCK_DISCARD))) {
-		LOG("[BSP::initDeviceObjects] failed to lock index buffer");
+		LOG("failed to lock index buffer");
 		return;
 	}
 	
@@ -83,7 +83,7 @@ void BSP::initDeviceObjects()
 	transparent_faces = new int[num_faces];
 
 	if(q3bsp::debug) {
-		LOG("[BSP::initDeviceObjects] allocated %ikb vertex buffer, %ikb index buffer",
+		LOG("allocated %ikb vertex buffer, %ikb index buffer",
 			num_verts * sizeof(BSPVertex) / 1024,
 			num_indices * sizeof(int) / 1024);
 	}
@@ -165,12 +165,24 @@ inline void BSP::initRenderState(void)
 	//render::device->SetStreamSource(0, dxvertbuf, 0, sizeof(BSPVertex));
 	//render::device->SetIndices(dxindexbuf);
 	//render::device->SetFVF(BSPVertex::FVF);
-	render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-	render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-	render::device->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
-	render::device->SetSamplerState( 1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
-	render::device->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
-	render::device->SetSamplerState( 1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+	if(!render::maxanisotropy)
+	{
+		render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+		render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+		render::device->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+		render::device->SetSamplerState( 1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR );
+		render::device->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR );
+		render::device->SetSamplerState( 1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
+	} else {
+		render::device->SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 0, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 1, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 1, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 1, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC );
+		render::device->SetSamplerState( 0, D3DSAMP_MAXANISOTROPY, render::maxanisotropy );
+		render::device->SetSamplerState( 1, D3DSAMP_MAXANISOTROPY, render::maxanisotropy );
+	}
 	render::device->SetSamplerState( 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP );
 	render::device->SetSamplerState( 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP );
 	render::device->SetSamplerState( 0, D3DSAMP_ADDRESSW, D3DTADDRESS_WRAP );

@@ -4,12 +4,14 @@
 #include "settings/settings.h"
 #include "client/appwindow.h"
 #include "interface/interface.h" // hack for fullscreen reset
+#include "render/shapes.h"
 
 namespace d3d {
 	IDirect3D9* d3d;
 	IDirect3DDevice9* d3dDevice;
 
 	D3DPRESENT_PARAMETERS d3dpp;
+	bool resetDevice = false;
 };
 
 using namespace d3d;
@@ -20,26 +22,15 @@ bool d3d::init()
 
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
 	d3dpp.Windowed = settings::getint("system.render.fullscreen") ? FALSE : TRUE;
-
-	if(d3dpp.Windowed) {
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		d3dpp.EnableAutoDepthStencil = TRUE;
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-		d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
-		d3dpp.BackBufferCount = 1;
-	} else {
-		d3dpp.BackBufferWidth = settings::getint("system.render.resolution.x");
-		d3dpp.BackBufferHeight = settings::getint("system.render.resolution.y");
-		d3dpp.BackBufferFormat = D3DFMT_A8R8G8B8;
-		//d3dpp.BackBufferFormat = D3DFMT_R5G6B5;
-		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
-		d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		d3dpp.EnableAutoDepthStencil = TRUE;
-		d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-		d3dpp.Flags = D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
-		d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-	}
-
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.EnableAutoDepthStencil = TRUE;
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24X8;
+	//if(d3dpp.Windowed)
+	//	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+	//else
+		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+	d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
+	
 	if(render::wait_vtrace)
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	else
@@ -80,12 +71,12 @@ bool d3d::init()
 				default:
 					err = "UNKNOWN";
 			}
-			LOG("[d3d::init] failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
+			LOG("failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
 			d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 			d3dpp.MultiSampleQuality = 0;
 		} else {
 			d3dpp.MultiSampleQuality -= 1; 
-			LOG("[d3d::init] set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
+			LOG("set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
 		}
 	}
 
@@ -93,7 +84,7 @@ bool d3d::init()
 		adapter, 
 		devicetype, 
 		appwindow::getHwnd(),
-		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
+		D3DCREATE_HARDWARE_VERTEXPROCESSING,
 		&d3dpp, 
 		&d3dDevice))) {
 			MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
@@ -101,30 +92,90 @@ bool d3d::init()
 		}
 
 	render::device = d3dDevice;
-	if(FAILED(render::device->GetSwapChain(0, &render::swapchain))) {
-		MessageBox(NULL, "[d3d::init] unable to get swapchain", "ERROR", MB_OK);
-		exit(1);		
-	}
+// 	if(FAILED(render::device->GetSwapChain(0, &render::swapchain))) {
+// 		MessageBox(NULL, "[d3d::init] unable to get swapchain", "ERROR", MB_OK);
+// 		exit(1);		
+// 	}
 
 	return true;
 }
 
 bool d3d::checkDevice()
 {
-	switch(d3dDevice->TestCooperativeLevel()) {
-	case D3DERR_DEVICELOST: 
-		LOG("[d3d::checkDevice] device lost");
-		return false;
-	case D3DERR_DEVICENOTRESET:
+	if(resetDevice)
+	{
+		LOG("resetting device");
 		ui::reset(); // hack for stupid d3dfont stuff
-		if(FAILED(d3dDevice->Reset(&d3dpp))) {
-			LOG("[d3d::checkDevice] could not reset device");
+		render::releaseLine(); // released the d3dxline interface
+		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
+		d3dpp.BackBufferWidth = render::xres;
+		d3dpp.BackBufferHeight = render::yres;
+		if(d3dpp.Windowed)
+			d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+		else
+			d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+		HRESULT result;
+		if(FAILED(result = d3dDevice->Reset(&d3dpp)))
+		{
+			char* reason = "UNKNOWN";
+			switch (result)
+			{
+			case D3DERR_DEVICELOST:
+				reason = "DEVICELOST";
+				break;
+			case D3DERR_DEVICEREMOVED:
+				reason = "DEVICEREMOVED";
+				break;
+			case D3DERR_DRIVERINTERNALERROR:
+				reason = "DRIVERINTERNALERROR";
+				break;
+			case D3DERR_OUTOFVIDEOMEMORY:
+				reason = "OUTOFVIDEOMEMORY";
+				break;
+			}
+
+			LOG("could not reset device (reason: %s)", reason);
 			return false;
 		}
-		LOG("[d3d::checkDevice] device reset");
+		else
+		{
+			LOG("device reset");
+			resetDevice = false;
+		}
+	}
+
+	switch(d3dDevice->TestCooperativeLevel()) {
+	case D3DERR_DEVICELOST: 
+		LOG("device lost");
+		return false;
+	case D3DERR_DEVICENOTRESET:
+		setResetDevice();
+		return false;
 	default:
 		return true;
 	}	
+}
+
+void d3d::resize(int width, int height)
+{
+	d3dpp.BackBufferWidth = width;
+	d3dpp.BackBufferHeight = height;
+	//LOG("resizing to %i:%i", width, height);
+	setResetDevice();
+	checkDevice();
+}
+
+void d3d::goFullScreen(bool fullscreen)
+{
+	d3dpp.Windowed = settings::getint("system.render.fullscreen") ? FALSE : TRUE;
+
+// 	if(d3dpp.Windowed) {
+// 		d3dpp.BackBufferCount = 1;
+// 	} else {
+// 		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
+// 	}
+
+	setResetDevice();
 }
 
 void d3d::begin()
@@ -144,7 +195,9 @@ void d3d::clear()
 
 void d3d::present()
 {
-	d3dDevice->Present(NULL, NULL, NULL, NULL);
+	if(d3dDevice->Present(NULL, NULL, NULL, NULL) != D3D_OK)
+		checkDevice();
+	//LOG("presented");
 }
 
 void d3d::release()
@@ -158,4 +211,9 @@ ID3DXFont* d3d::createFont(HFONT font)
 		return NULL;
 
 	return dxfont;
+}
+
+void d3d::setResetDevice()
+{
+	resetDevice = true;
 }

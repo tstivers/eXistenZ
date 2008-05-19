@@ -45,7 +45,7 @@ bool q3bsp::loadBSP(char* filename)
 	vfs::IFilePtr file = vfs::getFile(filename);
 	if(!bsp->load(file))
 	{
-		LOG("[q3bsp::loadBSP] unable to load \"%s\"", filename);
+		LOG("unable to load \"%s\"", filename);
 		delete bsp;
 		bsp = NULL;
 		return false;

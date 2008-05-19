@@ -155,7 +155,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 		bool full_out = false;
 
 		D3DXVECTOR3 hit_normal(0, 0, 0);
-		//LOG("[BSP::collideLeaf] checking brush %i", brush_index);
+		//LOG("checking brush %i", brush_index);
 
 		while(side_index--) { // loop through sides of the brush
 			BSPPlane& plane = planes[brushsides[side_start + side_index].plane];
@@ -210,7 +210,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 				collider.brush_contents = brush.texture;
 				collider.brush_id = brush_index;
 				collider.in_solid = true;
-// 				FRAMEDO(LOG("[q3bsp::collideLeaf] ERROR: totally in \"%s\" (%i)", 
+// 				FRAMEDO(LOG("ERROR: totally in \"%s\" (%i)", 
 // 					bsptextures[brush.texture].name, 
 // 					bsptextures[brush.texture].flags));
 				return;
@@ -224,7 +224,7 @@ void BSP::collideLeaf(collider_t& collider, int leaf_index)
 						collider.normal = hit_normal;
 						collider.brush_contents = brush.texture;
 						collider.brush_id = brush_index;
-						//LOG("[bspcollide] collided with \"%s\" (%i)", bsp_textures[brush.texture].strName, bsp_textures[brush.texture].flags);
+						//LOG("collided with \"%s\" (%i)", bsp_textures[brush.texture].strName, bsp_textures[brush.texture].flags);
 				}
 			}
 		}

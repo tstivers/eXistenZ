@@ -9,4 +9,7 @@ namespace d3d {
 	void begin();
 	void end();
 	bool checkDevice();
+	void resize(int width, int height);
+	void goFullScreen(bool fullscreen);
+	void setResetDevice();
 };

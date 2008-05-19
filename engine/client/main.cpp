@@ -13,6 +13,8 @@
 #include "physics/physics.h"
 #include "timer/timers.h"
 #include "game/game.h"
+#include "script/jsvector.h"
+#include "script/jsfunction.h"
 
 ScriptEngine* gScriptEngine = NULL;
 HINSTANCE gHInstance = 0;
@@ -41,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 			gScriptEngine->RunScript(file);
 			file.reset();
 		} 
-		else LOG("[eXistenZ] unable to open \"config.js\"");
+		else LOG("unable to open \"config.js\"");
 	}
 	// execute command line
 	console::processCmd(cmdline);
@@ -125,13 +127,15 @@ int mainloop()
 		if(!gActive)
 			WaitMessage();
 		else {
-			timer::doTick();			
+			timer::doTick();
 			input::doTick();
 			physics::getResults();
 			timer::fireTimers();
 			game::doTick();
 			physics::startSimulation();
 			render::render();
+			jsscript::jsfunction<void(float, D3DXVECTOR3)>(gScriptEngine->GetContext(), "on_tick")(timer::game_ms, D3DXVECTOR3(1, 3, 2));
+			
 			//JS_MaybeGC(gScriptEngine->GetContext());
 		}
 	}

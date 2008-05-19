@@ -9,6 +9,7 @@
 #include "q3bsp/bleh.h"
 #include "q3bsp/bsppatch.h"
 #include "render/meshoptimize.h"
+#include "render/shapes.h"
 #include "entity/entity.h"
 #include "texture/material.h"
 
@@ -246,6 +247,15 @@ void SceneBSP::render()
 			entities[i]->render(&lighting);
 		}
 	}
+
+ 	if(entities.size() > 1)
+ 	{
+ 		vector<D3DXVECTOR3> segments;
+ 		unsigned num_entities = entities.size();
+ 		for(unsigned i = 0; i < num_entities; i++)
+ 			segments.push_back(entities[i]->getPos());
+ 		render::drawLine(&segments[0], num_entities);
+ 	}
 
 	for(int i = render::alpha_groups.size(); i > 0; i--)
 		render::drawGroup(render::alpha_groups[i - 1], &render::world);

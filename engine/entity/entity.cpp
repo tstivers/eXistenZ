@@ -55,16 +55,16 @@ inline void Entity::mark(unsigned int frame)
 
 void Entity::applyForce(const D3DXVECTOR3 &force)
 {
-	LOG("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
+	LOG("attempted to apply force to non-dynamic entity %s", name.c_str());
 }
 
 bool Entity::getSleeping()
 {
-	LOG("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
+	LOG("attempted to apply force to non-dynamic entity %s", name.c_str());
 	return false;
 }
 
 void Entity::setSleeping(bool asleep)
 {
-	LOG("[Entity::applyForce] attempted to apply force to non-dynamic entity %s", name.c_str());
+	LOG("attempted to apply force to non-dynamic entity %s", name.c_str());
 }

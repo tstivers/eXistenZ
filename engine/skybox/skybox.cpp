@@ -71,13 +71,13 @@ void skybox::acquire()
 		D3DPOOL_MANAGED,
 		&dxvertbuf,
 		NULL))) {
-			LOG("[skybox::acquire] failed to create vertex buffer");
+			LOG("failed to create vertex buffer");
 			return;
 		}
 
 	void* vertbuf;
 	if(FAILED(dxvertbuf->Lock(0, 4 * 6 * sizeof(SkyVertex), &vertbuf, 0))) {
-		LOG("[skybox::acquire] failed to lock vertex buffer");
+		LOG("failed to lock vertex buffer");
 		return;
 	}
 	memcpy(vertbuf, verts, 4 * 6 * sizeof(SkyVertex));

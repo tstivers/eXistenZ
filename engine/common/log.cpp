@@ -35,7 +35,7 @@ void Log::log(const char* file, unsigned int line, const char* function, unsigne
 
 #ifdef _DEBUG
 	char buffer2[4096];
-	sprintf(buffer2, "%s:%i(%s) %s\n", file, line, function, buffer);
+	sprintf(buffer2, "%s(%i):[%s] %s\n", file, line, function, buffer);
 	OutputDebugString(buffer2);
 #endif
 

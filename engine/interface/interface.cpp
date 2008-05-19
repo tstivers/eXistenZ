@@ -120,11 +120,11 @@ void ui::consoleMessageCallback(const char* file, unsigned int line, const char*
 	if(!(((Console*)user)->filter & flags))
 		return;
 
-// 	char buffer[512];
-// 	if(function && *function)
-// 		sprintf(buffer, "[%s] %s", function, message);
-// 	else
-// 		strcpy(buffer, message);
+ 	char buffer[512];
+ 	if(function && *function)
+ 		sprintf(buffer, "[%s] %s", function, message);
+ 	else
+ 		strcpy(buffer, message);
 
-	((Console*)user)->addMessage(message);
+	((Console*)user)->addMessage(buffer);
 }

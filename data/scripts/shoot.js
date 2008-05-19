@@ -2,7 +2,7 @@ var shootspeed = 100;
 var shootvelo = 15;
 var lastshot = 0;
 
-game.player.shoot = function()
+game.player.shoot = function(key, state)
 {
     this.shootFunction();
 }
@@ -35,6 +35,6 @@ function playerShootSphere()
     pos.mul(2);
     pos.add(game.player.pos);
     sphere = shootSphere(pos, direction, shootvelo);
-    sphere.remove = function() { removeEntity(this.name); };
+    sphere.remove = function(){ removeEntity(this.name); };
     timer.addTimer(sphere.name + "_timer", sphere, sphere.remove, 0, system.time.ms + 10000);
 }

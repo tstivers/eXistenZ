@@ -50,19 +50,19 @@ shader::Shader* shader::getShader(const char* name)
 	if(!*(strcpy(shader_name, shader_alias.findAlias(name))))
 		strcpy(shader_name, name);
 
-	if(debug) LOG("[shader::getShader] retrieving \"%s\" (%s)", shader_name, name);
+	if(debug) LOG("retrieving \"%s\" (%s)", shader_name, name);
 	
 	// check to see if the shader is cached
 	shader_hash_map::iterator iter = shader_cache.find(shader_name);
 	if(iter != shader_cache.end()) { // found it
-		if(debug) LOG("[shader::getShader] shader cached");
+		if(debug) LOG("shader cached");
 		return (*iter).second;
 	}
 
 	// shader wasn't cached, needs to be loaded
 	Shader* shader = loadShader(shader_name);
 	if(shader) { // shader loaded, cache it
-		if(debug) LOG("[shader::getShader] shader loaded");
+		if(debug) LOG("shader loaded");
 		shader_cache.insert(shader_hash_map::value_type(shader->name, shader));
 		return shader;
 	}

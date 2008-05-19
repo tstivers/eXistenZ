@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=""
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;STATIC_JS_API;DEBUG"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;STATIC_JS_API;DEBUG;D3D_DEBUG_INFO"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
 				UsePrecompiledHeader="2"
@@ -64,7 +64,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib d3d9.lib d3dx9.lib dinput8.lib dxguid.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
 				AdditionalLibraryDirectories=""
 				IgnoreDefaultLibraryNames=""
@@ -543,6 +543,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\render\hwbuffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\jsrender.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\render\jsrender.h"
 				>
 			</File>
 			<File

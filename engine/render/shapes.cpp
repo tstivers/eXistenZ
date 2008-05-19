@@ -9,19 +9,23 @@
 #include "game/game.h"
 
 namespace render {
-	ID3DXLine* line = NULL;
-	struct LineVertex {
-		D3DXVECTOR3 pos;
-		D3DCOLOR	diffuse;
-	};
+
+
 #define LINEVERTEXF ( D3DFVF_XYZ | D3DFVF_DIFFUSE )
-	LineVertex linebuf[30];
 	ID3DXLine* D3DXLine = NULL;
 
 	void clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color);
 }
 
 using namespace render;
+
+void render::releaseLine()
+{
+	if(D3DXLine)
+		D3DXLine->Release();
+	D3DXLine = NULL;
+}
+
 
 void render::clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color)
 {

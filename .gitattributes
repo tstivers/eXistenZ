@@ -143,6 +143,8 @@ engine/render/frustrum.cpp eol=crlf
 engine/render/frustrum.h eol=crlf
 engine/render/hwbuffer.cpp eol=crlf
 engine/render/hwbuffer.h eol=crlf
+engine/render/jsrender.cpp -text
+engine/render/jsrender.h -text
 engine/render/marker.cpp eol=crlf
 engine/render/marker.h eol=crlf
 engine/render/mesh.cpp eol=crlf

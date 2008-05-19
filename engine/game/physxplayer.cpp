@@ -163,9 +163,9 @@ void PhysXPlayer::updatePos()
 		if(!on_ground)
 		{
 			if(jumping)
-				INFO("[physxplayer] hit ground at %f m/s, air time was %fs", -vel.y, (timer::game_ms - fall_start) / 1000.0f);
+				INFO("hit ground at %f m/s, air time was %fs", -vel.y, (timer::game_ms - fall_start) / 1000.0f);
 			else
-				INFO("[physxplayer] hit ground at %f m/s, air time was %fs, fell %fm", -vel.y, (timer::game_ms - fall_start) / 1000.0f, fall_start_height - pos.y);
+				INFO("hit ground at %f m/s, air time was %fs, fell %fm", -vel.y, (timer::game_ms - fall_start) / 1000.0f, fall_start_height - pos.y);
 			jumping = false;
 			on_ground = true;
 			vel.y = 0.0f;
@@ -257,7 +257,7 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 		fall_start = timer::game_ms;
 		apogee = false;
 		fall_start_height = pos.y;
-		INFO("[physxplayer] left ground at %f m/s", jump_velocity);
+		INFO("left ground at %f m/s", jump_velocity);
 	}
 
 	D3DXMATRIX mat;	
@@ -274,7 +274,7 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 			vel.y = jump_velocity + (physics::gravity * air_time);
 			if((vel.y <= 0.0) && !apogee)
 			{
-				INFO("[physxplayer] apogee at %fs, height of %f meters", air_time, pos.y - fall_start_height);
+				INFO("apogee at %fs, height of %f meters", air_time, pos.y - fall_start_height);
 				apogee = true;
 			}
 		}

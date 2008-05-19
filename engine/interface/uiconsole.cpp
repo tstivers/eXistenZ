@@ -128,7 +128,7 @@ void Console::clear()
 
 void Console::keypressed(char key, bool extended)
 {
-	//LOG("[Console] key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
+	//LOG("key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
 
 	if(extended)
 		switch(key) {

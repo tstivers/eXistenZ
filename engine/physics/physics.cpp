@@ -15,16 +15,16 @@
 namespace physics {
 	class PhysicsOutputStream : public NxUserOutputStream {
 		void reportError(NxErrorCode code, const char* message, const char* file, int line) {
-			ERROR("[physics] ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
+			ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
 		}
 		
 		NxAssertResponse reportAssertViolation(const char *message, const char *file,int line) {
-			ERROR("[physics] ASSERT \"%s\" (%s:%d)", message, file, line);
+			ERROR("ASSERT \"%s\" (%s:%d)", message, file, line);
 			return NX_AR_CONTINUE;
 		}
 
 		void print(const char* message) {
-			LOG("[physics] \"%s\"", message);
+			LOG("\"%s\"", message);
 		}
 
 	} physicsOutputStream;
@@ -79,16 +79,16 @@ void physics::acquire() {
 
 	gPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, &physicsOutputStream);
 	if(!gPhysicsSDK) {
-		LOG("[physics] failed to initialize physics sdk");
+		LOG("failed to initialize physics sdk");
 		return;
 	} else
-		LOG("[physics] sdk initialized");
+		LOG("sdk initialized");
 
 	if(physics::debug) {
 		gDebugger = gPhysicsSDK->getFoundationSDK().getRemoteDebugger();
 		gDebugger->connect("localhost");
 		if(!gDebugger->isConnected())
-			LOG("[physics] WARNING: debugger failed to attach");
+			LOG("WARNING: debugger failed to attach");
 
 		NX_DBG_CREATE_OBJECT(render::scene, NX_DBG_OBJECTTYPE_CAMERA, "Player", NX_DBG_EVENTGROUP_MYOBJECTS);
 		NX_DBG_CREATE_PARAMETER(NxVec3(render::cam_pos.x, render::cam_pos.y, render::cam_pos.z), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);

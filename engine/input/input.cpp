@@ -25,43 +25,43 @@ void input::init()
 	HRESULT hr;
 	hr = DirectInput8Create(gHInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dinput, NULL);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to get dinput device");
+		LOG("failed to get dinput device");
 		return;
 	}
 
 	hr = dinput->CreateDevice(GUID_SysKeyboard, (LPDIRECTINPUTDEVICEA*)&keyboard, NULL);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to get keyboard device");
+		LOG("failed to get keyboard device");
 		return;
 	}
 
 	hr = dinput->CreateDevice(GUID_SysMouse, (LPDIRECTINPUTDEVICEA*)&mouse, NULL);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to get mouse device");
+		LOG("failed to get mouse device");
 		return;
 	}
 
 	hr = keyboard->SetDataFormat(&c_dfDIKeyboard);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set keyboard data format");
+		LOG("failed to set keyboard data format");
 		return;
 	}
 
 	hr = mouse->SetDataFormat(&c_dfDIMouse);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set mouse data format");
+		LOG("failed to set mouse data format");
 		return;
 	}
 
 	hr = keyboard->SetCooperativeLevel(appwindow::getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);	
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set keyboard coop level");
+		LOG("failed to set keyboard coop level");
 		return;
 	}
 
 	hr = mouse->SetCooperativeLevel(appwindow::getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);	
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set mouse coop level");
+		LOG("failed to set mouse coop level");
 		return;
 	}
 
@@ -74,13 +74,13 @@ void input::init()
 
 	hr = keyboard->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set keyboard buffer size");
+		LOG("failed to set keyboard buffer size");
 		return;
 	}
 
 	hr = mouse->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph);
 	if(FAILED(hr)) {
-		LOG("[input::init] failed to set mouse buffer size");
+		LOG("failed to set mouse buffer size");
 		return;
 	}
 
@@ -97,12 +97,12 @@ void input::acquire()
 
 	hr = keyboard->Acquire();
 	if(FAILED(hr)) {
-		LOG("[input::acquire] failed to acquire keyboard");
+		LOG("failed to acquire keyboard");
 	}
 
 	hr = mouse->Acquire();
 	if(FAILED(hr)) {
-		LOG("[input::acquire] failed to acquire mouse");
+		LOG("failed to acquire mouse");
 	}
 
 	has_focus = 1;
@@ -140,10 +140,10 @@ void input::doTick()
 		}
 
 		if(hr == DI_BUFFEROVERFLOW) {
-			LOG("[input::doTick] keyboard input buffer overflow");
+			LOG("keyboard input buffer overflow");
 		}
 
-		LOG("[input::doTick] failed getting keyboard device state");
+		LOG("failed getting keyboard device state");
 	}
 
 	for(int i = 0; i < num_items; i++) {
@@ -164,10 +164,10 @@ void input::doTick()
 		}
 
 		if(hr == DI_BUFFEROVERFLOW) {
-			LOG("[input::doTick] mouse input buffer overflow");
+			LOG("mouse input buffer overflow");
 		}			
 
-		LOG("[input::doTick] failed getting mouse device state");
+		LOG("failed getting mouse device state");
 	}
 
 	for(int i = 0; i < num_items; i++) {

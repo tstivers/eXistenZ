@@ -1,6 +1,7 @@
 #pragma once
 
 #define JSFUNCTIONCALL_MAX_ARITY 10
+#include "jsvector.h"
 
 namespace jsscript
 {
@@ -204,6 +205,11 @@ namespace jsscript
 		}
 
 		return OBJECT_TO_JSVAL(arr);
+	}
+
+	inline jsval to_jsval(JSContext* cx, const D3DXVECTOR3& vec)
+	{
+		return OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, vec));
 	}
 
 	#pragma endregion

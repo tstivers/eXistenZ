@@ -38,6 +38,15 @@
 #include "d3dx9core.h"
 #define DIRECTINPUT_VERSION 0x0800
 #include "dinput.h"
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+#ifdef _DEBUG
+#pragma comment(lib, "d3dx9d.lib")
+#else
+#pragma comment(lib, "d3dx9.lib")
+#endif
+
 
 #include "js32.h"
 

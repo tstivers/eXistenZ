@@ -34,7 +34,7 @@ bool BSP::load(vfs::IFilePtr file)
 		return false;	
 
 	if(q3bsp::debug)
-		LOG("[BSP::load] loading %s", file->filename);
+		LOG("loading %s", file->filename);
 
 	tBSPHeader header;
 	tBSPLump lumps[kMaxLumps];
@@ -308,11 +308,11 @@ bool BSP::load(vfs::IFilePtr file)
 	// ------------------------- dump debug info --------------------------
 
 	if(q3bsp::debug) {
-		LOG("[BSP::loadBSP] loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);		
-		LOG("[BSP::loadBSP] loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
-		LOG("[BSP::loadBSP] loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
-		LOG("[BSP::loadBSP] loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
-		LOG("[BSP::loadBSP] loaded %i models, %i lights", num_models, num_lights);
+		LOG("loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);		
+		LOG("loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
+		LOG("loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
+		LOG("loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
+		LOG("loaded %i models, %i lights", num_models, num_lights);
 	}
 
 	return true;

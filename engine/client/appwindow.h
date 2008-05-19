@@ -12,4 +12,5 @@ namespace appwindow {
 	bool createWindow(HINSTANCE hinst);
 	void showWindow(bool show);
 	HWND getHwnd();
+	void toggleFullScreen();
 };

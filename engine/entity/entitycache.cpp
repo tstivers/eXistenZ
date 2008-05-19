@@ -15,7 +15,7 @@ Entity* entity::addStaticEntity(string& name, string& meshsys, D3DXMATRIX* trans
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
-		LOG("[entity::addStaticEntity] entity \"%s\" already exists!", name.c_str());
+		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
@@ -35,7 +35,7 @@ Entity* entity::addBoxEntity(string& name, string& texture, D3DXMATRIX* transfor
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
-		LOG("[entity::addBoxEntity] entity \"%s\" already exists!", name.c_str());
+		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
@@ -55,7 +55,7 @@ Entity* entity::addSphereEntity(string& name, string& texture, D3DXMATRIX* trans
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it != entity_cache.end()) {
-		LOG("[entity::addSphereEntity] entity \"%s\" already exists!", name.c_str());
+		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
@@ -75,7 +75,7 @@ Entity* entity::getEntity(string& name)
 {
 	EntityCache::iterator it = entity_cache.find(name);
 	if(it == entity_cache.end()) {
-		LOG("[entity::getEntity] entity \"%s\" doesn't exist!", name.c_str());
+		LOG("entity \"%s\" doesn't exist!", name.c_str());
 		return NULL;
 	}
 

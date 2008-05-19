@@ -120,7 +120,7 @@ bool Shader::load(vfs::IFilePtr file)
 	flags = 0;
 
 	while(file->readLine(buf, 256)) {
-		//LOG("[Shader::load] processing \"%s\"", buf);
+		//LOG("processing \"%s\"", buf);
 		line++;
 
 		char* comment = strstr(buf, "//");
@@ -152,7 +152,7 @@ bool Shader::load(vfs::IFilePtr file)
 			}
 
 		if(!commands[command_idx].command)
-			LOG("[Shader::load] %s[%i]: unknown command \"%s\"", file->filename, line, name);
+			LOG("%s[%i]: unknown command \"%s\"", file->filename, line, name);
 	}
 
 	return true;
@@ -169,7 +169,7 @@ void Shader::init(DXTexture* texture)
 
 bool Shader::activate(DXTexture* texture)
 {
-	//FRAMEDO(LOG("[Shader] activating %s", name));
+	//FRAMEDO(LOG("activating %s", name));
 	active_shader = this;	
 	for(int command_idx = 0; commands[command_idx].command; command_idx++)
 		if(flags & commands[command_idx].flag)
@@ -181,7 +181,7 @@ bool Shader::activate(DXTexture* texture)
 
 void Shader::deactivate(DXTexture* texture)
 {
-	//FRAMEDO(LOG("[Shader] deactivating %s", name));
+	//FRAMEDO(LOG("deactivating %s", name));
 	active_shader = NULL;
 	for(int command_idx = 0; commands[command_idx].command; command_idx++)
 		if(flags & commands[command_idx].flag)
@@ -192,7 +192,7 @@ void Shader::deactivate(DXTexture* texture)
 void texture::parse_alphatest(Shader* shader, int argc, char* argv[])
 {
 	if(argc != 2) {
-		LOG("[parse_alphatest] %s[%i]: ALPHATEST takes 1 argument", shader->name, shader->line);
+		LOG("%s[%i]: ALPHATEST takes 1 argument", shader->name, shader->line);
 		return;
 	}
 
@@ -202,7 +202,7 @@ void texture::parse_alphatest(Shader* shader, int argc, char* argv[])
 void texture::parse_chain(Shader* shader, int argc, char* argv[])
 {
 	if(argc != 3) {
-		LOG("[parse_alphatest] %s[%i]: ANIMATE_CHAIN takes 2 argument", shader->name, shader->line);
+		LOG("%s[%i]: ANIMATE_CHAIN takes 2 argument", shader->name, shader->line);
 		return;
 	}
 
@@ -241,7 +241,7 @@ void texture::parse_blendadd(Shader* shader, int argc, char* argv[])
 void texture::parse_ttransform(Shader* shader, int argc, char* argv[])
 {
 	if(argc != 8) {
-		LOG("[parse_ttransform] %s[%i]: TEX_TRANSFORM time tx ty tz rotx roty rotz", shader->name, shader->line);
+		LOG("%s[%i]: TEX_TRANSFORM time tx ty tz rotx roty rotz", shader->name, shader->line);
 		return;
 	}
 

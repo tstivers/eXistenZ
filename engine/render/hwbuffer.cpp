@@ -1,3 +1,7 @@
+
+
+
+
 #include "precompiled.h"
 #include "render/hwbuffer.h"
 #include "render/render.h"
@@ -149,12 +153,12 @@ void render::VB::init()
 		D3DPOOL_MANAGED,
 		&vertexbuffer,
 		NULL))) {
-			LOG("[VB::init] failed to create vertex buffer");
+			LOG("failed to create vertex buffer");
 			return;
 		}
 
 	free.insert(VBEntry(0, size, NULL));
-	LOG("[VB::init] allocated %i byte vertex buffer (fvf = %i)", size, fvf);
+	LOG("allocated %i byte vertex buffer (fvf = %i)", size, fvf);
 }
 
 void render::IB::init()
@@ -166,12 +170,12 @@ void render::IB::init()
 		D3DPOOL_MANAGED,
 		&indexbuffer,
 		NULL))) {
-			LOG("[IB::init] failed to create index buffer");
+			LOG("failed to create index buffer");
 			return;
 		}
 
 		free.insert(IBEntry(0, size, NULL));
-		LOG("[IB::init] allocated %i byte index buffer", size);
+		LOG("allocated %i byte index buffer", size);
 }
 
 
@@ -244,7 +248,7 @@ void render::VertexBuffer::update(void* data)
 	void* buf;
 	
 	if(FAILED(vertexbuffer->vertexbuffer->Lock(offset, size, &buf, 0))) {
-		LOG("[VB::update] failed to lock vertex buffer");
+		LOG("failed to lock vertex buffer");
 		return;
 	}
 
@@ -257,7 +261,7 @@ void render::IndexBuffer::update(void* data)
 	void* buf;
 
 	if(FAILED(indexbuffer->indexbuffer->Lock(offset, size, &buf, 0))) {
-		LOG("[IB::update] failed to lock vertex buffer");
+		LOG("failed to lock vertex buffer");
 		return;
 	}
 

@@ -8,6 +8,8 @@ system.render.wait_vtrace = 0;
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.render.fullscreen = 0;
+system.render.fullscreenres.x = 1280;
+system.render.fullscreenres.y = 1024;
 
 //system.render.resolution.x = 1280;
 //system.render.resolution.y = 1024;
@@ -16,10 +18,11 @@ system.render.fullscreen = 0;
 
 system.render.refdevice = 0;
 system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
+system.render.anisotropylevel = 16;
 system.vfs.addPath("../data");
 system.vfs.addPath("../data/pak0.zip");
 system.vfs.debug = 0;
-system.render.texture.debug = 1;
+system.render.texture.debug = 0;
 system.render.bsp.debug = 1;
 system.render.boost = 0;
 system.render.gamma = 2.0;
@@ -50,7 +53,7 @@ system.render.skybox.depth = 10;
 system.render.skybox.height = 10;
 system.render.skybox.texture = "textures/skybox/pondnight/";
 game.player.step_up = 0.75;
-game.player.jump_velocity = 2;
+game.player.jump_velocity = 4.5;
 
 // source keys (will fix this later)
 execfile("scripts/keys.js");
@@ -101,7 +104,6 @@ bind(KEY_V, "*exec createBox()");
 bind(KEY_B, "exec createSphere()");
 bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
-bind(KEY_Q, "exec doIt()");
 bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
@@ -347,6 +349,27 @@ function fireFountain(index)
     sphere.radius = (Math.random() + 0.5) / 2;
     //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
 }
+
+var last_time = 0;
+function on_tick(time, arg)
+{
+    if(last_time == 0)
+        last_time = time;
+        
+//    system.render.drawline(game.player.pos, [0,0,0]);
+        
+    if(time > last_time + 1000)
+    {
+        //print("tick! (" + arg + ")");
+        last_time = time;
+    }
+}
+
+function on_resize(width, height) {
+    system.ui.console.height = system.render.resolution.y - system.ui.console.y - 50;
+    system.ui.fps.x = system.render.resolution.x - 150;
+}
+
 
 execfile("scripts/stacks.js");
 execfile("scripts/shoot.js");

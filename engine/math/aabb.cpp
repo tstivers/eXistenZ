@@ -71,14 +71,14 @@ void AABB::recalc()
 
 void AABB::debugPrint()
 {
-	LOG("[AABB] min: {%.2f, %.2f, %.2f}  max: {%.2f, %.2f, %.2f}",
+	LOG("min: {%.2f, %.2f, %.2f}  max: {%.2f, %.2f, %.2f}",
 		min.x, min.y, min.z,
 		max.x, max.y, max.z);
-	LOG("[AABB] pos: {%.2f, %.2f, %.2f}  extents: {%.2f, %.2f, %.2f}",
+	LOG("pos: {%.2f, %.2f, %.2f}  extents: {%.2f, %.2f, %.2f}",
 		pos.x, pos.y, pos.z,
 		extents.x, extents.y, extents.z);
-	LOG("[AABB] cdist: %.2f", cdist);
-	LOG("[AABB] pdist: {%.2f, %.2f, %.2f, %.2f, %.2f, %.2f}",
+	LOG("cdist: %.2f", cdist);
+	LOG("pdist: {%.2f, %.2f, %.2f, %.2f, %.2f, %.2f}",
 		pdist[0], pdist[1], pdist[2], pdist[3], pdist[4], pdist[5]);
 }
 

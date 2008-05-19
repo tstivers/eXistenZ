@@ -163,7 +163,7 @@ MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 		if(!_stricmp(this_token, "MESH:")) {
 			Mesh* mesh = getMesh(string(token));
 			if(!mesh) {
-				LOG("[mesh::loadMeshSystem] failed to load mesh %s for system %s",
+				LOG("failed to load mesh %s for system %s",
 					token, filename.c_str());
 				continue;
 			}

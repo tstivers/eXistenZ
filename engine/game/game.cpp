@@ -123,6 +123,12 @@ void game::processInput()
 		settings::setint("system.ui.console.draw", 1);
 	}
 
+	if((KEYDOWN(DIK_LALT) || KEYDOWN(DIK_RALT)) && KEYDOWN(DIK_RETURN))
+	{
+		appwindow::toggleFullScreen();
+		input::kbstate[DIK_RETURN] = 0; // eat the enter
+	}
+
 	// handle mouse crap here for now
 	player->doRotation(D3DXVECTOR3((float)input::mousestate.lX * mouse_sens_x,
 		(float)input::mousestate.lY * mouse_sens_y,

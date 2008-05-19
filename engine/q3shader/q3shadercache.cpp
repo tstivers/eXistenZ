@@ -68,7 +68,7 @@ void q3shader::parseShader(char* filename)
 	int line = 0;
 	int level = 0;
 
-	//LOG("[q3shader::parseShader] parsing %s...", filename);
+	//LOG("parsing %s...", filename);
 
 	while(file->readLine(buf, 1024)) {
 		
@@ -80,7 +80,7 @@ void q3shader::parseShader(char* filename)
 		strip(buf);
 
 		if(!buf[0]) continue;
-		//LOG("[q3shader::parseShader] processing \"%s\"", buf);
+		//LOG("processing \"%s\"", buf);
 		char* token = buf;
 		char* this_token;
 		while(this_token = getToken(&token, " \t")) {
@@ -89,7 +89,7 @@ void q3shader::parseShader(char* filename)
 			else if(this_token[0] == '}')
 				level--;
 			else if(this_token[0] && level == 0) {
-				LOG("[q3shader::parseShader] adding \"%s\"", this_token);
+				LOG("adding \"%s\"", this_token);
 				shader_file_map.insert(alias_hash_map::value_type(_strdup(this_token), _strdup(filename)));
 			}
 		}
@@ -106,12 +106,12 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 	if(!name || !*name)
 		return NULL;
 
-	//LOG("[q3shader::getShader] looking for \"%s\"", name);
+	//LOG("looking for \"%s\"", name);
 
 	// check cache
 	shader_hash_map::iterator cache_iter = shader_cache.find(name);
 	if(cache_iter != shader_cache.end()) {
-		//LOG("[q3shader::getShader] found in cache");
+		//LOG("found in cache");
 		return ((*cache_iter).second);
 	}
 
@@ -119,9 +119,9 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 	alias_hash_map::iterator map_iter = shader_file_map.find(name);
 	if(map_iter != shader_file_map.end()) {
 		// shader was in list, create it
-		//LOG("[q3shader::getShader] found in list");
+		//LOG("found in list");
 		Q3Shader* shader = new Q3Shader(name);
-		LOG("[q3shader::getShader] loading %s from file %s", name, (*map_iter).second);
+		LOG("loading %s from file %s", name, (*map_iter).second);
 		shader->load((*map_iter).second);
 		shader_cache.insert(shader_hash_map::value_type(_strdup(name), shader));		
 		return shader;
@@ -130,7 +130,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 	// wasn't in cache or list, see if the texture exists and if so create the default shader
 	texture::DXTexture* texture = texture::getTexture(name);
 	if(texture) {
-		//LOG("[q3shader::getShader] found texture");
+		//LOG("found texture");
 		Q3Shader* shader = new Q3Shader(name);
 		shader->texture.push_back(texture);
 		shader->flags = FLAG_STD_TEXTURE;
@@ -139,7 +139,7 @@ q3shader::Q3Shader* q3shader::getShader(const char* name)
 	}
 	
 	// just plain couldn't find it
-	//LOG("[q3shader::getShader] couldn't find it");
+	//LOG("couldn't find it");
 	return NULL;
 }
 

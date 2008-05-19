@@ -26,7 +26,7 @@ Mesh* mesh::getMesh(string& name)
 		return mesh;
 	}
 
-	LOG("[mesh::getMesh] failed to find mesh \"%s\"", name.c_str());
+	LOG("failed to find mesh \"%s\"", name.c_str());
 
 	return NULL;
 }

@@ -18,13 +18,13 @@ void input::bindKey(int key, char* cmd)
 		real_cmd++;
 
 	if(key < 0 || key >= 256) {
-		LOG("[input::bindKey] invalid key (%i) for function \"%s\"", key, cmd);
+		LOG("invalid key (%i) for function \"%s\"", key, cmd);
 		return;
 	}
 
 	// TODO: proper command parsing
 	//if(!console::isCommand(real_cmd)) {
-	//	LOG("[input::bindKey] tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
+	//	LOG("tried to bind %s to invalid function \"%s\"", keyName(key), cmd);
 	//	return;
 	//}
 
@@ -47,7 +47,7 @@ void input::bindKey(int key, char* cmd)
 void input::bindKey(int key, function<void(char, KEY_STATE)> fun, KEY_STATE state)
 {
 	if(key < 0 || key >= 256) {
-		LOG("[input::bindKey] invalid key (%i)", key);
+		LOG("invalid key (%i)", key);
 		return;
 	}
 

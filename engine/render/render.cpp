@@ -14,10 +14,14 @@
 #include "render/rendergroup.h"
 #include "texture/texture.h"
 #include "texture/material.h"
+#include "script/script.h"
+#include "script/jsfunction.h"
 
 namespace render {
 	int xres;
 	int yres;
+	int windowed_width;
+	int windowed_height;
 	int refresh;
 	int bitdepth;
 
@@ -42,7 +46,8 @@ namespace render {
 	IDirect3DSwapChain9* swapchain;
 	int bsp_rendermethod;
 	int diffuse;
-	int lighting;	
+	int lighting;
+	int maxanisotropy = 0;
 	
 	int use_scenegraph;
 	unsigned int max_node_level;
@@ -78,6 +83,8 @@ void render::init()
 {
 	settings::addsetting("system.render.resolution.x", settings::TYPE_INT, 0, NULL, NULL, &xres);
 	settings::addsetting("system.render.resolution.y", settings::TYPE_INT, 0, NULL, NULL, &yres);
+	settings::addsetting("system.render.fullscreenres.x", settings::TYPE_INT, 0, NULL, NULL, NULL);
+	settings::addsetting("system.render.fullscreenres.y", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.resolution.refreshrate", settings::TYPE_INT, 0, NULL, NULL, &refresh);
 	settings::addsetting("system.render.resolution.bitdepth", settings::TYPE_INT, 0, NULL, NULL, &bitdepth);
 	settings::addsetting("system.render.fullscreen", settings::TYPE_INT, 0, NULL, NULL, NULL);
@@ -85,6 +92,7 @@ void render::init()
 	settings::addsetting("system.render.bsp_rendermethod", settings::TYPE_INT, 0, NULL, NULL, &bsp_rendermethod);
 	settings::addsetting("system.render.draw_entities", settings::TYPE_INT, 0, NULL, NULL, &draw_entities);
 	settings::addsetting("system.render.multisampletype", settings::TYPE_INT, 0, NULL, NULL, NULL);
+	settings::addsetting("system.render.anisotropylevel", settings::TYPE_INT, 0, NULL, NULL, &maxanisotropy);
 
 	settings::setint("system.render.resolution.x", 800);
 	settings::setint("system.render.resolution.y", 600);
@@ -125,7 +133,9 @@ void render::init()
 	settings::addsetting("system.render.backbuffercount", settings::TYPE_INT, 0, NULL, NULL, NULL);
 
 	settings::setint("system.render.device", 0);
-	settings::setint("system.render.backbuffercount", 2);
+	settings::setint("system.render.backbuffercount", 0);
+	settings::setint("system.render.fullscreenres.x", 1024);
+	settings::setint("system.render.fullscreenres.y", 768);
 
 	console::addCommand("toggle_wireframe", console::toggle_int, &wireframe);
 	console::addCommand("toggle_lightmap", console::toggle_int, &lightmap);
@@ -177,6 +187,8 @@ void render::init()
 
 	frame = 0;
 	scene = NULL;
+	windowed_width = xres;
+	windowed_height = yres;
 }
 
 void render::release()
@@ -253,10 +265,10 @@ void render::render()
 	d3d::end();
 	
 	// show it rarr
-	if(swapchain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_DONOTWAIT) == D3DERR_WASSTILLDRAWING) {
-		LOG("[render::render()] Had to wait for drawing");
+	//if(swapchain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_DONOTWAIT) == D3DERR_WASSTILLDRAWING) {
+	//	LOG("Had to wait for drawing");
 		d3d::present();
-	}
+	//}
 }
 
 void render::stop()
@@ -334,4 +346,33 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 
 	frame_drawcalls++;
 	frame_polys += rg->primitivecount;
+}
+
+void render::resize( int width, int height )
+{
+	if(xres == width && yres == height)
+		return;
+
+	xres = width;
+	yres = height;
+	LOG("resizing to %i:%i", width, height);
+	d3d::resize(width, height);
+	jsscript::jsfunction<void(int, int)>(gScriptEngine->GetContext(), "on_resize")(width, height);
+}
+
+void render::goFullScreen( bool fullscreen )
+{
+	settings::setint("system.render.fullscreen", fullscreen ? 1 : 0);
+	d3d::goFullScreen(fullscreen);
+
+	if(fullscreen)
+	{
+		windowed_width = xres;
+		windowed_height = yres;
+		resize(settings::getint("system.render.fullscreenres.x"), settings::getint("system.render.fullscreenres.y"));
+	}
+	else
+	{
+		resize(windowed_width, windowed_height);
+	}
 }

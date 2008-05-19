@@ -20,7 +20,7 @@ bool SimpleShader::load(const char* filename) {
 	if(!texture)
 		return false;
 
-	if(debug) LOG("[SimpleShader::load] loaded \"%s\"", texture->name);
+	if(debug) LOG("loaded \"%s\"", texture->name);
 
 	return true;
 }

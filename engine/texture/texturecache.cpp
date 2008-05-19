@@ -165,7 +165,7 @@ found:
 		goto err;
 	
 	if(debug) {
-		LOG("[texture::loadTexture] loaded %s", name);
+		LOG("loaded %s", name);
 	}
 
 shader:
@@ -196,7 +196,7 @@ done:
 
 err:	
 //	if(debug) 
-		LOG("[texture::loadTexture] failed to load %s", name);
+		LOG("failed to load %s", name);
 
 	return NULL;
 }
@@ -216,23 +216,23 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 		D3DPOOL_MANAGED, // pool
 		&texture,
 		NULL))) {
-			LOG("[texture::genLightmap] failed to generate lightmap");
+			LOG("failed to generate lightmap");
 			return NULL;
 		}
 
 		if(FAILED(texture->GetSurfaceLevel(0, &surface))) {
-			LOG("[texture::genLightmap] failed to get surface");
+			LOG("failed to get surface");
 			return NULL;
 		}
 				
 		D3DLOCKED_RECT bleh;
 		if(FAILED(hr = surface->LockRect(&bleh, NULL, 0))) {
-			LOG("[texture::genLightmap] failed to lock surface");
+			LOG("failed to lock surface");
 			return NULL;
 		}
 
 		if(bleh.Pitch != 512) {
-			LOG("[texture::genLightmap] generation failed (pitch = %i)", bleh.Pitch);
+			LOG("generation failed (pitch = %i)", bleh.Pitch);
 			return NULL;
 		}
 		
@@ -275,7 +275,7 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 		memcpy(bleh.pBits, dstbits, 128 * 128 * 4);
 
 		if(FAILED(surface->UnlockRect())) {
-			LOG("[texture::genLightmap] failed to unlock surface");
+			LOG("failed to unlock surface");
 			return NULL;
 		}
 

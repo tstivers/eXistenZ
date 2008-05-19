@@ -122,6 +122,12 @@ JSBool jsentity::createBoxEntity(JSContext* cx, JSObject* obj, uintN argc, jsval
 	}
 
 	*rval = createEntityObject(cx, new_entity);
+	if(*rval == JSVAL_NULL)
+	{
+		gScriptEngine->ReportError("couldn't create javascript entity");
+		entity::removeEntity(new_entity);
+		return JS_FALSE;
+	}
 
 	return JS_TRUE;
 }
@@ -176,26 +182,42 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 {
 	JS_EnterLocalRootScope(cx);
 	JSObject* object = JS_NewObject(cx, &entity_class, entity_prototype, NULL);
-	JS_DefineFunctions(cx, object, entity_methods);
-	JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity));
+	if(!object)
+		goto error; 
+
+	if(!JS_DefineFunctions(cx, object, entity_methods))
+		goto error;
+
+	if(!JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity)))
+		goto error; 
 
 	jsval name = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, entity->name.c_str()));
-	JS_DefineProperty(cx, object, "name", name, NULL, NULL, JSPROP_READONLY);
+	if(!JS_DefineProperty(cx, object, "name", name, NULL, NULL, JSPROP_READONLY))
+		goto error;
 
 	JSObject* vec;
 	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &posOps, entity);
-	JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, posSet, JSPROP_PERMANENT);	
+	if(!JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, posSet, JSPROP_PERMANENT))
+		goto error;
 
 	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &rotOps, entity);
-	JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, rotSet, JSPROP_PERMANENT);	
+	if(!JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, rotSet, JSPROP_PERMANENT))
+		goto error;
 
 	vec = jsvector::NewWrappedVector(cx, object, &entity->scale, false);
-	JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
+	if(!JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT))
+		goto error;
 
-	JS_DefineProperty(cx, object, "sleeping", JSVAL_FALSE, getSleeping, setSleeping, JSPROP_PERMANENT); 
+	if(!JS_DefineProperty(cx, object, "sleeping", JSVAL_FALSE, getSleeping, setSleeping, JSPROP_PERMANENT))
+		goto error;
 
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(object));
 	return OBJECT_TO_JSVAL(object);
+
+error:
+	JS_ReportError(cx, "[jsentity::createEntityObject] failed to create base entity object");
+	JS_LeaveLocalRootScope(cx);
+	return JSVAL_NULL;
 }
 
 JSBool jsentity::posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)

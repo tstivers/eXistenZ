@@ -22,6 +22,8 @@ namespace render {
 	bool start(void);
 	void stop(void);
 	void render(void);
+	void resize(int width, int height);
+	void goFullScreen(bool fullscreen);
 	inline extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
 
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
@@ -38,8 +40,9 @@ namespace render {
 	extern bool sky_visible;
 	extern int diffuse;
 	extern int lighting;
+	extern int maxanisotropy;
 	extern IDirect3DDevice9* device;
-	extern IDirect3DSwapChain9* swapchain;
+	//extern IDirect3DSwapChain9* swapchain;
 
 	extern int use_scenegraph;
 	extern unsigned int max_node_level;

@@ -42,7 +42,7 @@ JSObject* jsvector::initVectorClass(JSContext* cx, JSObject* obj)
 	return vector_prototype;
 }
 
-JSObject* jsvector::NewVector(JSContext* cx, JSObject* parent /* = NULL */, D3DXVECTOR3& vec)
+JSObject* jsvector::NewVector(JSContext* cx, JSObject* parent /* = NULL */, const D3DXVECTOR3& vec)
 {
 	JS_EnterLocalRootScope(cx);
 
@@ -180,7 +180,7 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsvector::SetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec)
+JSBool jsvector::SetVector(JSContext* cx, JSObject* obj, const D3DXVECTOR3& vec)
 {
 	if(JS_GetClass(obj) == &vector_class) {	
 		D3DXVECTOR3* wrapped_vec;
@@ -191,7 +191,7 @@ JSBool jsvector::SetVector(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec)
 			goto error;
 		
 		if(ops && ops->set) {
-			ops->set(cx, obj, vec, user);
+			ops->set(cx, obj, const_cast<D3DXVECTOR3&>(vec), user);
 			return JS_TRUE;
 		} else if(wrapped_vec) {
 			*wrapped_vec = vec;
