@@ -147,6 +147,7 @@ bool d3d::checkDevice()
 	switch(d3dDevice->TestCooperativeLevel()) {
 	case D3DERR_DEVICELOST: 
 		LOG("device lost");
+		setResetDevice();
 		return false;
 	case D3DERR_DEVICENOTRESET:
 		setResetDevice();

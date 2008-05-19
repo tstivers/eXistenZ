@@ -93,12 +93,20 @@ bool appwindow::createWindow(HINSTANCE hinst)
 void appwindow::showWindow(bool show)
 {
 	if(settings::getint("system.render.fullscreen")) {
-        SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_OVERLAPPEDWINDOW);
-		SetWindowLong(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+		LOG("setting fullscreen style");
+        SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_TOPMOST);
+		SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 	} else {
+		LOG("setting windowed style");
         SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_OVERLAPPEDWINDOW);
 		SetWindowLong(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 	}
+
+	// update the window style
+	//SetWindowPos( hwnd,
+	//	HWND_NOTOPMOST,
+	//	0,0,0,0,
+	//	SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOSENDCHANGING | SWP_FRAMECHANGED );
 
 	RECT r;
 	r.left = settings::getint("system.window.position.x");
@@ -109,14 +117,17 @@ void appwindow::showWindow(bool show)
 	AdjustWindowRectEx(&r, GetWindowLong(hwnd, GWL_STYLE), false, GetWindowLong(hwnd, GWL_EXSTYLE));
 
 	SetWindowPos(hwnd, 
-		HWND_TOP, 
+		HWND_NOTOPMOST, 
 		r.left,
 		r.top,
 		r.right - r.left,
 		r.bottom - r.top,
-		SWP_SHOWWINDOW);
+		0);
 	UpdateWindow(hwnd);
-	//LOG("showing window %i:%i",r.right - r.left,r.bottom - r.top);
+	//LOG("showing window size %i:%i (%i:%i adjusted)",
+	//	settings::getint("system.render.resolution.x"),
+	//	settings::getint("system.render.resolution.y"),
+	//	r.right - r.left,r.bottom - r.top);
 }
 
 LONG appwindow::onDestroy(WPARAM wparam, LPARAM lparam)
@@ -154,7 +165,7 @@ LONG appwindow::onActivateApp(WPARAM wparam, LPARAM lparam)
 	if(wparam == TRUE) {
 		gActive = 1;
 	} else {
-		//gActive = 0;
+		gActive = 0;
 	}
 
 	return 0;
@@ -241,7 +252,8 @@ LONG appwindow::onExitSizeMove( WPARAM wparam, LPARAM lparam )
 	int height = r.bottom - r.top;
 	
 	//LOG("resizing to %i:%i", width, height);
-	render::resize(width, height);
+	if(!settings::getint("system.render.fullscreen"))
+		render::resize(width, height);
 
 	return DefWindowProc(hwnd, WM_EXITSIZEMOVE, wparam, lparam);
 }
