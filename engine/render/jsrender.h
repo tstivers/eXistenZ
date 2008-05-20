@@ -3,5 +3,4 @@
 namespace jsrender
 {
 	void init();
-
 }

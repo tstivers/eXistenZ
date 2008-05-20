@@ -110,10 +110,8 @@ bool d3d::checkDevice()
 		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
 		d3dpp.BackBufferWidth = render::xres;
 		d3dpp.BackBufferHeight = render::yres;
-		if(d3dpp.Windowed)
-			d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
-		else
-			d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+		d3dpp.BackBufferFormat = d3dpp.Windowed ? D3DFMT_UNKNOWN : D3DFMT_X8R8G8B8;
+		d3dpp.PresentationInterval = render::wait_vtrace ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 		HRESULT result;
 		if(FAILED(result = d3dDevice->Reset(&d3dpp)))
 		{

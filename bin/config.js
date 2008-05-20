@@ -106,13 +106,14 @@ bind(BUTTON_2, "exec bullet_time_toggle()");
 bind(BUTTON_3, "+exec bullet_time_on()");
 bind(BUTTON_3, "-exec bullet_time_off()");
 //bind(KEY_N, "exec createBox()");
-bind(KEY_V, "*exec createBox()");
+//bind(KEY_V, "*exec createBox()");
 bind(KEY_B, "dbg_break");
 bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
 bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
+bind(KEY_V, toggle_vtrace);
 
 // functions
 
@@ -382,3 +383,8 @@ execfile("scripts/shoot.js");
 
 // log our start date and time
 print("eXistenZ engine started on " + Date());
+
+function toggle_vtrace() {
+    system.render.wait_vtrace = system.render.wait_vtrace == 0 ? 1 : 0;
+    system.render.reset();
+}

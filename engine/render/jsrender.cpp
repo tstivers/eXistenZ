@@ -4,10 +4,12 @@
 #include "render/shapes.h"
 #include "script/script.h"
 #include "script/jsvector.h"
+#include "render/dx.h"
 
 namespace jsrender
 {
 	JSBool drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool resetdevice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
 using namespace jsrender;
@@ -18,6 +20,7 @@ REGISTER_STARTUP_FUNCTION(jsrender, jsrender::init, 10);
 void jsrender::init()
 {
 	gScriptEngine->AddFunction("system.render.drawline", 2, jsrender::drawline);
+	gScriptEngine->AddFunction("system.render.reset", 2, jsrender::resetdevice);
 }
 
 JSBool jsrender::drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -43,4 +46,10 @@ JSBool jsrender::drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 onerr:
 	JS_ReportError(cx, "[jsrender::drawline] error drawing line");
 	return JS_FALSE;
+}
+
+JSBool jsrender::resetdevice( JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval )
+{
+	d3d::setResetDevice();
+	return JS_TRUE;
 }
