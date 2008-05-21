@@ -236,5 +236,5 @@ engine/vfs/zipfile.cpp eol=crlf
 engine/vfs/zipfile.h eol=crlf
 engine/vfs/zippath.cpp eol=crlf
 engine/vfs/zippath.h eol=crlf
-vc8/client.vcproj eol=crlf
-vc8/eXistenZ[!!-~]Engine.sln eol=crlf
+vc9/client.vcproj eol=crlf
+vc9/eXistenZ[!!-~]Engine.sln eol=crlf
