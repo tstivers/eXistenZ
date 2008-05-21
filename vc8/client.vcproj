@@ -43,7 +43,7 @@
 				AdditionalOptions=""
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_SECURE_SCL=0;_HAS_ITERATOR_DEBUGGING=0;_WIN32_WINNT=0x0501;STATIC_JS_API"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -139,7 +139,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_WIN32_WINNT=0x0501;STATIC_JS_API"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -398,6 +398,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\vfs\vfs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\vfs\watchfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\vfs\watchfile.h"
 				>
 			</File>
 			<File
@@ -705,6 +713,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\texture\material.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\texture\material.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\texture\shader.cpp"
 				>
 			</File>
@@ -888,6 +904,14 @@
 				RelativePath="..\engine\common\types.h"
 				>
 			</File>
+			<File
+				RelativePath="..\engine\common\utfstring.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\utfstring.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="scene"
@@ -942,6 +966,10 @@
 			</File>
 			<File
 				RelativePath="..\engine\math\aabb.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\math\math.cpp"
 				>
 			</File>
 			<File
