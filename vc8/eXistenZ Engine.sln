@@ -1,0 +1,99 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eXistenZ Engine Client", "client.vcproj", "{C90A2469-27AD-4BF6-94FF-75657AE13D25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {D9BE4917-EFC7-495B-AB71-6F5CFD99B682}
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {215F4C42-EFF3-4495-9FBD-2BD636A8D841}
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758} = {4B3A1F6D-AEE3-4C47-A34A-531563F91758}
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC} = {F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\lib\zlib\zlib.vcproj", "{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nvtristrip", "..\lib\nvtristrip\nvtristrip.vcproj", "{4B3A1F6D-AEE3-4C47-A34A-531563F91758}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "js32", "..\lib\js32\js32.vcproj", "{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}"
+	ProjectSection(ProjectDependencies) = postProject
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {215F4C42-EFF3-4495-9FBD-2BD636A8D841}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Libs", "External Libs", "{67764B00-DAA7-4B94-80FA-67E675AEB3D9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\js32\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Debug|Win32.Build.0 = Debug|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release|Any CPU.ActiveCfg = Release|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release|Win32.ActiveCfg = Release|Win32
+		{C90A2469-27AD-4BF6-94FF-75657AE13D25}.Release|Win32.Build.0 = Release|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Debug|Win32.Build.0 = Debug|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Release|Win32.ActiveCfg = Release|Win32
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC}.Release|Win32.Build.0 = Release|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Debug|Win32.Build.0 = Debug|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Release|Win32.ActiveCfg = Release|Win32
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758}.Release|Win32.Build.0 = Release|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Debug|Win32.Build.0 = Debug|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Release|Win32.ActiveCfg = Release|Win32
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}.Release|Win32.Build.0 = Release|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Debug|Win32.ActiveCfg = Debug|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Debug|Win32.Build.0 = Debug|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Any CPU.ActiveCfg = Release|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Win32.ActiveCfg = Release|Win32
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4B3A1F6D-AEE3-4C47-A34A-531563F91758} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+		{F3C7D4D1-49B4-45F4-8192-D2D0C88517AC} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
+	GlobalSection(DevPartner Solution Properties) = postSolution
+	EndGlobalSection
+EndGlobal
