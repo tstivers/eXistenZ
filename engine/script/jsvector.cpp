@@ -7,6 +7,7 @@ namespace jsvector {
 	
 	JSObject* initVectorClass(JSContext* cx, JSObject* obj);
 	JSBool vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);	
 	JSBool wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
@@ -24,6 +25,7 @@ namespace jsvector {
 
 	JSFunctionSpec vector_methods[] = { 
 		{"normalize",	vector_normalize,	0,0,0 },
+		{"length",		vector_length, 0, 0, 0},
 		{"rotate",		vector_rotate,		3,0,0 },	
 //		{"toString",	vector_toString,	0,0,0 },
 		{0,0,0,0,0}
@@ -298,6 +300,21 @@ JSBool jsvector::vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsva
 
 error:
 	JS_ReportError(cx, "[jsvector::vector_normalize] call failed");
+	return JS_FALSE;
+}
+
+JSBool jsvector::vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	D3DXVECTOR3 vec;
+	if(!GetVector(cx, obj, vec))
+		goto error;
+
+	JS_NewNumberValue(cx, D3DXVec3Length(&vec), rval);
+
+	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsvector::vector_length] call failed");
 	return JS_FALSE;
 }
 
