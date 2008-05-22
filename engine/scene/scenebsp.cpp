@@ -245,19 +245,11 @@ void SceneBSP::render()
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
 			entities[i]->render(&lighting);
+			
 		}
 	}
 
- 	if(entities.size() > 1)
- 	{
- 		vector<D3DXVECTOR3> segments;
- 		unsigned num_entities = entities.size();
- 		for(unsigned i = 0; i < num_entities; i++)
- 			segments.push_back(entities[i]->getPos());
- 		render::drawLine(&segments[0], num_entities);
- 	}
-
-	for(int i = render::alpha_groups.size(); i > 0; i--)
+ 	for(int i = render::alpha_groups.size(); i > 0; i--)
 		render::drawGroup(render::alpha_groups[i - 1], &render::world);
 
 	if(render::current_texture)
