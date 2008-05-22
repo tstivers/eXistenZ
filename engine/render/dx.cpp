@@ -107,6 +107,7 @@ bool d3d::checkDevice()
 		LOG("resetting device");
 		ui::reset(); // hack for stupid d3dfont stuff
 		render::releaseLine(); // released the d3dxline interface
+		render::releaseFont();
 		d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
 		d3dpp.BackBufferWidth = render::xres;
 		d3dpp.BackBufferHeight = render::yres;
@@ -215,4 +216,32 @@ ID3DXFont* d3d::createFont(HFONT font)
 void d3d::setResetDevice()
 {
 	resetDevice = true;
+}
+
+void d3d::takeScreenShot( const string filename )
+{
+	int width, height;
+	RECT rect;
+	if(d3dpp.Windowed)
+	{
+		width = GetSystemMetrics( SM_CXSCREEN );
+		height = GetSystemMetrics( SM_CYSCREEN );
+		GetClientRect(appwindow::getHwnd(), &rect);
+		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.left);
+		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.right);
+	}
+	else
+	{
+		width = d3dpp.BackBufferWidth;
+		height = d3dpp.BackBufferHeight;
+	}
+
+	LPDIRECT3DSURFACE9 frontbuf, noalphabuf;
+	d3dDevice->CreateOffscreenPlainSurface(width, height, D3DFMT_A8R8G8B8, D3DPOOL_SCRATCH, &frontbuf, NULL);
+	d3dDevice->CreateOffscreenPlainSurface(width, height, D3DFMT_X8R8G8B8, D3DPOOL_SCRATCH, &noalphabuf, NULL);
+	d3dDevice->GetFrontBufferData(0, frontbuf);
+	D3DXLoadSurfaceFromSurface(noalphabuf, NULL, NULL, frontbuf, NULL, NULL, D3DX_FILTER_NONE, 0);
+	D3DXSaveSurfaceToFile(filename.c_str(), D3DXIFF_PNG, noalphabuf, NULL, d3dpp.Windowed ? &rect : NULL);
+	frontbuf->Release();
+	noalphabuf->Release();
 }

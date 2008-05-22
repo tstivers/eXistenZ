@@ -12,6 +12,7 @@
 #define D3DFONT_BOLD        0x0001
 #define D3DFONT_ITALIC      0x0002
 #define D3DFONT_ZENABLE     0x0004
+#define D3DFONT_ANTIALIASED	0x0008
 
 // Font rendering flags
 #define D3DFONT_CENTERED_X  0x0001
@@ -68,7 +69,7 @@ public:
     HRESULT DeleteDeviceObjects();
 
     // Constructor / destructor
-    CD3DFont( const CHAR* strFontName, DWORD dwHeight, DWORD dwFlags=0L );
+    CD3DFont( const CHAR* strFontName, DWORD dwHeight, DWORD dwFlags=D3DFONT_ANTIALIASED );
     ~CD3DFont();
 };
 

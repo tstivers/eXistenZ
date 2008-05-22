@@ -12,4 +12,5 @@ namespace d3d {
 	void resize(int width, int height);
 	void goFullScreen(bool fullscreen);
 	void setResetDevice();
+	void takeScreenShot(const string filename);
 };

@@ -256,6 +256,9 @@ void render::render()
 	if(scene)
 		scene->render();
 
+	// call the on_render js event
+	jsscript::jsfunction<void(void)>(gScriptEngine->GetContext(), "on_render")();
+
 	// draw any markers
 	render::drawMarkers();
 	

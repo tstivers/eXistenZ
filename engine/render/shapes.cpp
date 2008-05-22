@@ -3,6 +3,7 @@
 #include "render/shapes.h"
 #include "render/rendergroup.h"
 #include "render/hwbuffer.h"
+#include "render/font.h"
 #include "q3bsp/bleh.h"
 #include "texture/texture.h"
 #include "texture/material.h"
@@ -15,6 +16,8 @@ namespace render {
 	ID3DXLine* D3DXLine = NULL;
 
 	void clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color);
+	D3DMATERIAL9 white_mtrl;
+	CD3DFont* font = NULL;
 }
 
 using namespace render;
@@ -24,6 +27,12 @@ void render::releaseLine()
 	if(D3DXLine)
 		D3DXLine->Release();
 	D3DXLine = NULL;
+}
+
+void render::releaseFont()
+{
+	delete font;
+	font = NULL;
 }
 
 
@@ -585,4 +594,48 @@ void render::drawSphere(const D3DXVECTOR3& pos, const D3DXQUATERNION& rot, const
 	line[0] = pos;
 	line[1] = pos + (dir * 50);
 	drawLine(line, 2, material->light.Diffuse.r, material->light.Diffuse.g, material->light.Diffuse.b);*/
+}
+
+void render::draw3DText( const string text, const D3DXVECTOR3& pos, DWORD flags )
+{
+	if(!font)
+	{
+		ZeroMemory( &white_mtrl, sizeof(white_mtrl) );
+		white_mtrl.Ambient.r = 1.0;
+		white_mtrl.Ambient.g = 1.0;
+		white_mtrl.Ambient.b = 1.0;
+		white_mtrl.Ambient.a = 1.0;
+		white_mtrl.Diffuse.r = 1.0;
+		white_mtrl.Diffuse.g = 1.0;
+		white_mtrl.Diffuse.b = 1.0;
+		white_mtrl.Diffuse.a = 1.0;
+
+		font = new CD3DFont("verdana", 42, D3DFONT_ZENABLE);
+		font->InitDeviceObjects(render::device);
+		font->RestoreDeviceObjects();
+	}
+
+	D3DXMATRIX m;
+	D3DXMatrixInverse(&m, NULL, &render::view);
+	m._41 = 0.0f;
+	m._42 = 0.0f;
+	m._43 = 0.0f;
+	D3DXMATRIX scale;
+	D3DXMatrixScaling(&scale, 0.1f, 0.1f, 0.1);
+	D3DXMATRIX result;
+	D3DXMatrixMultiply(&result, &m, &scale);
+	result._41 = pos.x;
+	result._42 = pos.y;
+	result._43 = pos.z;
+	render::device->SetTransform(D3DTS_WORLD, &result);
+	font->Render3DText(text.c_str(), flags);
+	render::device->SetTransform( D3DTS_WORLD, &render::world );
+	render::device->SetTransform( D3DTS_VIEW, &render::view );
+	render::device->SetTransform( D3DTS_PROJECTION, &render::projection );
+	render::current_texture = NULL;
+	render::current_lightmap = NULL;
+	render::current_material = NULL;
+	render::current_vb = NULL;
+	render::current_ib = NULL;
+	render::current_transform = render::world;
 }
