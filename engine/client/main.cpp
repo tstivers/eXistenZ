@@ -134,9 +134,8 @@ int mainloop()
 			game::doTick();
 			physics::startSimulation();
 			render::render();
-			jsscript::jsfunction<void(float, D3DXVECTOR3)>(gScriptEngine->GetContext(), "on_tick")(timer::game_ms, D3DXVECTOR3(1, 3, 2));
-			
-			//JS_MaybeGC(gScriptEngine->GetContext());
+			jsscript::jsfunction<void(void)>(gScriptEngine->GetContext(), "on_tick")();
+			JS_MaybeGC(gScriptEngine->GetContext());
 		}
 	}
 }
