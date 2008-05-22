@@ -26,7 +26,7 @@ ScriptEngine::ScriptEngine()
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 
-	rt = JS_NewRuntime(1024 * 1024); // 1mb until gc is triggered
+	rt = JS_NewRuntime(1024 * 1024 * 32); // 32mb until gc is triggered
 	
 	if ( rt == NULL ) {
 		ERROR("unable to create runtime");
