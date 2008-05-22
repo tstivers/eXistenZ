@@ -433,6 +433,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\data\scripts\events.js"
+					>
+				</File>
+				<File
 					RelativePath="..\data\scripts\house.js"
 					>
 				</File>
@@ -442,6 +446,10 @@
 				</File>
 				<File
 					RelativePath="..\data\scripts\q3dm1.js"
+					>
+				</File>
+				<File
+					RelativePath="..\data\scripts\screenshot.js"
 					>
 				</File>
 				<File
