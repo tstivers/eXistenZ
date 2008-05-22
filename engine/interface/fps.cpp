@@ -37,7 +37,7 @@ void FPS::render()
 
 	if(d3dfont == NULL)
 	{
-		d3dfont = new CD3DFont("Devotion", 20, 0);
+		d3dfont = new CD3DFont("Verdana", 20);
 		d3dfont->InitDeviceObjects(render::device);
 		d3dfont->RestoreDeviceObjects();
 	}

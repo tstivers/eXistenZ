@@ -38,7 +38,7 @@ void Pos::render()
 
 	if(d3dfont == NULL)
 	{
-		d3dfont = new CD3DFont("Terminal", 8, 0);
+		d3dfont = new CD3DFont("Terminal", 8);
 		d3dfont->InitDeviceObjects(render::device);
 		d3dfont->RestoreDeviceObjects();
 	}

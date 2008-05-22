@@ -84,7 +84,7 @@ void Console::render()
 
 	if(d3dfont == NULL)
 	{
-		d3dfont = new CD3DFont("Terminal", 9, 0);
+		d3dfont = new CD3DFont("Terminal", 9);
 		d3dfont->InitDeviceObjects(render::device);
 		d3dfont->RestoreDeviceObjects();	
 	}
