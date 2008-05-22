@@ -357,29 +357,10 @@ function fireFountain(index)
     //timer.addTimer(sphere.name + "_timer", "removeEntity('" + sphere.name + "');", 0, system.time.ms + 10000);
 }
 
-var last_time = 0;
-function on_tick(time, arg)
-{
-    if(last_time == 0)
-        last_time = time;
-        
-//    system.render.drawline(game.player.pos, [0,0,0]);
-        
-    if(time > last_time + 1000)
-    {
-        //print("tick! (" + arg + ")");
-        last_time = time;
-    }
-}
-
-function on_resize(width, height) {
-    system.ui.console.height = system.render.resolution.y - system.ui.console.y - 50;
-    system.ui.fps.x = system.render.resolution.x - 150;
-}
-
-
+execfile("scripts/events.js");
 execfile("scripts/stacks.js");
 execfile("scripts/shoot.js");
+execfile("scripts/screenshot.js");
 
 // log our start date and time
 print("eXistenZ engine started on " + Date());

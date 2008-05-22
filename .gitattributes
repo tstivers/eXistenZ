@@ -1,11 +1,13 @@
 * text=auto !eol
 bin/config.js eol=crlf
 crimson/eXistenZ.prj -text
+data/scripts/events.js -text
 data/scripts/house.js eol=crlf
 data/scripts/keys.js eol=crlf
 data/scripts/q3dm1.js eol=crlf
 data/scripts/q3dm13.js eol=crlf
 data/scripts/q3dm14.js eol=crlf
+data/scripts/screenshot.js -text
 data/scripts/shoot.js -text
 data/scripts/stacks.js -text
 data/textures/shader_alias.txt eol=crlf
