@@ -27,7 +27,9 @@ namespace entity {
 
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
+		D3DXVECTOR3& getVelocity();
 
+		D3DXVECTOR3 velocity;
 		NxActor* actor;
 		texture::DXTexture* texture;
 		float radius;

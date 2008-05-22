@@ -31,6 +31,8 @@ namespace jsentity {
 	JSBool getRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool getVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
+	JSBool setVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
 	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
@@ -60,6 +62,10 @@ namespace jsentity {
 
 	jsvector::jsVectorOps rotOps = {
 		getRot, setRot
+	};
+
+	jsvector::jsVectorOps velocityOps = {
+		getVelocity, setVelocity
 	};
 
 };
@@ -153,7 +159,14 @@ JSBool jsentity::createSphereEntity(JSContext* cx, JSObject* obj, uintN argc, js
 	*rval = createEntityObject(cx, new_entity);
 	JSObject* object = JSVAL_TO_OBJECT(*rval);
 
+	JS_EnterLocalRootScope(cx);
+	
 	JS_DefineProperty(cx, object, "radius", JSVAL_NULL, getRadius, setRadius, JSPROP_PERMANENT);
+	
+	JSObject* vec = jsvector::NewWrappedVector(cx, object, &((SphereEntity*)new_entity)->velocity, false, &velocityOps, new_entity);
+	JS_DefineProperty(cx, object, "velocity", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
+	
+	JS_LeaveLocalRootScope(cx);
 
 	return JS_TRUE;
 }
@@ -245,6 +258,20 @@ JSBool jsentity::setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* us
 {
 	entity::Entity* entity = (entity::Entity*)user;
 	entity->setRot(vec);
+	return JS_TRUE;
+}
+
+JSBool jsentity::getVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
+{
+	entity::SphereEntity* entity = (entity::SphereEntity*)user;
+	vec = entity->getVelocity();
+	return JS_TRUE;
+}
+
+JSBool jsentity::setVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
+{
+	entity::SphereEntity* entity = (entity::SphereEntity*)user;
+	//entity->setVelocity(vec);
 	return JS_TRUE;
 }
 

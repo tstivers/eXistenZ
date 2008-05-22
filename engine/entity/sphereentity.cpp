@@ -103,6 +103,12 @@ void SphereEntity::calcAABB()
 {
 }
 
+D3DXVECTOR3& SphereEntity::getVelocity()
+{
+	velocity = (D3DXVECTOR3&)actor->getLinearVelocity();
+	return velocity;
+}
+
 void SphereEntity::applyForce(const D3DXVECTOR3 &force)
 {
 	ASSERT(actor);
