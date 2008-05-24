@@ -58,6 +58,8 @@ engine/entity/jsentity.h eol=crlf
 engine/entity/sphereentity.cpp -text
 engine/entity/sphereentity.h -text
 engine/entity/staticentity.cpp eol=crlf
+engine/focus/appwindow/appwindow.cpp -text
+engine/focus/appwindow/appwindow.h -text
 engine/game/bspplayer.cpp eol=crlf
 engine/game/bspplayer.h -text
 engine/game/game.cpp eol=crlf

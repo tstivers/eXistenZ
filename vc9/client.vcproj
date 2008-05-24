@@ -1246,6 +1246,30 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="focus"
+			>
+			<Filter
+				Name="appwindow"
+				>
+				<File
+					RelativePath="..\engine\focus\appwindow\appwindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\focus\appwindow\appwindow.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="entity"
+				>
+			</Filter>
+			<Filter
+				Name="engine"
+				>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

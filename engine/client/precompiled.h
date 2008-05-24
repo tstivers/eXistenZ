@@ -24,6 +24,7 @@
 #include <unordered_map>
 
 #include <boost/static_assert.hpp>
+#include <boost/utility.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/count_if.hpp>
