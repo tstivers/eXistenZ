@@ -46,8 +46,12 @@ namespace physics {
 	bool acquired = false;
 	float scale = 1.0f;
 	float gravity = -9.8f;
+	float maxtimestep = 1.0/60.0;
+	int maxiter = 8;
 
 	bool setGravity(settings::Setting* setting, void* value);
+	bool setTimestep(settings::Setting* setting, void* value);
+	bool setMaxIter(settings::Setting* setting, void* value);
 }
 
 using namespace physics;
@@ -58,6 +62,8 @@ void physics::init() {
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
 	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);
 	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
+	settings::addsetting("system.physics.maxtimestep", settings::TYPE_FLOAT, 0, setTimestep, NULL, &physics::maxtimestep);
+	settings::addsetting("system.physics.maxiter", settings::TYPE_INT, 0, setMaxIter, NULL, &physics::maxiter);
 }
 
 bool physics::setGravity(settings::Setting* setting, void* value)
@@ -113,7 +119,7 @@ void physics::acquire() {
 	//sceneDesc.upAxis = 1;
 	//sceneDesc.maxBounds->min.x = render::scene->
 	gScene = gPhysicsSDK->createScene(sceneDesc);
-	//gScene->setTiming(1.0/240.0, 32);
+	gScene->setTiming(maxtimestep, maxiter);
 
 	// Create the default material
 	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
@@ -175,3 +181,20 @@ void physics::release() {
 void physics::addStaticMesh(string name, scene::SceneBSP* scene) {
 	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
 }
+
+bool physics::setTimestep( settings::Setting* setting, void* value )
+{
+	settings::float_setter(setting, value);
+	if(gScene)
+		gScene->setTiming(maxtimestep, maxiter);
+	return true;
+}
+
+bool physics::setMaxIter( settings::Setting* setting, void* value )
+{
+	settings::int_setter(setting, value);
+	if(gScene)
+		gScene->setTiming(maxtimestep, maxiter);
+	return true;
+}
+

@@ -38,9 +38,9 @@ void BoxEntity::acquire()
 	actorDesc.density = 10;    
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);	
+	actorDesc.name = name.c_str();
 	actor = physics::gScene->createActor(actorDesc);
-	ASSERT(actor);
-	actor->setName(name.c_str());	
+	ASSERT(actor);	
 }
 
 void BoxEntity::release()

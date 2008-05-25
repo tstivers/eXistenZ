@@ -29,6 +29,7 @@ data/textures/*
 /eXistenZ[!!-~]Engine.ncb
 vc9/*.JPG
 vc9/*.bmp
+vc9/*.dat
 vc9/*.ncb
 vc9/*.png
 vc9/*.suo

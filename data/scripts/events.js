@@ -19,8 +19,8 @@ function on_resize(width, height) {
     system.ui.fps.x = system.render.resolution.x - 150;
 }
 
-system.render.draw_velocity_lines = 1;
-system.render.draw_entity_names = 1;
+system.render.draw_velocity_lines = 0;
+system.render.draw_entity_names = 0;
 function on_render() {
     for (name in entities) {
         if(entities[name].velocity && system.render.draw_velocity_lines) {

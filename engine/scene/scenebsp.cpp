@@ -359,6 +359,7 @@ SceneBSP* SceneBSP::loadBSP(const string& name)
 
 	SceneBSP* scene = new SceneBSP();
 	scene->bsp = bsp;
+	scene->name = name;
 	q3bsp::bsp = bsp;
 	return scene;
 }

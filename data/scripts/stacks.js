@@ -1,5 +1,14 @@
 unbind(KEY_Q);
 bind(KEY_Q, doIt);
+unbind(KEY_G)
+bind(KEY_G, wakeEverything);
+
+function wakeEverything() {
+    for (name in entities) {
+        if (entities[name].sleeping)
+            entities[name].sleeping = false;
+    }
+}
 
 function createBoxStack(pos, rot, height, width)
 {
@@ -136,5 +145,5 @@ function doIt()
     //createBoxStack(pos, rot, 10, 10);
     //createBoxPyramid(pos, rot, 20);
     //createBoxTower(pos, rot, 10, 10, 20);
-    createRoundTower(pos, 60, 10, 20);
+    createRoundTower(pos, 30, 6, 20);
 }

@@ -12,6 +12,26 @@
 
 namespace game
 {
+	class PhysXPlayerShapeHit : public NxUserControllerHitReport
+	{
+	public:
+		NxControllerAction  onShapeHit(const NxControllerShapeHit& hit)
+		{
+			if(hit.shape->getActor().getGroup() == 16) // hit the bsp
+				return NX_ACTION_NONE;
+
+			INFO("hit %s", hit.shape->getActor().getName());
+			NxActor& actor = hit.shape->getActor();
+			actor.addForceAtPos(hit.dir * (hit.length * 1000), hit.worldNormal);
+			return NX_ACTION_PUSH;
+		}
+
+		NxControllerAction onControllerHit(const NxControllersHit& hit)
+		{
+			return NX_ACTION_NONE;
+		}
+	};
+
 	class PhysXPlayer : public Player {
 	public:
 		PhysXPlayer(D3DXVECTOR3& size);
@@ -23,6 +43,7 @@ namespace game
 		bool setPos(D3DXVECTOR3& pos);		
 		bool setSize(D3DXVECTOR3& size);
 		bool setStepUp(float step_up);
+		bool setMoveMode(t_movemode mode);
 
 		void doMove(t_impulse impulse);
 		void doRotation(D3DXVECTOR3& rotation);
@@ -38,7 +59,10 @@ namespace game
 		bool moving[MOVE_MAX];
 		float fall_start;
 		float fall_start_height;
+		PhysXPlayerShapeHit shapehit;
 	};
+
+
 }
 
 namespace physics {
@@ -70,6 +94,7 @@ void PhysXPlayer::acquire()
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
 	desc.stepOffset = step_up / physics::scale;
+	desc.callback = &shapehit;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
 	//nxc->setCollision(false);
@@ -92,9 +117,33 @@ bool PhysXPlayer::setStepUp(float step_up)
 	if(!Player::setStepUp(step_up))
 		return false;
 
-	if(acquired)
+	if(acquired && mode == MM_WALK)
 		nxc->setStepOffset(this->step_up / physics::scale);
 		
+	return true;
+}
+
+bool PhysXPlayer::setMoveMode( t_movemode mode )
+{
+	if(!Player::setMoveMode(mode))
+		return false;
+
+	if(acquired)
+	{
+		INFO("setting move movde");
+		switch(mode)
+		{
+		case MM_WALK:
+			nxc->setStepOffset(this->step_up / physics::scale);
+			((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale));
+			break;
+		default:
+			nxc->setStepOffset(0.0f);
+			((NxBoxController*)nxc)->setExtents(NxVec3(0,0,0));
+			break;
+		}
+	}
+
 	return true;
 }
 
@@ -103,9 +152,8 @@ bool PhysXPlayer::setSize(D3DXVECTOR3& size)
 	if(!Player::setSize(size))
 		return false;
 
-	// TODO: figure this out
-	//if(!nxc->setExtents(this->size / physics::scale))
-	//	return false;
+	if(!((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale)))
+		return false;
 
 	return true;
 }

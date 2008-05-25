@@ -89,6 +89,8 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	meshShapeDesc.meshData = mesh;	
 	NxActorDesc actorDesc;
 	actorDesc.shapes.push_back(&meshShapeDesc);	
+	actorDesc.name = scene->name.c_str();
+	actorDesc.group = 16;
 	NxActor* newActor = gScene->createActor(actorDesc);
 	ASSERT(newActor);
 }
