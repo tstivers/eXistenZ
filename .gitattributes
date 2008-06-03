@@ -62,6 +62,8 @@ engine/game/bspplayer.cpp eol=crlf
 engine/game/bspplayer.h -text
 engine/game/game.cpp eol=crlf
 engine/game/game.h eol=crlf
+engine/game/havokplayer.cpp -text
+engine/game/havokplayer.h -text
 engine/game/jsgame.cpp eol=crlf
 engine/game/jsgame.h eol=crlf
 engine/game/jsplayer.cpp -text

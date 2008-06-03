@@ -1,200 +1,203 @@
 #include "precompiled.h"
 #include "physics/physics.h"
-#include "physics/meshdesc.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "render/render.h"
-#include <NxPhysics.h>
-#include <NxCooking.h>
-#include <NxCharacter.h>
-#include <NxControllerManager.h>
+#include "scene/scene.h"
+#include "scene/scenebsp.h"
+#include "render/rendergroup.h"
+#include "texture/texture.h"
+#include "physics/hkOneFixedMoppUtil.h"
 
-#define NX_DBG_EVENTGROUP_MYOBJECTS        0x00100000
-#define NX_DBG_EVENTMASK_MYOBJECTS         0x00100000
-
-namespace physics {
-	class PhysicsOutputStream : public NxUserOutputStream {
-		void reportError(NxErrorCode code, const char* message, const char* file, int line) {
-			ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
-		}
-		
-		NxAssertResponse reportAssertViolation(const char *message, const char *file,int line) {
-			ERROR("ASSERT \"%s\" (%s:%d)", message, file, line);
-			return NX_AR_CONTINUE;
-		}
-
-		void print(const char* message) {
-			LOG("\"%s\"", message);
-		}
-
-	} physicsOutputStream;
-
-	class MyAllocator : public NxUserAllocator
-	{
-		void* mallocDEBUG(size_t size, const char* fileName, int line) { return malloc(size); }
-		void* malloc(size_t size) { return ::malloc(size); }
-		void* realloc(void* memory, size_t size) { return ::realloc(memory, size); }
-		void free(void* memory) { ::free(memory); }
-	} myAllocator;
-
-	NxPhysicsSDK* gPhysicsSDK = NULL;
-	NxRemoteDebugger* gDebugger = NULL;
-	NxScene* gScene = NULL;
-	NxCookingInterface *gCooking;
-	NxControllerManager* gManager;
-	int debug = 1;
+namespace physics 
+{
+	int debug = 0;
+	float scale = 1.0;
+	float gravity = -9.8;
+	float maxtimestep = 1.0 / 60.0;
+	int maxiter = 16;
 	bool acquired = false;
-	float scale = 1.0f;
-	float gravity = -9.8f;
-	float maxtimestep = 1.0/60.0;
-	int maxiter = 8;
+
+	hkpWorld* m_world;
+	hkMemory* m_memory;
+	
 
 	bool setGravity(settings::Setting* setting, void* value);
 	bool setTimestep(settings::Setting* setting, void* value);
 	bool setMaxIter(settings::Setting* setting, void* value);
+
+	void reportError(const char* message, void* user);
 }
 
 using namespace physics;
 
 REGISTER_STARTUP_FUNCTION(physics, physics::init, 10);
 
-void physics::init() {
+void physics::init() 
+{
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
 	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);
 	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
 	settings::addsetting("system.physics.maxtimestep", settings::TYPE_FLOAT, 0, setTimestep, NULL, &physics::maxtimestep);
 	settings::addsetting("system.physics.maxiter", settings::TYPE_INT, 0, setMaxIter, NULL, &physics::maxiter);
+
+	hkPoolMemory* memoryManager = new hkPoolMemory();
+	hkThreadMemory* threadMemory = new hkThreadMemory(memoryManager, 16);
+	hkBaseSystem::init( memoryManager, threadMemory, reportError );
+
+	char* stackBuffer;
+	{
+		int stackSize = 1024 * 1024 * 12;
+		stackBuffer = hkAllocate<char>( stackSize, HK_MEMORY_CLASS_BASE);
+		hkThreadMemory::getInstance().setStackArea( stackBuffer, stackSize);
+	}
+
+	{
+		hkMemory::getInstance().preAllocateRuntimeBlock(512000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(256000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(128000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(64000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(32000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(16000, HK_MEMORY_CLASS_BASE);
+		hkMemory::getInstance().preAllocateRuntimeBlock(16000, HK_MEMORY_CLASS_BASE);
+	}
 }
 
 bool physics::setGravity(settings::Setting* setting, void* value)
 {
 	settings::float_setter(setting, value);
-	if(gScene) {
-		gScene->setGravity(NxVec3(0, gravity, 0));
-		for(int i = 0; i < gScene->getNbActors(); i++)
-			if(gScene->getActors()[i]->isDynamic())
-				gScene->getActors()[i]->wakeUp();
-	}
 	return true;
 }
 
-void physics::acquire() {
-	
+void physics::acquire() 
+{
 	if(acquired)
 		return;
 
-	gPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, &physicsOutputStream);
-	if(!gPhysicsSDK) {
-		LOG("failed to initialize physics sdk");
-		return;
-	} else
-		LOG("sdk initialized");
+	hkpWorldCinfo info;
+	info.m_simulationType = hkpWorldCinfo::SIMULATION_TYPE_DISCRETE;
+	info.m_gravity.set( 0,-9.8f,0);
+	info.m_collisionTolerance = 0.1f; 
+	info.setBroadPhaseWorldSize( 150.0f );
+	info.setupSolverInfo( hkpWorldCinfo::SOLVER_TYPE_4ITERS_MEDIUM );
+	info.m_broadPhaseBorderBehaviour = hkpWorldCinfo::BROADPHASE_BORDER_DO_NOTHING;
 
-	if(physics::debug) {
-		gDebugger = gPhysicsSDK->getFoundationSDK().getRemoteDebugger();
-		gDebugger->connect("localhost");
-		if(!gDebugger->isConnected())
-			LOG("WARNING: debugger failed to attach");
 
-		NX_DBG_CREATE_OBJECT(render::scene, NX_DBG_OBJECTTYPE_CAMERA, "Player", NX_DBG_EVENTGROUP_MYOBJECTS);
-		NX_DBG_CREATE_PARAMETER(NxVec3(render::cam_pos.x, render::cam_pos.y, render::cam_pos.z), render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
-		NX_DBG_CREATE_PARAMETER(NxVec3(0, 0, 0), render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
-		//NX_DBG_CREATE_PARAMETER(NxVec3(0, 1, 0), render::scene, "Up", NX_DBG_EVENTGROUP_MYOBJECTS);
-	}
-	
-	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
-	gCooking->NxInitCooking(NULL, &physicsOutputStream);
+	m_world = new hkpWorld( info );
 
-	gPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.0005f);
-	//bool				ccdEnabled = 1;
-	//gPhysicsSDK->setParameter(NX_CONTINUOUS_CD, ccdEnabled);
-	//gPhysicsSDK->setParameter(NX_CCD_EPSILON, 0.01f);
-	//gPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_LIN_VEL_SQUARED, 0.15*0.15*SCALE*SCALE);
-	//gPhysicsSDK->setParameter(NX_BOUNCE_THRESHOLD, -2*SCALE);
-	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
-
-	NxSceneDesc sceneDesc;
-	NxVec3 gDefaultGravity(0, gravity, 0);
-	sceneDesc.gravity = gDefaultGravity;
-	//sceneDesc.upAxis = 1;
-	//sceneDesc.maxBounds->min.x = render::scene->
-	gScene = gPhysicsSDK->createScene(sceneDesc);
-	gScene->setTiming(maxtimestep, maxiter);
-
-	// Create the default material
-	NxMaterial* defaultMaterial = gScene->getMaterialFromIndex(0);
-	defaultMaterial->setRestitution(0.0f);
-	defaultMaterial->setStaticFriction(0.5f);
-	defaultMaterial->setDynamicFriction(0.5f);
-
-	// Create a bouncy material for spheres
-	NxMaterial* bouncyMaterial = gScene->getMaterialFromIndex(1);
-	defaultMaterial->setRestitution(0.75f);
-	defaultMaterial->setStaticFriction(0.5f);
-	defaultMaterial->setDynamicFriction(0.5f);
-
-	gManager = NxCreateControllerManager(&myAllocator);
+	hkpAgentRegisterUtil::registerAllAgents( m_world->getCollisionDispatcher() );
 
 	acquired = true;
 
 	startSimulation(); // prime the pump
 }
 
-void physics::startSimulation() {
+void physics::startSimulation() 
+{
 	if(!acquired)
-		return;		
-	
-	gScene->simulate(timer::delta_s);
-	gScene->flushStream();
+		return;
 
-	if(NX_DBG_IS_CONNECTED()) {
-		D3DXVECTOR3 campos = (render::cam_pos + render::cam_offset) / scale;
-		NX_DBG_SET_PARAMETER((NxVec3)campos, render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
-		D3DXMATRIX mat;
-		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
-		D3DXVECTOR3 lookat;
-		D3DXVec3TransformCoord(&lookat, &D3DXVECTOR3(0, 0, 10), &mat);
-		lookat += ((render::cam_pos + render::cam_offset) / scale);
-		NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
-		NX_DBG_FLUSH();
-		NX_DBG_FRAME_BREAK();
+	int iter = 0;
+
+	static float last_step = 0.0;
+	while ((timer::game_ms >= last_step + (maxtimestep * 1000.0)) && (iter < maxiter))
+	{
+		last_step += (maxtimestep * 1000.0);
+		m_world->stepDeltaTime(maxtimestep);
+		iter++;
 	}
 }
 
-void physics::getResults() {
+void physics::getResults() 
+{
 	if(!acquired)
 		return;
-
-	gScene->fetchResults(NX_ALL_FINISHED, true);
 }
 
-void physics::release() {
+void physics::release() 
+{
 	if(!acquired)
 		return;
-	gPhysicsSDK->release();
-	gPhysicsSDK = NULL;
-	gDebugger = NULL;
-	gScene = NULL;
+
+	delete m_world;
+	m_world = NULL;
+
 	acquired = false;
 }
 
-void physics::addStaticMesh(string name, scene::SceneBSP* scene) {
-	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
+void physics::addStaticMesh(string name, scene::SceneBSP* scene) 
+{
+	hkpExtendedMeshShape* mesh = new hkpExtendedMeshShape();
+	hkpExtendedMeshShape::TrianglesSubpart part;
+
+	static vector<D3DXVECTOR3> vertices;
+	static vector<short> indices;
+
+	for(int i = 0; i < scene->num_faces; i++) 
+	{
+		if(scene->faces[i].type != 1 && scene->faces[i].type != 3)
+			continue;
+
+		if(!scene->faces[i].rendergroup)
+			continue;
+
+		if(scene->faces[i].rendergroup->texture->is_transparent)
+			continue;
+
+		if(!scene->faces[i].rendergroup->texture->draw)
+			continue;
+
+		unsigned int offset = vertices.size();
+		for(int j = 0;j < scene->faces[i].num_vertices; j++)
+			vertices.push_back(scene->faces[i].vertices[j].pos / physics::scale);
+
+		for(int j = 0; j < scene->faces[i].num_indices; j++)
+			indices.push_back(scene->faces[i].indices[j] + offset);
+	}
+
+	part.m_vertexBase = (float*)&vertices[0];
+	part.m_vertexStriding = sizeof(D3DXVECTOR3);
+	part.m_numVertices = vertices.size();
+
+	part.m_indexBase = (void*)&indices[0];
+	part.m_indexStriding = 3 * sizeof(hkUint16);
+	part.m_stridingType = hkpExtendedMeshShape::INDICES_INT16;
+	part.m_numTriangleShapes = indices.size() / 3;
+
+	mesh->addTrianglesSubpart(part);
+
+	hkpMoppCompilerInput mci;
+	hkpMoppCode* code = hkpMoppUtility::buildCode( mesh , mci);
+	hkpMoppBvTreeShape* moppShape = new hkpMoppBvTreeShape(mesh, code);
+	code->removeReference();
+	
+	hkpRigidBodyCinfo rbCi;
+	rbCi.m_shape = moppShape;
+	rbCi.m_motionType = hkpMotion::MOTION_FIXED;
+
+	hkpRigidBody* rb = new hkpRigidBody(rbCi);
+	rb->setName(name.c_str());
+	m_world->addEntity(rb);
 }
 
 bool physics::setTimestep( settings::Setting* setting, void* value )
 {
 	settings::float_setter(setting, value);
-	if(gScene)
-		gScene->setTiming(maxtimestep, maxiter);
 	return true;
 }
 
 bool physics::setMaxIter( settings::Setting* setting, void* value )
 {
 	settings::int_setter(setting, value);
-	if(gScene)
-		gScene->setTiming(maxtimestep, maxiter);
 	return true;
 }
 
+void physics::reportError( const char* message, void* user )
+{
+	INFO(message);
+}
+
+World* physics::getWorld()
+{
+	return m_world;
+}

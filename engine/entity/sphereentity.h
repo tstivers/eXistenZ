@@ -1,6 +1,6 @@
 #pragma once
 
-class NxActor;
+#include "physics/physics.h"
 
 namespace texture {
 	class DXTexture;
@@ -30,7 +30,8 @@ namespace entity {
 		D3DXVECTOR3& getVelocity();
 
 		D3DXVECTOR3 velocity;
-		NxActor* actor;
+		hkpRigidBody* pentity;
+		hkpSphereShape* shape;
 		texture::DXTexture* texture;
 		float radius;
 	};	

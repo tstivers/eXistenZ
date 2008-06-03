@@ -1,7 +1,7 @@
 #include "precompiled.h"
 #include "game/player.h"
 #include "game/bspplayer.h"
-#include "game/physxplayer.h"
+#include "game/havokplayer.h"
 
 namespace game {
 
@@ -21,5 +21,5 @@ Player::~Player()
 
 Player* game::createPlayer(D3DXVECTOR3& size)
 {
-	return createPhysXPlayer(size);
+	return createHavokPlayer(size);
 }

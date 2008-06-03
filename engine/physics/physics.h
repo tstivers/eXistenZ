@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Common/hkAnimationPhysicsPublicInclude.h>
+
 namespace scene {
 	class SceneBSP;
 }
@@ -13,5 +15,9 @@ namespace physics {
 	void getResults();
 	void addStaticMesh(string name, scene::SceneBSP* scene);
 
+	typedef hkpEntity Entity;
+	typedef hkpWorld World;
+
+	World* getWorld();
 	extern float scale;
 }

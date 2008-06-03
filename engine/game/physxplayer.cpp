@@ -4,11 +4,6 @@
 #include "game/game.h"
 #include "physics/physics.h"
 #include "timer/timer.h"
-#include <NxPhysics.h>
-#include <NxController.h>
-#include <NxControllerManager.h>
-#include <NxCapsuleController.h>
-#include <NxBoxController.h>
 
 namespace game
 {

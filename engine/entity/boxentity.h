@@ -1,8 +1,8 @@
 #pragma once
 
-class NxActor;
+#include "physics/physics.h"
 
-namespace texture {;
+namespace texture {
 	class DXTexture;
 	struct Material;
 }
@@ -29,7 +29,8 @@ namespace entity {
 		void setSize(const D3DXVECTOR3& size);
 		D3DXVECTOR3 getSize() { return size; }
 
-		NxActor* actor;
+		physics::Entity* pentity;
+		hkpBoxShape* shape;
 		texture::DXTexture* texture;
 		D3DXVECTOR3 size;
 	};	
