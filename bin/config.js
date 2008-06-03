@@ -54,7 +54,9 @@ system.render.skybox.depth = 10;
 system.render.skybox.height = 10;
 system.render.skybox.texture = "textures/skybox/pondnight/";
 game.player.step_up = 0.5;
-game.player.jump_velocity = 4.5;
+game.player.jump_height = 1.0; // 1 meter jump height
+game.player.speed = 10; // 10 m/s (20mph)
+game.player.gravity = -16; // feels better than -9.8
 
 system.physics.maxtimestep = 1.0 / 60.0;
 system.physics.maxiter = 16;

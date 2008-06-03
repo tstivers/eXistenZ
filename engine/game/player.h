@@ -51,7 +51,8 @@ namespace game {
 		float speed;
 		float step_up;
 		float step_down;
-		float jump_velocity;
+		float jump_height; // in meters
+		float gravity;
 	};
 
 	Player* createPlayer(D3DXVECTOR3& size);

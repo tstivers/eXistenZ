@@ -68,7 +68,6 @@ namespace game
 namespace physics {
 	extern NxControllerManager* gManager;
 	extern NxScene* gScene;
-	extern float gravity;
 }
 
 
@@ -210,10 +209,10 @@ void PhysXPlayer::updatePos()
 	{
 		if(!on_ground)
 		{
-			if(jumping)
-				INFO("hit ground at %f m/s, air time was %fs", -vel.y, (timer::game_ms - fall_start) / 1000.0f);
-			else
-				INFO("hit ground at %f m/s, air time was %fs, fell %fm", -vel.y, (timer::game_ms - fall_start) / 1000.0f, fall_start_height - pos.y);
+			//if(jumping)
+			//	INFO("hit ground at %f m/s, air time was %fs", -vel.y, (timer::game_ms - fall_start) / 1000.0f);
+			//else
+			//	INFO("hit ground at %f m/s, air time was %fs, fell %fm", -vel.y, (timer::game_ms - fall_start) / 1000.0f, fall_start_height - pos.y);
 			jumping = false;
 			on_ground = true;
 			vel.y = 0.0f;
@@ -305,7 +304,6 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 		fall_start = timer::game_ms;
 		apogee = false;
 		fall_start_height = pos.y;
-		INFO("left ground at %f m/s", jump_velocity);
 	}
 
 	D3DXMATRIX mat;	
@@ -319,15 +317,16 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 		float air_time = (timer::game_ms - fall_start) / 1000.0f;
 		if(jumping)
 		{
-			vel.y = jump_velocity + (physics::gravity * air_time);
-			if((vel.y <= 0.0) && !apogee)
-			{
-				INFO("apogee at %fs, height of %f meters", air_time, pos.y - fall_start_height);
-				apogee = true;
-			}
+			float jump_velocity = sqrt(abs(jump_height * (2.0 * gravity)));
+			vel.y = jump_velocity + (gravity * air_time);
+			//if((vel.y <= 0.0) && !apogee)
+			//{
+			//	INFO("apogee at %fs, height of %f meters", air_time, pos.y - fall_start_height);
+			//	apogee = true;
+			//}
 		}
 		else
-			vel.y = physics::gravity * air_time;
+			vel.y = gravity * air_time;
 		dis.y = vel.y * timer::delta_s;
 	} else
 		dis.y = -step_up;

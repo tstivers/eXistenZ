@@ -11,7 +11,9 @@ namespace jsplayer {
 	JSBool setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setStepUp(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setJumpVelocity(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool setJumpHeight(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool setGravity(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+
 	game::Player* getPlayerReserved(JSContext* cx, JSObject* obj);
 	
 	JSClass player_class = {
@@ -67,10 +69,14 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 	JS_NewNumberValue(cx, player->getStepUp(), &step_up);
 	JS_DefineProperty(cx, pobj, "step_up", step_up, NULL, setStepUp, JSPROP_PERMANENT);
 
-	jsval jump_velocity;
-	JS_NewNumberValue(cx, player->jump_velocity, &jump_velocity);
-	JS_DefineProperty(cx, pobj, "jump_velocity", step_up, NULL, setJumpVelocity, JSPROP_PERMANENT);
+	jsval jump_height;
+	JS_NewNumberValue(cx, player->jump_height, &jump_height);
+	JS_DefineProperty(cx, pobj, "jump_height", jump_height, NULL, setJumpHeight, JSPROP_PERMANENT);
 	
+	jsval gravity;
+	JS_NewNumberValue(cx, player->gravity, &gravity);
+	JS_DefineProperty(cx, pobj, "gravity", gravity, NULL, setGravity, JSPROP_PERMANENT);
+
 	JS_LeaveLocalRootScope(cx);
 	return JS_TRUE;
 
@@ -160,13 +166,24 @@ game::Player* jsplayer::getPlayerReserved(JSContext* cx, JSObject* obj)
 	return (game::Player*)JSVAL_TO_PRIVATE(val);
 }
 
-JSBool jsplayer::setJumpVelocity(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setJumpHeight(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 {
 	jsdouble d;
 	if(!JS_ValueToNumber(cx, *vp, &d))
 		return JS_FALSE;
 
-	getPlayerReserved(cx, obj)->jump_velocity = d;
+	getPlayerReserved(cx, obj)->jump_height = d;
+
+	return JS_TRUE;
+}
+
+JSBool jsplayer::setGravity(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+{
+	jsdouble d;
+	if(!JS_ValueToNumber(cx, *vp, &d))
+		return JS_FALSE;
+
+	getPlayerReserved(cx, obj)->gravity = d;
 
 	return JS_TRUE;
 }
