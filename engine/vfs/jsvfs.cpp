@@ -8,6 +8,7 @@ namespace jsvfs
 	void init();
 	JSBool addPath(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool addFileWatch(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool listFiles(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	void jsWatchCallback(const string&, void*);
 };
 
@@ -17,6 +18,7 @@ void jsvfs::init()
 {
 	gScriptEngine->AddFunction("system.vfs.addPath", 1, jsvfs::addPath);
 	gScriptEngine->AddFunction("system.vfs.watchFile", 2, jsvfs::addFileWatch);
+	gScriptEngine->AddFunction("system.vfs.listFiles", 2, jsvfs::listFiles);
 }
 
 JSBool jsvfs::addPath(JSContext *cx, JSObject *obj, uintN argc,
@@ -64,4 +66,28 @@ void jsvfs::jsWatchCallback(const string& filename, void* user)
 	JSString* s = JS_NewStringCopyZ(cx, filename.c_str());
 	argv = STRING_TO_JSVAL(s);
 	JS_CallFunction(cx, gScriptEngine->GetGlobal(), callback, 1, &argv, &rval);
+}
+
+JSBool jsvfs::listFiles( JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval )
+{
+	char* path =  JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	char* filter = "*";
+	if(argc = 2)
+		filter = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+
+	vfs::file_list_t files;
+	vfs::getFileList(files, path, filter);
+	
+	JS_EnterLocalRootScope(cx);
+	JSObject* arr = JS_NewArrayObject(cx, 0, NULL);
+	int index = 0;
+	for(vfs::file_list_t::const_iterator it = files.begin(); it != files.end(); ++it, index++)
+	{
+		JSString* str = JS_NewStringCopyZ(cx, it->c_str());
+		jsval v = STRING_TO_JSVAL(str);
+		JS_SetElement(cx, arr, index, &v);
+	}
+	*rval = OBJECT_TO_JSVAL(arr);
+	JS_LeaveLocalRootScope(cx);
+	return JS_TRUE;
 }

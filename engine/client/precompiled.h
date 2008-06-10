@@ -33,6 +33,7 @@
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "d3d9.h"
 #include "d3dx9core.h"

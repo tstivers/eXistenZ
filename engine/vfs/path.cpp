@@ -30,9 +30,12 @@ vfs::Path* vfs::Path::createPath(const char* path)
 	sanitizepath(canonpath);
 
 	// check for archive
-	if((strlen(canonpath) > 4) && !strcmp(canonpath + (strlen(canonpath) - 4), ".zip")) {
+	if((strlen(canonpath) > 4) && (boost::ends_with(string(canonpath), string(".zip")) || boost::ends_with(string(canonpath), string(".pk3")))) 
+	{
 		return ZipPath::createPath(canonpath);
-	} else {
+	} 
+	else
+	{
 		return DiskPath::createPath(canonpath);
 	}
 }

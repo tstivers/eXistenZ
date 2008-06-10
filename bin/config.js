@@ -21,7 +21,6 @@ system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.render.anisotropylevel = 16;
 system.render.backbuffercount = 2;
 system.vfs.addPath("../data");
-system.vfs.addPath("../data/pak0.zip");
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
 system.render.bsp.debug = 1;
@@ -130,7 +129,11 @@ function onScriptChange(filename)
     execfile(filename);
 }
 
-var message;
+var paks = system.vfs.listFiles("/", "*.pk3");
+for (file in paks) {
+    system.vfs.addPath(paks[file]);
+}
+
 function print(message) {
 	log(message);
 }
@@ -214,23 +217,26 @@ function markerfun() {
 
 num_entities = 0;
 current_texture = 0;
+//textures = new Array(
+//    "textures/gothic_block/block10d",
+//    "textures/gothic_block/blocks10",
+//    "textures/gothic_block/blocks11b",
+//    "textures/gothic_block/blocks11bbroke",
+//    "textures/gothic_block/blocks11bbroke3",
+//    "textures/gothic_block/blocks11d",
+//    "textures/gothic_block/blocks15",
+//    "textures/gothic_block/blocks15_blue",
+//    "textures/gothic_block/blocks15_c",
+//    "textures/gothic_block/blocks15_iron_r",
+//    "textures/gothic_block/blocks17",
+//    "textures/gothic_block/blocks17e",
+//    "textures/gothic_block/blocks17g",
+//    "textures/gothic_block/blocks17i",
+//    "textures/gothic_block/blocks17j",
+//    "textures/gothic_block/blocks17k");
+
 textures = new Array(
-    "textures/gothic_block/block10d",
-    "textures/gothic_block/blocks10",
-    "textures/gothic_block/blocks11b",
-    "textures/gothic_block/blocks11bbroke",
-    "textures/gothic_block/blocks11bbroke3",
-    "textures/gothic_block/blocks11d",
-    "textures/gothic_block/blocks15",
-    "textures/gothic_block/blocks15_blue",
-    "textures/gothic_block/blocks15_c",
-    "textures/gothic_block/blocks15_iron_r",
-    "textures/gothic_block/blocks17",
-    "textures/gothic_block/blocks17e",
-    "textures/gothic_block/blocks17g",
-    "textures/gothic_block/blocks17i",
-    "textures/gothic_block/blocks17j",
-    "textures/gothic_block/blocks17k");
+    "textures/crate/crate");
 
 var entities = new Object();
 

@@ -22,14 +22,14 @@ namespace vfs {
 vfs::Path* vfs::ZipPath::createPath(const char* path)	
 {
 	IFilePtr file = vfs::getFile(path);
-	
+
 	if(!file) {
 		LOG("error opening \"%s\"", path);
 		return NULL;
 	}
 
 	U32 header;
-	
+
 	if(file->read(&header, sizeof(header)) == 0) {
 		LOG("error reading \"%s\"", path);		
 		return NULL;
@@ -46,8 +46,8 @@ vfs::Path* vfs::ZipPath::createPath(const char* path)
 	return archive;	
 }
 
-vfs::ZipPath::ZipPath(const char* path) :
-	Path(path)
+vfs::ZipPath::ZipPath(const char* path) 
+	: Path(path)
 {	
 }
 
@@ -60,7 +60,7 @@ void vfs::ZipPath::readContents()
 	FileHeader header;
 	char filename[MAX_PATH];
 	U32 offset;	
-	
+
 	IFilePtr file = vfs::getFile(path);
 
 	if(!file) {
@@ -101,7 +101,7 @@ void vfs::ZipPath::readContents()
 bool vfs::ZipPath::fileExists(const char* filename)
 {
 	ZipFileEntryHash::iterator it = file_hash.find(filename);
-	
+
 	return it != file_hash.end();
 }
 
@@ -129,8 +129,6 @@ U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const ch
 	char filepath[MAX_PATH];
 	char* filename;	
 
-	LOG("searching \"%s\\%s\"", path, filespec);
-
 	for(ZipFileEntryList::iterator it = this->file_list.begin(); it != this->file_list.end(); ++it) {
 		strcpy(filepath, (*it)->filename);
 		filename = strrchr(filepath, '\\');
@@ -145,7 +143,6 @@ U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const ch
 			if(wildcmp(filespec, (*it)->filename)) {
 				if((((*it)->compressed_size == 0) && (flags & FIND_DIRECTORY)) ||
 					(!((*it)->compressed_size == 0) && (flags & FIND_FILE))) {
-						LOG("\tfound \"%s\"", (*it)->filename);
 						file_list.insert(strDup((*it)->filename));
 				}
 			}

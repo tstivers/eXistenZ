@@ -6,6 +6,7 @@
 namespace jsplayer {
 
 	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user);
+	JSBool sizeChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user);
 	JSBool setPos(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setRot(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
@@ -61,6 +62,10 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 	JS_DefineProperty(cx, pobj, "rot", OBJECT_TO_JSVAL(rot), NULL, setRot, JSPROP_PERMANENT);
 	JS_ForgetLocalRoot(cx, rot);
 	
+	JSObject* size = jsvector::NewWrappedVector(cx, pobj, &player->size, false);
+	JS_DefineProperty(cx, pobj, "size", OBJECT_TO_JSVAL(size), NULL, setSize, JSPROP_PERMANENT);
+	JS_ForgetLocalRoot(cx, size);
+
 	jsval speed;
 	JS_NewNumberValue(cx, player->getSpeed(), &speed);
 	JS_DefineProperty(cx, pobj, "speed", speed, NULL, setSpeed, JSPROP_PERMANENT);
@@ -90,6 +95,13 @@ JSBool jsplayer::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, 
 {
 	game::Player* player = (game::Player*)user;
 	player->setPos(new_vec);
+	return JS_TRUE;
+}
+
+JSBool jsplayer::sizeChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user)
+{
+	game::Player* player = (game::Player*)user;
+	player->setSize(new_vec);
 	return JS_TRUE;
 }
 
@@ -134,6 +146,26 @@ error:
 	JS_ReportError(cx, "[jsplayer::setRot] error setting player rotation");
 	return JS_FALSE;
 }
+
+JSBool jsplayer::setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+{
+	D3DXVECTOR3 vec;
+	if(!jsvector::ParseVector(cx, vec, 1, vp))
+		goto error;
+
+	if(!JS_GetProperty(cx, obj, "size", vp))
+		goto error;
+
+	if(!getPlayerReserved(cx, obj)->setSize(vec))
+		goto error;
+
+	return JS_TRUE;
+
+error:
+	JS_ReportError(cx, "[jsplayer::setSize] error setting player size");
+	return JS_FALSE;
+}
+
 
 
 JSBool jsplayer::setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp)

@@ -80,8 +80,6 @@ U32 vfs::DiskPath::getFileList(file_list_t& file_list, const char* path, const c
 
 	sprintf(search_path, "%s\\%s", canon_path, "*");			
 
-	LOG("searching \"%s\"", search_path);
-
 	if((hfile = _findfirst(search_path, &found)) == (intptr_t)-1)
 		return (U32)file_list.size();
 
@@ -90,7 +88,6 @@ U32 vfs::DiskPath::getFileList(file_list_t& file_list, const char* path, const c
 			(!(found.attrib & _A_SUBDIR) && (flags & FIND_FILE))) {
 				if(wildcmp(filespec, found.name)) {
 					sprintf(search_path, "%s\\%s", canon_path, strlower(found.name));
-					LOG("\tfound \"%s\"", search_path);
 					file_list.insert(strDup(search_path));
 				}
 		}
