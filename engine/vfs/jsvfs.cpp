@@ -22,28 +22,30 @@ void jsvfs::init()
 }
 
 JSBool jsvfs::addPath(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+					  jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("addPath() takes 1 argument");
 		return JS_FALSE;
 	}
 
-	vfs::addPath(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));	
+	vfs::addPath(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 
 	return JS_TRUE;
 }
 
 JSBool jsvfs::addFileWatch(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+						   jsval *argv, jsval *rval)
 {
-	if(argc != 2) {
+	if (argc != 2)
+	{
 		gScriptEngine->ReportError("usage: watchFile(filename, function)");
 		return JS_FALSE;
 	}
 
 	JSFunction* callback = JS_ValueToFunction(cx, argv[1]);
-	if(!callback)
+	if (!callback)
 	{
 		gScriptEngine->ReportError("usage: watchFile(filename, function)");
 		return JS_FALSE;
@@ -52,7 +54,7 @@ JSBool jsvfs::addFileWatch(JSContext *cx, JSObject *obj, uintN argc,
 	// protect closures (wrong way to do this)
 	//JS_AddRoot(cx, callback);
 
-	vfs::watchFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), jsWatchCallback, (void*)argv[1]); 
+	vfs::watchFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), jsWatchCallback, (void*)argv[1]);
 
 	return JS_TRUE;
 }
@@ -68,20 +70,20 @@ void jsvfs::jsWatchCallback(const string& filename, void* user)
 	JS_CallFunction(cx, gScriptEngine->GetGlobal(), callback, 1, &argv, &rval);
 }
 
-JSBool jsvfs::listFiles( JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval )
+JSBool jsvfs::listFiles(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	char* path =  JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
 	char* filter = "*";
-	if(argc = 2)
+	if (argc = 2)
 		filter = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
 
 	vfs::file_list_t files;
 	vfs::getFileList(files, path, filter);
-	
+
 	JS_EnterLocalRootScope(cx);
 	JSObject* arr = JS_NewArrayObject(cx, 0, NULL);
 	int index = 0;
-	for(vfs::file_list_t::const_iterator it = files.begin(); it != files.end(); ++it, index++)
+	for (vfs::file_list_t::const_iterator it = files.begin(); it != files.end(); ++it, index++)
 	{
 		JSString* str = JS_NewStringCopyZ(cx, it->c_str());
 		jsval v = STRING_TO_JSVAL(str);

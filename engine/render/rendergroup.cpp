@@ -2,7 +2,8 @@
 #include "render/rendergroup.h"
 #include "render/hwbuffer.h"
 
-namespace render {
+namespace render
+{
 };
 
 using namespace render;
@@ -20,7 +21,7 @@ RenderGroup::~RenderGroup()
 
 void RenderGroup::acquire()
 {
-	if(acquired)
+	if (acquired)
 		return;
 
 	vertexbuffer = getVB(numvertices * stride, fvf, stride);
@@ -30,7 +31,7 @@ void RenderGroup::acquire()
 
 void RenderGroup::release()
 {
-	if(!acquired)
+	if (!acquired)
 		return;
 	delete vertexbuffer;
 	delete indexbuffer;
@@ -39,10 +40,10 @@ void RenderGroup::release()
 
 void RenderGroup::update(void* vertexdata, void* indexdata)
 {
-	if(vertexdata)
+	if (vertexdata)
 		vertexbuffer->update(vertexdata);
 
-	if(indexdata)
+	if (indexdata)
 		indexbuffer->update(indexdata);
 }
 

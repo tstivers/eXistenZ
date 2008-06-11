@@ -3,7 +3,8 @@
 #include "mesh/meshsystem.h"
 #include "mesh/meshload.h"
 
-namespace mesh {
+namespace mesh
+{
 
 	typedef stdext::hash_map<string, MeshSystem*> MeshSystemCache;
 	MeshSystemCache cache;
@@ -15,12 +16,13 @@ MeshSystem* mesh::getMeshSystem(string& name)
 {
 	// see if it's in the cache
 	MeshSystemCache::iterator it = cache.find(name);
-	if(it != cache.end())
+	if (it != cache.end())
 		return it->second;
 
 	// nope, try to load it
-	MeshSystem* mesh = loadMeshSystem(name);	
-	if(mesh) {
+	MeshSystem* mesh = loadMeshSystem(name);
+	if (mesh)
+	{
 		// found it, add it to the cache
 		cache.insert(MeshSystemCache::value_type(name, mesh));
 		return mesh;

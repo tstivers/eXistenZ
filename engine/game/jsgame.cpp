@@ -4,11 +4,12 @@
 #include "script/script.h"
 #include "client/appwindow.h"
 
-namespace jsgame {
+namespace jsgame
+{
 	JSBool jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
-		jsval *argv, jsval *rval);
+					  jsval *argv, jsval *rval);
 	JSBool jsquit(JSContext *cx, JSObject *obj, uintN argc,
-		jsval *argv, jsval *rval);
+				  jsval *argv, jsval *rval);
 	JSBool jstimestamp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
@@ -24,9 +25,10 @@ void jsgame::init()
 JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
 						  jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("startMap() takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
 	game::startMap(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
@@ -48,13 +50,13 @@ JSBool jsgame::jstimestamp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 	GetLocalTime(&now);
 	char timestamp[64];
 	sprintf(timestamp, "%04d-%02d-%02d-%02d-%02d-%02d-%04d",
-		now.wYear,
-		now.wMonth,
-		now.wDay,
-		now.wHour,
-		now.wMinute,
-		now.wSecond,
-		now.wMilliseconds);
+			now.wYear,
+			now.wMonth,
+			now.wDay,
+			now.wHour,
+			now.wMinute,
+			now.wSecond,
+			now.wMilliseconds);
 
 	*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, timestamp));
 	return JS_TRUE;

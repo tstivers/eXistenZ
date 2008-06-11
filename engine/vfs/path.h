@@ -2,11 +2,13 @@
 
 #include "vfs.h"
 
-namespace vfs {
-	
+namespace vfs
+{
+
 	class IFile;
 
-	class Path {	
+	class Path
+	{
 	public:
 		Path(const char* path);
 		virtual ~Path();

@@ -18,7 +18,7 @@ FPS::FPS()
 
 FPS::~FPS()
 {
-	if(d3dfont)
+	if (d3dfont)
 		delete d3dfont;
 }
 
@@ -30,21 +30,21 @@ void FPS::reset()
 
 void FPS::render()
 {
-	if(!draw)
+	if (!draw)
 		return;
 
-	char buf[32];	
+	char buf[32];
 
-	if(d3dfont == NULL)
+	if (d3dfont == NULL)
 	{
 		d3dfont = new CD3DFont("Verdana", 20);
 		d3dfont->InitDeviceObjects(render::device);
 		d3dfont->RestoreDeviceObjects();
 	}
-	
-	frames++;	
 
-	if(timer::time_ms - last_ms >= 1000)
+	frames++;
+
+	if (timer::time_ms - last_ms >= 1000)
 	{
 		fps = (float)((double)frames / ((double)((double)timer::time_ms - (double)last_ms) / 1000));
 		frames = 0;

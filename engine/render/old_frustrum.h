@@ -6,8 +6,10 @@
 
 #pragma once
 
-namespace render {
-	class CFrustum {
+namespace render
+{
+	class CFrustum
+	{
 
 	public:
 

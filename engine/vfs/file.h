@@ -2,5 +2,6 @@
 
 #include "vfs.h"
 
-namespace vfs {
+namespace vfs
+{
 };

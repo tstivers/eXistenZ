@@ -18,11 +18,13 @@ class VFile;
 #include "shader/shadercache.h"
 
 
-namespace q3bsp {
+namespace q3bsp
+{
 
 	class BSPPatch;
 
-	struct tBSPVertexDX {
+	struct tBSPVertexDX
+	{
 		D3DXVECTOR3 pos;
 		D3DXVECTOR3	nrm;
 		D3DCOLOR	diffuse;
@@ -30,7 +32,8 @@ namespace q3bsp {
 		D3DXVECTOR2 tex2;
 	};
 
-	typedef struct {
+	typedef struct
+	{
 		int face_index;
 		int texture_index;
 		int lightmap_index;
@@ -40,7 +43,8 @@ namespace q3bsp {
 
 #define VERTEX tBSPVertexDX
 
-	class BSP {
+	class BSP
+	{
 	public:
 		BSP();
 		~BSP();
@@ -76,7 +80,7 @@ namespace q3bsp {
 		IDirect3DVertexBuffer9* dxvertbuf;
 		IDirect3DIndexBuffer9* dxindexbuf;
 		D3DMATERIAL9 mtrl;
-		
+
 		int num_verts;
 		int num_faces;
 		int num_textures;
@@ -92,7 +96,7 @@ namespace q3bsp {
 		int num_mesh_indices;
 
 		tBSPVertexDX* verts;
-		tBSPFace* faces;		
+		tBSPFace* faces;
 		texture::DXTexture** textures;
 		tBSPTexture* bsp_textures;
 
@@ -110,7 +114,7 @@ namespace q3bsp {
 
 		int			*mesh_indices;
 		BSPPatch	**patches;
-		
+
 		int			drawn_faces;
 		int			drawn_leafs;
 		int			drawn_polys;
@@ -120,7 +124,7 @@ namespace q3bsp {
 		int			*marked_leafs;
 		int			*sorted_faces;
 
-		int frame;	
+		int frame;
 		tBSPVisData  clusters;
 
 		int current_cluster;

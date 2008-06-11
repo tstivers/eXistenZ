@@ -2,8 +2,10 @@
 #include "texture/texture.h"
 class VFile;
 
-namespace shader {
-	enum {
+namespace shader
+{
+	enum
+	{
 		TEXTURE_LIGHTMAP,
 		TEXTURE_BUMP,
 		TEXTURE_SPEC,
@@ -11,10 +13,11 @@ namespace shader {
 		TEXTURE_DIFFUSE
 	};
 
-	class Shader {
+	class Shader
+	{
 	public:
 		char* name;
-		char* filename;		
+		char* filename;
 		U32 flags;
 
 		Shader(const char* name);

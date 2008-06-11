@@ -20,7 +20,8 @@
 #include "jsplayer.h"
 
 
-namespace game {
+namespace game
+{
 	int game_state;
 
 	void processInput();
@@ -39,7 +40,7 @@ namespace game {
 	void con_quit();
 	void con_break();
 	void toggle_movemode();
-	
+
 	char init_command[MAX_PATH];
 
 	Player* player;
@@ -63,7 +64,7 @@ void game::init()
 	init_command[0] = 0;
 
 	noclip = 1;
-	
+
 	console::addCommand("map", con_map);
 	console::addCommand("toggle_clipping", console::toggle_int, &noclip);
 	console::addCommand("toggle_movemode", toggle_movemode);
@@ -84,7 +85,7 @@ void game::release()
 
 void game::toggle_movemode()
 {
-	if(player->getMoveMode() == MM_FLY)
+	if (player->getMoveMode() == MM_FLY)
 		player->setMoveMode(MM_WALK);
 	else
 		player->setMoveMode(MM_FLY);
@@ -92,12 +93,13 @@ void game::toggle_movemode()
 
 void game::doTick()
 {
-	switch(game_state) {
-		case STATE_RUN:
-			processInput();
-			break;
-		default:
-			break;
+	switch (game_state)
+	{
+	case STATE_RUN:
+		processInput();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -105,25 +107,28 @@ void game::processInput()
 {
 	//console::log_frame = false;
 
-	if(init_command[0]) {
+	if (init_command[0])
+	{
 		console::processCmd(init_command);
 		init_command[0] = 0;
 	}
 
-	if(!input::has_focus)
+	if (!input::has_focus)
 		return;
 
 	// default key mappings cannot be changed
-	if(KEYPRESSED(DIK_ESCAPE)) {
+	if (KEYPRESSED(DIK_ESCAPE))
+	{
 		PostMessage(appwindow::getHwnd(), WM_QUIT, 0, 0);
 	}
 
-	if(KEYDOWN(DIK_GRAVE)) {
+	if (KEYDOWN(DIK_GRAVE))
+	{
 		input::unacquire();
 		settings::setint("system.ui.console.draw", 1);
 	}
 
-	if((KEYDOWN(DIK_LALT) || KEYDOWN(DIK_RALT)) && KEYDOWN(DIK_RETURN))
+	if ((KEYDOWN(DIK_LALT) || KEYDOWN(DIK_RALT)) && KEYDOWN(DIK_RETURN))
 	{
 		appwindow::toggleFullScreen();
 		input::kbstate[DIK_RETURN] = 0; // eat the enter
@@ -131,9 +136,9 @@ void game::processInput()
 
 	// handle mouse crap here for now
 	player->doRotation(D3DXVECTOR3((float)input::mousestate.lX * mouse_sens_x,
-		(float)input::mousestate.lY * mouse_sens_y,
-		0.0f));
-	
+								   (float)input::mousestate.lY * mouse_sens_y,
+								   0.0f));
+
 	// process key mappings
 	input::processBinds();
 
@@ -185,7 +190,8 @@ void game::move_jump()
 
 void game::con_map(char* cmd, char* cmdline, void* user)
 {
-	if(!cmdline) {
+	if (!cmdline)
+	{
 		LOG("usage: /map <mapname>");
 		return;
 	}
@@ -207,7 +213,7 @@ bool game::startMap(char* name)
 
 	// load the bsp
 	render::scene = scene::Scene::load(bspname);
-	if(!render::scene)
+	if (!render::scene)
 		return false;
 
 	render::scene->init();
@@ -215,12 +221,13 @@ bool game::startMap(char* name)
 	physics::acquire();
 	player->acquire();
 	render::scene->acquire();
-	physics::addStaticMesh(name,(scene::SceneBSP*)render::scene);
+	physics::addStaticMesh(name, (scene::SceneBSP*)render::scene);
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);
 	vfs::IFilePtr file = vfs::getFile(bspname);
-	if(file){
+	if (file)
+	{
 		gScriptEngine->RunScript(file);
 	}
 

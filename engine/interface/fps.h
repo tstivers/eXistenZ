@@ -2,14 +2,16 @@
 
 class CD3DFont;
 
-namespace ui {
-	class FPS {
+namespace ui
+{
+	class FPS
+	{
 	public:
 		FPS();
 		~FPS();
 		void render();
 		void reset(); // hack
-	
+
 	public:
 		int xpos;
 		int ypos;

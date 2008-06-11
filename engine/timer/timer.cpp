@@ -2,7 +2,8 @@
 #include "timer/timer.h"
 #include "settings/settings.h"
 
-namespace timer {
+namespace timer
+{
 	unsigned __int64 time_hz;
 	unsigned __int64 frame_ticks;
 	unsigned __int64 game_ticks;
@@ -20,7 +21,7 @@ namespace timer {
 REGISTER_STARTUP_FUNCTION(timer, timer::init, 10);
 
 void timer::init()
-{		
+{
 	time_ms = 0.0f;
 	game_ms = 0.0f;
 	time_scale = 1.0f;
@@ -43,8 +44,8 @@ void timer::init()
 void timer::doTick()
 {
 	U64 last_frame_ticks = frame_ticks;
-	QueryPerformanceCounter((LARGE_INTEGER*)&frame_ticks);	
-	U64 delta_ticks = frame_ticks - last_frame_ticks;	
+	QueryPerformanceCounter((LARGE_INTEGER*)&frame_ticks);
+	U64 delta_ticks = frame_ticks - last_frame_ticks;
 	delta_ms = ((double)delta_ticks * time_scale) / ((double)time_hz / 1000.0);
 	delta_s = ((double)delta_ticks * time_scale) / (double)time_hz;
 	game_ms += delta_ms;
@@ -52,8 +53,8 @@ void timer::doTick()
 	//game_ms = (double)(game_ticks - start_ticks) / ((double)time_hz / 1000.0);
 	time_ms = (double)(frame_ticks - start_ticks) / ((double)time_hz / 1000.0);
 	//INFO("game_ms = %f, time_ms = %f", game_ms, time_ms);
-	
-	if(delta_ms > max_ms)
+
+	if (delta_ms > max_ms)
 		delta_ms = max_ms;
 }
 

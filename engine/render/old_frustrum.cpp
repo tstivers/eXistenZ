@@ -18,7 +18,7 @@ enum FrustumSide
 	TOP		= 3,		// The TOP side of the frustum
 	BACK	= 4,		// The BACK	side of the frustum
 	FRONT	= 5			// The FRONT side of the frustum
-}; 
+};
 
 // Like above, instead of saying a number for the ABC and D of the plane, we
 // want to be more descriptive.
@@ -41,16 +41,16 @@ void NormalizePlane(float frustum[6][4], int side)
 	// Here we calculate the magnitude of the normal to the plane (point A B C)
 	// Remember that (A, B, C) is that same thing as the normal's (X, Y, Z).
 	// To calculate magnitude you use the equation:  magnitude = sqrt( x^2 + y^2 + z^2)
-	float magnitude = (float)sqrt( frustum[side][A] * frustum[side][A] + 
-		frustum[side][B] * frustum[side][B] + 
-		frustum[side][C] * frustum[side][C] );
+	float magnitude = (float)sqrt(frustum[side][A] * frustum[side][A] +
+								  frustum[side][B] * frustum[side][B] +
+								  frustum[side][C] * frustum[side][C]);
 
 	// Then we divide the plane's values by it's magnitude.
 	// This makes it easier to work with.
 	frustum[side][A] /= magnitude;
 	frustum[side][B] /= magnitude;
 	frustum[side][C] /= magnitude;
-	frustum[side][D] /= magnitude; 
+	frustum[side][D] /= magnitude;
 }
 
 
@@ -61,7 +61,7 @@ void NormalizePlane(float frustum[6][4], int side)
 ///////////////////////////////// CALCULATE FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
 void CFrustum::CalculateFrustum()
-{    
+{
 	D3DXMATRIX proj = render::projection;								// This will hold our projection matrix
 	D3DXMATRIX modl = render::view;								// This will hold our modelview matrix
 	float   clip[16];								// This will hold the clipping planes
@@ -161,13 +161,13 @@ void CFrustum::CalculateFrustum()
 /////
 ///////////////////////////////// POINT IN FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-bool CFrustum::PointInFrustum( float x, float y, float z )
+bool CFrustum::PointInFrustum(float x, float y, float z)
 {
 	// Go through all the sides of the frustum
-	for(int i = 0; i < 6; i++ )
+	for (int i = 0; i < 6; i++)
 	{
 		// Calculate the plane equation and check if the point is behind a side of the frustum
-		if(m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= 0)
+		if (m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= 0)
 		{
 			// The point was behind a side, so it ISN'T in the frustum
 			return false;
@@ -185,13 +185,13 @@ bool CFrustum::PointInFrustum( float x, float y, float z )
 /////
 ///////////////////////////////// SPHERE IN FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-bool CFrustum::SphereInFrustum( float x, float y, float z, float radius )
+bool CFrustum::SphereInFrustum(float x, float y, float z, float radius)
 {
 	// Go through all the sides of the frustum
-	for(int i = 0; i < 6; i++ )	
+	for (int i = 0; i < 6; i++)
 	{
 		// If the center of the sphere is farther away from the plane than the radius
-		if( m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= -radius )
+		if (m_Frustum[i][A] * x + m_Frustum[i][B] * y + m_Frustum[i][C] * z + m_Frustum[i][D] <= -radius)
 		{
 			// The distance was greater than the radius so the sphere is outside of the frustum
 			return false;
@@ -209,7 +209,7 @@ bool CFrustum::SphereInFrustum( float x, float y, float z, float radius )
 /////
 ///////////////////////////////// CUBE IN FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-bool CFrustum::CubeInFrustum( float x, float y, float z, float size )
+bool CFrustum::CubeInFrustum(float x, float y, float z, float size)
 {
 	// Basically, what is going on is, that we are given the center of the cube,
 	// and half the length.  Think of it like a radius.  Then we checking each point
@@ -221,23 +221,23 @@ bool CFrustum::CubeInFrustum( float x, float y, float z, float size )
 	// This happens when all the corners of the bounding box are not behind any one plane.
 	// This is rare and shouldn't effect the overall rendering speed.
 
-	for(int i = 0; i < 6; i++ )
+	for (int i = 0; i < 6; i++)
 	{
-		if(m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z - size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y - size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x - size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
 			continue;
-		if(m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
+		if (m_Frustum[i][A] * (x + size) + m_Frustum[i][B] * (y + size) + m_Frustum[i][C] * (z + size) + m_Frustum[i][D] > 0)
 			continue;
 
 		// If we get here, it isn't in the frustum
@@ -256,21 +256,21 @@ bool CFrustum::CubeInFrustum( float x, float y, float z, float size )
 /////
 ///////////////////////////////// BOX IN FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-bool CFrustum::BoxInFrustum( float x, float y, float z, float x2, float y2, float z2)
+bool CFrustum::BoxInFrustum(float x, float y, float z, float x2, float y2, float z2)
 {
 	// Go through all of the corners of the box and check then again each plane
 	// in the frustum.  If all of them are behind one of the planes, then it most
 	// like is not in the frustum.
-	for(int i = 0; i < 6; i++ )
+	for (int i = 0; i < 6; i++)
 	{
-		if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
-		if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+		if (m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
 
 		// If we get here, it isn't in the frustum
 		return false;

@@ -2,8 +2,10 @@
 #include "render/render.h"
 #include "render/frustrum.h"
 
-namespace render {
-	enum {
+namespace render
+{
+	enum
+	{
 		PLANE_LEFT,
 		PLANE_RIGHT,
 		PLANE_NEAR,
@@ -49,21 +51,22 @@ void render::calc_frustrum(void)
 	clip_plane[PLANE_FAR].c = mat._34 - mat._33;
 	clip_plane[PLANE_FAR].d = mat._44 - mat._43;
 
-	for(int plane_index = 0; plane_index < 6; plane_index++)
+	for (int plane_index = 0; plane_index < 6; plane_index++)
 		D3DXPlaneNormalize(&clip_plane[plane_index], &clip_plane[plane_index]);
 }
 
 inline bool render::box_in_frustrum(const D3DXVECTOR3 &mins, const D3DXVECTOR3 &maxs)
 {
-	for(int i = 0; i < 6; i++) {
-		if(D3DXPlaneDotCoord(&clip_plane[i], &mins) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &maxs) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, mins.y, mins.z)) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, maxs.y, mins.z)) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, mins.y, maxs.z)) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, maxs.y, maxs.z)) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, mins.y, maxs.z)) > 0) continue;
-		if(D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, maxs.y, mins.z)) > 0) continue;
+	for (int i = 0; i < 6; i++)
+	{
+		if (D3DXPlaneDotCoord(&clip_plane[i], &mins) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &maxs) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, mins.y, mins.z)) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, maxs.y, mins.z)) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(maxs.x, mins.y, maxs.z)) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, maxs.y, maxs.z)) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, mins.y, maxs.z)) > 0) continue;
+		if (D3DXPlaneDotCoord(&clip_plane[i], &D3DXVECTOR3(mins.x, maxs.y, mins.z)) > 0) continue;
 
 		return false;
 	}
@@ -71,7 +74,8 @@ inline bool render::box_in_frustrum(const D3DXVECTOR3 &mins, const D3DXVECTOR3 &
 	return true;
 }
 
-inline bool render::box_in_frustrum(const int min[], const int max[]) {
+inline bool render::box_in_frustrum(const int min[], const int max[])
+{
 	return box_in_frustrum(D3DXVECTOR3((float)min[0], (float)min[1], (float)min[2]),
-		D3DXVECTOR3((float)max[0], (float)max[1], (float)max[2]));
+						   D3DXVECTOR3((float)max[0], (float)max[1], (float)max[2]));
 }

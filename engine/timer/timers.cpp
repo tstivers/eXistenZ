@@ -3,21 +3,23 @@
 #include "timer/timers.h"
 #include "console/console.h"
 
-namespace timer {
-	class Timer {
+namespace timer
+{
+	class Timer
+	{
 	public:
 		Timer(const string& name, const string& action, const unsigned int frequency_ms, const unsigned int next_ms) :
-		  name(name), action(action), frequency_ms(frequency_ms), next_ms(next_ms){};
-		Timer(const string& name, function<void(string)> action, const unsigned int frequency_ms, const unsigned int next_ms) :
-		  name(name), action_f(action), frequency_ms(frequency_ms), next_ms(next_ms){};
+				name(name), action(action), frequency_ms(frequency_ms), next_ms(next_ms) {};
+		Timer(const string& name, function < void(string) > action, const unsigned int frequency_ms, const unsigned int next_ms) :
+				name(name), action_f(action), frequency_ms(frequency_ms), next_ms(next_ms) {};
 
 		~Timer() {};
-		
+
 		string name;
 		string action;
-		function<void(string)> action_f;
+		function < void(string) > action_f;
 		float frequency_ms;
-		float next_ms;		
+		float next_ms;
 	};
 
 	typedef shared_ptr<Timer> pTimer;
@@ -46,7 +48,7 @@ bool timer::addTimer(const string& name, const string& action, float frequency_m
 	return true;
 }
 
-bool timer::addTimer(const string& name, function<void(string)> action, float frequency_ms /* = 0 */, float next_ms /* = 0 */)
+bool timer::addTimer(const string& name, function < void(string) > action, float frequency_ms /* = 0 */, float next_ms /* = 0 */)
 {
 	addTimer(pTimer(new Timer(name, action, frequency_ms, next_ms)));
 	return true;
@@ -55,7 +57,7 @@ bool timer::addTimer(const string& name, function<void(string)> action, float fr
 void timer::addTimer(pTimer timer)
 {
 	ASSERT(timer->frequency_ms >= 0.0f);
-	if(timer->next_ms < game_ms)
+	if (timer->next_ms < game_ms)
 		timer->next_ms = game_ms;
 
 	removeTimer(timer->name);
@@ -67,41 +69,45 @@ void timer::addTimer(pTimer timer)
 bool timer::removeTimer(const string& name)
 {
 	timermap_t::iterator i = timer_map.find(name);
-	if(i == timer_map.end())
+	if (i == timer_map.end())
 		return false;
 
 	vector<pTimer> temp;
-	while(timer_queue.top() != i->second) {
+	while (timer_queue.top() != i->second)
+	{
 		temp.push_back(timer_queue.top());
 		timer_queue.pop();
 	}
 
 	timer_queue.pop();
 
-	for(vector<pTimer>::iterator j = temp.begin(); j != temp.end(); j++)
+	for (vector<pTimer>::iterator j = temp.begin(); j != temp.end(); j++)
 		timer_queue.push(*j);
 
 	timer_map.erase(i);
-		
+
 	return false;
 }
 
 void timer::fireTimers()
 {
-	while(!timer_queue.empty() && (timer_queue.top()->next_ms <= game_ms)) 
+	while (!timer_queue.empty() && (timer_queue.top()->next_ms <= game_ms))
 	{
 		pTimer t = timer_queue.top();
 		timer_queue.pop();
-		if(t->action_f)
+		if (t->action_f)
 			t->action_f(t->name);
 		else
 			console::processCmd(t->action.c_str());
-		if(t->frequency_ms != 0.0f) {
+		if (t->frequency_ms != 0.0f)
+		{
 			t->next_ms += t->frequency_ms;
-			if(t->next_ms <= game_ms)
+			if (t->next_ms <= game_ms)
 				t->next_ms = game_ms + 1.0f;
 			timer_queue.push(t);
-		} else {			
+		}
+		else
+		{
 			timer_map.erase(t->name);
 		}
 	}

@@ -8,7 +8,8 @@
 #include "vfs/file.h"
 #include "timer/timer.h"
 
-namespace texture {
+namespace texture
+{
 	typedef void (* parse_command)(Shader* shader, int argc, char* argv[]);
 	typedef void (* init_command)(Shader* shader, DXTexture* texture);
 	typedef void (* activate_command)(Shader* shader, DXTexture* texture);
@@ -42,17 +43,19 @@ namespace texture {
 	void deactivate_ttransform(Shader* shader, DXTexture* texture);
 
 
-	struct {
+	struct
+	{
 		char* command;
 		unsigned int flag;
 		parse_command parse;
 		init_command init;
 		activate_command activate;
 		deactivate_command deactivate;
-	} commands[] = {
+	} commands[] =
+	{
 		//	command				flag		parse				init				activate				deactivate
 		{	"TEXTURE",			0x0000,		parse_texture,		NULL,				NULL,					NULL					},
-		{	"NODRAW",			0x0001,		NULL,				init_nodraw,		NULL,					NULL					},		
+		{	"NODRAW",			0x0001,		NULL,				init_nodraw,		NULL,					NULL					},
 		{	"ALPHATEST",		0x0002,		parse_alphatest,	NULL,				activate_alphatest,		deactivate_alphatest	},
 		{	"2SIDED",			0x0004,		NULL,				NULL,				activate_cullmode,		deactivate_cullmode		},
 		{	"ALPHABLEND",		0x0008,		NULL,				init_alphablend,	activate_alphablend,	deactivate_alphablend	},
@@ -60,7 +63,7 @@ namespace texture {
 		{	"BLEND_ADD",		0x0020,		parse_blendadd,		init_blendadd,		activate_blendadd,		deactivate_blendadd		},
 		{	"SKY",				0x0040,		NULL,				init_sky,			NULL,					NULL					},
 		{	"TEX_TRANSFORM",	0x0080,		parse_ttransform,	NULL,				activate_ttransform,	deactivate_ttransform	},
-		{	"INVERT_TEXTURE",	0x0100,		NULL,				NULL,				activate_invert,		deactivate_invert		},		
+		{	"INVERT_TEXTURE",	0x0100,		NULL,				NULL,				activate_invert,		deactivate_invert		},
 		{	NULL,				0x0000,		NULL,				NULL,				NULL,					NULL					}
 	};
 };
@@ -75,7 +78,7 @@ Shader::Shader()
 Shader::Shader(char* filename)
 {
 	vfs::IFilePtr file = vfs::getFile(filename);
-	if(!file)
+	if (!file)
 		return;
 
 	load(file);
@@ -94,14 +97,14 @@ void Shader::acquire()
 void Shader::release()
 {
 	refcount--;
-	if(refcount <= 0)
+	if (refcount <= 0)
 		delete this;
 }
 
 bool Shader::load(char* filename)
 {
 	vfs::IFilePtr file = vfs::getFile(filename);
-	if(!file)
+	if (!file)
 		return false;
 
 	return load(file);
@@ -119,39 +122,41 @@ bool Shader::load(vfs::IFilePtr file)
 	line = 0;
 	flags = 0;
 
-	while(file->readLine(buf, 256)) {
+	while (file->readLine(buf, 256))
+	{
 		//LOG("processing \"%s\"", buf);
 		line++;
 
 		char* comment = strstr(buf, "//");
-		if(comment) *comment = 0;
+		if (comment) *comment = 0;
 
 		strip(buf);
 
-		if(!buf[0]) continue;
+		if (!buf[0]) continue;
 
 		char * name = buf;
 		char* args = strchr(name, ' ');
 		int argc;
 		char* argv[12];
 
-		if(args)
+		if (args)
 			*(args++) = 0;
 		argv[0] = name;
 		argc = countArgs(args) + 1;
-		for(int arg_idx = 1; arg_idx < argc; arg_idx++)
+		for (int arg_idx = 1; arg_idx < argc; arg_idx++)
 			argv[arg_idx] = getToken(&args, " \t");
 
 		int command_idx;
-		for(command_idx = 0; commands[command_idx].command; command_idx++)
-			if(!_stricmp(name, commands[command_idx].command)) {
+		for (command_idx = 0; commands[command_idx].command; command_idx++)
+			if (!_stricmp(name, commands[command_idx].command))
+			{
 				flags |= commands[command_idx].flag;
-				if(commands[command_idx].parse)
+				if (commands[command_idx].parse)
 					commands[command_idx].parse(this, argc, argv);
 				break;
 			}
 
-		if(!commands[command_idx].command)
+		if (!commands[command_idx].command)
 			LOG("%s[%i]: unknown command \"%s\"", file->filename, line, name);
 	}
 
@@ -161,19 +166,19 @@ bool Shader::load(vfs::IFilePtr file)
 
 void Shader::init(DXTexture* texture)
 {
-	for(int command_idx = 0; commands[command_idx].command; command_idx++)
-		if(flags & commands[command_idx].flag)
-			if(commands[command_idx].init)
+	for (int command_idx = 0; commands[command_idx].command; command_idx++)
+		if (flags & commands[command_idx].flag)
+			if (commands[command_idx].init)
 				commands[command_idx].init(this, texture);
 }
 
 bool Shader::activate(DXTexture* texture)
 {
 	//FRAMEDO(LOG("activating %s", name));
-	active_shader = this;	
-	for(int command_idx = 0; commands[command_idx].command; command_idx++)
-		if(flags & commands[command_idx].flag)
-			if(commands[command_idx].activate)
+	active_shader = this;
+	for (int command_idx = 0; commands[command_idx].command; command_idx++)
+		if (flags & commands[command_idx].flag)
+			if (commands[command_idx].activate)
 				commands[command_idx].activate(this, texture);
 
 	return true;
@@ -183,15 +188,16 @@ void Shader::deactivate(DXTexture* texture)
 {
 	//FRAMEDO(LOG("deactivating %s", name));
 	active_shader = NULL;
-	for(int command_idx = 0; commands[command_idx].command; command_idx++)
-		if(flags & commands[command_idx].flag)
-			if(commands[command_idx].deactivate)
+	for (int command_idx = 0; commands[command_idx].command; command_idx++)
+		if (flags & commands[command_idx].flag)
+			if (commands[command_idx].deactivate)
 				commands[command_idx].deactivate(this, texture);
 }
 
 void texture::parse_alphatest(Shader* shader, int argc, char* argv[])
 {
-	if(argc != 2) {
+	if (argc != 2)
+	{
 		LOG("%s[%i]: ALPHATEST takes 1 argument", shader->name, shader->line);
 		return;
 	}
@@ -201,7 +207,8 @@ void texture::parse_alphatest(Shader* shader, int argc, char* argv[])
 
 void texture::parse_chain(Shader* shader, int argc, char* argv[])
 {
-	if(argc != 3) {
+	if (argc != 3)
+	{
 		LOG("%s[%i]: ANIMATE_CHAIN takes 2 argument", shader->name, shader->line);
 		return;
 	}
@@ -209,7 +216,7 @@ void texture::parse_chain(Shader* shader, int argc, char* argv[])
 	sscanf(argv[1], "%i", &shader->chain_frames);
 	sscanf(argv[2], "%i", &shader->chain_time);
 	shader->textures = new DXTexture*[shader->chain_frames];
-	for(int idx = 0; idx < shader->chain_frames; idx++)
+	for (int idx = 0; idx < shader->chain_frames; idx++)
 		shader->textures[idx] = NULL;
 	shader->chain_last_time = 0;
 }
@@ -217,7 +224,7 @@ void texture::parse_chain(Shader* shader, int argc, char* argv[])
 void texture::parse_texture(Shader* shader, int argc, char* argv[])
 {
 	int tex_idx = 0;
-	while(shader->textures[tex_idx])
+	while (shader->textures[tex_idx])
 		tex_idx++;
 
 	shader->textures[tex_idx] = getTexture(argv[1], false);
@@ -228,19 +235,20 @@ void texture::parse_blendadd(Shader* shader, int argc, char* argv[])
 	shader->blend_add_src = D3DBLEND_ONE;
 	shader->blend_add_dst = D3DBLEND_ONE;
 
-	if(argc == 1)
+	if (argc == 1)
 		return;
 
-	if(argc > 1)
+	if (argc > 1)
 		sscanf(argv[1], "%i", &shader->blend_add_src);
 
-	if(argc > 2)
+	if (argc > 2)
 		sscanf(argv[2], "%i", &shader->blend_add_dst);
 }
 
 void texture::parse_ttransform(Shader* shader, int argc, char* argv[])
 {
-	if(argc != 8) {
+	if (argc != 8)
+	{
 		LOG("%s[%i]: TEX_TRANSFORM time tx ty tz rotx roty rotz", shader->name, shader->line);
 		return;
 	}
@@ -267,17 +275,17 @@ void texture::init_sky(Shader* shader, DXTexture* texture)
 
 
 void texture::init_alphablend(Shader* shader, DXTexture* texture)
-{	
+{
 	texture->is_transparent = true;
 }
 
 void texture::init_blendadd(Shader* shader, DXTexture* texture)
-{	
+{
 	texture->is_transparent = true;
 }
 
 void texture::init_chain(Shader* shader, DXTexture* texture)
-{	
+{
 	texture->use_texture = false;
 	shader->chain_current = 0;
 }
@@ -285,75 +293,76 @@ void texture::init_chain(Shader* shader, DXTexture* texture)
 
 void texture::activate_alphatest(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHATESTENABLE, TRUE );
-	render::device->SetRenderState( D3DRS_ALPHAREF, shader->alphamask );
-	render::device->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL );
+	render::device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+	render::device->SetRenderState(D3DRS_ALPHAREF, shader->alphamask);
+	render::device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 }
 
 void texture::deactivate_alphatest(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHATESTENABLE, FALSE );	
-	render::device->SetRenderState( D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL );
+	render::device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	render::device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
 }
 
 void texture::activate_alphablend(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE );
-	render::device->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
-	render::device->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
-	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
+	render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	render::device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	render::device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	render::device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 }
 
 void texture::deactivate_alphablend(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );
-	render::device->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
+	render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	render::device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 void texture::activate_blendadd(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE );
-	render::device->SetRenderState( D3DRS_SRCBLEND, shader->blend_add_src );
-	render::device->SetRenderState( D3DRS_DESTBLEND, shader->blend_add_dst );
-	render::device->SetRenderState( D3DRS_ZWRITEENABLE, FALSE );
+	render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	render::device->SetRenderState(D3DRS_SRCBLEND, shader->blend_add_src);
+	render::device->SetRenderState(D3DRS_DESTBLEND, shader->blend_add_dst);
+	render::device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 }
 
 void texture::deactivate_blendadd(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_ALPHABLENDENABLE, FALSE );	
-	render::device->SetRenderState( D3DRS_ZWRITEENABLE, TRUE );
+	render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	render::device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 }
 
 void texture::activate_invert(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT );
+	render::device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
 	//device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE | D3DTA_COMPLEMENT );
 }
 
 void texture::deactivate_invert(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_BLENDOP, D3DBLENDOP_ADD );
+	render::device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 	//device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE );
 }
 
 void texture::activate_cullmode(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+	render::device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 }
 
 void texture::deactivate_cullmode(Shader* shader, DXTexture* texture)
 {
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+	render::device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void texture::activate_chain(Shader* shader, DXTexture* texture)
 {
-	if((shader->chain_last_time + shader->chain_time) < timer::game_ms) {
+	if ((shader->chain_last_time + shader->chain_time) < timer::game_ms)
+	{
 		shader->chain_last_time = timer::game_ms;
 		shader->chain_current++;
 	}
 
-	if(shader->chain_current >= shader->chain_frames)
+	if (shader->chain_current >= shader->chain_frames)
 		shader->chain_current = 0;
 
 	shader->textures[shader->chain_current]->activate(false);

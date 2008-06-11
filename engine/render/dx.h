@@ -1,6 +1,7 @@
 #pragma once
 
-namespace d3d {
+namespace d3d
+{
 	bool init();
 	void release();
 	void clear();

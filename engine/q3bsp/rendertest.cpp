@@ -26,10 +26,11 @@ BSPRenderTest::BSPRenderTest(BSP* bsp) : BSPRenderer(bsp)
 
 BSPRenderTest::~BSPRenderTest()
 {
-	if(acquired)
+	if (acquired)
 		release();
 
-	for(int i = 0; i < num_meshes; i++)	{
+	for (int i = 0; i < num_meshes; i++)
+	{
 		delete [] meshes[i].vertices;
 		delete [] meshes[i].indices;
 	}
@@ -39,22 +40,25 @@ BSPRenderTest::~BSPRenderTest()
 
 void BSPRenderTest::acquire()
 {
-	for(int i = 0; i < num_meshes; i++)	{
+	for (int i = 0; i < num_meshes; i++)
+	{
 		Mesh& mesh = meshes[i];
 
-		if(FAILED(render::device->CreateVertexBuffer(mesh.num_vertices * sizeof(BSPVertex),
-			D3DUSAGE_WRITEONLY,
-			BSPVERTEXF,
-			D3DPOOL_MANAGED,
-			&mesh.vertbuf,
-			NULL))) {
-				LOG("[BSPRenderTest::acquire] failed to create vertex buffer");
-				return;
-			}
+		if (FAILED(render::device->CreateVertexBuffer(mesh.num_vertices * sizeof(BSPVertex),
+				   D3DUSAGE_WRITEONLY,
+				   BSPVERTEXF,
+				   D3DPOOL_MANAGED,
+				   &mesh.vertbuf,
+				   NULL)))
+		{
+			LOG("[BSPRenderTest::acquire] failed to create vertex buffer");
+			return;
+		}
 
 		void* vertbuf;
 
-		if(FAILED(mesh.vertbuf->Lock(0, mesh.num_vertices * sizeof(BSPVertex), &vertbuf, D3DLOCK_DISCARD))) {
+		if (FAILED(mesh.vertbuf->Lock(0, mesh.num_vertices * sizeof(BSPVertex), &vertbuf, D3DLOCK_DISCARD)))
+		{
 			LOG("[BSPRenderTest::acquire] failed to lock vertex buffer");
 			return;
 		}
@@ -63,18 +67,20 @@ void BSPRenderTest::acquire()
 		mesh.vertbuf->Unlock();
 
 		// generate our index buffer and drop everything into it
-		if(FAILED(render::device->CreateIndexBuffer(mesh.num_indices * sizeof(unsigned short),
-			D3DUSAGE_WRITEONLY,
-			D3DFMT_INDEX16,
-			D3DPOOL_MANAGED,
-			&mesh.indexbuf,
-			NULL))) {
-				LOG("[BSPRenderTest::acquire] failed to create index buffer");
-				return;
-			}
+		if (FAILED(render::device->CreateIndexBuffer(mesh.num_indices * sizeof(unsigned short),
+				   D3DUSAGE_WRITEONLY,
+				   D3DFMT_INDEX16,
+				   D3DPOOL_MANAGED,
+				   &mesh.indexbuf,
+				   NULL)))
+		{
+			LOG("[BSPRenderTest::acquire] failed to create index buffer");
+			return;
+		}
 
 		void* indexbuf;
-		if(FAILED(mesh.indexbuf->Lock(0, mesh.num_indices * sizeof(unsigned short), &indexbuf, D3DLOCK_DISCARD))) {
+		if (FAILED(mesh.indexbuf->Lock(0, mesh.num_indices * sizeof(unsigned short), &indexbuf, D3DLOCK_DISCARD)))
+		{
 			LOG("[BSPRenderTest::acquire] failed to lock index buffer");
 			return;
 		}
@@ -88,31 +94,33 @@ void BSPRenderTest::acquire()
 
 void BSPRenderTest::release()
 {
-	for(int i = 0; i < num_meshes; i++)	{		
-		if(meshes[i].vertbuf) meshes[i].vertbuf->Release();
-		if(meshes[i].indexbuf) meshes[i].indexbuf->Release();
+	for (int i = 0; i < num_meshes; i++)
+	{
+		if (meshes[i].vertbuf) meshes[i].vertbuf->Release();
+		if (meshes[i].indexbuf) meshes[i].indexbuf->Release();
 	}
 
 	acquired = false;
 }
- 
+
 void BSPRenderTest::render()
 {
-	if(!acquired)
+	if (!acquired)
 		acquire();
 
-	for(int i = 0; i < num_meshes; i++)	{
+	for (int i = 0; i < num_meshes; i++)
+	{
 		Mesh& mesh = meshes[i];
-		
-		if(!mesh.texture || !mesh.texture->draw || mesh.texture->is_transparent)
+
+		if (!mesh.texture || !mesh.texture->draw || mesh.texture->is_transparent)
 			continue;
 
 		mesh.texture->activate();
-		if(mesh.lightmap)
+		if (mesh.lightmap)
 			mesh.lightmap->activate();
 		else
 			render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-		
+
 		render::device->SetStreamSource(0, mesh.vertbuf, 0, sizeof(BSPVertex));
 		render::device->SetIndices(mesh.indexbuf);
 		render::device->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, mesh.num_vertices, 0, mesh.num_indices / 3);
@@ -120,14 +128,15 @@ void BSPRenderTest::render()
 		mesh.texture->deactivate();
 	}
 
-	for(int i = 0; i < num_meshes; i++)	{
+	for (int i = 0; i < num_meshes; i++)
+	{
 		Mesh& mesh = meshes[i];
 
-		if(!mesh.texture || !mesh.texture->draw || !mesh.texture->is_transparent)
+		if (!mesh.texture || !mesh.texture->draw || !mesh.texture->is_transparent)
 			continue;
 
 		mesh.texture->activate();
-		if(mesh.lightmap)
+		if (mesh.lightmap)
 			mesh.lightmap->activate();
 		else
 			render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);

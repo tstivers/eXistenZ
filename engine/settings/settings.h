@@ -1,6 +1,7 @@
 #pragma once
 
-namespace settings {
+namespace settings
+{
 
 	class Setting;
 
@@ -11,7 +12,8 @@ namespace settings {
 	typedef bool (* setFunction)(Setting* setting, void* value);
 	typedef bool (* getFunction)(Setting* setting, void** value);
 
-	enum {		
+	enum
+	{
 		TYPE_STRING,
 		TYPE_INT,
 		TYPE_FLOAT,
@@ -19,10 +21,14 @@ namespace settings {
 		TYPE_USERDEF
 	};
 
-	class Setting {
-	public: 
+	class Setting
+	{
+	public:
 		Setting() {};
-		~Setting() {free(name);};
+		~Setting()
+		{
+			free(name);
+		};
 
 		char* name;
 		setFunction set;
@@ -30,7 +36,7 @@ namespace settings {
 		U8 type;
 		U32 flags;
 		void* data;
-	};	
+	};
 
 	void init(void);
 	void release(void);

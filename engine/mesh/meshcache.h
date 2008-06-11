@@ -1,7 +1,8 @@
 #pragma once
 
-namespace mesh {
-	
+namespace mesh
+{
+
 	class Mesh;
 
 	Mesh* getMesh(string& name);

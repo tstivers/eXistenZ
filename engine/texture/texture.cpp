@@ -6,70 +6,72 @@
 #include "render/rendergroup.h"
 #include "render/dx.h"
 
-namespace texture {
+namespace texture
+{
 };
 
 using namespace texture;
 
-DXTexture::DXTexture() 
-{ 
-	texture = NULL; 
+DXTexture::DXTexture()
+{
+	texture = NULL;
 	shader = NULL;
-	name = NULL; 
+	name = NULL;
 	is_transparent = false;
 	use_texture = true;
 	is_lightmap = false;
 	draw = true;
 	sky = false;
-	refcount = 1; 
+	refcount = 1;
 }
 
-DXTexture::~DXTexture() 
-{ 
-	if(texture) 
-		texture->Release(); 
+DXTexture::~DXTexture()
+{
+	if (texture)
+		texture->Release();
 
-	if(shader)
+	if (shader)
 		shader->release();
 
-	delete name; 
+	delete name;
 }
 
 bool DXTexture::activate(bool deactivate_current)
-{	
+{
 	render::frame_texswaps++;
 
-	if(is_lightmap) {
-		if(deactivate_current)
+	if (is_lightmap)
+	{
+		if (deactivate_current)
 		{
-			if(render::current_lightmap)
+			if (render::current_lightmap)
 				render::current_lightmap->deactivate();
 
 			render::current_lightmap = this;
 		}
 
-		render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		render::device->SetTexture(1, texture);
 
 		return true;
 	}
-	
-	if(deactivate_current)
+
+	if (deactivate_current)
 	{
-		if(render::current_texture)
+		if (render::current_texture)
 			render::current_texture->deactivate();
 
 		render::current_texture = this;
 	}
 
-	if(shader)
+	if (shader)
 		shader->activate(this);
 
-	if(!use_texture)
+	if (!use_texture)
 		return true;
 
-	if(texture)
+	if (texture)
 		render::device->SetTexture(0, texture);
 	else
 		render::device->SetTexture(0, NULL);
@@ -79,7 +81,7 @@ bool DXTexture::activate(bool deactivate_current)
 
 void DXTexture::deactivate()
 {
-	if(is_lightmap)
+	if (is_lightmap)
 	{
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		render::current_lightmap = NULL;
@@ -88,8 +90,8 @@ void DXTexture::deactivate()
 
 	render::current_texture = NULL;
 
-	if(shader)
-		shader->deactivate(this);	
+	if (shader)
+		shader->deactivate(this);
 }
 
 void DXTexture::acquire()
@@ -100,6 +102,6 @@ void DXTexture::acquire()
 void DXTexture::release()
 {
 	refcount--;
-	if(!refcount)
+	if (!refcount)
 		delete this;
 }

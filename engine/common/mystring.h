@@ -14,9 +14,11 @@ string StripPathFromFileName(const string& filename);
 string StripFileNameFromPath(const string& filename);
 
 // class for char* hash_map
-class hash_char_ptr_traits {
+class hash_char_ptr_traits
+{
 public:
-	enum {
+	enum
+	{
 		bucket_size = 4,
 		min_buckets = 8
 	};
@@ -38,7 +40,8 @@ public:
 	}
 };
 
-class char_ptr_less {
+class char_ptr_less
+{
 public:
 	bool operator()(const char* val1, const char* val2) const
 	{

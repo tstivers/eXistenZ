@@ -1,13 +1,14 @@
 #include "precompiled.h"
 #include "script/JSArgumentList.h"
 
-namespace script {
+namespace script
+{
 }
 
 using namespace script;
 
 JSArgumentList::JSArgumentList(JSContext* cx)
-	: cx(cx)
+		: cx(cx)
 {
 }
 
@@ -23,7 +24,7 @@ int JSArgumentList::getCount()
 
 jsval* JSArgumentList::getArgv()
 {
-	if(!argv.empty())
+	if (!argv.empty())
 		return &argv[0];
 	else
 		return NULL;
@@ -31,7 +32,7 @@ jsval* JSArgumentList::getArgv()
 
 void JSArgumentList::clear()
 {
-	for(vec_jsval::iterator it = roots.begin(); it != roots.end(); it++)
+	for (vec_jsval::iterator it = roots.begin(); it != roots.end(); it++)
 		JS_RemoveRoot(cx, &(*it));
 	roots.clear();
 	argv.clear();
@@ -39,11 +40,12 @@ void JSArgumentList::clear()
 
 JSArgumentList& JSArgumentList::addParam(jsval val, bool rooted /* = false */)
 {
-	if(!rooted && JSVAL_IS_GCTHING(val)) {
+	if (!rooted && JSVAL_IS_GCTHING(val))
+	{
 		JS_AddRoot(cx, &val);
 		roots.push_back(val);
 	}
-	
+
 	argv.push_back(val);
 	return *this;
 }
@@ -51,7 +53,7 @@ JSArgumentList& JSArgumentList::addParam(jsval val, bool rooted /* = false */)
 JSArgumentList& JSArgumentList::addParam(int i)
 {
 	ASSERT(INT_FITS_IN_JSVAL(i));
-	return addParam(INT_TO_JSVAL(i));		
+	return addParam(INT_TO_JSVAL(i));
 }
 
 JSArgumentList& JSArgumentList::addParam(float f)

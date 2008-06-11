@@ -2,13 +2,17 @@
 
 class NxActor;
 
-namespace texture {;
+namespace texture
+{
+	;
 	class DXTexture;
 	struct Material;
 }
 
-namespace entity {
-	class BoxEntity : public Entity {
+namespace entity
+{
+	class BoxEntity : public Entity
+	{
 	public:
 		BoxEntity(string name, string texture);
 		~BoxEntity();
@@ -27,10 +31,13 @@ namespace entity {
 		void setSleeping(bool asleep);
 
 		void setSize(const D3DXVECTOR3& size);
-		D3DXVECTOR3 getSize() { return size; }
+		D3DXVECTOR3 getSize()
+		{
+			return size;
+		}
 
 		NxActor* actor;
 		texture::DXTexture* texture;
 		D3DXVECTOR3 size;
-	};	
+	};
 }

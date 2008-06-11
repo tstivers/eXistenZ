@@ -7,11 +7,14 @@
 
 #define MARKERVERTEXF ( D3DFVF_XYZ | D3DFVF_NORMAL )
 
-namespace render {
-	struct {
+namespace render
+{
+	struct
+	{
 		float x, y, z;
 		float nx, ny, nz;
-	} marker_verts[] = {
+	} marker_verts[] =
+	{
 		{ 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
 		{ 1.0f, 0.0f, -1.0f, 1.0f, 0.0f, -1.0f },
 		{ -1.0f, 0.0f, -1.0f, -1.0f, 0.0f, -1.0f },
@@ -20,7 +23,8 @@ namespace render {
 		{ 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f }
 	};
 
-	int marker_indices[] = {
+	int marker_indices[] =
+	{
 		0, 1, 2,
 		0, 3, 1,
 		0, 4, 3,
@@ -31,7 +35,8 @@ namespace render {
 		4, 2, 5
 	};
 
-	struct MARKER {
+	struct MARKER
+	{
 		char name[32];
 		D3DXVECTOR3 pos;
 		D3DCOLORVALUE color;
@@ -56,7 +61,7 @@ void render::drawMarker(D3DXVECTOR3 pos, D3DXVECTOR3 color, float scale)
 	D3DXMatrixTranslation(&marker_pos, pos.x / scale, pos.y / scale, pos.z / scale);
 	D3DXMatrixRotationY(&marker_rot, yrot * -1 * (D3DX_PI / 180.0f));
 	D3DXMatrixScaling(&marker_scale, scale, scale, scale);
-	
+
 	D3DXMatrixIdentity(&marker);
 	marker *= marker_rot;
 	marker *= marker_pos;
@@ -69,13 +74,13 @@ void render::drawMarker(D3DXVECTOR3 pos, D3DXVECTOR3 color, float scale)
 	mtrl.Diffuse.b = mtrl.Ambient.b = color.z;
 	mtrl.Diffuse.a = mtrl.Ambient.a = 1.0f;
 
-	render::device->SetTransform( D3DTS_WORLD, &marker );
+	render::device->SetTransform(D3DTS_WORLD, &marker);
 	render::device->SetFVF(MARKERVERTEXF);
-	render::device->SetMaterial( &mtrl );
+	render::device->SetMaterial(&mtrl);
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);	
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CW );
+	render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	render::device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 
 	render::device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 6, 8, &marker_indices, D3DFMT_INDEX32, &marker_verts, sizeof(float) * 6);
 }
@@ -84,10 +89,10 @@ char* render::addMarker(char* name, float x, float y, float z, float r, float g,
 {
 	static int marker_num = 0;
 	MARKER* marker = new MARKER;
-	
-	if(!name)
+
+	if (!name)
 		sprintf(marker->name, "marker_%02i", marker_num++);
-	else	
+	else
 		strcpy(marker->name, name);
 
 	marker->pos.x = x;
@@ -104,21 +109,22 @@ char* render::addMarker(char* name, float x, float y, float z, float r, float g,
 
 void render::drawMarkers()
 {
-	if(marker_list.empty())
+	if (marker_list.empty())
 		return;
 
 	D3DMATERIAL9 mtrl;
-	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));	
+	ZeroMemory(&mtrl, sizeof(D3DMATERIAL9));
 	D3DXMATRIX marker_pos, marker_rot, marker_scale, marker_final;
 
 	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);	
-	render::device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );	
-	render::device->SetFVF(MARKERVERTEXF);	
+	render::device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	render::device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	render::device->SetFVF(MARKERVERTEXF);
 
 
-	for(marker_list_t::iterator it = marker_list.begin(); it != marker_list.end(); it++) {
+	for (marker_list_t::iterator it = marker_list.begin(); it != marker_list.end(); it++)
+	{
 		MARKER* marker = *it;
 		float yrot = marker->rot + ((float)timer::game_ms / 5.0f);
 		mtrl.Diffuse.r = mtrl.Ambient.r = marker->color.r;
@@ -134,8 +140,8 @@ void render::drawMarkers()
 		marker_final *= marker_pos;
 		marker_final *= marker_scale;
 
-		render::device->SetTransform( D3DTS_WORLD, &marker_final );
-		render::device->SetMaterial( &mtrl );
+		render::device->SetTransform(D3DTS_WORLD, &marker_final);
+		render::device->SetMaterial(&mtrl);
 
 		render::device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 6, 8, &marker_indices, D3DFMT_INDEX32, &marker_verts, sizeof(float) * 6);
 	}
@@ -143,8 +149,9 @@ void render::drawMarkers()
 
 void render::delMarker(char* name)
 {
-	if(!name) {
-		if(!marker_list.empty())
+	if (!name)
+	{
+		if (!marker_list.empty())
 			marker_list.pop_back();
 	}
 }

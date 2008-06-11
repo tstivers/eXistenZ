@@ -12,18 +12,23 @@
 #define NX_DBG_EVENTGROUP_MYOBJECTS        0x00100000
 #define NX_DBG_EVENTMASK_MYOBJECTS         0x00100000
 
-namespace physics {
-	class PhysicsOutputStream : public NxUserOutputStream {
-		void reportError(NxErrorCode code, const char* message, const char* file, int line) {
+namespace physics
+{
+	class PhysicsOutputStream : public NxUserOutputStream
+	{
+		void reportError(NxErrorCode code, const char* message, const char* file, int line)
+		{
 			ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
 		}
-		
-		NxAssertResponse reportAssertViolation(const char *message, const char *file,int line) {
+
+		NxAssertResponse reportAssertViolation(const char *message, const char *file, int line)
+		{
 			ERROR("ASSERT \"%s\" (%s:%d)", message, file, line);
 			return NX_AR_CONTINUE;
 		}
 
-		void print(const char* message) {
+		void print(const char* message)
+		{
 			LOG("\"%s\"", message);
 		}
 
@@ -31,10 +36,22 @@ namespace physics {
 
 	class MyAllocator : public NxUserAllocator
 	{
-		void* mallocDEBUG(size_t size, const char* fileName, int line) { return malloc(size); }
-		void* malloc(size_t size) { return ::malloc(size); }
-		void* realloc(void* memory, size_t size) { return ::realloc(memory, size); }
-		void free(void* memory) { ::free(memory); }
+		void* mallocDEBUG(size_t size, const char* fileName, int line)
+		{
+			return malloc(size);
+		}
+		void* malloc(size_t size)
+		{
+			return ::malloc(size);
+		}
+		void* realloc(void* memory, size_t size)
+		{
+			return ::realloc(memory, size);
+		}
+		void free(void* memory)
+		{
+			::free(memory);
+		}
 	} myAllocator;
 
 	NxPhysicsSDK* gPhysicsSDK = NULL;
@@ -46,7 +63,7 @@ namespace physics {
 	bool acquired = false;
 	float scale = 1.0f;
 	float gravity = -9.8f;
-	float maxtimestep = 1.0/60.0;
+	float maxtimestep = 1.0 / 60.0;
 	int maxiter = 8;
 
 	bool setGravity(settings::Setting* setting, void* value);
@@ -58,7 +75,8 @@ using namespace physics;
 
 REGISTER_STARTUP_FUNCTION(physics, physics::init, 10);
 
-void physics::init() {
+void physics::init()
+{
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
 	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);
 	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
@@ -69,31 +87,36 @@ void physics::init() {
 bool physics::setGravity(settings::Setting* setting, void* value)
 {
 	settings::float_setter(setting, value);
-	if(gScene) {
+	if (gScene)
+	{
 		gScene->setGravity(NxVec3(0, gravity, 0));
-		for(int i = 0; i < gScene->getNbActors(); i++)
-			if(gScene->getActors()[i]->isDynamic())
+		for (int i = 0; i < gScene->getNbActors(); i++)
+			if (gScene->getActors()[i]->isDynamic())
 				gScene->getActors()[i]->wakeUp();
 	}
 	return true;
 }
 
-void physics::acquire() {
-	
-	if(acquired)
+void physics::acquire()
+{
+
+	if (acquired)
 		return;
 
 	gPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, &physicsOutputStream);
-	if(!gPhysicsSDK) {
+	if (!gPhysicsSDK)
+	{
 		LOG("failed to initialize physics sdk");
 		return;
-	} else
+	}
+	else
 		LOG("sdk initialized");
 
-	if(physics::debug) {
+	if (physics::debug)
+	{
 		gDebugger = gPhysicsSDK->getFoundationSDK().getRemoteDebugger();
 		gDebugger->connect("localhost");
-		if(!gDebugger->isConnected())
+		if (!gDebugger->isConnected())
 			LOG("WARNING: debugger failed to attach");
 
 		NX_DBG_CREATE_OBJECT(render::scene, NX_DBG_OBJECTTYPE_CAMERA, "Player", NX_DBG_EVENTGROUP_MYOBJECTS);
@@ -101,7 +124,7 @@ void physics::acquire() {
 		NX_DBG_CREATE_PARAMETER(NxVec3(0, 0, 0), render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
 		//NX_DBG_CREATE_PARAMETER(NxVec3(0, 1, 0), render::scene, "Up", NX_DBG_EVENTGROUP_MYOBJECTS);
 	}
-	
+
 	gCooking = NxGetCookingLib(NX_PHYSICS_SDK_VERSION);
 	gCooking->NxInitCooking(NULL, &physicsOutputStream);
 
@@ -140,14 +163,16 @@ void physics::acquire() {
 	startSimulation(); // prime the pump
 }
 
-void physics::startSimulation() {
-	if(!acquired)
-		return;		
-	
+void physics::startSimulation()
+{
+	if (!acquired)
+		return;
+
 	gScene->simulate(timer::delta_s);
 	gScene->flushStream();
 
-	if(NX_DBG_IS_CONNECTED()) {
+	if (NX_DBG_IS_CONNECTED())
+	{
 		D3DXVECTOR3 campos = (render::cam_pos + render::cam_offset) / scale;
 		NX_DBG_SET_PARAMETER((NxVec3)campos, render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
 		D3DXMATRIX mat;
@@ -161,15 +186,17 @@ void physics::startSimulation() {
 	}
 }
 
-void physics::getResults() {
-	if(!acquired)
+void physics::getResults()
+{
+	if (!acquired)
 		return;
 
 	gScene->fetchResults(NX_ALL_FINISHED, true);
 }
 
-void physics::release() {
-	if(!acquired)
+void physics::release()
+{
+	if (!acquired)
 		return;
 	gPhysicsSDK->release();
 	gPhysicsSDK = NULL;
@@ -178,22 +205,23 @@ void physics::release() {
 	acquired = false;
 }
 
-void physics::addStaticMesh(string name, scene::SceneBSP* scene) {
+void physics::addStaticMesh(string name, scene::SceneBSP* scene)
+{
 	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
 }
 
-bool physics::setTimestep( settings::Setting* setting, void* value )
+bool physics::setTimestep(settings::Setting* setting, void* value)
 {
 	settings::float_setter(setting, value);
-	if(gScene)
+	if (gScene)
 		gScene->setTiming(maxtimestep, maxiter);
 	return true;
 }
 
-bool physics::setMaxIter( settings::Setting* setting, void* value )
+bool physics::setMaxIter(settings::Setting* setting, void* value)
 {
 	settings::int_setter(setting, value);
-	if(gScene)
+	if (gScene)
 		gScene->setTiming(maxtimestep, maxiter);
 	return true;
 }

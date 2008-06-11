@@ -9,7 +9,8 @@
 #include "NxPhysics.h"
 #include "NxCooking.h"
 
-namespace physics {
+namespace physics
+{
 	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxCookingInterface *gCooking;
 	extern NxScene* gScene;
@@ -17,53 +18,57 @@ namespace physics {
 
 using namespace physics;
 
-MeshDesc* physics::createMeshDesc(const char* name, scene::SceneBSP* scene) {
+MeshDesc* physics::createMeshDesc(const char* name, scene::SceneBSP* scene)
+{
 	return new BSPMeshDescImpl(name, scene);
 }
 
-MeshDesc::MeshDesc(const char* name) {
+MeshDesc::MeshDesc(const char* name)
+{
 	this->name = _strdup(name);
 }
 
-MeshDesc::~MeshDesc() {
+MeshDesc::~MeshDesc()
+{
 	delete name;
 }
 
 MeshDescImpl::MeshDescImpl(const char* name)
-	: MeshDesc(name) 
+		: MeshDesc(name)
 {
 }
 
 MeshDescImpl::~MeshDescImpl()
-{	
+{
 }
 
 BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
-	: MeshDescImpl(name)
+		: MeshDescImpl(name)
 {
 	this->type = MESHDESC_BSP;
 	MemoryWriteBuffer mwBuf;
 
-	for(int i = 0; i < scene->num_faces; i++) {
-		if(scene->faces[i].type != 1 && scene->faces[i].type != 3)
+	for (int i = 0; i < scene->num_faces; i++)
+	{
+		if (scene->faces[i].type != 1 && scene->faces[i].type != 3)
 			continue;
 
 		//if(scene->bsp->bsptextures[scene->faces[i].texture].flags & 0x4000)
-			//continue;
-		if(!scene->faces[i].rendergroup)
+		//continue;
+		if (!scene->faces[i].rendergroup)
 			continue;
 
-		if(scene->faces[i].rendergroup->texture->is_transparent)
+		if (scene->faces[i].rendergroup->texture->is_transparent)
 			continue;
 
-		if(!scene->faces[i].rendergroup->texture->draw)
+		if (!scene->faces[i].rendergroup->texture->draw)
 			continue;
 
 		unsigned int offset = vertices.size();
-		for(int j = 0;j < scene->faces[i].num_vertices; j++)
+		for (int j = 0;j < scene->faces[i].num_vertices; j++)
 			vertices.push_back(scene->faces[i].vertices[j].pos / physics::scale);
 
-		for(int j = 0; j < scene->faces[i].num_indices; j++)
+		for (int j = 0; j < scene->faces[i].num_indices; j++)
 			indices.push_back(scene->faces[i].indices[j] + offset);
 	}
 
@@ -77,18 +82,18 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	desc.triangles = &indices[0];
 
 	ASSERT(desc.isValid());
-	
+
 	bool cooked = gCooking->NxCookTriangleMesh(desc, mwBuf);
 	ASSERT(cooked);
-	
+
 	mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(mwBuf.data));
 	ASSERT(mesh);
 
 	NxTriangleMeshShapeDesc meshShapeDesc;
 
-	meshShapeDesc.meshData = mesh;	
+	meshShapeDesc.meshData = mesh;
 	NxActorDesc actorDesc;
-	actorDesc.shapes.push_back(&meshShapeDesc);	
+	actorDesc.shapes.push_back(&meshShapeDesc);
 	actorDesc.name = scene->name.c_str();
 	actorDesc.group = 16;
 	NxActor* newActor = gScene->createActor(actorDesc);
@@ -103,5 +108,4 @@ bool MeshDescImpl::cook()
 {
 	return false;
 }
-	
-	
+

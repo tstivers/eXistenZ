@@ -1,5 +1,6 @@
 #pragma once
 
-namespace jsgame {
+namespace jsgame
+{
 	void init();
 }

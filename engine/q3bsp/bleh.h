@@ -6,11 +6,13 @@
 #include "math/vertex.h"
 #include "vfs/vfs.h"
 
-namespace q3bsp {
-	
+namespace q3bsp
+{
+
 	class BSPRenderer;
 
-	struct BSPFace {
+	struct BSPFace
+	{
 		int type;
 		int vertex;
 		int numverts;
@@ -22,15 +24,17 @@ namespace q3bsp {
 		int size[2];
 	};
 
-	struct BSPNode {
+	struct BSPNode
+	{
 		int plane;
 		int front;
 		int back;
 		D3DXVECTOR3 min;
 		D3DXVECTOR3 max;
-	}; 
+	};
 
-	struct BSPLeaf {
+	struct BSPLeaf
+	{
 		int cluster;
 		int leafface;
 		int numleaffaces;
@@ -38,25 +42,29 @@ namespace q3bsp {
 		int numleafbrushes;
 		D3DXVECTOR3 min;
 		D3DXVECTOR3 max;
-	}; 
+	};
 
-	struct BSPPlane {
+	struct BSPPlane
+	{
 		D3DXVECTOR3 nrm;
 		float dst;
 	};
 
-	struct BSPBrush {
+	struct BSPBrush
+	{
 		int brushside;
 		int numbrushsides;
-		int texture;		
+		int texture;
 	};
 
-	struct BSPBrushSide {
+	struct BSPBrushSide
+	{
 		int plane;
-		int texture;		
-	}; 
+		int texture;
+	};
 
-	struct BSPTexture {
+	struct BSPTexture
+	{
 		char name[64];
 		int flags;
 		int contents;
@@ -79,14 +87,16 @@ namespace q3bsp {
 		byte direction[2];   // The direction of the light: [phi,theta]
 	};
 
-	struct face_sort_t {
+	struct face_sort_t
+	{
 		int face_index;
 		int texture_index;
 		int lightmap_index;
 		BSPFace* face_address;
 	};
 
-	class BSP {
+	class BSP
+	{
 	public:
 		BSP();
 		~BSP();
@@ -117,14 +127,14 @@ namespace q3bsp {
 
 		int num_verts;
 		int num_indices;
-		int num_faces;		
+		int num_faces;
 		int num_nodes;
 		int num_leafs;
 		int num_leaffaces;
 		int num_leafbrushes;
 		int num_brushes;
 		int num_brushsides;
-		int num_planes;		
+		int num_planes;
 		int num_clusters;
 		int num_textures;
 		int num_lightmaps;
@@ -135,14 +145,14 @@ namespace q3bsp {
 
 		BSPVertex		*verts;
 		int				*indices;
-		BSPFace			*faces;		
+		BSPFace			*faces;
 		BSPNode			*nodes;
 		BSPLeaf			*leafs;
 		int				*leaffaces;
-		int				*leafbrushes;		
+		int				*leafbrushes;
 		BSPBrush		*brushes;
 		BSPBrushSide	*brushsides;
-		BSPPlane		*planes;		
+		BSPPlane		*planes;
 		byte			*clusters;
 		BSPTexture		*bsptextures;
 		BSPLight		*lights;
@@ -158,7 +168,7 @@ namespace q3bsp {
 		int	*sorted_faces;
 		int *drawn_faces;
 		int *transparent_faces;
-		
+
 		int frame;
 		int last_texture;
 		int last_lightmap;

@@ -1,7 +1,9 @@
 #pragma once
 
-namespace skybox {
-	enum {
+namespace skybox
+{
+	enum
+	{
 		BOX_TOP,
 		BOX_LEFT,
 		BOX_RIGHT,

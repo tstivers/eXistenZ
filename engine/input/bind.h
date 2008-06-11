@@ -1,6 +1,7 @@
 #pragma once
 
-namespace input {
+namespace input
+{
 	enum KEY_STATE
 	{
 		STATE_PRESSED = 0,
@@ -10,7 +11,7 @@ namespace input {
 	};
 
 	void bindKey(int key, char* cmd);
-	void bindKey(int key, function<void(char, KEY_STATE)> fun, KEY_STATE state = STATE_PRESSED);
+	void bindKey(int key, function < void(char, KEY_STATE) > fun, KEY_STATE state = STATE_PRESSED);
 	void unbind(int key);
 	void listBinds();
 

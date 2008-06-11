@@ -13,22 +13,24 @@
 #include "entity/entity.h"
 #include "texture/material.h"
 
-namespace scene {
+namespace scene
+{
 };
 
-namespace render {
+namespace render
+{
 	extern int draw_entities;
 	vector<RenderGroup*> alpha_groups;
 }
 
 using namespace scene;
 
-SceneBSP::SceneBSP() 
+SceneBSP::SceneBSP()
 {
 	bsp = NULL;
 };
 
-SceneBSP::~SceneBSP() 
+SceneBSP::~SceneBSP()
 {
 	// release/delete everything
 };
@@ -41,8 +43,9 @@ void SceneBSP::init()
 	num_faces = bsp->num_faces;
 	faces = new BSPFace[num_faces];
 	ZeroMemory(faces, sizeof(BSPFace) * num_faces);
-	 
-	for(unsigned i = 0; i < num_faces; i++) {
+
+	for (unsigned i = 0; i < num_faces; i++)
+	{
 		//q3bsp::BSPFace& face = bsp->faces[bsp->sorted_faces[i]];
 		q3bsp::BSPFace& face = bsp->faces[i];
 		faces[i].num_vertices = face.numverts;
@@ -53,20 +56,21 @@ void SceneBSP::init()
 		faces[i].prim_type = D3DPT_TRIANGLELIST;
 
 		faces[i].vertices = new BSPVertex[faces[i].num_vertices];
-		for(unsigned j = 0; j < faces[i].num_vertices; j++)
+		for (unsigned j = 0; j < faces[i].num_vertices; j++)
 			faces[i].vertices[j] = bsp->verts[face.vertex + j];
 
 		faces[i].indices = new unsigned short[faces[i].num_indices];
-		for(unsigned j = 0; j < faces[i].num_indices; j++)
+		for (unsigned j = 0; j < faces[i].num_indices; j++)
 			faces[i].indices[j] = bsp->indices[face.meshvertex + j];
 	}
 
 	// optimize faces (convert stupid patches, stripify, cache)
-	for(unsigned i = 0; i < num_faces; i++) {
-		if(faces[i].type == 2)
+	for (unsigned i = 0; i < num_faces; i++)
+	{
+		if (faces[i].type == 2)
 			q3bsp::genPatch(faces[i], bsp->faces[i].size[0], bsp->faces[i].size[1]);
 
-		if(scene::optimize_bsp) 
+		if (scene::optimize_bsp)
 			render::optimizeMesh(&faces[i].prim_type, &faces[i].vertices, &faces[i].indices, &faces[i].num_vertices, &faces[i].num_indices, true, true, false);
 	}
 
@@ -76,61 +80,66 @@ void SceneBSP::init()
 	ZeroMemory(clusters, sizeof(BSPCluster) * num_clusters);
 
 	// reset aabbs
-	for(unsigned i = 0; i < num_clusters; i++)
+	for (unsigned i = 0; i < num_clusters; i++)
 		clusters[i].aabb.reset();
 
 	// first extend aabb and count faces
-	for(unsigned i = 0; i < bsp->num_leafs; i++) {
+	for (unsigned i = 0; i < bsp->num_leafs; i++)
+	{
 
-		if(bsp->leafs[i].cluster < 0)
+		if (bsp->leafs[i].cluster < 0)
 			continue;
 
-		if(bsp->leafs[i].cluster >= num_clusters)
+		if (bsp->leafs[i].cluster >= num_clusters)
 			continue;
 
 		BSPCluster& cluster = clusters[bsp->leafs[i].cluster];
-		
+
 		cluster.aabb.extend(&D3DXVECTOR3(bsp->leafs[i].min[0], bsp->leafs[i].min[1], bsp->leafs[i].min[2]),
-			&D3DXVECTOR3(bsp->leafs[i].max[0], bsp->leafs[i].max[1], bsp->leafs[i].max[2]));
-		
-		for(unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++) {
+							&D3DXVECTOR3(bsp->leafs[i].max[0], bsp->leafs[i].max[1], bsp->leafs[i].max[2]));
+
+		for (unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++)
+		{
 			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
-			
+
 			// don't even bother adding invalid faces
-			if((face->texture < 0) || 
-				(face->texture > bsp->num_textures) || 
-				(!bsp->textures[face->texture]) ||
-				(!bsp->textures[face->texture]->draw))
+			if ((face->texture < 0) ||
+					(face->texture > bsp->num_textures) ||
+					(!bsp->textures[face->texture]) ||
+					(!bsp->textures[face->texture]->draw))
 				continue;
-			
+
 			cluster.num_faces++;
 		}
 	}
 
 	// now allocate and add faces
-	for(unsigned i = 0; i < bsp->num_leafs; i++) {
+	for (unsigned i = 0; i < bsp->num_leafs; i++)
+	{
 
-		if(bsp->leafs[i].cluster < 0)
+		if (bsp->leafs[i].cluster < 0)
 			continue;
 
-		if(bsp->leafs[i].cluster >= num_clusters)
+		if (bsp->leafs[i].cluster >= num_clusters)
 			continue;
 
 		BSPCluster& cluster = clusters[bsp->leafs[i].cluster];
 
-		if(!cluster.faces) {
+		if (!cluster.faces)
+		{
 			cluster.faces = new BSPFace*[cluster.num_faces];
 			cluster.num_faces = 0;
 		}
 
-		for(unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++) {
+		for (unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++)
+		{
 			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
 
 			// don't even bother adding invalid faces
-			if((face->texture < 0) || 
-				(face->texture > bsp->num_textures) || 
-				(!bsp->textures[face->texture]) ||
-				(!bsp->textures[face->texture]->draw))
+			if ((face->texture < 0) ||
+					(face->texture > bsp->num_textures) ||
+					(!bsp->textures[face->texture]) ||
+					(!bsp->textures[face->texture]->draw))
 				continue;
 
 			cluster.faces[cluster.num_faces] = face;
@@ -141,21 +150,23 @@ void SceneBSP::init()
 
 void SceneBSP::acquire()
 {
-	if(acquired)
+	if (acquired)
 		return;
 
 	// loop through clusters and create rendergroups for faces
 	//		get vbuffers, ibuffers, textures
-	for(unsigned i = 0; i < num_clusters; i++) {
-		for(unsigned j = 0; j < clusters[i].num_faces; j++) {
+	for (unsigned i = 0; i < num_clusters; i++)
+	{
+		for (unsigned j = 0; j < clusters[i].num_faces; j++)
+		{
 			BSPFace& face = *(clusters[i].faces[j]);
-			
-			if(face.rendergroup)
+
+			if (face.rendergroup)
 				continue;
 
 			face.rendergroup = render::getRenderGroup(BSPVertex::FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
 			face.rendergroup->texture = bsp->textures[face.texture];
-			if((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
+			if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
 				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
 			face.rendergroup->type = face.prim_type;
 			face.rendergroup->primitivecount = face.prim_type == D3DPT_TRIANGLELIST ? face.num_indices / 3 : face.num_indices - 2;
@@ -166,7 +177,7 @@ void SceneBSP::acquire()
 
 	// loop through entities and acquire everything
 	unsigned num_entities = entities.size();
-	for(unsigned i = 0; i < num_entities; i++)
+	for (unsigned i = 0; i < num_entities; i++)
 		entities[i]->acquire();
 
 	acquired = true;
@@ -174,7 +185,7 @@ void SceneBSP::acquire()
 
 void SceneBSP::release()
 {
-	if(!acquired)
+	if (!acquired)
 		return;
 
 	// loop through clusters and delete rendergroups
@@ -199,63 +210,71 @@ void SceneBSP::render()
 
 	const byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
 
-	if(current_cluster < 0) {
-		for(unsigned i = 0; i < num_clusters; i++) {
+	if (current_cluster < 0)
+	{
+		for (unsigned i = 0; i < num_clusters; i++)
+		{
 
-			if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
 				continue;
 
 			render::frame_clusters++;
 
-			for(unsigned j = 0; j < clusters[i].num_faces; j++)
+			for (unsigned j = 0; j < clusters[i].num_faces; j++)
 				clusters[i].faces[j]->frame = render::frame;
 		}
-	} else {
-		for(unsigned i = 0; i < num_clusters; i++) {
-			
-			if(!BSP_TESTVIS(i))
+	}
+	else
+	{
+		for (unsigned i = 0; i < num_clusters; i++)
+		{
+
+			if (!BSP_TESTVIS(i))
 				continue;
 
-			if(!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
 				continue;
 
 			render::frame_clusters++;
 
-			for(unsigned j = 0; j < clusters[i].num_faces; j++)
-				clusters[i].faces[j]->frame = render::frame;			
+			for (unsigned j = 0; j < clusters[i].num_faces; j++)
+				clusters[i].faces[j]->frame = render::frame;
 		}
 	}
 
 	bsp->initRenderState();
 	render::alpha_groups.clear();
 
-	for(unsigned i = 0; i < num_faces; i++)
-		if(faces[bsp->sorted_faces[i]].frame == render::frame) {
+	for (unsigned i = 0; i < num_faces; i++)
+		if (faces[bsp->sorted_faces[i]].frame == render::frame)
+		{
 			render::frame_faces++;
-			if(faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
+			if (faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
 				render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
 			else
 				render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
 		}
 
 	texture::Material lighting;
-	if(render::draw_entities) {
+	if (render::draw_entities)
+	{
 		unsigned num_entities = entities.size();
-		for(unsigned i = 0; i < num_entities; i++) {
+		for (unsigned i = 0; i < num_entities; i++)
+		{
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
 			entities[i]->render(&lighting);
-			
+
 		}
 	}
 
- 	for(int i = render::alpha_groups.size(); i > 0; i--)
+	for (int i = render::alpha_groups.size(); i > 0; i--)
 		render::drawGroup(render::alpha_groups[i - 1], &render::world);
 
-	if(render::current_texture)
+	if (render::current_texture)
 		render::current_texture->deactivate();
 
-	if(render::current_lightmap)
+	if (render::current_lightmap)
 		render::current_lightmap->deactivate();
 }
 
@@ -266,33 +285,33 @@ void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* en
 	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	int pos[3];
 	int gridstep[3];
-	D3DXVECTOR3 frac(0,0,0), amb(0,0,0), color(0,0,0), direction(0,0,0);
+	D3DXVECTOR3 frac(0, 0, 0), amb(0, 0, 0), color(0, 0, 0), direction(0, 0, 0);
 
 	origin -= bsp->lightgrid_origin;
-	for(int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		float v = origin[i] / gridsize[i];
 		pos[i] = floor(v);
 		frac[i] = v - pos[i];
-		if(pos[i] < 0)
+		if (pos[i] < 0)
 			pos[i] = 0;
-		else if(pos[i] > bsp->lightgrid_bounds[i] - 1)
+		else if (pos[i] > bsp->lightgrid_bounds[i] - 1)
 			pos[i] = bsp->lightgrid_bounds[i] - 1;
 	}
-	
+
 	gridstep[0] = 1;
 	gridstep[1] = 1 * bsp->lightgrid_bounds[0];
 	gridstep[2] = 1 * bsp->lightgrid_bounds[0] * bsp->lightgrid_bounds[1];
 	int start_index = pos[0] * gridstep[0] + pos[1] * gridstep[1] + pos[2] * gridstep[2];
 
 	float totalfactor = 0;
-	for(int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		float factor = 1.0f;
 		int index = start_index;
-		for(int j = 0; j < 3; j++)
+		for (int j = 0; j < 3; j++)
 		{
-			if(i & (1 << j))
+			if (i & (1 << j))
 			{
 				factor *= frac[j];
 				index += gridstep[j];
@@ -301,17 +320,17 @@ void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* en
 				factor *= (1.0f - frac[j]);
 		}
 
-		if(index < 0 || index >= bsp->num_lights)
+		if (index < 0 || index >= bsp->num_lights)
 			continue;
 
 		q3bsp::BSPLight* l = &bsp->lights[index];
 
-		if(!(l->ambient[0] + l->ambient[1] + l->ambient[2]))
+		if (!(l->ambient[0] + l->ambient[1] + l->ambient[2]))
 			continue;
 
 		totalfactor += factor;
 
-		for(int x = 0; x < 3; x++)
+		for (int x = 0; x < 3; x++)
 		{
 			amb[x] += factor * (l->ambient[x]);
 			color[x] += factor * (l->directional[x]);
@@ -325,7 +344,7 @@ void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* en
 		direction += (normal * factor);
 	}
 
-	if(totalfactor > 0 && totalfactor < 0.99)
+	if (totalfactor > 0 && totalfactor < 0.99)
 	{
 		totalfactor = 1.0f / totalfactor;
 		amb *= totalfactor;
@@ -354,7 +373,7 @@ SceneBSP* SceneBSP::loadBSP(const string& name)
 {
 	q3bsp::BSP* bsp = q3bsp::BSP::load(name.c_str());
 
-	if(!bsp)
+	if (!bsp)
 		return NULL;
 
 	SceneBSP* scene = new SceneBSP();
@@ -367,14 +386,14 @@ SceneBSP* SceneBSP::loadBSP(const string& name)
 void SceneBSP::addEntity(entity::Entity* entity)
 {
 	entities.push_back(entity);
-	if(acquired)
+	if (acquired)
 		entity->acquire();
 }
 
 void SceneBSP::removeEntity(entity::Entity* entity)
 {
-	for(entity::EntityList::iterator it = entities.begin(); it != entities.end(); it++)
-		if(*it == entity)
+	for (entity::EntityList::iterator it = entities.begin(); it != entities.end(); it++)
+		if (*it == entity)
 		{
 			entities.erase(it);
 			return;

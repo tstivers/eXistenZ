@@ -8,10 +8,11 @@
 #include "shader/stdshader/shader.h"
 #include "misc/alias.h"
 
-namespace shader {
-	typedef stdext::hash_map<const char*, Shader*, hash_char_ptr_traits> shader_hash_map;		
+namespace shader
+{
+	typedef stdext::hash_map<const char*, Shader*, hash_char_ptr_traits> shader_hash_map;
 
-	shader_hash_map shader_cache;	
+	shader_hash_map shader_cache;
 	misc::AliasList shader_alias;
 	int debug;
 
@@ -41,28 +42,30 @@ void shader::acquire()
 	shader_alias.load(settings::getstring("system.render.texture.shader_map_file"));
 }
 
-shader::Shader* shader::getShader(const char* name) 
+shader::Shader* shader::getShader(const char* name)
 {
 	char shader_name[MAX_PATH];
 
 
-	// check to see if the shader is aliased	
-	if(!*(strcpy(shader_name, shader_alias.findAlias(name))))
+	// check to see if the shader is aliased
+	if (!*(strcpy(shader_name, shader_alias.findAlias(name))))
 		strcpy(shader_name, name);
 
-	if(debug) LOG("retrieving \"%s\" (%s)", shader_name, name);
-	
+	if (debug) LOG("retrieving \"%s\" (%s)", shader_name, name);
+
 	// check to see if the shader is cached
 	shader_hash_map::iterator iter = shader_cache.find(shader_name);
-	if(iter != shader_cache.end()) { // found it
-		if(debug) LOG("shader cached");
+	if (iter != shader_cache.end())  // found it
+	{
+		if (debug) LOG("shader cached");
 		return (*iter).second;
 	}
 
 	// shader wasn't cached, needs to be loaded
 	Shader* shader = loadShader(shader_name);
-	if(shader) { // shader loaded, cache it
-		if(debug) LOG("shader loaded");
+	if (shader)  // shader loaded, cache it
+	{
+		if (debug) LOG("shader loaded");
 		shader_cache.insert(shader_hash_map::value_type(shader->name, shader));
 		return shader;
 	}
@@ -82,20 +85,22 @@ shader::Shader* shader::loadShader(const char* name)
 	// try standard shader (.shader)
 	strcpy(endptr, ".shader");
 	file = vfs::getFile(shader_file);
-	if(file) {
+	if (file)
+	{
 		shader = new shader::StdShader(name);
-		if(shader->load(shader_file))
+		if (shader->load(shader_file))
 			return shader;
 		else
-			delete shader;		
+			delete shader;
 	}
 
 	// try shader program (.hws)
 
 	// try simple texture shader
-	if(texture::getTexture(name)) {
+	if (texture::getTexture(name))
+	{
 		shader = new shader::SimpleShader(name);
-		if(shader->load(shader_file))
+		if (shader->load(shader_file))
 			return shader;
 		else
 			delete shader;

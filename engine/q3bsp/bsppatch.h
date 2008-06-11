@@ -1,11 +1,14 @@
 #pragma once
 
-namespace scene {
+namespace scene
+{
 	class BSPFace;
 }
 
-namespace q3bsp {
-	class MyBiquadraticPatch {
+namespace q3bsp
+{
+	class MyBiquadraticPatch
+	{
 	public:
 		MyBiquadraticPatch();
 		~MyBiquadraticPatch();

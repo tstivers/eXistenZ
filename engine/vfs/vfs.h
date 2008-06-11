@@ -1,8 +1,10 @@
 #pragma once
 
-namespace vfs {
-	
-	class IFile {
+namespace vfs
+{
+
+	class IFile
+	{
 	public:
 		char* filename;
 		U32 size;
@@ -14,7 +16,7 @@ namespace vfs {
 		IFile(const char* filename, bool write = false);
 		virtual ~IFile();
 
-		virtual U32 read(void* buffer, U32 size) = 0;		
+		virtual U32 read(void* buffer, U32 size) = 0;
 		virtual U32 write(const void* buffer, U32 size, bool flush = true) = 0;
 		virtual U32 seek(S32 offset, U32 origin) = 0;
 		virtual void* cache() = 0;
@@ -37,10 +39,11 @@ namespace vfs {
 	bool IsDirectory(const string& path);
 	bool IsFile(const string& path);
 
-	typedef function<void(const string&, void*)> WatchCallback;
+	typedef function < void(const string&, void*) > WatchCallback;
 	void watchFile(const string& filename, WatchCallback callback, void* user);
 
-	enum {
+	enum
+	{
 		FIND_FILE = 1,
 		FIND_DIRECTORY = 1 << 1
 	};

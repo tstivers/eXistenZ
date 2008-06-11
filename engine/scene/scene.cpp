@@ -3,7 +3,8 @@
 #include "scene/scenebsp.h"
 #include "settings/settings.h"
 
-namespace scene {
+namespace scene
+{
 	int optimize_bsp;
 };
 
@@ -21,7 +22,7 @@ Scene::~Scene()
 
 Scene* Scene::load(const string& name, SCENE_TYPE type)
 {
-	return SceneBSP::loadBSP(name);	
+	return SceneBSP::loadBSP(name);
 }
 
 REGISTER_STARTUP_FUNCTION(scene, scene::init, 10);

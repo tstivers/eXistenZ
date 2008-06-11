@@ -4,11 +4,11 @@ void MatrixToYawPitchRoll(D3DXMATRIX* m, D3DXVECTOR3* pVec)
 {
 	D3DXVECTOR3	Scale;
 	D3DXQUATERNION	Rotation;
-	D3DXVECTOR3	Translation; 
+	D3DXVECTOR3	Translation;
 
 // *************************** DECOMPOSE MATRIX
 
-	D3DXMatrixDecompose(&Scale,&Rotation,&Translation,m);
+	D3DXMatrixDecompose(&Scale, &Rotation, &Translation, m);
 
 // *************************** CALCULATE COMPONENTS
 
@@ -25,27 +25,27 @@ void MatrixToYawPitchRoll(D3DXMATRIX* m, D3DXVECTOR3* pVec)
 	float tzy =   tz * Rotation.y;
 	float tzz =   tz * Rotation.z;
 
-	float	s = tzy - txw;   
-	if(	s >  1.0f )  
+	float	s = tzy - txw;
+	if (s >  1.0f)
 		s =  1.0f;
-        if(	s < -1.0f )  
+	if (s < -1.0f)
 		s = -1.0f;
 
 // *************************** CALCULATE PITCH
 
-	pVec->x = asin(-s );
+	pVec->x = asin(-s);
 
 // *************************** CALCULATE YAW/ROLL
 
 	if ((Rotation.x > -D3DXToRadian(89)) || (Rotation.x < D3DXToRadian(89)))
 	{
-		pVec->y = atan2( tzx + tyw, 1.0f - ( txx + tyy ) );
-		pVec->z = atan2( tyx + tzw, 1.0f - ( txx + tzz ) );
+		pVec->y = atan2(tzx + tyw, 1.0f - (txx + tyy));
+		pVec->z = atan2(tyx + tzw, 1.0f - (txx + tzz));
 	}
 	else
 	{
 		pVec->y = 0.0f;
-		pVec->z = atan2( tzx - tyw, 1.0f -( tyy + tzz ) );
+		pVec->z = atan2(tzx - tyw, 1.0f - (tyy + tzz));
 	}
 
 // *************************** CHANGE TO DEGREE

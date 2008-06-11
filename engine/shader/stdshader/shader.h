@@ -2,8 +2,10 @@
 #include "shader/shader.h"
 #include "texture/texture.h"
 
-namespace shader {
-	class StdShader : public Shader {
+namespace shader
+{
+	class StdShader : public Shader
+	{
 	public:
 		StdShader(const char* name);
 		~StdShader();

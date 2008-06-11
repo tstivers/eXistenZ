@@ -1,6 +1,7 @@
 #pragma once
 
-namespace q3bsp {
+namespace q3bsp
+{
 	class BSP;
 	extern BSP* bsp;
 	extern int debug;

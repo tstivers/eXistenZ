@@ -1,15 +1,18 @@
 #pragma once
 
-namespace scene {
+namespace scene
+{
 	class Scene;
 }
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 	class Material;
 }
 
-namespace render {
+namespace render
+{
 	class RenderGroup;
 
 	extern int xres;

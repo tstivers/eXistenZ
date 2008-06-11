@@ -10,17 +10,18 @@
 #include "texture/texture.h"
 
 using namespace q3bsp;
-void R_ColorShiftLightingBytes( byte *in) ;
+void R_ColorShiftLightingBytes(byte *in) ;
 
 BSP* BSP::load(const string& filename)
 {
 	vfs::IFilePtr file = vfs::getFile(filename.c_str());
 
-	if(!file)
+	if (!file)
 		return NULL;
 
 	BSP* bsp = new BSP();
-	if(!bsp->load(file)) {
+	if (!bsp->load(file))
+	{
 		delete bsp;
 		return NULL;
 	}
@@ -30,10 +31,10 @@ BSP* BSP::load(const string& filename)
 
 bool BSP::load(vfs::IFilePtr file)
 {
-	if(!file) 
-		return false;	
+	if (!file)
+		return false;
 
-	if(q3bsp::debug)
+	if (q3bsp::debug)
 		LOG("loading %s", file->filename);
 
 	tBSPHeader header;
@@ -53,7 +54,8 @@ bool BSP::load(vfs::IFilePtr file)
 	verts = new BSPVertex[num_verts];
 	ZeroMemory(verts, num_verts * sizeof(BSPVertex));
 
-	for(int i = 0; i < num_verts; i++) {
+	for (int i = 0; i < num_verts; i++)
+	{
 		verts[i].pos.x = tmp_verts[i].vPosition[0] * 0.03f;
 		verts[i].pos.y = tmp_verts[i].vPosition[2] * 0.03f;
 		verts[i].pos.z = tmp_verts[i].vPosition[1] * 0.03f;
@@ -88,7 +90,8 @@ bool BSP::load(vfs::IFilePtr file)
 	faces = new BSPFace[num_faces];
 	ZeroMemory(faces, num_faces * sizeof(BSPFace));
 
-	for(int i = 0; i < num_faces; i++) {
+	for (int i = 0; i < num_faces; i++)
+	{
 		faces[i].type = tmp_faces[i].type;
 		faces[i].vertex = tmp_faces[i].vertexIndex;
 		faces[i].numverts = tmp_faces[i].numOfVerts;
@@ -117,7 +120,8 @@ bool BSP::load(vfs::IFilePtr file)
 	nodes = new BSPNode[num_nodes];
 	ZeroMemory(nodes, num_nodes * sizeof(BSPNode));
 
-	for(int i = 0; i < num_nodes; i++) {
+	for (int i = 0; i < num_nodes; i++)
+	{
 		nodes[i].plane = tmp_nodes[i].plane;
 		nodes[i].front = tmp_nodes[i].front;
 		nodes[i].back = tmp_nodes[i].back;
@@ -137,12 +141,13 @@ bool BSP::load(vfs::IFilePtr file)
 	num_leafs = lumps[kLeafs].length / sizeof(tBSPLeaf);
 	tBSPLeaf* tmp_leafs = new tBSPLeaf[num_leafs];
 	file->seek(lumps[kLeafs].offset, FILE_BEGIN);
-	file->read((void*)tmp_leafs, lumps[kLeafs].length);	
+	file->read((void*)tmp_leafs, lumps[kLeafs].length);
 
 	leafs = new BSPLeaf[num_leafs];
 	ZeroMemory(leafs, num_leafs * sizeof(BSPLeaf));
 
-	for(int i = 0; i < num_leafs; i++) {
+	for (int i = 0; i < num_leafs; i++)
+	{
 		leafs[i].cluster = tmp_leafs[i].cluster;
 		leafs[i].leafface = tmp_leafs[i].leafface;
 		leafs[i].numleaffaces = tmp_leafs[i].numOfLeafFaces;
@@ -180,7 +185,8 @@ bool BSP::load(vfs::IFilePtr file)
 	brushes = new BSPBrush[num_brushes];
 	ZeroMemory(brushes, num_brushes * sizeof(BSPBrush));
 
-	for(int i = 0; i < num_brushes; i++) {
+	for (int i = 0; i < num_brushes; i++)
+	{
 		brushes[i].brushside = tmp_brushes[i].brushSide;
 		brushes[i].numbrushsides = tmp_brushes[i].numOfBrushSides;
 		brushes[i].texture = tmp_brushes[i].textureID;
@@ -197,7 +203,8 @@ bool BSP::load(vfs::IFilePtr file)
 	brushsides = new BSPBrushSide[num_brushsides];
 	ZeroMemory(brushsides, num_brushsides * sizeof(BSPBrushSide));
 
-	for(int i = 0; i < num_brushsides; i++) {
+	for (int i = 0; i < num_brushsides; i++)
+	{
 		brushsides[i].plane = tmp_brushsides[i].plane;
 		brushsides[i].texture = tmp_brushsides[i].textureID;
 	}
@@ -213,7 +220,8 @@ bool BSP::load(vfs::IFilePtr file)
 	planes = new BSPPlane[num_planes];
 	ZeroMemory(planes, num_planes * sizeof(BSPPlane));
 
-	for(int i = 0; i < num_planes; i++) {		
+	for (int i = 0; i < num_planes; i++)
+	{
 		planes[i].nrm.x = tmp_planes[i].vNormal[0];
 		planes[i].nrm.y = tmp_planes[i].vNormal[2];
 		planes[i].nrm.z = tmp_planes[i].vNormal[1];
@@ -223,7 +231,8 @@ bool BSP::load(vfs::IFilePtr file)
 	delete [] tmp_planes;
 
 	// ------------------- load vis data if it exists --------------------
-	if(lumps[kVisData].length) {
+	if (lumps[kVisData].length)
+	{
 		file->seek(lumps[kVisData].offset, FILE_BEGIN);
 		file->read(&num_clusters, sizeof(int));
 		file->read(&cluster_size, sizeof(int));
@@ -237,27 +246,29 @@ bool BSP::load(vfs::IFilePtr file)
 	// ------------------------ load textures ----------------------------
 	num_textures = lumps[kTextures].length / sizeof(tBSPTexture);
 	bsptextures = new BSPTexture[num_textures];
-	
+
 	file->seek(lumps[kTextures].offset, FILE_BEGIN);
 	file->read((void*)bsptextures, lumps[kTextures].length);
-	
-	textures = new texture::DXTexture*[num_textures];	
 
-	for(int i = 0; i < num_textures; i++) {		
+	textures = new texture::DXTexture*[num_textures];
+
+	for (int i = 0; i < num_textures; i++)
+	{
 		textures[i] = texture::getTexture(bsptextures[i].name);
 	}
 
 	// -------------------------- load lightmaps --------------------------
 	num_lightmaps = lumps[kLightmaps].length / sizeof(tBSPLightmap);
 	tBSPLightmap* tmp_lightmaps = new tBSPLightmap[num_lightmaps];
-	
+
 	file->seek(lumps[kLightmaps].offset, FILE_BEGIN);
 	file->read((void*)tmp_lightmaps, lumps[kLightmaps].length);
 
 	lightmaps = new texture::DXTexture*[num_lightmaps];
 
-	for(int i = 0; i < num_lightmaps; i++) {		
-		lightmaps[i] = texture::genLightmap((texture::tBSPLightmap*)&tmp_lightmaps[i], render::gamma, render::boost);
+	for (int i = 0; i < num_lightmaps; i++)
+	{
+		lightmaps[i] = texture::genLightmap((texture::tBSPLightmap*) & tmp_lightmaps[i], render::gamma, render::boost);
 	}
 
 	delete [] tmp_lightmaps;
@@ -269,7 +280,7 @@ bool BSP::load(vfs::IFilePtr file)
 	file->seek(lumps[kModels].offset, FILE_BEGIN);
 	file->read((void*)models, lumps[kModels].length);
 
-	for(int i = 0; i < num_models; i++)
+	for (int i = 0; i < num_models; i++)
 	{
 		models[i].min[0] *= 0.03f;
 		models[i].min[1] *= 0.03f;
@@ -289,14 +300,14 @@ bool BSP::load(vfs::IFilePtr file)
 	// ------------------------ calc some lightgrid stuffs -------------
 	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	D3DXVECTOR3 max;
-	for(int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		lightgrid_origin[i] = gridsize[i] * ceil(models[0].min[i] / gridsize[i]);
 		max[i] = gridsize[i] * floor(models[0].max[i] / gridsize[i]);
 		lightgrid_bounds[i] = (max[i] - lightgrid_origin[i]) / gridsize[i] + 1;
 	}
 
-	for(int i = 0; i < num_lights; i++)
+	for (int i = 0; i < num_lights; i++)
 	{
 		R_ColorShiftLightingBytes(&lights[i].ambient[0]);
 		R_ColorShiftLightingBytes(&lights[i].directional[0]);
@@ -304,11 +315,12 @@ bool BSP::load(vfs::IFilePtr file)
 	}
 
 	int numgridpoints = lightgrid_bounds[0] * lightgrid_bounds[1] * lightgrid_bounds[2];
-	
+
 	// ------------------------- dump debug info --------------------------
 
-	if(q3bsp::debug) {
-		LOG("loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);		
+	if (q3bsp::debug)
+	{
+		LOG("loaded %i verts, %i indices, %i faces", num_verts, num_indices, num_faces);
 		LOG("loaded %i nodes, %i leafs, %i clusters", num_nodes, num_leafs, num_clusters);
 		LOG("loaded %i leaf_faces, %i planes", num_leaffaces, num_planes);
 		LOG("loaded %i textures, %i lightmaps", num_textures, num_lightmaps);
@@ -318,7 +330,7 @@ bool BSP::load(vfs::IFilePtr file)
 	return true;
 }
 
-void R_ColorShiftLightingBytes( byte* in) 
+void R_ColorShiftLightingBytes(byte* in)
 {
 	int		shift, r, g, b;
 
@@ -329,9 +341,10 @@ void R_ColorShiftLightingBytes( byte* in)
 	r = in[0] << shift;
 	g = in[1] << shift;
 	b = in[2] << shift;
-	
+
 	// normalize by color instead of saturating to white
-	if ( ( r | g | b ) > 255 ) {
+	if ((r | g | b) > 255)
+	{
 		int		max;
 
 		max = r > g ? r : g;
@@ -343,5 +356,5 @@ void R_ColorShiftLightingBytes( byte* in)
 
 	in[0] = r;
 	in[1] = g;
-	in[2] = b;	
+	in[2] = b;
 }

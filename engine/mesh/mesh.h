@@ -1,16 +1,20 @@
 #pragma once
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 };
 
-namespace render {
+namespace render
+{
 	class RenderGroup;
 };
 
-namespace mesh {
+namespace mesh
+{
 
-	class Mesh {
+	class Mesh
+	{
 	public:
 		Mesh();
 		~Mesh();
@@ -23,7 +27,7 @@ namespace mesh {
 		string material_name;
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
-		
+
 		bool acquired;
 		unsigned int vertice_format;
 		unsigned int vertice_count;

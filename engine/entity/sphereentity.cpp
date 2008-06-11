@@ -6,10 +6,12 @@
 #include "render/shapes.h"
 #include <NxPhysics.h>
 
-namespace entity {
+namespace entity
+{
 }
 
-namespace physics {
+namespace physics
+{
 	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxScene* gScene;
 }
@@ -23,7 +25,7 @@ SphereEntity::SphereEntity(string name, string texture) : Entity(name), actor(NU
 
 SphereEntity::~SphereEntity()
 {
-	if(actor)
+	if (actor)
 		physics::gScene->releaseActor(*actor);
 }
 
@@ -34,14 +36,14 @@ void SphereEntity::acquire()
 	NxSphereShapeDesc sphereDesc;
 	sphereDesc.radius = radius / physics::scale;
 	sphereDesc.materialIndex = 1;
-	actorDesc.shapes.pushBack(&sphereDesc);    
+	actorDesc.shapes.pushBack(&sphereDesc);
 	actorDesc.body = &bodyDesc;
 	actorDesc.density = 1;
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
 	actorDesc.userData = dynamic_cast<Entity*>(this);
 	actorDesc.name = name.c_str();
 	actor = physics::gScene->createActor(actorDesc);
-	ASSERT(actor);		
+	ASSERT(actor);
 }
 
 void SphereEntity::release()
@@ -57,7 +59,7 @@ void SphereEntity::update()
 }
 
 void SphereEntity::doTick()
-{	
+{
 	//setPos((D3DXVECTOR3&)actor->getGlobalPosition());
 	//setQuatRotation((D3DXQUATERNION&)actor->getGlobalOrientationQuat());
 	//setRot((D3DXVECTOR3&)actor->getGlobalOrientation());

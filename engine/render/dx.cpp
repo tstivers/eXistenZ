@@ -6,7 +6,8 @@
 #include "interface/interface.h" // hack for fullscreen reset
 #include "render/shapes.h"
 
-namespace d3d {
+namespace d3d
+{
 	IDirect3D9* d3d;
 	IDirect3DDevice9* d3dDevice;
 
@@ -28,14 +29,14 @@ bool d3d::init()
 	//if(d3dpp.Windowed)
 	//	d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
 	//else
-		d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
 	d3dpp.BackBufferCount = settings::getint("system.render.backbuffercount");
-	
-	if(render::wait_vtrace)
+
+	if (render::wait_vtrace)
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
 	else
 		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-	
+
 	UINT adapter = settings::getint("system.render.device");
 	D3DDEVTYPE devicetype = D3DDEVTYPE_HAL;
 
@@ -44,7 +45,7 @@ bool d3d::init()
 	for (UINT i = 0; i < d3d->GetAdapterCount(); i++)
 	{
 		D3DADAPTER_IDENTIFIER9 id;
-		HRESULT res = d3d->GetAdapterIdentifier(i,0,&id);
+		HRESULT res = d3d->GetAdapterIdentifier(i, 0, &id);
 		if (!strcmp(id.Description, "NVIDIA NVPerfHUD"))
 		{
 			adapter = i;
@@ -53,48 +54,54 @@ bool d3d::init()
 		}
 	}
 
-	d3dpp.MultiSampleType = (D3DMULTISAMPLE_TYPE)settings::getint("system.render.multisampletype");	
+	d3dpp.MultiSampleType = (D3DMULTISAMPLE_TYPE)settings::getint("system.render.multisampletype");
 	HRESULT result;
 	char* err = "";
-	if(d3dpp.MultiSampleType) {
-		if(FAILED(result = d3d->CheckDeviceMultiSampleType(adapter, devicetype, d3dpp.BackBufferFormat, d3dpp.Windowed, d3dpp.MultiSampleType, &d3dpp.MultiSampleQuality))) {
-			switch(result) {
-				case D3DERR_INVALIDCALL:
-					err = "D3DERR_INVALIDCALL";
-					break;
-				case D3DERR_NOTAVAILABLE:
-					err = "D3DERR_NOTAVAILABLE";
-					break;
-				case D3DERR_INVALIDDEVICE:
-					err = "D3DERR_INVALIDDEVICE";
-					break;
-				default:
-					err = "UNKNOWN";
+	if (d3dpp.MultiSampleType)
+	{
+		if (FAILED(result = d3d->CheckDeviceMultiSampleType(adapter, devicetype, d3dpp.BackBufferFormat, d3dpp.Windowed, d3dpp.MultiSampleType, &d3dpp.MultiSampleQuality)))
+		{
+			switch (result)
+			{
+			case D3DERR_INVALIDCALL:
+				err = "D3DERR_INVALIDCALL";
+				break;
+			case D3DERR_NOTAVAILABLE:
+				err = "D3DERR_NOTAVAILABLE";
+				break;
+			case D3DERR_INVALIDDEVICE:
+				err = "D3DERR_INVALIDDEVICE";
+				break;
+			default:
+				err = "UNKNOWN";
 			}
 			LOG("failed setting multisample level %i (%s)", d3dpp.MultiSampleType, err);
 			d3dpp.MultiSampleType = D3DMULTISAMPLE_NONE;
 			d3dpp.MultiSampleQuality = 0;
-		} else {
-			d3dpp.MultiSampleQuality -= 1; 
+		}
+		else
+		{
+			d3dpp.MultiSampleQuality -= 1;
 			LOG("set multisample level %i (%i)", d3dpp.MultiSampleType, d3dpp.MultiSampleQuality);
 		}
 	}
 
-	if(FAILED(d3d->CreateDevice(
-		adapter, 
-		devicetype, 
-		appwindow::getHwnd(),
-		D3DCREATE_HARDWARE_VERTEXPROCESSING,
-		&d3dpp, 
-		&d3dDevice))) {
-			MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
-			exit(1);
-		}
+	if (FAILED(d3d->CreateDevice(
+				   adapter,
+				   devicetype,
+				   appwindow::getHwnd(),
+				   D3DCREATE_HARDWARE_VERTEXPROCESSING,
+				   &d3dpp,
+				   &d3dDevice)))
+	{
+		MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
+		exit(1);
+	}
 
 	render::device = d3dDevice;
 // 	if(FAILED(render::device->GetSwapChain(0, &render::swapchain))) {
 // 		MessageBox(NULL, "[d3d::init] unable to get swapchain", "ERROR", MB_OK);
-// 		exit(1);		
+// 		exit(1);
 // 	}
 
 	return true;
@@ -102,7 +109,7 @@ bool d3d::init()
 
 bool d3d::checkDevice()
 {
-	if(resetDevice)
+	if (resetDevice)
 	{
 		LOG("resetting device");
 		ui::reset(); // hack for stupid d3dfont stuff
@@ -114,7 +121,7 @@ bool d3d::checkDevice()
 		d3dpp.BackBufferFormat = d3dpp.Windowed ? D3DFMT_UNKNOWN : D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = render::wait_vtrace ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 		HRESULT result;
-		if(FAILED(result = d3dDevice->Reset(&d3dpp)))
+		if (FAILED(result = d3dDevice->Reset(&d3dpp)))
 		{
 			char* reason = "UNKNOWN";
 			switch (result)
@@ -143,8 +150,9 @@ bool d3d::checkDevice()
 		}
 	}
 
-	switch(d3dDevice->TestCooperativeLevel()) {
-	case D3DERR_DEVICELOST: 
+	switch (d3dDevice->TestCooperativeLevel())
+	{
+	case D3DERR_DEVICELOST:
 		LOG("device lost");
 		setResetDevice();
 		return false;
@@ -153,7 +161,7 @@ bool d3d::checkDevice()
 		return false;
 	default:
 		return true;
-	}	
+	}
 }
 
 void d3d::resize(int width, int height)
@@ -195,7 +203,7 @@ void d3d::clear()
 
 void d3d::present()
 {
-	if(d3dDevice->Present(NULL, NULL, NULL, NULL) != D3D_OK)
+	if (d3dDevice->Present(NULL, NULL, NULL, NULL) != D3D_OK)
 		checkDevice();
 	//LOG("presented");
 }
@@ -208,7 +216,7 @@ ID3DXFont* d3d::createFont(HFONT font)
 {
 	ID3DXFont* dxfont;
 	//if(D3DXCreateFont(d3dDevice, font, &dxfont) != D3D_OK)
-		return NULL;
+	return NULL;
 
 	return dxfont;
 }
@@ -218,14 +226,14 @@ void d3d::setResetDevice()
 	resetDevice = true;
 }
 
-void d3d::takeScreenShot( const string filename )
+void d3d::takeScreenShot(const string filename)
 {
 	int width, height;
 	RECT rect;
-	if(d3dpp.Windowed)
+	if (d3dpp.Windowed)
 	{
-		width = GetSystemMetrics( SM_CXSCREEN );
-		height = GetSystemMetrics( SM_CYSCREEN );
+		width = GetSystemMetrics(SM_CXSCREEN);
+		height = GetSystemMetrics(SM_CYSCREEN);
 		GetClientRect(appwindow::getHwnd(), &rect);
 		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.left);
 		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.right);

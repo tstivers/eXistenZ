@@ -17,7 +17,8 @@
 #include "script/script.h"
 #include "script/jsfunction.h"
 
-namespace render {
+namespace render
+{
 	int xres;
 	int yres;
 	int windowed_width;
@@ -48,7 +49,7 @@ namespace render {
 	int diffuse;
 	int lighting;
 	int maxanisotropy = 0;
-	
+
 	int use_scenegraph;
 	unsigned int max_node_level;
 	unsigned int max_node_meshes;
@@ -99,7 +100,7 @@ void render::init()
 	settings::setint("system.render.resolution.refreshrate", 60);
 	settings::setint("system.render.resolution.bitdepth", 32);
 	settings::setint("system.render.fullscreen", 0);
-	
+
 	settings::addsetting("game.camera.pos.x", settings::TYPE_FLOAT, 0, NULL, NULL, &cam_pos.x);
 	settings::addsetting("game.camera.pos.y", settings::TYPE_FLOAT, 0, NULL, NULL, &cam_pos.y);
 	settings::addsetting("game.camera.pos.z", settings::TYPE_FLOAT, 0, NULL, NULL, &cam_pos.z);
@@ -196,8 +197,8 @@ void render::release()
 }
 
 bool render::start()
-{	
-	return d3d::init();	
+{
+	return d3d::init();
 }
 
 void render::setMatrices()
@@ -208,24 +209,24 @@ void render::setMatrices()
 	D3DXMatrixIdentity(&view);
 
 	D3DXMatrixTranslation(&pos, cam_pos.x * -1, cam_pos.y * - 1 , cam_pos.z * -1);
-	D3DXMatrixRotationY(&rotx, cam_rot.x * -1 * (D3DX_PI / 180.0f)); 
-	D3DXMatrixRotationX(&roty, cam_rot.y * -1 * (D3DX_PI / 180.0f)); 
+	D3DXMatrixRotationY(&rotx, cam_rot.x * -1 * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationX(&roty, cam_rot.y * -1 * (D3DX_PI / 180.0f));
 
 	view *= pos;
 	view *= rotx;
 	view *= roty;
 
-	D3DXMatrixPerspectiveFovLH( &projection, D3DX_PI/4, (float)xres / (float)yres, 0.1f, 10000.0f );
+	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 4, (float)xres / (float)yres, 0.1f, 10000.0f);
 
-	device->SetTransform( D3DTS_WORLD, &world );
-	device->SetTransform( D3DTS_VIEW, &view );
-	device->SetTransform( D3DTS_PROJECTION, &projection );
+	device->SetTransform(D3DTS_WORLD, &world);
+	device->SetTransform(D3DTS_VIEW, &view);
+	device->SetTransform(D3DTS_PROJECTION, &projection);
 	calc_frustrum();
 }
 
 void render::render()
 {
-	frame++;	
+	frame++;
 	sky_visible = true;
 	//current_texture = NULL;
 	//current_lightmap = NULL;
@@ -240,37 +241,37 @@ void render::render()
 	frame_drawcalls = 0;
 
 	// check the device
-	if(!d3d::checkDevice())
+	if (!d3d::checkDevice())
 		return;
 
 	// clear the scene
 	d3d::clear();
 	d3d::begin();
-	
+
 	// set up world/view matrices
 	render::setMatrices();
 
 	// draw the skybox TODO: render only if visible in bsp (transparent crap bug)
 	skybox::render();
 
-	if(scene)
+	if (scene)
 		scene->render();
 
 	// call the on_render js event
-	jsscript::jsfunction<void(void)>(gScriptEngine->GetContext(), "on_render")();
+	jsscript::jsfunction < void(void) > (gScriptEngine->GetContext(), "on_render")();
 
 	// draw any markers
 	render::drawMarkers();
-	
+
 	// draw the interface
 	ui::render();
 
 	d3d::end();
-	
+
 	// show it rarr
 	//if(swapchain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_DONOTWAIT) == D3DERR_WASSTILLDRAWING) {
 	//	LOG("Had to wait for drawing");
-		d3d::present();
+	d3d::present();
 	//}
 }
 
@@ -282,93 +283,94 @@ void render::stop()
 void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 {
 	activateBuffers(rg->vertexbuffer, rg->indexbuffer);
-	
-	if(rg->texture != current_texture) 
+
+	if (rg->texture != current_texture)
 	{
-		if(rg->texture)
+		if (rg->texture)
 			rg->texture->activate();
-		else if(current_texture)
+		else if (current_texture)
 			current_texture->deactivate();
 	}
 
-	if(rg->lightmap != current_lightmap)
+	if (rg->lightmap != current_lightmap)
 	{
-		if(rg->lightmap && render::lightmap)
+		if (rg->lightmap && render::lightmap)
 			rg->lightmap->activate();
 		else
-			if(current_lightmap)
+			if (current_lightmap)
 				current_lightmap->deactivate();
 	}
 
 	if (rg->texture && rg->texture->is_transparent && (!rg->lightmap || !render::lightmap))
 	{
-		render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1 );
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	}
 
-	if ((!rg->lightmap || !render::lightmap) && !rg->material && !rg->texture->is_transparent && render::diffuse) 
+	if ((!rg->lightmap || !render::lightmap) && !rg->material && !rg->texture->is_transparent && render::diffuse)
 	{
-		render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X );
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 	}
 
-	if(transform && *transform != current_transform) {
-		if(transform)
-			device->SetTransform( D3DTS_WORLD, transform );
+	if (transform && *transform != current_transform)
+	{
+		if (transform)
+			device->SetTransform(D3DTS_WORLD, transform);
 		else
-			device->SetTransform( D3DTS_WORLD, &world );
+			device->SetTransform(D3DTS_WORLD, &world);
 
 		current_transform = *transform;
 	}
 
 	static texture::Material m;
-	if(rg->material && !rg->texture->is_transparent)
+	if (rg->material && !rg->texture->is_transparent)
 	{
-		if((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
+		if ((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
 		{
 			device->SetRenderState(D3DRS_LIGHTING, TRUE);
-			device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);		
-			render::device->SetTextureStageState( 0, D3DTSS_COLOROP, D3DTOP_MODULATE );
+			device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);
+			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 			m = *rg->material;
 			device->SetLight(0, &rg->material->light);
 			device->LightEnable(0, TRUE);
 		}
 		current_material = &m;
-	} 
-	else if(current_material)
+	}
+	else if (current_material)
 	{
 		device->SetRenderState(D3DRS_LIGHTING, FALSE);
 		current_material = NULL;
 	}
 
 	render::device->DrawIndexedPrimitive(
-		rg->type, 
-		rg->vertexbuffer->offset / rg->stride, 
-		0, 
-		rg->numvertices, 
-		rg->indexbuffer->offset / sizeof(unsigned short), 
+		rg->type,
+		rg->vertexbuffer->offset / rg->stride,
+		0,
+		rg->numvertices,
+		rg->indexbuffer->offset / sizeof(unsigned short),
 		rg->primitivecount);
 
 	frame_drawcalls++;
 	frame_polys += rg->primitivecount;
 }
 
-void render::resize( int width, int height )
+void render::resize(int width, int height)
 {
-	if(xres == width && yres == height)
+	if (xres == width && yres == height)
 		return;
 
 	xres = width;
 	yres = height;
 	LOG("resizing to %i:%i", width, height);
 	d3d::resize(width, height);
-	jsscript::jsfunction<void(int, int)>(gScriptEngine->GetContext(), "on_resize")(width, height);
+	jsscript::jsfunction < void(int, int) > (gScriptEngine->GetContext(), "on_resize")(width, height);
 }
 
-void render::goFullScreen( bool fullscreen )
+void render::goFullScreen(bool fullscreen)
 {
 	settings::setint("system.render.fullscreen", fullscreen ? 1 : 0);
 	d3d::goFullScreen(fullscreen);
 
-	if(fullscreen)
+	if (fullscreen)
 	{
 		windowed_width = xres;
 		windowed_height = yres;

@@ -1,24 +1,32 @@
 #pragma once
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 };
 
-namespace mesh {
+namespace mesh
+{
 
 	class Mesh;
 
-	class MeshEntry {
+	class MeshEntry
+	{
 	public:
 		MeshEntry() {};
-		MeshEntry(D3DXMATRIX& transform, Mesh* mesh) { this->transform = transform ; this->mesh = mesh; };
+		MeshEntry(D3DXMATRIX& transform, Mesh* mesh)
+		{
+			this->transform = transform ;
+			this->mesh = mesh;
+		};
 		D3DXMATRIX transform;
 		Mesh* mesh;
 	};
 
 	typedef vector<MeshEntry> MeshList;
 
-	class MeshSystem {
+	class MeshSystem
+	{
 	public:
 		MeshSystem();
 		~MeshSystem();

@@ -9,12 +9,14 @@
 #include "texture/texture.h"
 #include "math/aabb.h"
 
-namespace render {
+namespace render
+{
 
 	typedef unsigned int MESHHANDLE;
 	class RenderGroup;
 
-	class Mesh {
+	class Mesh
+	{
 	public:
 		Mesh();
 		texture::DXTexture* texture;  // replace with material
@@ -53,7 +55,8 @@ namespace render {
 	typedef std::vector<Mesh*> MeshList;
 	typedef std::vector<RenderGroup*> RenderGroupList;
 
-	class SceneNode {
+	class SceneNode
+	{
 	public:
 		SceneNode(SceneNode* parent);
 		~SceneNode();
@@ -70,7 +73,7 @@ namespace render {
 		bool acquired;
 
 		SceneNode* parent;
-		SceneNode** children;		
+		SceneNode** children;
 
 		RenderGroupList rendergroups;
 		MeshList meshes;
@@ -85,7 +88,8 @@ namespace render {
 		IDirect3DIndexBuffer9* indexbuffer;
 	};
 
-	class SceneGraph {
+	class SceneGraph
+	{
 	public:
 		SceneGraph();
 		~SceneGraph();

@@ -4,7 +4,8 @@
 #include "mesh/mesh.h"
 #include "mesh/meshsystem.h"
 
-namespace mesh {
+namespace mesh
+{
 	const static string EXTENSION_TEXTMESH = ".tm";
 	const static string EXTENSION_TEXTMESHSYSTEM = ".tms";
 };
@@ -18,7 +19,8 @@ Mesh* mesh::loadMesh(const string& name)
 
 	// try to load a text mesh;
 	mesh = loadTextMesh(name + EXTENSION_TEXTMESH);
-	if(mesh) {
+	if (mesh)
+	{
 		mesh->name = name;
 		return mesh;
 	}
@@ -34,7 +36,8 @@ MeshSystem* mesh::loadMeshSystem(const string& name)
 
 	// try to load a text mesh;
 	meshsys = loadTextMeshSystem(name + EXTENSION_TEXTMESHSYSTEM);
-	if(meshsys) {
+	if (meshsys)
+	{
 		meshsys->name = name;
 		return meshsys;
 	}

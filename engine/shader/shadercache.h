@@ -1,6 +1,7 @@
 #pragma once
 
-namespace shader {
+namespace shader
+{
 	class Shader;
 
 	void init();

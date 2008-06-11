@@ -1,11 +1,13 @@
 #pragma once
 
 
-namespace q3bsp {
+namespace q3bsp
+{
 
 	class BSP;
 
-	class BSPRenderer {
+	class BSPRenderer
+	{
 	public:
 		BSPRenderer(BSP* bsp);
 		virtual ~BSPRenderer();
@@ -16,18 +18,20 @@ namespace q3bsp {
 		BSP* bsp;
 	};
 
-	struct Mesh {
+	struct Mesh
+	{
 		texture::DXTexture* texture;
 		texture::DXTexture* lightmap;
 		int num_indices;
 		int num_vertices;
- 		BSPVertex* vertices;
+		BSPVertex* vertices;
 		unsigned short* indices;
 		IDirect3DVertexBuffer9* vertbuf;
 		IDirect3DIndexBuffer9* indexbuf;
 	};
 
-	class BSPRenderTest : public BSPRenderer {
+	class BSPRenderTest : public BSPRenderer
+	{
 	public:
 		BSPRenderTest(BSP* bsp);
 		~BSPRenderTest();

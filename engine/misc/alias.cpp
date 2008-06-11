@@ -9,25 +9,26 @@ void AliasList::load(const string& filename)
 	list.clear();
 
 	vfs::IFilePtr file = vfs::getFile(filename.c_str());
-	if(!file)
+	if (!file)
 		return;
 
 	char buf[MAX_PATH * 2];
 
-	while(file->readLine(buf, MAX_PATH * 2)) {
+	while (file->readLine(buf, MAX_PATH * 2))
+	{
 		char* bufptr = buf;
 		char* comment = strstr(buf, "//");
-		if(comment) *comment = 0;
+		if (comment) *comment = 0;
 
 		strip(buf);
 
-		if(!buf[0]) 
+		if (!buf[0])
 			continue;
 
 		char* key = getToken(&bufptr, " \t");
 		char* value = getToken(&bufptr, " \t");
 
-		if(!(key && value)) 
+		if (!(key && value))
 			continue;
 
 		list.push_back(list_t::value_type(key, value));
@@ -36,8 +37,8 @@ void AliasList::load(const string& filename)
 
 const char* AliasList::findAlias(const char* key)
 {
-	for(list_t::iterator it = list.begin(); it != list.end(); it++)
-		if(wildcmp(it->first.c_str(), key))
+	for (list_t::iterator it = list.begin(); it != list.end(); it++)
+		if (wildcmp(it->first.c_str(), key))
 			return it->second.c_str();
 
 	return NULL;

@@ -1,11 +1,13 @@
 #pragma once
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 	struct Material;
 }
 
-namespace render {
+namespace render
+{
 	void drawLine(const D3DXVECTOR3* vertices, int count, D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255), bool clip = true);
 	void drawLines(const D3DXVECTOR3* segements, int count, D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));
 	void drawAABBox(const D3DXVECTOR3* min, const D3DXVECTOR3* max, D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255));

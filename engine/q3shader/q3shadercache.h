@@ -1,6 +1,7 @@
 #pragma once
 
-namespace q3shader {
+namespace q3shader
+{
 
 	class Q3Shader;
 

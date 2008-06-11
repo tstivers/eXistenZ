@@ -8,7 +8,8 @@
 #include "render/render.h"
 #include "render/scenegraph.h"
 
-namespace render {
+namespace render
+{
 }
 
 using namespace render;
@@ -46,8 +47,8 @@ void SceneGraph::release()
 }
 
 void SceneGraph::render()
-{	
-	if(render::use_scenegraph)
+{
+	if (render::use_scenegraph)
 		tree->render();
 }
 

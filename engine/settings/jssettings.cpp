@@ -3,9 +3,10 @@
 #include "settings/jssettings.h"
 #include "script/script.h"
 
-namespace jssettings {
+namespace jssettings
+{
 	JSBool dump(JSContext *cx, JSObject *obj, uintN argc,
-		jsval *argv, jsval *rval);
+				jsval *argv, jsval *rval);
 
 	typedef stdext::hash_map<char*, settings::Setting*, hash_char_ptr_traits> propmap_hash;
 	typedef propmap_hash::iterator propmap_iterator;
@@ -30,7 +31,7 @@ void jssettings::release()
 }
 
 JSBool jssettings::dump(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+						jsval *argv, jsval *rval)
 {
 	settings::dump();
 	return JS_TRUE;
@@ -42,7 +43,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	char objname[512];
 	strcpy(objname, setting->name);
 	char* propname = strrchr(objname, '.');
-	if(!propname)
+	if (!propname)
 		return false;
 
 	*propname = 0;
@@ -57,7 +58,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	int int_value;
 	float float_value;
 
-	switch(setting->type)
+	switch (setting->type)
 	{
 	case settings::TYPE_STRING:
 		setting->get(setting, (void**)&string_value);
@@ -76,21 +77,24 @@ bool jssettings::addsetting(settings::Setting* setting)
 
 	// currobj points to the object for the property, curr = prop name
 	int flags = JSPROP_ENUMERATE | JSPROP_PERMANENT;
-	if(setting->flags & settings::FLAG_READONLY)
+	if (setting->flags & settings::FLAG_READONLY)
 		flags |= JSPROP_READONLY;
-	gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);	
-	
+	gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);
+
 	propmap_ptr p;
 	objmap_hash::iterator i = object_map.find(obj);
-	if(i == object_map.end()){
+	if (i == object_map.end())
+	{
 		p = propmap_ptr(new propmap_hash());
 		object_map.insert(objmap_hash::value_type(obj, p));
-	} else {
+	}
+	else
+	{
 		p = i->second;
 	}
-	
+
 	p->insert(propmap_hash::value_type(_strdup(propname), setting));
-	
+
 	return true;
 }
 
@@ -101,11 +105,11 @@ JSBool jssettings::jsgetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *v
 	propmap_ptr props = i->second;
 
 	propmap_iterator iter = props->find(JS_GetStringBytes(JS_ValueToString(cx, id)));
-	ASSERT(iter != props->end());		
+	ASSERT(iter != props->end());
 
 	settings::Setting* setting = (*iter).second;
 
-	switch(setting->type)
+	switch (setting->type)
 	{
 	case settings::TYPE_STRING:
 		char* string_value;
@@ -136,11 +140,11 @@ JSBool jssettings::jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *v
 	propmap_ptr props = i->second;
 
 	propmap_iterator iter = props->find(JS_GetStringBytes(JS_ValueToString(cx, id)));
-	ASSERT(iter != props->end());		
+	ASSERT(iter != props->end());
 
 	settings::Setting* setting = (*iter).second;
 
-	switch(setting->type)
+	switch (setting->type)
 	{
 	case settings::TYPE_STRING:
 		setting->set(setting, JS_GetStringBytes(JS_ValueToString(cx, *vp)));

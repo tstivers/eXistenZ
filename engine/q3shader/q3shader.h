@@ -17,8 +17,10 @@
 #define FLAG_STD_TEXTURE	0x0200
 #define FLAG_DEPTHFUNC		0x0400
 
-namespace q3shader {
-	class Q3Shader {
+namespace q3shader
+{
+	class Q3Shader
+	{
 	public:
 		char* name;
 		char* filename;
@@ -45,8 +47,8 @@ namespace q3shader {
 		bool parse(vfs::IFilePtr file);
 		void parseLine(char* line);
 
-		bool activate(texture::DXTexture* lightmap, int pass = 0);		
-		
+		bool activate(texture::DXTexture* lightmap, int pass = 0);
+
 		void deactivate(int pass = 0);
 	};
 };

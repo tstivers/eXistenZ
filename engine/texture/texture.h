@@ -1,9 +1,11 @@
 #pragma once
 
-namespace texture {
+namespace texture
+{
 	class Shader;
 
-	class DXTexture {
+	class DXTexture
+	{
 	public:
 		char* name;
 		int refcount;

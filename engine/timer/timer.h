@@ -1,6 +1,7 @@
 #pragma once
 
-namespace timer {
+namespace timer
+{
 	void init(void);
 	void release(void);
 	void doTick();

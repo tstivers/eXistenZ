@@ -1,10 +1,11 @@
 #pragma once
 
-#define KEYDOWN(key) ((input::kbstate[key] == 2) || (input::kbstate[key] == 1)) 
+#define KEYDOWN(key) ((input::kbstate[key] == 2) || (input::kbstate[key] == 1))
 #define KEYPRESSED(key) (input::kbstate[key] == 1)
 #define KEYRELEASED(key) (input::kbstate[key] == 3)
 
-namespace input {
+namespace input
+{
 	void init(void);
 	void acquire(void);
 	void doTick(void);

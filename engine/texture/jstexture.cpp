@@ -14,5 +14,5 @@ JSBool jstexture::jsflush(JSContext *cx, JSObject *obj, uintN argc,
 						  jsval *argv, jsval *rval)
 {
 	texture::flush();
- 	return JS_TRUE;
+	return JS_TRUE;
 }

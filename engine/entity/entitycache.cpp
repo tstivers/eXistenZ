@@ -3,27 +3,28 @@
 #include "entity/boxentity.h"
 #include "entity/sphereentity.h"
 
-namespace entity {
+namespace entity
+{
 	typedef stdext::hash_map<string, Entity*> EntityCache;
-
 	EntityCache entity_cache;
 };
 
 using namespace entity;
 
-Entity* entity::addStaticEntity(string& name, string& meshsys, D3DXMATRIX* transform) 
+Entity* entity::addStaticEntity(string& name, string& meshsys, D3DXMATRIX* transform)
 {
 	EntityCache::iterator it = entity_cache.find(name);
-	if(it != entity_cache.end()) {
+	if (it != entity_cache.end())
+	{
 		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
 	StaticEntity* entity = StaticEntity::create(name, meshsys);
-	if(!entity)
+	if (!entity)
 		return NULL;
 
-	if(transform)
+	if (transform)
 		entity->setTransform(*transform);
 
 	entity_cache.insert(EntityCache::value_type(name, entity));
@@ -34,16 +35,17 @@ Entity* entity::addStaticEntity(string& name, string& meshsys, D3DXMATRIX* trans
 Entity* entity::addBoxEntity(string& name, string& texture, D3DXMATRIX* transform /* = NULL */)
 {
 	EntityCache::iterator it = entity_cache.find(name);
-	if(it != entity_cache.end()) {
+	if (it != entity_cache.end())
+	{
 		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
 	BoxEntity* entity = new BoxEntity(name, texture);
-	if(!entity)
+	if (!entity)
 		return NULL;
 
-	if(transform)
+	if (transform)
 		entity->setTransform(*transform);
 
 	entity_cache.insert(EntityCache::value_type(name, entity));
@@ -54,16 +56,17 @@ Entity* entity::addBoxEntity(string& name, string& texture, D3DXMATRIX* transfor
 Entity* entity::addSphereEntity(string& name, string& texture, D3DXMATRIX* transform /* = NULL */)
 {
 	EntityCache::iterator it = entity_cache.find(name);
-	if(it != entity_cache.end()) {
+	if (it != entity_cache.end())
+	{
 		LOG("entity \"%s\" already exists!", name.c_str());
 		return NULL;
 	}
 
 	SphereEntity* entity = new SphereEntity(name, texture);
-	if(!entity)
+	if (!entity)
 		return NULL;
 
-	if(transform)
+	if (transform)
 		entity->setTransform(*transform);
 
 	entity_cache.insert(EntityCache::value_type(name, entity));
@@ -74,7 +77,8 @@ Entity* entity::addSphereEntity(string& name, string& texture, D3DXMATRIX* trans
 Entity* entity::getEntity(string& name)
 {
 	EntityCache::iterator it = entity_cache.find(name);
-	if(it == entity_cache.end()) {
+	if (it == entity_cache.end())
+	{
 		LOG("entity \"%s\" doesn't exist!", name.c_str());
 		return NULL;
 	}

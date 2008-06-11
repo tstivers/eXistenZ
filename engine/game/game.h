@@ -1,13 +1,15 @@
 #pragma once
 
-namespace game {
+namespace game
+{
 	void init(void);
 	void doTick(void);
 	void release(void);
 
 	bool startMap(char* name);
 
-	enum {
+	enum
+	{
 		STATE_LOADLEVEL,
 		STATE_RUN,
 		STATE_EXIT
@@ -16,7 +18,7 @@ namespace game {
 	extern int game_state;
 	extern float mouse_sens_x;
 	extern float mouse_sens_y;
-	extern int noclip;	
+	extern int noclip;
 
 	// console commands
 	void con_map(char* cmd, char* cmdline, void* user);

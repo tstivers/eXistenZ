@@ -3,46 +3,76 @@
 #include "math/aabb.h"
 #include "entity/entitycache.h"
 
-namespace mesh {
+namespace mesh
+{
 	class MeshSystem;
 };
 
-namespace texture {
+namespace texture
+{
 	struct Material;
 };
 
-namespace entity {
-	enum ENTITY_FLAG {
-		EF_MESH = 1<<1,
-		EF_DRAW = 1<<2,
-		EF_COLLIDE = 1<<3,
-		EF_THINKS = 1<<4,
-		EF_DYNAMIC = 1<<5,
+namespace entity
+{
+	enum ENTITY_FLAG
+	{
+		EF_MESH = 1 << 1,
+		EF_DRAW = 1 << 2,
+		EF_COLLIDE = 1 << 3,
+		EF_THINKS = 1 << 4,
+		EF_DYNAMIC = 1 << 5,
 		EF_END = 0xffff
 	};
 
-	enum ENTITY_TYPE {
+	enum ENTITY_TYPE
+	{
 		ET_STATIC,
 		ET_DYNAMIC,
 		ET_TRIGGER,
 		ET_END = 0xffff
 	};
 
-	class Entity {
+	class Entity
+	{
 	public:
 		Entity(string name);
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
-		virtual D3DXVECTOR3& getPos() { return pos; };
-		virtual D3DXVECTOR3& getRot() { return rot; };
-		virtual D3DXVECTOR3& getScale() { return scale; };
-		virtual D3DXMATRIX getTransform() { return transform; };
-		virtual void setPos(const D3DXVECTOR3& pos) { this->pos = pos; };
-		virtual void setRot(const D3DXVECTOR3& rot) { this->rot = rot; };
+		virtual D3DXVECTOR3& getPos()
+		{
+			return pos;
+		};
+		virtual D3DXVECTOR3& getRot()
+		{
+			return rot;
+		};
+		virtual D3DXVECTOR3& getScale()
+		{
+			return scale;
+		};
+		virtual D3DXMATRIX getTransform()
+		{
+			return transform;
+		};
+		virtual void setPos(const D3DXVECTOR3& pos)
+		{
+			this->pos = pos;
+		};
+		virtual void setRot(const D3DXVECTOR3& rot)
+		{
+			this->rot = rot;
+		};
 		virtual void setQuatRot(const D3DXQUATERNION& rot);
-		virtual void setScale(const D3DXVECTOR3& scale) { this->scale = scale; };
-		virtual void setTransform(const D3DXMATRIX& transform) { this->transform = transform; };
+		virtual void setScale(const D3DXVECTOR3& scale)
+		{
+			this->scale = scale;
+		};
+		virtual void setTransform(const D3DXMATRIX& transform)
+		{
+			this->transform = transform;
+		};
 		virtual void activate();
 		virtual void deactivate();
 		virtual void render(texture::Material* lighting) = 0;
@@ -53,7 +83,7 @@ namespace entity {
 		virtual bool getSleeping();
 		virtual void setSleeping(bool asleep);
 		inline void mark(unsigned int frame);
-		
+
 		string name;
 		ENTITY_TYPE type;
 		unsigned int flags;
@@ -65,7 +95,8 @@ namespace entity {
 		unsigned int frame;
 	};
 
-	class StaticEntity : public Entity {
+	class StaticEntity : public Entity
+	{
 	public:
 		StaticEntity(string name);
 		~StaticEntity();
@@ -78,5 +109,5 @@ namespace entity {
 
 		string meshname;
 		mesh::MeshSystem* meshsys;
-	};	
+	};
 };

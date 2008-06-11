@@ -2,8 +2,10 @@
 
 class CD3DFont;
 
-namespace ui {
-	class Pos {
+namespace ui
+{
+	class Pos
+	{
 	public:
 		Pos();
 		~Pos();

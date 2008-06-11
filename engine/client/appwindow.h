@@ -1,10 +1,12 @@
 #pragma once
 
-namespace appwindow {
+namespace appwindow
+{
 	void init(void);
 	void release(void);
 
-	enum {
+	enum
+	{
 		STYLE_WINDOW,
 		STYLE_FULLSCREEN
 	};

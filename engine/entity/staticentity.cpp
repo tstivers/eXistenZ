@@ -8,7 +8,8 @@
 #include "render/shapes.h"
 #include "math/vertex.h"
 
-namespace entity {
+namespace entity
+{
 };
 
 using namespace entity;
@@ -16,7 +17,7 @@ using namespace entity;
 StaticEntity* StaticEntity::create(string name, string meshname)
 {
 	mesh::MeshSystem* meshsys = mesh::getMeshSystem(meshname);
-	if(!meshsys)
+	if (!meshsys)
 		return NULL;
 
 	StaticEntity* entity = new StaticEntity(name);
@@ -24,7 +25,7 @@ StaticEntity* StaticEntity::create(string name, string meshname)
 	return entity;
 }
 
-StaticEntity::StaticEntity(string name) : Entity(name) 
+StaticEntity::StaticEntity(string name) : Entity(name)
 {
 }
 
@@ -45,7 +46,7 @@ void StaticEntity::release()
 
 void StaticEntity::render(texture::Material* lighting)
 {
-	for(unsigned i = 0; i < meshsys->meshes.size(); i++)
+	for (unsigned i = 0; i < meshsys->meshes.size(); i++)
 		render::drawGroup(meshsys->meshes[i].mesh->rendergroup, &transform);
 	//render::drawBox(&aabb.min, &aabb.max);
 }
@@ -54,9 +55,11 @@ void StaticEntity::calcAABB()
 {
 	D3DXVECTOR3 transformed;
 	aabb.reset();
-	for(unsigned i = 0; i < meshsys->meshes.size(); i++) {
+	for (unsigned i = 0; i < meshsys->meshes.size(); i++)
+	{
 		BSPVertex* vertices = (BSPVertex*)meshsys->meshes[i].mesh->vertices;
-		for(unsigned j = 0; j < meshsys->meshes[i].mesh->vertice_count; j++) {
+		for (unsigned j = 0; j < meshsys->meshes[i].mesh->vertice_count; j++)
+		{
 			aabb.extend(D3DXVec3TransformCoord(&transformed, &(vertices[j].pos), &transform));
 		}
 	}

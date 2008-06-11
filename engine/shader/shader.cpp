@@ -10,6 +10,6 @@ Shader::Shader(const char* name)
 }
 
 Shader::~Shader()
-{	
+{
 	free(this->name);
 }

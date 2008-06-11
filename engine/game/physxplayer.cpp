@@ -17,7 +17,7 @@ namespace game
 	public:
 		NxControllerAction  onShapeHit(const NxControllerShapeHit& hit)
 		{
-			if(hit.shape->getActor().getGroup() == 16) // hit the bsp
+			if (hit.shape->getActor().getGroup() == 16) // hit the bsp
 				return NX_ACTION_NONE;
 
 			INFO("hit %s", hit.shape->getActor().getName());
@@ -32,7 +32,8 @@ namespace game
 		}
 	};
 
-	class PhysXPlayer : public Player {
+	class PhysXPlayer : public Player
+	{
 	public:
 		PhysXPlayer(D3DXVECTOR3& size);
 		~PhysXPlayer();
@@ -40,7 +41,7 @@ namespace game
 		void acquire();
 		void release();
 
-		bool setPos(D3DXVECTOR3& pos);		
+		bool setPos(D3DXVECTOR3& pos);
 		bool setSize(D3DXVECTOR3& size);
 		bool setStepUp(float step_up);
 		bool setMoveMode(t_movemode mode);
@@ -65,7 +66,8 @@ namespace game
 
 }
 
-namespace physics {
+namespace physics
+{
 	extern NxControllerManager* gManager;
 	extern NxScene* gScene;
 }
@@ -74,22 +76,22 @@ namespace physics {
 using namespace game;
 
 PhysXPlayer::PhysXPlayer(D3DXVECTOR3& size)
-: Player(size), acquired(false), in_air(false), jumping(false), nxc(NULL)
-{	
+		: Player(size), acquired(false), in_air(false), jumping(false), nxc(NULL)
+{
 }
 
 PhysXPlayer::~PhysXPlayer()
 {
-	if(acquired)
+	if (acquired)
 		release();
 }
 
 void PhysXPlayer::acquire()
 {
-	if(acquired)
+	if (acquired)
 		return;
 
-	NxBoxControllerDesc desc;	
+	NxBoxControllerDesc desc;
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
 	desc.stepOffset = step_up / physics::scale;
@@ -103,34 +105,34 @@ void PhysXPlayer::acquire()
 
 bool PhysXPlayer::setPos(D3DXVECTOR3& pos)
 {
-	if(!Player::setPos(pos))
+	if (!Player::setPos(pos))
 		return false;
-	if(acquired)
-		if(!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
-			return false;		
+	if (acquired)
+		if (!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
+			return false;
 	return true;
 }
 
 bool PhysXPlayer::setStepUp(float step_up)
 {
-	if(!Player::setStepUp(step_up))
+	if (!Player::setStepUp(step_up))
 		return false;
 
-	if(acquired && mode == MM_WALK)
+	if (acquired && mode == MM_WALK)
 		nxc->setStepOffset(this->step_up / physics::scale);
-		
+
 	return true;
 }
 
-bool PhysXPlayer::setMoveMode( t_movemode mode )
+bool PhysXPlayer::setMoveMode(t_movemode mode)
 {
-	if(!Player::setMoveMode(mode))
+	if (!Player::setMoveMode(mode))
 		return false;
 
-	if(acquired)
+	if (acquired)
 	{
 		INFO("setting move movde");
-		switch(mode)
+		switch (mode)
 		{
 		case MM_WALK:
 			nxc->setStepOffset(this->step_up / physics::scale);
@@ -138,7 +140,7 @@ bool PhysXPlayer::setMoveMode( t_movemode mode )
 			break;
 		default:
 			nxc->setStepOffset(0.0f);
-			((NxBoxController*)nxc)->setExtents(NxVec3(0,0,0));
+			((NxBoxController*)nxc)->setExtents(NxVec3(0, 0, 0));
 			break;
 		}
 	}
@@ -148,10 +150,10 @@ bool PhysXPlayer::setMoveMode( t_movemode mode )
 
 bool PhysXPlayer::setSize(D3DXVECTOR3& size)
 {
-	if(!Player::setSize(size))
+	if (!Player::setSize(size))
 		return false;
 
-	if(!((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale)))
+	if (!((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale)))
 		return false;
 
 	return true;
@@ -171,28 +173,29 @@ void PhysXPlayer::doMove(t_impulse impulse)
 
 void PhysXPlayer::doRotation(D3DXVECTOR3& rotation)
 {
-	rot += rotation;	
-	if(rot.x > 360.0f) rot.x -= 360.0f;
-	if(rot.x < 0.0f) rot.x += 360.0f;
-	if(rot.y > 90.0f) rot.y = 90.0f;
-	if(rot.y < -90.0f) rot.y = -90.0f;
+	rot += rotation;
+	if (rot.x > 360.0f) rot.x -= 360.0f;
+	if (rot.x < 0.0f) rot.x += 360.0f;
+	if (rot.y > 90.0f) rot.y = 90.0f;
+	if (rot.y < -90.0f) rot.y = -90.0f;
 }
 
 void PhysXPlayer::updatePos()
 {
-	if(!acquired)
+	if (!acquired)
 		return;
 
 	D3DXVECTOR3 dis;
-	switch(mode) {
-		case MM_FLY:
-			dis = getFlyDisplacement();
-			break;
-		case MM_WALK:
-			dis = getWalkDisplacement();
-			break;
-		default:
-			break;
+	switch (mode)
+	{
+	case MM_FLY:
+		dis = getFlyDisplacement();
+		break;
+	case MM_WALK:
+		dis = getWalkDisplacement();
+		break;
+	default:
+		break;
 	}
 
 	NxU32 flags = 0;
@@ -201,13 +204,13 @@ void PhysXPlayer::updatePos()
 	nxc->move((NxVec3&)dis, collisionGroups, 0.0001f, flags, 1.0);
 
 	physics::gManager->updateControllers();
-	
+
 	NxExtendedVec3 newpos = nxc->getPosition();
 
 	//INFO("flags = %d", flags);
-	if(flags & NXCC_COLLISION_DOWN)
+	if (flags & NXCC_COLLISION_DOWN)
 	{
-		if(!on_ground)
+		if (!on_ground)
 		{
 			//if(jumping)
 			//	INFO("hit ground at %f m/s, air time was %fs", -vel.y, (timer::game_ms - fall_start) / 1000.0f);
@@ -220,7 +223,7 @@ void PhysXPlayer::updatePos()
 	}
 	else
 	{
-		if(on_ground)
+		if (on_ground)
 		{
 			on_ground = false;
 			fall_start = timer::game_ms;
@@ -230,19 +233,19 @@ void PhysXPlayer::updatePos()
 		}
 	}
 
-	if(flags & NXCC_COLLISION_UP)
+	if (flags & NXCC_COLLISION_UP)
 	{
-		if(vel.y > 0.0f)
+		if (vel.y > 0.0f)
 		{
 			vel.y = 0.0f;
 			jumping = false;
 			fall_start = timer::game_ms;
 		}
 	}
-	
+
 	this->pos = D3DXVECTOR3(newpos.x, newpos.y, newpos.z) * physics::scale;
 
-	for(int i = 0; i < MOVE_MAX; i++)
+	for (int i = 0; i < MOVE_MAX; i++)
 		moving[i] = false;
 }
 
@@ -253,26 +256,26 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 	jumping = false;
 
 	D3DXVECTOR3 dis(0.0f, 0.0f, 0.0f);
-	
-	if(moving[MOVE_UP])
+
+	if (moving[MOVE_UP])
 		dis.y += 1.0f;
-	
-	if(moving[MOVE_DOWN])
+
+	if (moving[MOVE_DOWN])
 		dis.y -= 1.0f;
 
-	if(moving[MOVE_LEFT])
+	if (moving[MOVE_LEFT])
 		dis.x -= 1.0f;
 
-	if(moving[MOVE_RIGHT])
+	if (moving[MOVE_RIGHT])
 		dis.x += 1.0f;
 
-	if(moving[MOVE_FORWARD])
+	if (moving[MOVE_FORWARD])
 		dis.z += 1.0f;
 
-	if(moving[MOVE_BACK])
+	if (moving[MOVE_BACK])
 		dis.z -= 1.0f;
 
-	D3DXMATRIX mat;	
+	D3DXMATRIX mat;
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
@@ -284,20 +287,20 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 {
 	D3DXVECTOR3 dis(0.0f, 0.0f, 0.0f);
 
-	if(moving[MOVE_LEFT])
+	if (moving[MOVE_LEFT])
 		dis.x -= 1.0f;
 
-	if(moving[MOVE_RIGHT])
+	if (moving[MOVE_RIGHT])
 		dis.x += 1.0f;
 
-	if(moving[MOVE_FORWARD])
+	if (moving[MOVE_FORWARD])
 		dis.z += 1.0f;
 
-	if(moving[MOVE_BACK])
+	if (moving[MOVE_BACK])
 		dis.z -= 1.0f;
 
 	static bool apogee;
-	if(moving[MOVE_JUMP] && on_ground)
+	if (moving[MOVE_JUMP] && on_ground)
 	{
 		jumping = true;
 		on_ground = false;
@@ -306,16 +309,16 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 		fall_start_height = pos.y;
 	}
 
-	D3DXMATRIX mat;	
+	D3DXMATRIX mat;
 	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), 0, 0);
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
 	dis *= timer::delta_s * speed;
 
-	if(!on_ground)
+	if (!on_ground)
 	{
 		float air_time = (timer::game_ms - fall_start) / 1000.0f;
-		if(jumping)
+		if (jumping)
 		{
 			float jump_velocity = sqrt(abs(jump_height * (2.0 * gravity)));
 			vel.y = jump_velocity + (gravity * air_time);
@@ -328,7 +331,8 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 		else
 			vel.y = gravity * air_time;
 		dis.y = vel.y * timer::delta_s;
-	} else
+	}
+	else
 		dis.y = -step_up;
 
 	return dis;

@@ -7,54 +7,62 @@
 
 class ScriptEngine;
 
-namespace registeredfunctions {
+namespace registeredfunctions
+{
 	class StartupFunction;
 	class ShutdownFunction;
 	class ScriptFunction;
-	
+
 	void addStartupFunction(StartupFunction& startup);
 	void addShutdownFunction(ShutdownFunction& shutdown);
 	void addScriptFunction(ScriptFunction& script);
-	
+
 	void fireStartupFunctions();
 	void fireShutdownFunctions();
 	void fireScriptFunctions(ScriptEngine* se);
-		
-	typedef function<void(void)> voidFunction;
-	typedef function<void(ScriptEngine*)> scriptFunction;
-	
+
+	typedef function < void(void) > voidFunction;
+	typedef function < void(ScriptEngine*) > scriptFunction;
+
 	template <typename T>
-	class OrderedFunction {
+	class OrderedFunction
+	{
 	public:
 		string name;
 		int order;
 		T func;
-		OrderedFunction(string name, T func, int order) : name(name), func(func), order(order){};
-		bool operator< (const OrderedFunction<T>& other) const {return order < other.order;}
+		OrderedFunction(string name, T func, int order) : name(name), func(func), order(order) {};
+		bool operator< (const OrderedFunction<T>& other) const
+		{
+			return order < other.order;
+		}
 	};
 
-	class StartupFunction : public OrderedFunction<voidFunction> {
+	class StartupFunction : public OrderedFunction<voidFunction>
+	{
 	public:
 		StartupFunction(string name, voidFunction func, int order) :
-			OrderedFunction(name, func, order)
+				OrderedFunction(name, func, order)
 		{
 			addStartupFunction(*this);
 		}
 	};
-	
-	class ShutdownFunction : public OrderedFunction<voidFunction> {
+
+	class ShutdownFunction : public OrderedFunction<voidFunction>
+	{
 	public:
 		ShutdownFunction(string name, voidFunction func, int order) :
-			OrderedFunction(name, func, order)
+				OrderedFunction(name, func, order)
 		{
 			addShutdownFunction(*this);
 		}
 	};
-	
-	class ScriptFunction : public OrderedFunction<scriptFunction> {
+
+	class ScriptFunction : public OrderedFunction<scriptFunction>
+	{
 	public:
 		ScriptFunction(string name, scriptFunction func, int order) :
-			OrderedFunction(name, func, order)
+				OrderedFunction(name, func, order)
 		{
 			addScriptFunction(*this);
 		}

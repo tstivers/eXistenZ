@@ -12,7 +12,8 @@ StdShader::~StdShader()
 {
 }
 
-bool StdShader::load(const char* filename) {
+bool StdShader::load(const char* filename)
+{
 	return false;
 }
 

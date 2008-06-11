@@ -10,9 +10,9 @@ REGISTER_STARTUP_FUNCTION(jsscript, jsscript::init, 10);
 
 namespace jsscript
 {
-JSBool jssetzeal(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool jsclassof(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-JSBool jsparentof(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jssetzeal(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsclassof(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsparentof(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
 void jsscript::init()
@@ -25,35 +25,41 @@ void jsscript::init()
 }
 
 JSBool jsscript::jsexecfile(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+							jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("execfile() takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
 	vfs::IFilePtr file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
-	if(file){
-		gScriptEngine->RunScript(file);		
-	} else {
+	if (file)
+	{
+		gScriptEngine->RunScript(file);
+	}
+	else
+	{
 		gScriptEngine->ReportError("execfile(): unable to open %s", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 		return JS_FALSE;
 	}
-	
+
 	return JS_TRUE;
 }
 
 JSBool jsscript::jsdumpobject(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+							  jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("dumpobject(): takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_OBJECT(argv[0])) {
+	if (!JSVAL_IS_OBJECT(argv[0]))
+	{
 		gScriptEngine->ReportError("dumpobject(): argument must be an object");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
 	gScriptEngine->DumpObject(JSVAL_TO_OBJECT(argv[0]));
@@ -61,16 +67,18 @@ JSBool jsscript::jsdumpobject(JSContext *cx, JSObject *obj, uintN argc,
 }
 
 JSBool jsscript::jssetzeal(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+						   jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("setzeal(): takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_NUMBER(argv[0])) {
+	if (!JSVAL_IS_NUMBER(argv[0]))
+	{
 		gScriptEngine->ReportError("setzeal(): argument must be a number");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
 	int32 zeal;
@@ -84,14 +92,16 @@ JSBool jsscript::jssetzeal(JSContext *cx, JSObject *obj, uintN argc,
 }
 
 JSBool jsscript::jsclassof(JSContext *cx, JSObject *obj, uintN argc,
-						  jsval *argv, jsval *rval)
+						   jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("classof(): takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_OBJECT(argv[0])) {
+	if (!JSVAL_IS_OBJECT(argv[0]))
+	{
 		*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, "none"));
 	}
 	else
@@ -101,14 +111,15 @@ JSBool jsscript::jsclassof(JSContext *cx, JSObject *obj, uintN argc,
 }
 
 JSBool jsscript::jsparentof(JSContext *cx, JSObject *obj, uintN argc,
-						   jsval *argv, jsval *rval)
+							jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("parentof(): takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_OBJECT(argv[0]))
+	if (!JSVAL_IS_OBJECT(argv[0]))
 		return JS_FALSE;
 
 	*rval = OBJECT_TO_JSVAL(JS_GetParent(cx, JSVAL_TO_OBJECT(argv[0])));

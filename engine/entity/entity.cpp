@@ -1,7 +1,8 @@
 #include "precompiled.h"
 #include "entity/entity.h"
 
-namespace entity {
+namespace entity
+{
 };
 
 using namespace entity;
@@ -31,10 +32,10 @@ void Entity::deactivate()
 void Entity::update()
 {
 	D3DXQUATERNION rotq;
-	D3DXQuaternionRotationYawPitchRoll(&rotq, 
-		rot.y * (D3DX_PI / 180.0f), 
-		rot.x * (D3DX_PI / 180.0f), 
-		rot.z * (D3DX_PI / 180.0f));
+	D3DXQuaternionRotationYawPitchRoll(&rotq,
+									   rot.y * (D3DX_PI / 180.0f),
+									   rot.x * (D3DX_PI / 180.0f),
+									   rot.z * (D3DX_PI / 180.0f));
 	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rotq, &pos);
 	calcAABB();
 }
@@ -45,7 +46,6 @@ void Entity::doTick()
 
 void Entity::setQuatRot(const D3DXQUATERNION& rot)
 {
-	
 }
 
 inline void Entity::mark(unsigned int frame)

@@ -2,7 +2,8 @@
 #include "texture/material.h"
 #include "texture/shader.h"
 
-namespace texture {
+namespace texture
+{
 };
 
 using namespace texture;
@@ -13,7 +14,7 @@ Material::Material()
 }
 
 Material::Material(D3DCOLOR ambient, D3DXVECTOR3 direction, D3DXCOLOR color) :
-	ambient(ambient)
+		ambient(ambient)
 {
 	ZeroMemory(&light, sizeof(D3DLIGHT9));
 	light.Type = D3DLIGHT_DIRECTIONAL;

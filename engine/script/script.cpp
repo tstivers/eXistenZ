@@ -6,8 +6,9 @@
 
 #pragma warning( disable : 4311 4312 )
 
-namespace script {
-	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report );
+namespace script
+{
+	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report);
 	void exec(char* cmd, char* cmdline, void* user);
 }
 
@@ -16,8 +17,8 @@ using namespace script;
 REGISTER_STARTUP_FUNCTION(script, script::init, 0);
 
 ScriptEngine::ScriptEngine()
-{	
-	static JSClass globalClass = 
+{
+	static JSClass globalClass =
 	{
 		"Global", 0,
 		JS_PropertyStub,  JS_PropertyStub,
@@ -27,18 +28,20 @@ ScriptEngine::ScriptEngine()
 	};
 
 	rt = JS_NewRuntime(1024 * 1024 * 32); // 32mb until gc is triggered
-	
-	if ( rt == NULL ) {
+
+	if (rt == NULL)
+	{
 		ERROR("unable to create runtime");
 	}
 
 	cx = JS_NewContext(rt, 8192);
-    if ( cx == NULL ) {
+	if (cx == NULL)
+	{
 		ERROR("unable to create context");
-    }
+	}
 
 	//JS_SetGCZeal(cx, 2); //debug allocations
-	
+
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
 	//JS_AddRoot(cx, globalObj);
 	JS_InitStandardClasses(cx, globalObj);
@@ -53,17 +56,19 @@ ScriptEngine::ScriptEngine()
 ScriptEngine::~ScriptEngine()
 {
 	JS_DestroyContext(cx);
-    JS_DestroyRuntime(rt);
+	JS_DestroyRuntime(rt);
 }
 
 JSErrorReporter ScriptEngine::SetErrorReporter(JSErrorReporter reporter)
 {
 	JSErrorReporter prev_reporter = this->reporter;
-	if(reporter) {
+	if (reporter)
+	{
 		this->reporter = reporter;
 		JS_SetErrorReporter(cx, reporter);
 	}
-	else {
+	else
+	{
 		this->reporter = script::errorreporter;
 		JS_SetErrorReporter(cx, script::errorreporter);
 	}
@@ -89,12 +94,12 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script)
 }
 
 bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retval)
-{	
+{
 	return (JS_TRUE == JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval));
 }
 
 bool ScriptEngine::RunScript(vfs::IFilePtr file)
-{	
+{
 	char *script = (char*)malloc(file->size + 1);
 	file->read(script, file->size);
 	script[file->size] = 0;
@@ -116,7 +121,8 @@ JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
 
 	strcpy(buf, name);
 	funcname = strrchr(buf, '.');
-	if(funcname) {
+	if (funcname)
+	{
 		*funcname = 0;
 		funcname++;
 		obj = GetObject(buf, true);
@@ -132,7 +138,7 @@ void ScriptEngine::ReportError(char* format, ...)
 	va_list args;
 	char buffer[512];
 
-	va_start(args, format);	
+	va_start(args, format);
 	vsprintf(buffer, format, args);
 	va_end(args);
 
@@ -142,7 +148,7 @@ void ScriptEngine::ReportError(char* format, ...)
 
 JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
 {
-	static JSClass def_class = 
+	static JSClass def_class =
 	{
 		"Object", JSCLASS_HAS_RESERVED_SLOTS(2),
 		JS_PropertyStub,  JS_PropertyStub,
@@ -152,7 +158,7 @@ JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
 	};
 
 	JSObject* obj = JS_DefineObject(cx, parent, name, &def_class, NULL, JSPROP_ENUMERATE | JSPROP_EXPORTED);
-	if(obj)
+	if (obj)
 		JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(NULL));
 
 	return obj;
@@ -166,24 +172,29 @@ JSObject* ScriptEngine::GetObject(char* name, bool create)
 	JSObject* currobj = GetGlobal();
 	strcpy(namebuf, name);
 	jsval prop;
-	
-	while(curr && *curr) {
+
+	while (curr && *curr)
+	{
 		next = strchr(next, '.');
-		if(next) {
+		if (next)
+		{
 			*next = 0;
 			next++;
 		}
 		// check for existing property name
-		if(GetProperty(currobj, curr, &prop)) {
-			if(JSVAL_IS_OBJECT(prop))
+		if (GetProperty(currobj, curr, &prop))
+		{
+			if (JSVAL_IS_OBJECT(prop))
 				currobj = JSVAL_TO_OBJECT(prop);
-			else {
-				ERROR("failed getting \"%s\"", name);				
+			else
+			{
+				ERROR("failed getting \"%s\"", name);
 				return NULL;
 			}
 		}
-		else {
-			if(create)// didn't exist, add it
+		else
+		{
+			if (create)// didn't exist, add it
 				currobj = AddObject(curr, currobj);
 			else
 				return NULL;
@@ -204,22 +215,27 @@ JSObject* script::GetObject(const string& name)
 	strcpy(namebuf, name.c_str());
 	jsval prop;
 
-	while(curr && *curr) {
+	while (curr && *curr)
+	{
 		next = strchr(next, '.');
-		if(next) {
+		if (next)
+		{
 			*next = 0;
 			next++;
 		}
 		// check for existing property name
-		if(gScriptEngine->GetProperty(currobj, curr, &prop)) {
-			if(JSVAL_IS_OBJECT(prop))
+		if (gScriptEngine->GetProperty(currobj, curr, &prop))
+		{
+			if (JSVAL_IS_OBJECT(prop))
 				currobj = JSVAL_TO_OBJECT(prop);
-			else {
-				ERROR("failed getting \"%s\"", name);				
+			else
+			{
+				ERROR("failed getting \"%s\"", name);
 				return NULL;
 			}
 		}
-		else {
+		else
+		{
 			return NULL;
 		}
 		curr = next;
@@ -230,12 +246,12 @@ JSObject* script::GetObject(const string& name)
 
 
 bool ScriptEngine::AddProperty(JSObject* obj, char* name, jsval value, JSPropertyOp getter, JSPropertyOp setter, uintN flags)
-{	
+{
 	return (JS_DefineProperty(cx, obj, name, value, getter, setter, flags) == JS_TRUE);
 }
 
 bool ScriptEngine::GetProperty(JSObject* parent, char* name, jsval* object)
-{	
+{
 	return ((JS_GetProperty(cx, parent, name, object) == JS_TRUE) && !JSVAL_IS_VOID(*object));
 }
 
@@ -245,17 +261,18 @@ void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* 
 	JSIdArray* ida = JS_Enumerate(cx, obj);
 	JSIdArray* idb = JS_Enumerate(cx, globalObj);
 	jsval val, maybeobj;
-	
+
 	strcat(name, prevname);
-	if(*prevname) strcat(name, ".");
+	if (*prevname) strcat(name, ".");
 	strcat(name, objname);
 
-	for(int i = 0; i < ida->length; i++) {
-		JS_IdToValue(cx, ida->vector[i], &val);		
+	for (int i = 0; i < ida->length; i++)
+	{
+		JS_IdToValue(cx, ida->vector[i], &val);
 		JSString* bleh = JS_ValueToString(cx, val);
 		GetProperty(obj, JS_GetStringBytes(bleh), &maybeobj);
 		INFO("%s%s%s (%s) = %s", name, *name ? "." : "", JS_GetStringBytes(bleh), JS_GetTypeName(cx, JS_TypeOfValue(cx, maybeobj)), JS_GetStringBytes(JS_ValueToString(cx, maybeobj)));
-		if(JSVAL_IS_OBJECT(maybeobj) && recurse)			
+		if (JSVAL_IS_OBJECT(maybeobj) && recurse)
 			DumpObject(JSVAL_TO_OBJECT(maybeobj), true, JS_GetStringBytes(bleh), name);
 	}
 }
@@ -264,7 +281,7 @@ const char* ScriptEngine::GetClassName(JSObject* obj)
 {
 	JSClass* c = JS_GET_CLASS(cx, obj);
 
-	if(c)
+	if (c)
 		return c->name;
 
 	return "none";
@@ -272,8 +289,8 @@ const char* ScriptEngine::GetClassName(JSObject* obj)
 
 void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
 {
-	if(report->linebuf)
-		Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, report->linebuf);		
+	if (report->linebuf)
+		Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, report->linebuf);
 	Log::log(report->filename, report->lineno, "", LF_ERROR | LF_SCRIPT, message);
 }
 
@@ -290,7 +307,7 @@ void script::release()
 
 void script::exec(char* cmd, char* cmdline, void* user)
 {
-	if(!cmdline)
+	if (!cmdline)
 		return;
 
 	gScriptEngine->RunScript(cmdline);

@@ -1,11 +1,12 @@
 #include "precompiled.h"
 #include "registeredfunctions.h"
 
-namespace registeredfunctions {
+namespace registeredfunctions
+{
 	typedef multiset<StartupFunction> startup_list_t;
 	typedef multiset<ShutdownFunction> shutdown_list_t;
 	typedef multiset<ScriptFunction> script_list_t;
-	
+
 	startup_list_t& getStartupList();
 	shutdown_list_t& getShutdownList();
 	script_list_t& getScriptList();
@@ -48,7 +49,8 @@ void registeredfunctions::addScriptFunction(ScriptFunction& script)
 
 void registeredfunctions::fireStartupFunctions()
 {
-	for(startup_list_t::iterator it = getStartupList().begin(); it != getStartupList().end(); it++) {
+	for (startup_list_t::iterator it = getStartupList().begin(); it != getStartupList().end(); it++)
+	{
 		INFO("executing startup function [%s]", it->name.c_str());
 		it->func();
 	}
@@ -56,14 +58,14 @@ void registeredfunctions::fireStartupFunctions()
 
 void registeredfunctions::fireShutdownFunctions()
 {
-	for(shutdown_list_t::iterator it = getShutdownList().begin(); it != getShutdownList().end(); it++)
+	for (shutdown_list_t::iterator it = getShutdownList().begin(); it != getShutdownList().end(); it++)
 		it->func();
 }
 
 void registeredfunctions::fireScriptFunctions(ScriptEngine* se)
 {
-	for(script_list_t::iterator it = getScriptList().begin(); it != getScriptList().end(); it++)
+	for (script_list_t::iterator it = getScriptList().begin(); it != getScriptList().end(); it++)
 	{
 		it->func(se);
-	}	
+	}
 }

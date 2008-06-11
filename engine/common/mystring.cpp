@@ -4,10 +4,11 @@
 int countArgs(char* args)
 {
 	int argc = 1;
-	if(!args || !*args)
+	if (!args || !*args)
 		return 0;
 
-	while(args = strchr(args, ' ')) {
+	while (args = strchr(args, ' '))
+	{
 		args++;
 		argc++;
 	}
@@ -19,9 +20,10 @@ void replacechars(char* src, char* replace, char replacement)
 {
 	char* replacepos;
 
-	for(; *src; src++)
-		for(replacepos = replace; *replacepos; replacepos++)
-			if(*src == *replacepos) {
+	for (; *src; src++)
+		for (replacepos = replace; *replacepos; replacepos++)
+			if (*src == *replacepos)
+			{
 				*src = replacement;
 				continue;
 			}
@@ -29,16 +31,17 @@ void replacechars(char* src, char* replace, char replacement)
 
 void replacechar(char* src, char replace, char replacement)
 {
-	for(; *src; src++)
-		if(*src == replace)
-				*src = replacement;
+	for (; *src; src++)
+		if (*src == replace)
+			*src = replacement;
 }
 
 char* replacestr(char* in, char* find, char* replace)
 {
 	char* pos = in;
 
-	while(pos = strstr(pos, find)) {
+	while (pos = strstr(pos, find))
+	{
 		strncpy(pos, replace, strlen(replace));
 		pos += strlen(replace);
 		strcpy(pos, pos + (strlen(find) - strlen(replace)));
@@ -50,12 +53,12 @@ char* replacestr(char* in, char* find, char* replace)
 
 void stripchars(char* src, char* strip)
 {
-	char* srcpos; 
+	char* srcpos;
 	char* strippos;
 
-	for(srcpos = src; *srcpos; srcpos++)
-		for(strippos = strip; *strippos; strippos++)
-			if(*srcpos != *strippos)
+	for (srcpos = src; *srcpos; srcpos++)
+		for (strippos = strip; *strippos; strippos++)
+			if (*srcpos != *strippos)
 				*src++ = *srcpos;
 
 	*src = 0;
@@ -63,32 +66,32 @@ void stripchars(char* src, char* strip)
 
 char* lstrip(char* str)
 {
-	if(!str || !*str)
+	if (!str || !*str)
 		return str;
 
 	char* pos;
 
-	for(pos = str; isspace(*pos); pos++);
-	for(;*pos;*str=*pos, pos++, str++);
-	*str=0;
+	for (pos = str; isspace(*pos); pos++);
+	for (;*pos;*str = *pos, pos++, str++);
+	*str = 0;
 	return str;
 }
 
 char* rstrip(char* str)
 {
-	if(!str || !*str)
+	if (!str || !*str)
 		return str;
 
 	char* pos;
 
-	for(pos=str + strlen(str) - 1; pos >= str && isspace(*pos); *pos = 0, pos--);
+	for (pos = str + strlen(str) - 1; pos >= str && isspace(*pos); *pos = 0, pos--);
 	return str;
 }
 
 char* strip(char* str)
 {
 
-	if(!str || !*str)
+	if (!str || !*str)
 		return str;
 
 	lstrip(str);
@@ -100,20 +103,20 @@ char *getToken(char **src, char *token_sep)
 {
 	char *tok;
 
-	if(!(src && *src && **src))
+	if (!(src && *src && **src))
 		return NULL;
-	while(**src && strchr(token_sep, **src))
+	while (**src && strchr(token_sep, **src))
 		(*src)++;
-	if(**src)
+	if (**src)
 		tok = *src;
 	else
 		return NULL;
 	*src = strpbrk(*src, token_sep);
-	if(*src)
+	if (*src)
 	{
 		**src = '\0';
 		(*src)++;
-		while(**src && strchr(token_sep, **src))
+		while (**src && strchr(token_sep, **src))
 			(*src)++;
 	}
 	else
@@ -127,7 +130,7 @@ char *getToken(char **src, char *token_sep)
 char* strlower(char* str)
 {
 	char* start = str;
-	for(;*str;str++)
+	for (;*str;str++)
 		chrlower(*str);
 
 	return start;
@@ -136,26 +139,27 @@ char* strlower(char* str)
 // not mine although it looks like something i'd write
 int wildcmp(const char* w, const char* s)
 {
-	if(toupper(*w) == toupper(*s)) return !*s || wildcmp(++w, ++s);
-	if(!*s) return '*' == *w && wildcmp(++w, s);
-	if('?' == *w) return wildcmp(++w, ++s);
-	if('*' == *w) if(!*++w) return 1; else while(*s) if(wildcmp(w, s++)) return 1;
+	if (toupper(*w) == toupper(*s)) return !*s || wildcmp(++w, ++s);
+	if (!*s) return '*' == *w && wildcmp(++w, s);
+	if ('?' == *w) return wildcmp(++w, ++s);
+	if ('*' == *w) if (!*++w) return 1;
+		else while (*s) if (wildcmp(w, s++)) return 1;
 	return 0;
 }
 
 char* sanitizePath(char* out, const char* in)
 {
 	strcpy(out, in);
-	if(!*out)
+	if (!*out)
 		return out;
 
 	strlower(out);
 	replacechar(out, '/', '\\');
-	replacestr(out, "\\\\", "\\");	
+	replacestr(out, "\\\\", "\\");
 
-	if(out[strlen(out) - 1] == '\\')
+	if (out[strlen(out) - 1] == '\\')
 		out[strlen(out) - 1] = 0;
-	if(out[0] == '\\')
+	if (out[0] == '\\')
 		strcpy(out, out + 1);
 
 	return out;
@@ -168,24 +172,27 @@ char* sanitizepath(char* path)
 	char* in = path;
 	char* out = path;
 
-	while((*in == '\\') || (*in == '/'))
+	while ((*in == '\\') || (*in == '/'))
 		++in;
 
-	while(*in) {
+	while (*in)
+	{
 		*out = *in;
-		if(*out == '/')
+		if (*out == '/')
 			*out = '\\';
-		if(*out == '\\') {
-			while((*(in + 1) == '/') || (*(in + 1) == '\\'))
+		if (*out == '\\')
+		{
+			while ((*(in + 1) == '/') || (*(in + 1) == '\\'))
 				++in;
-			if(*(in + 1) == 0)
+			if (*(in + 1) == 0)
 				*out = 0;
-		} else
+		}
+		else
 			chrlower(*out);
 		in++, out++;
 	}
 
-	*out = 0;	
+	*out = 0;
 
 	return ret;
 }
@@ -208,7 +215,7 @@ string StripPathFromFileName(const string& filename)
 }
 
 string StripFileNameFromPath(const string& filename)
-{	
+{
 	size_t pos = filename.find_last_of("/\\");
 	assert(pos != string::npos);
 	return string(filename.begin(), filename.begin() + pos);

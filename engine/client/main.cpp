@@ -30,35 +30,35 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 
 	// execute registered startup functions
 	registeredfunctions::fireStartupFunctions();
-	
+
 	// set vfs root so we can load the main config file
 	vfs::setRoot(settings::getstring("system.env.exepath"));
-	
+
 	// load and execute the config script
 	{
 		vfs::IFilePtr file = vfs::getFile("config.js");
-		if(file)
+		if (file)
 		{
 			LOG("reading config from \"%s\"", file->filename);
 			gScriptEngine->RunScript(file);
 			file.reset();
-		} 
+		}
 		else LOG("unable to open \"config.js\"");
 	}
 	// execute command line
 	console::processCmd(cmdline);
 
 	// TODO: everything from here on down should be driven by a script
-	
-	// open main window and set up interface	
+
+	// open main window and set up interface
 	appwindow::createWindow(hinst);
 	appwindow::showWindow(true);
-	
+
 	input::init();
 	texture::acquire(); // hack
 	input::acquire();
 	render::start();
-	shader::acquire();	
+	shader::acquire();
 
 	// enter main loop and do fun things
 	mainloop();
@@ -74,9 +74,9 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 	//console::release();
 	//physics::release();
 	//script::release();
-	
+
 	//LOG("\n----------- eXistenZ client build %i shutting down -----------", _build_num);
-	
+
 	return exitcode;
 }
 
@@ -90,16 +90,17 @@ void addSystemSettings()
 	settings::addsetting("system.env.exepath", settings::TYPE_STRING, settings::FLAG_READONLY, NULL, NULL, NULL);
 	settings::addsetting("system.env.exefilename", settings::TYPE_STRING, settings::FLAG_READONLY, NULL, NULL, NULL);
 	settings::addsetting("system.env.cwd", settings::TYPE_STRING, settings::FLAG_READONLY, NULL, NULL, NULL);
-	
+
 	GetModuleFileName(NULL, buf, 512);
-	if(bufptr = strrchr(buf, '\\')) {
+	if (bufptr = strrchr(buf, '\\'))
+	{
 		*bufptr = 0;
 		bufptr++;
 	}
 
 	settings::setstring("system.env.exepath", buf);
 	settings::setstring("system.env.exefilename", bufptr);
-	
+
 	GetCurrentDirectory(512, buf);
 	settings::setstring("system.env.cwd", buf);
 	settings::addsetting("system.env.build", settings::TYPE_INT, settings::FLAG_READONLY, NULL, NULL, NULL);
@@ -112,11 +113,11 @@ int mainloop()
 {
 	MSG msg;
 
-	while(TRUE)
+	while (TRUE)
 	{
-		while(PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE))
+		while (PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE))
 		{
-			if(msg.message == WM_QUIT)
+			if (msg.message == WM_QUIT)
 				return (int)msg.wParam;
 			else
 			{
@@ -124,9 +125,10 @@ int mainloop()
 				DispatchMessage(&msg);
 			}
 		}
-		if(!gActive)
+		if (!gActive)
 			WaitMessage();
-		else {
+		else
+		{
 			timer::doTick();
 			input::doTick();
 			physics::getResults();
@@ -134,7 +136,7 @@ int mainloop()
 			game::doTick();
 			physics::startSimulation();
 			render::render();
-			jsscript::jsfunction<void(void)>(gScriptEngine->GetContext(), "on_tick")();
+			jsscript::jsfunction < void(void) > (gScriptEngine->GetContext(), "on_tick")();
 			JS_MaybeGC(gScriptEngine->GetContext());
 		}
 	}

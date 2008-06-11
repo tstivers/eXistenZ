@@ -3,29 +3,38 @@
 #include "math/aabb.h"
 #include "math/vertex.h"
 
-namespace render {
+namespace render
+{
 	class RenderGroup;
 };
 
-namespace q3bsp {
+namespace q3bsp
+{
 	class BSP;
 }
 
-namespace entity {
+namespace entity
+{
 	class Entity;
 
 	typedef vector<Entity*> EntityList;
 };
 
-namespace texture {
+namespace texture
+{
 	struct Material;
 }
 
-namespace scene {
+namespace scene
+{
 
-	class BSPFace {
+	class BSPFace
+	{
 	public:
-		~BSPFace() { delete [] vertices; }
+		~BSPFace()
+		{
+			delete [] vertices;
+		}
 		int texture;
 		int lightmap;
 		int type; // remove?
@@ -36,11 +45,12 @@ namespace scene {
 		unsigned short* indices;
 		unsigned int frame;
 		render::RenderGroup* rendergroup;
-	};	
+	};
 
 	typedef vector<BSPFace*> BSPFacePtrList;
 
-	class BSPCluster {
+	class BSPCluster
+	{
 	public:
 		AABB aabb;
 		unsigned int num_faces;
@@ -48,14 +58,15 @@ namespace scene {
 		entity::EntityList entities;
 	};
 
-	class SceneBSP : public Scene {
+	class SceneBSP : public Scene
+	{
 	public:
 
 		// construction
 		SceneBSP();
 		~SceneBSP();
 
-		// overloads				
+		// overloads
 		void init();
 		void acquire();
 		void release();

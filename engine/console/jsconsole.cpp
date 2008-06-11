@@ -10,15 +10,16 @@ void jscon::init()
 }
 
 JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
-                             jsval *argv, jsval *rval)
+					jsval *argv, jsval *rval)
 {
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("log() takes 1 argument");
-		return JS_FALSE;	
+		return JS_FALSE;
 	}
 
 	JSString* s = JS_ValueToString(cx, argv[0]);
-	if(!s)
+	if (!s)
 		return JS_FALSE;
 
 	JSINFO(JS_GetStringBytes(s));

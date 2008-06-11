@@ -1,10 +1,12 @@
 #include "precompiled.h"
 #include "common/log.h"
 
-namespace Log {
-	struct Consumer {
+namespace Log
+{
+	struct Consumer
+	{
 		Consumer(ConsumerCallback callback, void* user, U32 mask) :
-			callback(callback), user(user), mask(mask) {}
+				callback(callback), user(user), mask(mask) {}
 		ConsumerCallback callback;
 		void* user;
 		U32 mask;
@@ -29,7 +31,7 @@ void Log::log(const char* file, unsigned int line, const char* function, unsigne
 	va_list args;
 	char buffer[4096];
 
-	va_start(args, format);	
+	va_start(args, format);
 	vsprintf(buffer, format, args);
 	va_end(args);
 
@@ -39,8 +41,9 @@ void Log::log(const char* file, unsigned int line, const char* function, unsigne
 	OutputDebugString(buffer2);
 #endif
 
-	for(consumer_map_t::const_iterator it = consumer_map.begin(); it != consumer_map.end(); it++) {
-		if(flags & it->second.mask)
+	for (consumer_map_t::const_iterator it = consumer_map.begin(); it != consumer_map.end(); it++)
+	{
+		if (flags & it->second.mask)
 			it->second.callback(file, line, function, flags, buffer, it->second.user);
 	}
 }

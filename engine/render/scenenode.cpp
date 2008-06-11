@@ -12,7 +12,8 @@
 #include "math/aabb.h"
 #include "render/shapes.h"
 
-namespace render {
+namespace render
+{
 }
 
 using namespace render;
@@ -35,53 +36,57 @@ SceneNode::SceneNode(SceneNode* parent)
 SceneNode::~SceneNode()
 {
 	delete [] children;
-	if(acquired)
+	if (acquired)
 		release();
 }
 
 void SceneNode::acquire()
 {
-	if(acquired)
+	if (acquired)
 		return;
 
-	if((vertice_size < max_node_vertsize) && (vertice_size > 0)) {
-		if(FAILED(render::device->CreateVertexBuffer((UINT)vertice_size,
-			D3DUSAGE_WRITEONLY,
-			BSPVertex::FVF,
-			D3DPOOL_MANAGED,
-			&vertexbuffer,
-			NULL))) {
-				LOG("[BSPRenderTest::acquire] failed to create vertex buffer");
-				return;
-			}
+	if ((vertice_size < max_node_vertsize) && (vertice_size > 0))
+	{
+		if (FAILED(render::device->CreateVertexBuffer((UINT)vertice_size,
+				   D3DUSAGE_WRITEONLY,
+				   BSPVertex::FVF,
+				   D3DPOOL_MANAGED,
+				   &vertexbuffer,
+				   NULL)))
+		{
+			LOG("[BSPRenderTest::acquire] failed to create vertex buffer");
+			return;
+		}
 
 		void* buffer;
 
-		if(FAILED(vertexbuffer->Lock(0, (UINT)vertice_size, &buffer, D3DLOCK_DISCARD))) {
+		if (FAILED(vertexbuffer->Lock(0, (UINT)vertice_size, &buffer, D3DLOCK_DISCARD)))
+		{
 			LOG("[BSPRenderTest::acquire] failed to lock vertex buffer");
 			return;
 		}
 
 		int vertbuf_pos = 0;
-		for(MeshList::iterator it = meshes.begin(); it != meshes.end(); it++) {
+		for (MeshList::iterator it = meshes.begin(); it != meshes.end(); it++)
+		{
 			Mesh* mesh = *it;
-			if(mesh->rendergroup)
+			if (mesh->rendergroup)
 				continue;
 
-		/*	mesh->rendergroup = new RenderGroup();
-			mesh->rendergroup->texture = mesh->texture;
-			mesh->rendergroup->lightmap = mesh->lightmap;
-			mesh->rendergroup->vertexbuffer = vertexbuffer;
-			mesh->rendergroup->transform = mesh->transform;
-			mesh->rendergroup->vertices = mesh->vertices;
-			mesh->rendergroup->indices = mesh->indices;
-			//mesh->rendergroup->vertex_stride = sizeof(BSPVertex);
-			mesh->rendergroup->type = (D3DPRIMITIVETYPE)mesh->vertice_format;
-			//mesh->rendergroup->basevertex = 
-			mesh->rendergroup->minindex = 0;
-			mesh->rendergroup->numvertices = mesh->vertice_count;
-			//mesh->rendergroup.startindex = 
-			*/
+			/*	mesh->rendergroup = new RenderGroup();
+				mesh->rendergroup->texture = mesh->texture;
+				mesh->rendergroup->lightmap = mesh->lightmap;
+				mesh->rendergroup->vertexbuffer = vertexbuffer;
+				mesh->rendergroup->transform = mesh->transform;
+				mesh->rendergroup->vertices = mesh->vertices;
+				mesh->rendergroup->indices = mesh->indices;
+				//mesh->rendergroup->vertex_stride = sizeof(BSPVertex);
+				mesh->rendergroup->type = (D3DPRIMITIVETYPE)mesh->vertice_format;
+				//mesh->rendergroup->basevertex =
+				mesh->rendergroup->minindex = 0;
+				mesh->rendergroup->numvertices = mesh->vertice_count;
+				//mesh->rendergroup.startindex =
+				*/
 		}
 	}
 
@@ -95,22 +100,26 @@ void SceneNode::release()
 
 void SceneNode::render()
 {
-	if(children)
-		for(int i = 0; i < 8; i++)
+	if (children)
+		for (int i = 0; i < 8; i++)
 			children[i]->render();
-	else {
-		if(meshes.size()) {
-			if(bbox.contains(&render::cam_pos)) {
+	else
+	{
+		if (meshes.size())
+		{
+			if (bbox.contains(&render::cam_pos))
+			{
 				render::drawBox(&bbox.min, &bbox.max, 0.0f, 1.0f, 0.0f);
 				FRAMEDO(LOG4("[SceneNode::render] meshes:%i  vertices: %i  polys: %i", meshes.size(), this->numvertices, this->numpolys));
 			}
 			else
 				render::drawBox(&bbox.min, &bbox.max, 1.0f, 1.0f, 1.0f);
 		}
-		
-		for(MeshList::iterator it = meshes.begin(); it != meshes.end(); it++) {
+
+		for (MeshList::iterator it = meshes.begin(); it != meshes.end(); it++)
+		{
 			Mesh* mesh = *it;
-			if(bbox.contains(&render::cam_pos))
+			if (bbox.contains(&render::cam_pos))
 				render::drawBox(&mesh->bbox.min, &mesh->bbox.max, 0.0f, 0.0f, 1.0f);
 			else
 				render::drawBox(&mesh->bbox.min, &mesh->bbox.max, 1.0f, 0.0f, 0.0f);
@@ -122,7 +131,8 @@ void SceneNode::addStaticMesh(Mesh& mesh)
 {
 	meshes.push_back(&mesh);
 
-	if(!parent) {
+	if (!parent)
+	{
 		// extend bounding box if outside
 		bbox.extend(&mesh.bbox);
 	}
@@ -131,16 +141,18 @@ void SceneNode::addStaticMesh(Mesh& mesh)
 bool SceneNode::checkSplit()
 {
 
-	if(level >= render::max_node_level)
+	if (level >= render::max_node_level)
 		return false;
 
 	int contained = 0;
 
-	for(MeshList::iterator it = meshes.begin(); it != meshes.end(); it++) {
+	for (MeshList::iterator it = meshes.begin(); it != meshes.end(); it++)
+	{
 		Mesh* mesh = *it;
 
 		// don't count bigass meshes because they'll end up in every child and child's child anyway
-		if(bbox.isContained(&(mesh->bbox))) {
+		if (bbox.isContained(&(mesh->bbox)))
+		{
 			//LOG("[SceneNode::checkSplit] skipping big mesh");
 			//bbox.debugPrint();
 			//LOG("[SceneNode::checkSplit] is conained by");
@@ -148,17 +160,24 @@ bool SceneNode::checkSplit()
 			continue;
 		}
 
-		if(bbox.contains(&(mesh->bbox)))
+		if (bbox.contains(&(mesh->bbox)))
 			contained++;
 
 		numvertices += mesh->vertice_count;
 		vertice_size += mesh->vertice_count * sizeof(BSPVertex);
 		indice_size += mesh->indice_count * sizeof(unsigned short);
-		switch(mesh->indice_format) {
-			case D3DPT_TRIANGLELIST: numpolys += mesh->indice_count / 3; break;
-			case D3DPT_TRIANGLESTRIP: numpolys += mesh->indice_count - 2; break;
-			default: ASSERT(1); break;
-		}		
+		switch (mesh->indice_format)
+		{
+		case D3DPT_TRIANGLELIST:
+			numpolys += mesh->indice_count / 3;
+			break;
+		case D3DPT_TRIANGLESTRIP:
+			numpolys += mesh->indice_count - 2;
+			break;
+		default:
+			ASSERT(1);
+			break;
+		}
 	}
 
 	//LOG8("[SceneNode::checkSplit] node level %i: {%f, %f, %f} {%f, %f, %f}",
@@ -167,20 +186,20 @@ bool SceneNode::checkSplit()
 	//	bounds[1][0], bounds[1][1], bounds[1][2]);
 
 	LOG8("[SceneNode::checkSplit] node level %i: %i[%i] meshes, %i vertices, %i polygons, %ikb vertbuf, %ikb indicebuf",
-		level,
-		meshes.size(), contained,
-		numvertices,
-		numpolys,
-		vertice_size / 1024,
-		indice_size / 1024);
+		 level,
+		 meshes.size(), contained,
+		 numvertices,
+		 numpolys,
+		 vertice_size / 1024,
+		 indice_size / 1024);
 
-	//bbox.debugPrint();	
+	//bbox.debugPrint();
 
-	if(	(meshes.size() > render::max_node_meshes) ||
-		(numvertices > render::max_node_vertices) ||
-		(numpolys > render::max_node_polys) ||
-		(vertice_size > render::max_node_vertsize) ||
-		(indice_size > render::max_node_indicesize)) 			
+	if ((meshes.size() > render::max_node_meshes) ||
+			(numvertices > render::max_node_vertices) ||
+			(numpolys > render::max_node_polys) ||
+			(vertice_size > render::max_node_vertsize) ||
+			(indice_size > render::max_node_indicesize))
 		return true;
 
 	return false;
@@ -188,7 +207,8 @@ bool SceneNode::checkSplit()
 
 void SceneNode::subdivide()
 {
-	if(!checkSplit()) {
+	if (!checkSplit())
+	{
 		//LOG("[SceneNode::subdivide] no subdivison required");
 		return;
 	}
@@ -196,7 +216,7 @@ void SceneNode::subdivide()
 //		LOG("[SceneNode::subdivide] subdividing...");
 
 	children = new SceneNode*[8];
-	for(int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 		children[i] = new SceneNode(this);
 
 	children[0]->bbox.min = D3DXVECTOR3(bbox.min.x, bbox.pos.y, bbox.min.z);
@@ -223,13 +243,15 @@ void SceneNode::subdivide()
 	children[7]->bbox.min = D3DXVECTOR3(bbox.pos.x, bbox.min.y, bbox.pos.z);
 	children[7]->bbox.max = D3DXVECTOR3(bbox.max.x, bbox.pos.y, bbox.max.z);
 
-	for(int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++)
+	{
 		//LOG2("[SceneNode::subdivide] populating child[%i]", i);
 		children[i]->bbox.recalcPos();
 		ASSERT(children[i]->bbox.cdist > 0.0f);
-		for(MeshList::iterator it = meshes.begin(); it != meshes.end(); it++) {
+		for (MeshList::iterator it = meshes.begin(); it != meshes.end(); it++)
+		{
 			Mesh* mesh = *it;
-			if(children[i]->bbox.intersects(&(mesh->bbox)))
+			if (children[i]->bbox.intersects(&(mesh->bbox)))
 				children[i]->addStaticMesh(*mesh);
 		}
 		children[i]->subdivide();

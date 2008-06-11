@@ -1,5 +1,6 @@
 #pragma once
 
-namespace jsscene {
+namespace jsscene
+{
 	void init();
 };

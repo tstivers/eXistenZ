@@ -9,7 +9,8 @@
 #include "interface/pos.h"
 #include "input/input.h"
 
-namespace ui {
+namespace ui
+{
 	int draw;
 	Console console;
 	FPS fps;
@@ -51,7 +52,7 @@ void ui::init()
 	settings::setint("system.ui.console.height", 140);
 	settings::setint("system.ui.console.filter", 0xffff);
 	settings::setint("system.ui.console.cmdecho", 1);
-	
+
 	console::addCommand("toggle_console", console::toggle_int, &console.draw);
 	console::addCommand("focus_console", con_focus_console);
 	console::addCommand("focus_console_slash", con_focus_console_slash);
@@ -74,28 +75,31 @@ void ui::reset()
 
 void ui::render()
 {
-	if(!draw)
+	if (!draw)
 		return;
 
-	console.render();	
+	console.render();
 	fps.render();
 	pos.render();
 }
 
 void ui::keypressed(char key, bool extended)
 {
-	if(key == '`' && !extended) {
+	if (key == '`' && !extended)
+	{
 		input::acquire();
 		console.draw = 0;
 		return;
 	}
-	
-	if(key == 0x09 && !extended) {
+
+	if (key == 0x09 && !extended)
+	{
 		input::acquire();
 		return;
 	}
 
-	if(key == 0x1b && !extended) {
+	if (key == 0x1b && !extended)
+	{
 		console::executeCommand("quit");
 	}
 
@@ -116,15 +120,15 @@ void ui::con_focus_console_slash()
 }
 
 void ui::consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user)
-{	
-	if(!(((Console*)user)->filter & flags))
+{
+	if (!(((Console*)user)->filter & flags))
 		return;
 
- 	char buffer[512];
- 	if(function && *function)
- 		sprintf(buffer, "[%s] %s", function, message);
- 	else
- 		strcpy(buffer, message);
+	char buffer[512];
+	if (function && *function)
+		sprintf(buffer, "[%s] %s", function, message);
+	else
+		strcpy(buffer, message);
 
 	((Console*)user)->addMessage(buffer);
 }

@@ -2,32 +2,36 @@
 #include <NxPhysics.h>
 #include "stream.h"
 
-namespace scene {
+namespace scene
+{
 	class SceneBSP;
 }
 
-namespace physics {
-	
-	class MeshDescImpl : public MeshDesc {
+namespace physics
+{
+
+	class MeshDescImpl : public MeshDesc
+	{
 	public:
 		MeshDescImpl(const char* name);
 		~MeshDescImpl();
-		
+
 		bool cook();
-	
+
 	protected:
-		NxTriangleMeshDesc desc;		
+		NxTriangleMeshDesc desc;
 		vector<D3DXVECTOR3> vertices;
 		vector<unsigned int> indices;
 		NxTriangleMesh* mesh;
 	};
-	
-	class BSPMeshDescImpl : public MeshDescImpl {
+
+	class BSPMeshDescImpl : public MeshDescImpl
+	{
 	public:
 		BSPMeshDescImpl(const char* name, scene::SceneBSP* scene);
 		~BSPMeshDescImpl();
-		
+
 	private:
-				
+
 	};
 }

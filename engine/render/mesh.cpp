@@ -7,7 +7,8 @@
 #include "precompiled.h"
 #include "render/render.h"
 
-namespace render {
+namespace render
+{
 }
 
 using namespace render;

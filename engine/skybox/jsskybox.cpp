@@ -9,7 +9,7 @@ void jsskybox::init()
 }
 
 JSBool jsskybox::jsreset(JSContext *cx, JSObject *obj, uintN argc,
-						  jsval *argv, jsval *rval)
+						 jsval *argv, jsval *rval)
 {
 	skybox::reset();
 	return JS_TRUE;

@@ -1,6 +1,7 @@
 #pragma once
 
-class AABB {
+class AABB
+{
 public:
 	AABB();
 	AABB(D3DXVECTOR3* min, D3DXVECTOR3* max);
@@ -23,11 +24,11 @@ public:
 	bool contains(AABB* test);
 	bool contains(const D3DXVECTOR3* pt);
 	bool isContained(AABB* test);
-	
+
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 extents;
 	D3DXVECTOR3 min;
-	D3DXVECTOR3 max; 
+	D3DXVECTOR3 max;
 	float pdist[6];
 	float cdist;
 };

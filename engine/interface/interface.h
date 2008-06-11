@@ -1,6 +1,7 @@
 #pragma once
 
-namespace ui {
+namespace ui
+{
 	void init();
 	void release();
 	void render();

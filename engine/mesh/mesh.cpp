@@ -3,7 +3,8 @@
 #include "render/rendergroup.h"
 #include "math/vertex.h"
 
-namespace mesh {
+namespace mesh
+{
 };
 
 using namespace mesh;
@@ -21,8 +22,8 @@ Mesh::~Mesh()
 }
 
 void Mesh::acquire()
-{	
-	if(acquired)
+{
+	if (acquired)
 		return;
 
 	rendergroup = render::getRenderGroup(BSPVertex::FVF, sizeof(BSPVertex), vertice_count, indice_count);

@@ -1,9 +1,11 @@
 #pragma once
 
-namespace game {
+namespace game
+{
 	class Player;
 }
 
-namespace jsplayer {
+namespace jsplayer
+{
 	JSBool createPlayerObject(JSContext* cx, JSObject* parent, const char* name, game::Player* player);
 }

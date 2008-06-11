@@ -7,7 +7,8 @@
 #include "q3bsp/bleh.h"  // for vertex typedef
 #include "texture/texturecache.h"
 
-namespace mesh {
+namespace mesh
+{
 	// TODO: make this go away
 	typedef BSPVertex Vertex;
 
@@ -22,8 +23,10 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 
 	char* token = info;
 	char* this_token;
-	while(this_token = getToken(&token, ":[")) {
-		if(!_stricmp(this_token, "POS")) {
+	while (this_token = getToken(&token, ":["))
+	{
+		if (!_stricmp(this_token, "POS"))
+		{
 			this_token = getToken(&token, ",");
 			vertex->pos.x = (float)atof(this_token);
 			this_token = getToken(&token, ",");
@@ -33,7 +36,8 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			continue;
 		}
 
-		if(!_stricmp(this_token, "NRM")) {
+		if (!_stricmp(this_token, "NRM"))
+		{
 			this_token = getToken(&token, ",");
 			vertex->nrm.x = (float)atof(this_token);
 			this_token = getToken(&token, ",");
@@ -43,7 +47,8 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			continue;
 		}
 
-		if(!_stricmp(this_token, "COL")) {
+		if (!_stricmp(this_token, "COL"))
+		{
 			this_token = getToken(&token, ",");
 			D3DXCOLOR color;
 			color.r = (float)atof(this_token);
@@ -52,12 +57,13 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 			this_token = getToken(&token, ",");
 			color.b = (float)atof(this_token);
 			this_token = getToken(&token, " ");
-			color.a = (float)atof(this_token);						
+			color.a = (float)atof(this_token);
 			vertex->diffuse = color;
 			continue;
 		}
 
-		if(!_stricmp(this_token, "UV")) {
+		if (!_stricmp(this_token, "UV"))
+		{
 			this_token = getToken(&token, ":");
 			this_token = getToken(&token, ",");
 			vertex->tex1.x = (float)atof(this_token);
@@ -68,12 +74,12 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 }
 
 Mesh* mesh::loadTextMesh(const string& filename)
-{	
+{
 	vfs::IFilePtr file = vfs::getFile(filename.c_str());
-	if(!file)
+	if (!file)
 		return NULL;
 
-	Mesh* mesh = new Mesh();	
+	Mesh* mesh = new Mesh();
 
 	// i'm sick of this shit, do everything with xml and a parser
 	// using callbacks so i never have to parse a fucking line of text
@@ -82,46 +88,53 @@ Mesh* mesh::loadTextMesh(const string& filename)
 	unsigned current_vert = 0;
 	unsigned current_ind = 0;
 
-	while(file->readLine(buf, 1024)) {		
+	while (file->readLine(buf, 1024))
+	{
 
 		char* comment = strstr(buf, "//");
-		if(comment) *comment = 0;
+		if (comment) *comment = 0;
 
 		strip(buf);
 
-		if(!buf[0]) continue;
+		if (!buf[0]) continue;
 		char* token = buf;
 		char* this_token;
 		this_token = getToken(&token, " ");
-		
-		if(!_stricmp(this_token, "MATERIAL:")) {
+
+		if (!_stricmp(this_token, "MATERIAL:"))
+		{
 			mesh->material_name = token;
 			mesh->texture = texture::getTexture(token);
 		}
-		
-		if(!_stricmp(this_token, "VERTICEFORMAT:")) {
+
+		if (!_stricmp(this_token, "VERTICEFORMAT:"))
+		{
 			//mesh->vertice_format = fvfFromString(token);
 			mesh->vertice_format = BSPVertex::FVF;
 		}
 
-		if(!_stricmp(this_token, "VERTICECOUNT:")) {
+		if (!_stricmp(this_token, "VERTICECOUNT:"))
+		{
 			mesh->vertice_count = atoi(token);
 			// TODO: switch based on fvf value
 			mesh->vertices = new Vertex[mesh->vertice_count];
 		}
 
-		if(!_stricmp(this_token, "INDICECOUNT:")) {
+		if (!_stricmp(this_token, "INDICECOUNT:"))
+		{
 			mesh->indice_count = atoi(token);
 			mesh->indices = new unsigned short[mesh->indice_count];
 		}
 
-		if(!_memicmp(this_token, "VERTEX[", strlen("VERTEX["))) {
+		if (!_memicmp(this_token, "VERTEX[", strlen("VERTEX[")))
+		{
 			Vertex* vertices = (Vertex*)mesh->vertices;
 			parseVertex(&vertices[current_vert], token);
 			current_vert++;
 		}
 
-		if(!_memicmp(this_token, "INDICE[", strlen("INDICE["))) {			
+		if (!_memicmp(this_token, "INDICE[", strlen("INDICE[")))
+		{
 			mesh->indices[current_ind] = atoi(token);
 			current_ind++;
 		}
@@ -136,10 +149,10 @@ Mesh* mesh::loadTextMesh(const string& filename)
 MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 {
 	vfs::IFilePtr file = vfs::getFile(filename.c_str());
-	if(!file)
+	if (!file)
 		return NULL;
 
-	MeshSystem* meshsys = new MeshSystem();	
+	MeshSystem* meshsys = new MeshSystem();
 
 	// i'm sick of this shit, do everything with xml and a parser
 	// using callbacks so i never have to parse a fucking line of text
@@ -148,21 +161,24 @@ MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 	unsigned current_vert = 0;
 	unsigned current_ind = 0;
 
-	while(file->readLine(buf, 1024)) {		
+	while (file->readLine(buf, 1024))
+	{
 
 		char* comment = strstr(buf, "//");
-		if(comment) *comment = 0;
+		if (comment) *comment = 0;
 
 		strip(buf);
 
-		if(!buf[0]) continue;
+		if (!buf[0]) continue;
 		char* token = buf;
 		char* this_token;
 		this_token = getToken(&token, " ");
 
-		if(!_stricmp(this_token, "MESH:")) {
+		if (!_stricmp(this_token, "MESH:"))
+		{
 			Mesh* mesh = getMesh(string(token));
-			if(!mesh) {
+			if (!mesh)
+			{
 				LOG("failed to load mesh %s for system %s",
 					token, filename.c_str());
 				continue;
@@ -172,5 +188,5 @@ MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 			meshsys->meshes.push_back(MeshEntry(*(D3DXMatrixIdentity(&transform)), mesh));
 		}
 	}
-		return meshsys;
+	return meshsys;
 }

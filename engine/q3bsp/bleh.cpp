@@ -20,7 +20,7 @@ BSP::BSP()
 	num_leafbrushes = 0;
 	num_brushes = 0;
 	num_brushsides = 0;
-	num_planes = 0;	
+	num_planes = 0;
 	num_clusters = 0;
 	num_textures = 0;
 	num_lightmaps = 0;
@@ -69,8 +69,8 @@ BSP::~BSP()
 
 	delete renderer;
 
-	if(dxvertbuf) dxvertbuf->Release();
-	if(dxindexbuf) dxindexbuf->Release();
+	if (dxvertbuf) dxvertbuf->Release();
+	if (dxindexbuf) dxindexbuf->Release();
 
 	//TODO: release textures
 

@@ -6,24 +6,38 @@
 #include "render/hwbuffer.h"
 #include "render/render.h"
 
-namespace render {
-	class VBEntry {
+namespace render
+{
+	class VBEntry
+	{
 	public:
-		VBEntry(unsigned int o, unsigned int s, VertexBuffer* b) { offset = o; size = s; buffer = b; }
+		VBEntry(unsigned int o, unsigned int s, VertexBuffer* b)
+		{
+			offset = o;
+			size = s;
+			buffer = b;
+		}
 		unsigned int offset;
 		unsigned int size;
 		VertexBuffer* buffer;
 	};
 
-	class IBEntry {
+	class IBEntry
+	{
 	public:
-		IBEntry(unsigned int o, unsigned int s, IndexBuffer* b) { offset = o; size = s; buffer = b; }
+		IBEntry(unsigned int o, unsigned int s, IndexBuffer* b)
+		{
+			offset = o;
+			size = s;
+			buffer = b;
+		}
 		unsigned int offset;
 		unsigned int size;
 		IndexBuffer* buffer;
 	};
 
-	class VBEntryTraits {
+	class VBEntryTraits
+	{
 	public:
 		inline bool operator()(const VBEntry& key1, const VBEntry& key2) const
 		{
@@ -31,7 +45,8 @@ namespace render {
 		}
 	};
 
-	class IBEntryTraits {
+	class IBEntryTraits
+	{
 	public:
 		inline bool operator()(const IBEntry& key1, const IBEntry& key2) const
 		{
@@ -42,7 +57,8 @@ namespace render {
 	typedef set<VBEntry, VBEntryTraits> VBMemMap;
 	typedef set<IBEntry, IBEntryTraits> IBMemMap;
 
-	class VB {
+	class VB
+	{
 	public:
 		VertexBuffer* alloc(unsigned int size);
 		void init();
@@ -58,11 +74,12 @@ namespace render {
 		unsigned int largest_free;
 	};
 
-	class IB {
+	class IB
+	{
 	public:
 		IndexBuffer* alloc(unsigned int size);
 		void init();
-		
+
 		IDirect3DIndexBuffer9* indexbuffer;
 		bool dynamic;
 		unsigned int size;
@@ -90,13 +107,15 @@ VertexBuffer* render::getVB(unsigned int size, DWORD fvf, unsigned int stride, u
 	ASSERT(size > 0);
 	ASSERT(fvf);
 	ASSERT(stride);
-	
+
 	// see if any existing buffer has enough space
-	for(unsigned i = 0; i < vbcache.size(); i++) {
-		if((vbcache[i]->fvf == fvf) &&
-			(vbcache[i]->largest_free >= size) &&
-			(vbcache[i]->dynamic == dynamic)) {
-				return vbcache[i]->alloc(size);
+	for (unsigned i = 0; i < vbcache.size(); i++)
+	{
+		if ((vbcache[i]->fvf == fvf) &&
+				(vbcache[i]->largest_free >= size) &&
+				(vbcache[i]->dynamic == dynamic))
+		{
+			return vbcache[i]->alloc(size);
 		}
 	}
 
@@ -119,18 +138,20 @@ VertexBuffer* render::getVB(unsigned int size, DWORD fvf, unsigned int stride, u
 
 IndexBuffer* render::getIB(unsigned int size, unsigned int group, bool dynamic)
 {
-	ASSERT(size > 0);	
+	ASSERT(size > 0);
 
 	// see if any existing buffer has enough space
-	for(unsigned i = 0; i < ibcache.size(); i++) {
-		if(	(ibcache[i]->largest_free >= size) &&
-			(ibcache[i]->dynamic == dynamic)) {
-				return ibcache[i]->alloc(size);
-			}
+	for (unsigned i = 0; i < ibcache.size(); i++)
+	{
+		if ((ibcache[i]->largest_free >= size) &&
+				(ibcache[i]->dynamic == dynamic))
+		{
+			return ibcache[i]->alloc(size);
+		}
 	}
 
 	// nope, have to alloc a new one
-	IB* buf = new IB;	
+	IB* buf = new IB;
 	buf->dynamic = dynamic;
 	buf->size = render::index_buffer_size;
 	buf->group = group;
@@ -147,15 +168,16 @@ IndexBuffer* render::getIB(unsigned int size, unsigned int group, bool dynamic)
 
 void render::VB::init()
 {
-	if(FAILED(render::device->CreateVertexBuffer(size,
-		D3DUSAGE_WRITEONLY | (dynamic ? D3DUSAGE_DYNAMIC : 0),
-		fvf,
-		D3DPOOL_MANAGED,
-		&vertexbuffer,
-		NULL))) {
-			LOG("failed to create vertex buffer");
-			return;
-		}
+	if (FAILED(render::device->CreateVertexBuffer(size,
+			   D3DUSAGE_WRITEONLY | (dynamic ? D3DUSAGE_DYNAMIC : 0),
+			   fvf,
+			   D3DPOOL_MANAGED,
+			   &vertexbuffer,
+			   NULL)))
+	{
+		LOG("failed to create vertex buffer");
+		return;
+	}
 
 	free.insert(VBEntry(0, size, NULL));
 	LOG("allocated %i byte vertex buffer (fvf = %i)", size, fvf);
@@ -163,19 +185,20 @@ void render::VB::init()
 
 void render::IB::init()
 {
-	if(FAILED(render::device->CreateIndexBuffer(
-		size,
-		D3DUSAGE_WRITEONLY | (dynamic ? D3DUSAGE_DYNAMIC : 0),
-		D3DFMT_INDEX16,
-		D3DPOOL_MANAGED,
-		&indexbuffer,
-		NULL))) {
-			LOG("failed to create index buffer");
-			return;
-		}
+	if (FAILED(render::device->CreateIndexBuffer(
+				   size,
+				   D3DUSAGE_WRITEONLY | (dynamic ? D3DUSAGE_DYNAMIC : 0),
+				   D3DFMT_INDEX16,
+				   D3DPOOL_MANAGED,
+				   &indexbuffer,
+				   NULL)))
+	{
+		LOG("failed to create index buffer");
+		return;
+	}
 
-		free.insert(IBEntry(0, size, NULL));
-		LOG("allocated %i byte index buffer", size);
+	free.insert(IBEntry(0, size, NULL));
+	LOG("allocated %i byte index buffer", size);
 }
 
 
@@ -183,29 +206,29 @@ VertexBuffer* render::VB::alloc(unsigned int size)
 {
 	// find a spot to put it
 	VBMemMap::iterator it;
-	for(it = free.begin(); it != free.end(); it++)
-		if(it->size >= size) 
-				break;
-	
+	for (it = free.begin(); it != free.end(); it++)
+		if (it->size >= size)
+			break;
+
 	ASSERT(it != free.end());
 
 	// allocate buffer and populate it
 	VertexBuffer* buf = new VertexBuffer;
 	buf->size = size;
-	buf->vertexbuffer = this;	
+	buf->vertexbuffer = this;
 	buf->offset = it->offset;
 
 	// update our memory map
 	VBEntry old_entry = (*it);
 	free.erase(it);
-	allocated.insert(VBEntry(old_entry.offset, size, buf));	
-	if(old_entry.size > size)
+	allocated.insert(VBEntry(old_entry.offset, size, buf));
+	if (old_entry.size > size)
 		free.insert(VBEntry(old_entry.offset + size, old_entry.size - size, NULL));
 
 	// update largest_free
 	largest_free = 0;
-	for(it = free.begin(); it != free.end(); it++)
-		if(it->size > largest_free)
+	for (it = free.begin(); it != free.end(); it++)
+		if (it->size > largest_free)
 			largest_free = it->size;
 
 	return buf;
@@ -215,29 +238,29 @@ IndexBuffer* render::IB::alloc(unsigned int size)
 {
 	// find a spot to put it
 	IBMemMap::iterator it;
-	for(it = free.begin(); it != free.end(); it++)
-		if(it->size >= size)
-				break;
+	for (it = free.begin(); it != free.end(); it++)
+		if (it->size >= size)
+			break;
 
 	ASSERT(it != free.end());
 
 	// allocate buffer and populate it
 	IndexBuffer* buf = new IndexBuffer;
 	buf->size = size;
-	buf->indexbuffer = this;	
+	buf->indexbuffer = this;
 	buf->offset = it->offset;
 
 	// update our memory map
 	IBEntry old_entry = (*it);
 	free.erase(it);
-	allocated.insert(IBEntry(old_entry.offset, size, buf));	
-	if(old_entry.size > size)
+	allocated.insert(IBEntry(old_entry.offset, size, buf));
+	if (old_entry.size > size)
 		free.insert(IBEntry(old_entry.offset + size, old_entry.size - size, NULL));
 
 	// update largest_free
 	largest_free = 0;
-	for(it = free.begin(); it != free.end(); it++)
-		if(it->size > largest_free)
+	for (it = free.begin(); it != free.end(); it++)
+		if (it->size > largest_free)
 			largest_free = it->size;
 
 	return buf;
@@ -246,8 +269,9 @@ IndexBuffer* render::IB::alloc(unsigned int size)
 void render::VertexBuffer::update(void* data)
 {
 	void* buf;
-	
-	if(FAILED(vertexbuffer->vertexbuffer->Lock(offset, size, &buf, 0))) {
+
+	if (FAILED(vertexbuffer->vertexbuffer->Lock(offset, size, &buf, 0)))
+	{
 		LOG("failed to lock vertex buffer");
 		return;
 	}
@@ -260,7 +284,8 @@ void render::IndexBuffer::update(void* data)
 {
 	void* buf;
 
-	if(FAILED(indexbuffer->indexbuffer->Lock(offset, size, &buf, 0))) {
+	if (FAILED(indexbuffer->indexbuffer->Lock(offset, size, &buf, 0)))
+	{
 		LOG("failed to lock vertex buffer");
 		return;
 	}
@@ -271,14 +296,16 @@ void render::IndexBuffer::update(void* data)
 
 void render::activateBuffers(const VertexBuffer* vb, const IndexBuffer* ib)
 {
-	if(vb->vertexbuffer->vertexbuffer != current_vb) {
+	if (vb->vertexbuffer->vertexbuffer != current_vb)
+	{
 		render::frame_bufswaps++;
 		render::device->SetStreamSource(0, vb->vertexbuffer->vertexbuffer, 0, vb->vertexbuffer->stride);
 		render::device->SetFVF(vb->vertexbuffer->fvf);
 		current_vb = vb->vertexbuffer->vertexbuffer;
 	}
 
-	if(ib->indexbuffer->indexbuffer != current_ib) {
+	if (ib->indexbuffer->indexbuffer != current_ib)
+	{
 		render::frame_bufswaps++;
 		render::device->SetIndices(ib->indexbuffer->indexbuffer);
 		current_ib = ib->indexbuffer->indexbuffer;

@@ -1,11 +1,13 @@
 #pragma once
 
-namespace jsvector {
-	typedef JSBool (* jsVectorOp)(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);	
+namespace jsvector
+{
+	typedef JSBool(* jsVectorOp)(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 
-	struct jsVectorOps {
+	struct jsVectorOps
+	{
 		jsVectorOp get;
-		jsVectorOp set;		
+		jsVectorOp set;
 	};
 
 	JSObject* initVectorClass(JSContext* cx, JSObject* obj);

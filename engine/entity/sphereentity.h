@@ -2,13 +2,16 @@
 
 class NxActor;
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 	struct Material;
 }
 
-namespace entity {
-	class SphereEntity : public Entity {
+namespace entity
+{
+	class SphereEntity : public Entity
+	{
 	public:
 		SphereEntity(string name, string texture);
 		~SphereEntity();
@@ -23,7 +26,10 @@ namespace entity {
 		void setRot(const D3DXVECTOR3& rot);
 
 		void setRadius(const float radius);
-		float getRadius() { return radius; }
+		float getRadius()
+		{
+			return radius;
+		}
 
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
@@ -33,5 +39,5 @@ namespace entity {
 		NxActor* actor;
 		texture::DXTexture* texture;
 		float radius;
-	};	
+	};
 }

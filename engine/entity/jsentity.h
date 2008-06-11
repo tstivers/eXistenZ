@@ -1,7 +1,7 @@
 #pragma once
 
-namespace jsentity {
+namespace jsentity
+{
 	void init();
-
 	extern JSClass entity_class;
 };

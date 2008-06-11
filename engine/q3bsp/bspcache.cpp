@@ -8,7 +8,8 @@
 #include "console/console.h"
 #include "vfs/vfs.h"
 
-namespace q3bsp {
+namespace q3bsp
+{
 	BSP* bsp;
 	int debug;
 	int draw;
@@ -39,11 +40,11 @@ void q3bsp::release()
 }
 
 bool q3bsp::loadBSP(char* filename)
-{	
+{
 	delete bsp;
 	bsp = new BSP();
 	vfs::IFilePtr file = vfs::getFile(filename);
-	if(!bsp->load(file))
+	if (!bsp->load(file))
 	{
 		LOG("unable to load \"%s\"", filename);
 		delete bsp;
@@ -59,7 +60,7 @@ bool q3bsp::loadBSP(char* filename)
 
 void q3bsp::render()
 {
-	if(bsp && draw)
+	if (bsp && draw)
 		bsp->render();
 }
 
@@ -68,6 +69,6 @@ void q3bsp::con_list_maps(int argc, char* argv[], void* user)
 	vfs::file_list_t map_list;
 	vfs::getFileList(map_list, settings::getstring("system.render.bsp.bsp_path"), "*.bsp");
 	LOG("Map List:");
-	for(vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
+	for (vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
 		LOG("  %s", (*it).c_str());
 }

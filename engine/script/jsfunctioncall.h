@@ -7,23 +7,23 @@ namespace jsscript
 {
 	namespace jsfunctioncall_detail
 	{
-		#pragma region root_predicates
+#pragma region root_predicates
 
-		#include <boost/type_traits/detail/bool_trait_def.hpp>
-		BOOST_TT_AUX_BOOL_TRAIT_DEF1(arg_needs_root,T,true)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,unsigned char,false)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,bool,false)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,void,false)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,int,false)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,unsigned int,false)
-		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root,char,false)
-		BOOST_TT_AUX_BOOL_TRAIT_DEF1(rval_needs_root,T,false)
-		#include <boost/type_traits/detail/bool_trait_undef.hpp>
+#include <boost/type_traits/detail/bool_trait_def.hpp>
+		BOOST_TT_AUX_BOOL_TRAIT_DEF1(arg_needs_root, T, true)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, unsigned char, false)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, bool, false)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, void, false)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, int, false)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, unsigned int, false)
+		BOOST_TT_AUX_BOOL_TRAIT_CV_SPEC1(arg_needs_root, char, false)
+		BOOST_TT_AUX_BOOL_TRAIT_DEF1(rval_needs_root, T, false)
+#include <boost/type_traits/detail/bool_trait_undef.hpp>
 
-		#pragma endregion
+#pragma endregion
 
-		#pragma region struct root_impl
-		
+#pragma region struct root_impl
+
 		// auto root structures for args and return value
 
 		template<typename root_args, typename root_ret>
@@ -40,7 +40,7 @@ namespace jsscript
 		{
 			JSContext* cx;
 			inline root_impl(JSContext* cx, jsval& rval)
-				: cx(cx)
+					: cx(cx)
 			{
 				JS_EnterLocalRootScope(cx);
 			}
@@ -57,7 +57,7 @@ namespace jsscript
 			JSContext* cx;
 			jsval& rval;
 			inline root_impl(JSContext* cx, jsval& rval)
-				: cx(cx), rval(rval)
+					: cx(cx), rval(rval)
 			{
 				JS_EnterLocalRootScope(cx);
 			}
@@ -74,7 +74,7 @@ namespace jsscript
 			JSContext* cx;
 			jsval& rval;
 			inline root_impl(JSContext* cx, jsval& rval)
-				: cx(cx), rval(rval)
+					: cx(cx), rval(rval)
 			{
 				JS_EnterLocalRootScope(cx);
 			}
@@ -93,9 +93,9 @@ namespace jsscript
 			}
 		};
 
-		#pragma endregion 
+#pragma endregion
 
-		#pragma region class jsfunctioncall_base
+#pragma region class jsfunctioncall_base
 
 		template <int arity, typename T>
 		class jsfunctioncall_base
@@ -116,42 +116,42 @@ namespace jsscript
 				jsval argv, rval;
 				root_t root(cx, rval);
 				JS_CallFunctionValue(cx, par, fun, 0, &argv, &rval);
-				return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval); 
+				return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval);
 			}
 		};
 
 #define JSFUNCTIONCALL_BASE_TYPEDEF_ARG(z, n, text) \
-			BOOST_PP_COMMA_IF(n) typename boost::call_traits<typename boost::function_traits<T>::arg ## n ##_type>::param_type arg ## n
+	BOOST_PP_COMMA_IF(n) typename boost::call_traits<typename boost::function_traits<T>::arg ## n ##_type>::param_type arg ## n
 
 #define JSFUNCTIONCALL_BASE_ASSIGN_ARG(z, n, text) \
-			argv[BOOST_PP_DEC(n)] = to_jsval(cx, arg ## n);
+	argv[BOOST_PP_DEC(n)] = to_jsval(cx, arg ## n);
 
 #define JSFUNCTIONCALL_BASE_IMPL(z, n, text) \
-		template <typename T> \
-		class jsfunctioncall_base<n, T> \
-		{ \
-			typedef typename boost::mpl::count_if<boost::function_types::parameter_types<T>, jsfunctioncall_detail::arg_needs_root<boost::mpl::_>>::type arg_root_count; \
-			typedef typename boost::mpl::if_<arg_root_count, boost::mpl::bool_<true>, boost::mpl::bool_<false>>::type args_need_root; \
-			typedef typename root_impl<args_need_root, boost::mpl::bool_<jsfunctioncall_detail::rval_needs_root<typename boost::function_traits<T>::result_type>::value>> root_t; \
-		public: \
-			inline typename boost::function_traits<T>::result_type operator()(JSContext* cx, JSObject* par, jsval fun \
+	template <typename T> \
+	class jsfunctioncall_base<n, T> \
+	{ \
+		typedef typename boost::mpl::count_if<boost::function_types::parameter_types<T>, jsfunctioncall_detail::arg_needs_root<boost::mpl::_>>::type arg_root_count; \
+		typedef typename boost::mpl::if_<arg_root_count, boost::mpl::bool_<true>, boost::mpl::bool_<false>>::type args_need_root; \
+		typedef typename root_impl<args_need_root, boost::mpl::bool_<jsfunctioncall_detail::rval_needs_root<typename boost::function_traits<T>::result_type>::value>> root_t; \
+	public: \
+		inline typename boost::function_traits<T>::result_type operator()(JSContext* cx, JSObject* par, jsval fun \
 				BOOST_PP_REPEAT_FROM_TO_ ## z(1, BOOST_PP_INC(n), JSFUNCTIONCALL_BASE_TYPEDEF_ARG, null) \
-				) \
-			{ \
-				jsval argv[n], rval; \
-				root_t root(cx, rval); \
-				BOOST_PP_REPEAT_FROM_TO_ ## z(1, BOOST_PP_INC(n), JSFUNCTIONCALL_BASE_ASSIGN_ARG, null) \
-				JS_CallFunctionValue(cx, par, fun, n, &argv[0], &rval); \
-				return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval); \
-			} \
-		}; \
-
+																		 ) \
+		{ \
+			jsval argv[n], rval; \
+			root_t root(cx, rval); \
+			BOOST_PP_REPEAT_FROM_TO_ ## z(1, BOOST_PP_INC(n), JSFUNCTIONCALL_BASE_ASSIGN_ARG, null) \
+			JS_CallFunctionValue(cx, par, fun, n, &argv[0], &rval); \
+			return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval); \
+		} \
+	}; \
+	 
 		BOOST_PP_REPEAT_FROM_TO(1, JSFUNCTIONCALL_MAX_ARITY, JSFUNCTIONCALL_BASE_IMPL, null)
 
-		#pragma endregion
+#pragma endregion
 	}
 
-	#pragma region to_jsval
+#pragma region to_jsval
 
 	template <typename T>
 	inline jsval to_jsval(JSContext* cx, T arg)
@@ -198,7 +198,7 @@ namespace jsscript
 	{
 		jsval a;
 		JSObject* arr = JS_NewArrayObject(cx, 0, NULL);
-		for(int i = 0; i < vec.size(); i++)
+		for (int i = 0; i < vec.size(); i++)
 		{
 			jsval v = to_jsval(cx, vec[i]);
 			JS_SetElement(cx, arr, i, &v);
@@ -212,9 +212,9 @@ namespace jsscript
 		return OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, vec));
 	}
 
-	#pragma endregion
+#pragma endregion
 
-	#pragma region jsval_to_
+#pragma region jsval_to_
 
 	template <typename T>
 	struct jsval_to_
@@ -238,14 +238,14 @@ namespace jsscript
 	{
 		inline bool operator()(JSContext* cx, jsval v)
 		{
-			if(JSVAL_IS_BOOLEAN(v))
+			if (JSVAL_IS_BOOLEAN(v))
 			{
 				return JSVAL_TO_BOOLEAN(v) == JS_TRUE;
 			}
 			else
 			{
 				JSBool boolean;
-				if(JS_ValueToBoolean(cx, v, &boolean))
+				if (JS_ValueToBoolean(cx, v, &boolean))
 					return boolean == JS_TRUE;
 			}
 			return false;
@@ -257,11 +257,11 @@ namespace jsscript
 	{
 		inline string operator()(JSContext* cx, jsval v)
 		{
-			if(JSVAL_IS_STRING(v))
+			if (JSVAL_IS_STRING(v))
 			{
 				return string(JS_GetStringBytes(JSVAL_TO_STRING(v)));
 			}
-			else if(JSString * s = JS_ValueToString(cx, v))
+			else if (JSString * s = JS_ValueToString(cx, v))
 			{
 				return string(JS_GetStringBytes(s));
 			}
@@ -275,14 +275,14 @@ namespace jsscript
 	{
 		inline float operator()(JSContext* cx, jsval v)
 		{
-			if(JSVAL_IS_INT(v))
+			if (JSVAL_IS_INT(v))
 			{
 				return JSVAL_TO_INT(v);
 			}
 			else
 			{
 				jsdouble d;
-				if(JS_ValueToNumber(cx, v, &d))
+				if (JS_ValueToNumber(cx, v, &d))
 					return d;
 				else
 					return 0.0f;
@@ -295,14 +295,14 @@ namespace jsscript
 	{
 		inline double operator()(JSContext* cx, jsval v)
 		{
-			if(JSVAL_IS_INT(v))
+			if (JSVAL_IS_INT(v))
 			{
 				return JSVAL_TO_INT(v);
 			}
 			else
 			{
 				jsdouble d;
-				if(JS_ValueToNumber(cx, v, &d))
+				if (JS_ValueToNumber(cx, v, &d))
 					return d;
 				else
 					return 0.0;
@@ -315,14 +315,14 @@ namespace jsscript
 	{
 		inline int operator()(JSContext* cx, jsval v)
 		{
-			if(JSVAL_IS_INT(v))
+			if (JSVAL_IS_INT(v))
 			{
 				return JSVAL_TO_INT(v);
 			}
 			else
 			{
 				int32 i;
-				if(JS_ValueToInt32(cx, v, &i))
+				if (JS_ValueToInt32(cx, v, &i))
 					return i;
 				else
 					return 0;
@@ -330,11 +330,11 @@ namespace jsscript
 		}
 	};
 
-	#pragma endregion
+#pragma endregion
 
 	template <typename T>
 	class jsfunctioncall :
-		public jsfunctioncall_detail::jsfunctioncall_base<boost::function_traits<T>::arity, T>
+				public jsfunctioncall_detail::jsfunctioncall_base<boost::function_traits<T>::arity, T>
 	{
 	};
 }

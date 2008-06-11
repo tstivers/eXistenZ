@@ -3,10 +3,12 @@
 #include "settings/settings.h"
 #include "script/script.h"
 
-namespace console {
-	struct CommandEntry {
+namespace console
+{
+	struct CommandEntry
+	{
 		CommandEntry(ConsoleCommand cmd, ConsoleCommandArgs cmd_args, ConsoleCommandNoArgs cmd_noargs, void* user) :
-			cmd(cmd), cmd_args(cmd_args), cmd_noargs(cmd_noargs), user(user) {};
+				cmd(cmd), cmd_args(cmd_args), cmd_noargs(cmd_noargs), user(user) {};
 		ConsoleCommand cmd;
 		ConsoleCommandArgs cmd_args;
 		ConsoleCommandNoArgs cmd_noargs;
@@ -43,7 +45,7 @@ void console::addCommand(char* name, ConsoleCommandNoArgs command, void* user)
 void console::delCommand(char* name)
 {
 	command_map_t::iterator found = command_map.find(name);
-	if(found != command_map.end())
+	if (found != command_map.end())
 		command_map.erase(found);
 }
 
@@ -56,7 +58,7 @@ bool console::isCommand(char* name)
 void console::listCommands()
 {
 	LOG("Commands:");
-	for(command_map_t::iterator it = command_map.begin(); it != command_map.end(); it++)
+	for (command_map_t::iterator it = command_map.begin(); it != command_map.end(); it++)
 		LOG("  %s", it->first.c_str());
 }
 
@@ -70,27 +72,32 @@ bool console::executeCommand(char* cmd)
 	int argc;
 	char* argv[12];
 
-	if(args)
+	if (args)
 		*(args++) = 0;
 
 	strlower(name);
 	command_map_t::iterator found = command_map.find(name);
-	if(found == command_map.end()) {
+	if (found == command_map.end())
+	{
 		LOG("command \"%s\" not found", name);
 		return false;
 	}
 
 	CommandEntry* cmdentry = &found->second;
-	if(cmdentry->cmd_args) {
+	if (cmdentry->cmd_args)
+	{
 		argv[0] = name;
 		argc = countArgs(args) + 1;
-		for(int arg_idx = 1; arg_idx < argc; arg_idx++)
+		for (int arg_idx = 1; arg_idx < argc; arg_idx++)
 			argv[arg_idx] = getToken(&args, " \t");
 		cmdentry->cmd_args(argc, argv, cmdentry->user);
-	} else if(cmdentry->cmd) {
+	}
+	else if (cmdentry->cmd)
+	{
 		cmdentry->cmd(name, args, cmdentry->user);
 	}
-	else if(cmdentry->cmd_noargs) {
+	else if (cmdentry->cmd_noargs)
+	{
 		cmdentry->cmd_noargs();
 	}
 
@@ -108,10 +115,10 @@ bool console::processCmd(const char* cmd)
 	strcpy(buffer, cmd);
 	strip(buffer);
 
-	if(*buffer == '/')
+	if (*buffer == '/')
 		return executeCommand(&buffer[1]);
 	else
-		return executeJS(buffer);	
+		return executeJS(buffer);
 }
 
 void console::toggle_int(char* cmd, char* args, void* user)

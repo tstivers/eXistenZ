@@ -6,24 +6,27 @@
 #include "render/shapes.h"
 #include <NxPhysics.h>
 
-namespace entity {
+namespace entity
+{
 }
 
-namespace physics {
+namespace physics
+{
 	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxScene* gScene;
 }
 
 using namespace entity;
 
-BoxEntity::BoxEntity(string name, string texture) : Entity(name), actor(NULL), size(physics::scale,physics::scale,physics::scale)
+BoxEntity::BoxEntity(string name, string texture)
+		: Entity(name), actor(NULL), size(physics::scale, physics::scale, physics::scale)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
 
 BoxEntity::~BoxEntity()
 {
-	if(actor)
+	if (actor)
 		physics::gScene->releaseActor(*actor);
 }
 
@@ -33,14 +36,14 @@ void BoxEntity::acquire()
 	NxBodyDesc bodyDesc;
 	NxBoxShapeDesc boxDesc;
 	boxDesc.dimensions.set((size / physics::scale) / 2);
-	actorDesc.shapes.pushBack(&boxDesc);    
-	actorDesc.body = &bodyDesc;    
-	actorDesc.density = 10;    
+	actorDesc.shapes.pushBack(&boxDesc);
+	actorDesc.body = &bodyDesc;
+	actorDesc.density = 10;
 	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
-	actorDesc.userData = dynamic_cast<Entity*>(this);	
+	actorDesc.userData = dynamic_cast<Entity*>(this);
 	actorDesc.name = name.c_str();
 	actor = physics::gScene->createActor(actorDesc);
-	ASSERT(actor);	
+	ASSERT(actor);
 }
 
 void BoxEntity::release()
@@ -56,7 +59,7 @@ void BoxEntity::update()
 }
 
 void BoxEntity::doTick()
-{	
+{
 	//setPos((D3DXVECTOR3&)actor->getGlobalPosition());
 	//setQuatRotation((D3DXQUATERNION&)actor->getGlobalOrientationQuat());
 	//setRot((D3DXVECTOR3&)actor->getGlobalOrientation());
@@ -111,7 +114,7 @@ void BoxEntity::applyForce(const D3DXVECTOR3 &force)
 void BoxEntity::setSleeping(bool asleep)
 {
 	ASSERT(actor);
-	if(asleep)
+	if (asleep)
 		actor->putToSleep();
 	else
 		actor->wakeUp();

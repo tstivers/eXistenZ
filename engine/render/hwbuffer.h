@@ -1,10 +1,12 @@
 #pragma once
 
-namespace render {
+namespace render
+{
 	class VB;
 	class IB;
 
-	class VertexBuffer {
+	class VertexBuffer
+	{
 	public:
 		void update(void* data);
 		void release();
@@ -14,7 +16,8 @@ namespace render {
 		unsigned int size;
 	};
 
-	class IndexBuffer {
+	class IndexBuffer
+	{
 	public:
 		void update(void* data);
 		void release();

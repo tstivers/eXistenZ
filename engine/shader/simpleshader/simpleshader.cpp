@@ -8,31 +8,33 @@ using namespace shader;
 
 SimpleShader::SimpleShader(const char* name) : Shader(name)
 {
-	texture = NULL;	
+	texture = NULL;
 }
 
 SimpleShader::~SimpleShader()
 {
 }
 
-bool SimpleShader::load(const char* filename) {
+bool SimpleShader::load(const char* filename)
+{
 	texture = texture::getTexture(filename);
-	if(!texture)
+	if (!texture)
 		return false;
 
-	if(debug) LOG("loaded \"%s\"", texture->name);
+	if (debug) LOG("loaded \"%s\"", texture->name);
 
 	return true;
 }
 
 void SimpleShader::setTexture(int type, texture::DXTexture* texture)
 {
-	switch(type) {
-		case TEXTURE_DIFFUSE: 
-			this->texture = texture;
-			break;
-		default:
-			break;
+	switch (type)
+	{
+	case TEXTURE_DIFFUSE:
+		this->texture = texture;
+		break;
+	default:
+		break;
 	}
 }
 

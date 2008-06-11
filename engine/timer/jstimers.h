@@ -1,5 +1,6 @@
 #pragma once
 
-namespace jstimer {
+namespace jstimer
+{
 	void init();
 }

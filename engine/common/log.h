@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef ERROR
-	#undef ERROR
+#undef ERROR
 #endif
 
 #define	LF_NONE		(1<<0)
@@ -32,7 +32,8 @@
 #define JSERROR(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_SCRIPT|LF_ERROR,__VA_ARGS__)
 #define JSDEBUG(...) Log::log(__FILE__,__LINE__,__FUNCTION__,LF_SCRIPT|LF_DEBUG,__VA_ARGS__)
 
-namespace Log {
+namespace Log
+{
 	typedef void (* ConsumerCallback)(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user);
 
 	void addConsumer(const string& name, unsigned int mask, ConsumerCallback callback, void* userdef = NULL);

@@ -2,9 +2,11 @@
 #include "zippath.h"
 #include "zipfile.h"
 
-namespace vfs {
+namespace vfs
+{
 #pragma pack(1)
-	struct FileHeader {
+	struct FileHeader
+	{
 		U32 signature;
 		U16 version_needed;
 		U16 flag;
@@ -19,23 +21,26 @@ namespace vfs {
 	};
 }
 
-vfs::Path* vfs::ZipPath::createPath(const char* path)	
+vfs::Path* vfs::ZipPath::createPath(const char* path)
 {
 	IFilePtr file = vfs::getFile(path);
 
-	if(!file) {
+	if (!file)
+	{
 		LOG("error opening \"%s\"", path);
 		return NULL;
 	}
 
 	U32 header;
 
-	if(file->read(&header, sizeof(header)) == 0) {
-		LOG("error reading \"%s\"", path);		
+	if (file->read(&header, sizeof(header)) == 0)
+	{
+		LOG("error reading \"%s\"", path);
 		return NULL;
 	}
 
-	if(header != 0x04034b50) {
+	if (header != 0x04034b50)
+	{
 		LOG("invalid zip header in \"%s\"", path);
 		return NULL;
 	}
@@ -43,33 +48,36 @@ vfs::Path* vfs::ZipPath::createPath(const char* path)
 	ZipPath* archive = new ZipPath(path);
 	archive->readContents();
 
-	return archive;	
+	return archive;
 }
 
-vfs::ZipPath::ZipPath(const char* path) 
-	: Path(path)
-{	
+vfs::ZipPath::ZipPath(const char* path)
+		: Path(path)
+{
 }
 
 vfs::ZipPath::~ZipPath()
-{	
+{
 }
 
 void vfs::ZipPath::readContents()
 {
 	FileHeader header;
 	char filename[MAX_PATH];
-	U32 offset;	
+	U32 offset;
 
 	IFilePtr file = vfs::getFile(path);
 
-	if(!file) {
+	if (!file)
+	{
 		LOG("error opening \"%s\"", path);
 		return;
-	}	
+	}
 
-	while(file->read(&header, sizeof(header))) {
-		if(header.signature == 0x04034b50) {
+	while (file->read(&header, sizeof(header)))
+	{
+		if (header.signature == 0x04034b50)
+		{
 			file->read(filename, header.filename_len);
 			filename[header.filename_len] = 0;
 			file->seek(header.extra_field_len, FILE_CURRENT);
@@ -77,7 +85,7 @@ void vfs::ZipPath::readContents()
 			file->seek(header.compressed_size, FILE_CURRENT);
 
 			// skip wacky compressed files
-			if(((header.method != 0) && (header.method != 8)))
+			if (((header.method != 0) && (header.method != 8)))
 				continue;
 
 			ZipFileEntryPtr feptr(new ZipFileEntry);
@@ -94,7 +102,7 @@ void vfs::ZipPath::readContents()
 			break;
 	}
 
-	if(header.signature != 0x02014b50)
+	if (header.signature != 0x02014b50)
 		LOG("unexpected end of archive encountered in \"%s\"", path);
 }
 
@@ -112,13 +120,13 @@ bool vfs::ZipPath::pathExists(const char* path)
 
 vfs::IFile* vfs::ZipPath::getFile(const char* filename)
 {
-	ZipFileEntryHash::iterator it = file_hash.find(filename);	
+	ZipFileEntryHash::iterator it = file_hash.find(filename);
 
-	if(it == file_hash.end())
+	if (it == file_hash.end())
 		return NULL;
 
 	// don't return directories
-	if(it->second->compressed_size == 0)
+	if (it->second->compressed_size == 0)
 		return NULL;
 
 	return new ZipFile(path, it->second);
@@ -127,28 +135,36 @@ vfs::IFile* vfs::ZipPath::getFile(const char* filename)
 U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse)
 {
 	char filepath[MAX_PATH];
-	char* filename;	
+	char* filename;
 
-	for(ZipFileEntryList::iterator it = this->file_list.begin(); it != this->file_list.end(); ++it) {
+	for (ZipFileEntryList::iterator it = this->file_list.begin(); it != this->file_list.end(); ++it)
+	{
 		strcpy(filepath, (*it)->filename);
 		filename = strrchr(filepath, '\\');
-		if(!filename) { 
+		if (!filename)
+		{
 			filepath[0] = 0;
-			filename = (*it)->filename;			
-		} else {
+			filename = (*it)->filename;
+		}
+		else
+		{
 			*strrchr(filepath, '\\') = 0;
 			filename++;
 		}
-		if(!strcmp(filepath, path)) {
-			if(wildcmp(filespec, (*it)->filename)) {
-				if((((*it)->compressed_size == 0) && (flags & FIND_DIRECTORY)) ||
-					(!((*it)->compressed_size == 0) && (flags & FIND_FILE))) {
-						file_list.insert(strDup((*it)->filename));
+		if (!strcmp(filepath, path))
+		{
+			if (wildcmp(filespec, (*it)->filename))
+			{
+				if ((((*it)->compressed_size == 0) && (flags & FIND_DIRECTORY)) ||
+						(!((*it)->compressed_size == 0) && (flags & FIND_FILE)))
+				{
+					file_list.insert(strDup((*it)->filename));
 				}
 			}
-			if(((*it)->compressed_size == 0) && recurse) {
+			if (((*it)->compressed_size == 0) && recurse)
+			{
 				char search_path[MAX_PATH];
-				if(*path)
+				if (*path)
 					sprintf(search_path, "%s\\%s", path, (*it)->filename);
 				else
 					strcpy(search_path, (*it)->filename);

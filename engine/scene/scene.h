@@ -1,20 +1,24 @@
 #pragma once
 
-namespace entity {
+namespace entity
+{
 	class Entity;
 };
 
-namespace scene {
-	enum SCENE_TYPE {
+namespace scene
+{
+	enum SCENE_TYPE
+	{
 		ST_BSP,
 		ST_TREE,
 		ST_PORTAL,
 		ST_AUTO
 	};
 
-	class Scene {
+	class Scene
+	{
 	public:
-		// construction 
+		// construction
 		Scene();
 		virtual ~Scene();
 
@@ -24,10 +28,10 @@ namespace scene {
 		virtual void acquire() = 0;
 		virtual void release() = 0;
 		virtual void reload(unsigned int flags = 0) = 0;
-		
+
 		// render crap
 		//TODO: virtual render(render::Camera& cam, render::Frustrum& frust);
-		virtual void render() = 0;		
+		virtual void render() = 0;
 
 		// entity crap
 		//TODO: virtual addEntity(string name, int type,

@@ -1,10 +1,12 @@
 #pragma once
 
-namespace scene {
+namespace scene
+{
 	class SceneBSP;
 }
 
-namespace physics {
+namespace physics
+{
 	void init();
 	void acquire();
 	void release();

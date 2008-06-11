@@ -1,16 +1,19 @@
 #pragma once
 
-namespace texture {
+namespace texture
+{
 	class DXTexture;
 	struct Material;
 }
 
-namespace render {
+namespace render
+{
 
 	class VertexBuffer;
 	class IndexBuffer;
 
-	class RenderGroup {
+	class RenderGroup
+	{
 	public:
 		RenderGroup();
 		~RenderGroup();
@@ -25,15 +28,15 @@ namespace render {
 		texture::Material* material;
 
 		DWORD fvf;
-		unsigned int stride;		
+		unsigned int stride;
 		VertexBuffer* vertexbuffer;
-		IndexBuffer* indexbuffer;		
+		IndexBuffer* indexbuffer;
 
 		D3DPRIMITIVETYPE type;
 		unsigned int numvertices;
 		unsigned int numindices;
 		unsigned int startindex;
-		unsigned int primitivecount;	
+		unsigned int primitivecount;
 	};
 
 	RenderGroup* getRenderGroup(DWORD fvf, unsigned int stride, unsigned int numvertices, unsigned int numindices, bool dynamic = false);

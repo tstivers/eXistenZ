@@ -6,8 +6,9 @@
 #include "entity/entity.h"
 #include "render/render.h"
 
-namespace jsscene {
-	JSBool addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);	
+namespace jsscene
+{
+	JSBool addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	//JSBool updateEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 };
@@ -27,23 +28,27 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 {
 	*rval = JSVAL_VOID;
 
-	if(!render::scene) {
+	if (!render::scene)
+	{
 		gScriptEngine->ReportError("addEntity(): no scene loaded");
 		return JS_FALSE;
 	}
 
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("usage: addEntity(Entity)");
 		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_OBJECT(argv[0])) {
+	if (!JSVAL_IS_OBJECT(argv[0]))
+	{
 		gScriptEngine->ReportError("addEntity(): argument wasn't an object");
 		return JS_FALSE;
 	}
 
 	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	if(JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE) {
+	if (JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE)
+	{
 		gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
 		return JS_FALSE;
 	}
@@ -60,23 +65,27 @@ JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
 {
 	*rval = JSVAL_VOID;
 
-	if(!render::scene) {
+	if (!render::scene)
+	{
 		gScriptEngine->ReportError("addEntity(): no scene loaded");
 		return JS_FALSE;
 	}
 
-	if(argc != 1) {
+	if (argc != 1)
+	{
 		gScriptEngine->ReportError("usage: addEntity(Entity)");
 		return JS_FALSE;
 	}
 
-	if(!JSVAL_IS_OBJECT(argv[0])) {
+	if (!JSVAL_IS_OBJECT(argv[0]))
+	{
 		gScriptEngine->ReportError("addEntity(): argument wasn't an object");
 		return JS_FALSE;
 	}
 
 	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	if(JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE) {
+	if (JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE)
+	{
 		gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
 		return JS_FALSE;
 	}

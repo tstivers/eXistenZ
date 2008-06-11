@@ -8,7 +8,8 @@
 
 extern int gActive;
 
-namespace appwindow {
+namespace appwindow
+{
 	HWND hwnd;
 	HINSTANCE hinst;
 	LONG CALLBACK appwndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -27,9 +28,9 @@ namespace appwindow {
 	bool inSizeMove = false;
 };
 
-HWND appwindow::getHwnd() 
-{ 
-	return hwnd; 
+HWND appwindow::getHwnd()
+{
+	return hwnd;
 }
 
 REGISTER_STARTUP_FUNCTION(appwindow, appwindow::init, 10);
@@ -55,36 +56,36 @@ bool appwindow::createWindow(HINSTANCE hinst)
 	appwindow::hinst = hinst;
 
 	wc.cbSize = sizeof(WNDCLASSEX);
-    wc.hInstance		= hinst;
+	wc.hInstance		= hinst;
 	wc.hIcon			= LoadIcon(hinst, MAKEINTRESOURCE(IDI_LUXICON));
 	wc.lpszClassName	= classname;
 	wc.lpfnWndProc		= appwndproc;
-	wc.style			= CS_VREDRAW|CS_HREDRAW|CS_DBLCLKS;
+	wc.style			= CS_VREDRAW | CS_HREDRAW | CS_DBLCLKS;
 	wc.hIconSm			= NULL;
-	wc.hCursor			= NULL;	
-	wc.lpszMenuName		= NULL;	
-    wc.cbClsExtra		= 0;
-    wc.cbWndExtra		= 0;
+	wc.hCursor			= NULL;
+	wc.lpszMenuName		= NULL;
+	wc.cbClsExtra		= 0;
+	wc.cbWndExtra		= 0;
 	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
 
-	if(!RegisterClassEx(&wc))
+	if (!RegisterClassEx(&wc))
 		return false;
 
 	hwnd = CreateWindowEx(
-				WS_EX_OVERLAPPEDWINDOW,
-				classname,
-				settings::getstring("system.window.title"),
-				WS_OVERLAPPEDWINDOW,
-				0, 
-				0,
-				0,
-				0,
-				NULL,
-				NULL,
-				hinst,
-				NULL);
+			   WS_EX_OVERLAPPEDWINDOW,
+			   classname,
+			   settings::getstring("system.window.title"),
+			   WS_OVERLAPPEDWINDOW,
+			   0,
+			   0,
+			   0,
+			   0,
+			   NULL,
+			   NULL,
+			   hinst,
+			   NULL);
 
-	if(!hwnd)
+	if (!hwnd)
 		return false;
 
 	return true;
@@ -92,13 +93,16 @@ bool appwindow::createWindow(HINSTANCE hinst)
 
 void appwindow::showWindow(bool show)
 {
-	if(settings::getint("system.render.fullscreen")) {
+	if (settings::getint("system.render.fullscreen"))
+	{
 		LOG("setting fullscreen style");
-        SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_TOPMOST);
+		SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_TOPMOST);
 		SetWindowLong(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-	} else {
+	}
+	else
+	{
 		LOG("setting windowed style");
-        SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_OVERLAPPEDWINDOW);
+		SetWindowLong(hwnd, GWL_EXSTYLE, WS_EX_OVERLAPPEDWINDOW);
 		SetWindowLong(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 	}
 
@@ -116,13 +120,13 @@ void appwindow::showWindow(bool show)
 
 	AdjustWindowRectEx(&r, GetWindowLong(hwnd, GWL_STYLE), false, GetWindowLong(hwnd, GWL_EXSTYLE));
 
-	SetWindowPos(hwnd, 
-		HWND_NOTOPMOST, 
-		r.left,
-		r.top,
-		r.right - r.left,
-		r.bottom - r.top,
-		0);
+	SetWindowPos(hwnd,
+				 HWND_NOTOPMOST,
+				 r.left,
+				 r.top,
+				 r.right - r.left,
+				 r.bottom - r.top,
+				 0);
 	UpdateWindow(hwnd);
 	//LOG("showing window size %i:%i (%i:%i adjusted)",
 	//	settings::getint("system.render.resolution.x"),
@@ -144,7 +148,8 @@ LONG appwindow::onChar(WPARAM wparam, LPARAM lparam)
 
 LONG appwindow::onKey(WPARAM wparam, LPARAM lparam)
 {
-	switch(wparam) {
+	switch (wparam)
+	{
 	case VK_LEFT:
 	case VK_RIGHT:
 	case VK_UP:
@@ -152,19 +157,22 @@ LONG appwindow::onKey(WPARAM wparam, LPARAM lparam)
 	case VK_DELETE:
 	case VK_HOME:
 	case VK_END:
-		ui::keypressed((char)wparam, true);		
+		ui::keypressed((char)wparam, true);
 		break;
-	default:		
+	default:
 		break;
-	}	
+	}
 	return 0;
 }
 
 LONG appwindow::onActivateApp(WPARAM wparam, LPARAM lparam)
 {
-	if(wparam == TRUE) {
+	if (wparam == TRUE)
+	{
 		gActive = 1;
-	} else {
+	}
+	else
+	{
 		gActive = 0;
 	}
 
@@ -177,7 +185,7 @@ LONG appwindow::onActivateApp(WPARAM wparam, LPARAM lparam)
 
 LONG CALLBACK appwindow::appwndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	switch(msg)
+	switch (msg)
 	{
 		ON_MESSAGE(WM_DESTROY, onDestroy)
 		ON_MESSAGE(WM_CHAR, onChar)
@@ -191,19 +199,20 @@ LONG CALLBACK appwindow::appwndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		/*ON_MESSAGE(WM_SYSCOMMAND, OnSystemCommand)
 		ON_MESSAGE(WM_SETFOCUS, OnSetFocus)
 		IGNORE_MESSAGE(WM_SYSKEYDOWN)
-		IGNORE_MESSAGE(WM_SYSKEYUP)		
+		IGNORE_MESSAGE(WM_SYSKEYUP)
 		IGNORE_MESSAGE(WM_KEYUP)
 		IGNORE_MESSAGE(WM_ERASEBKGND)*/
-		default: return (LONG)DefWindowProc(hwnd, msg, wparam, lparam);
+	default:
+		return (LONG)DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 }
 
-LONG appwindow::onSize( WPARAM wparam, LPARAM lparam )
+LONG appwindow::onSize(WPARAM wparam, LPARAM lparam)
 {
 	int width = LOWORD(lparam);
 	int height = HIWORD(lparam);
 	//LOG("onSize(%i, %i)", width, height);
-	if(!inSizeMove && !settings::getint("system.render.fullscreen"))
+	if (!inSizeMove && !settings::getint("system.render.fullscreen"))
 	{
 		//LOG("resizing");
 		render::resize(width, height);
@@ -212,9 +221,9 @@ LONG appwindow::onSize( WPARAM wparam, LPARAM lparam )
 	return DefWindowProc(hwnd, WM_SIZE, wparam, lparam);
 }
 
-LONG appwindow::onSysCommand( WPARAM wparam, LPARAM lparam )
+LONG appwindow::onSysCommand(WPARAM wparam, LPARAM lparam)
 {
-	if(wparam == SC_MAXIMIZE || wparam == SC_RESTORE)
+	if (wparam == SC_MAXIMIZE || wparam == SC_RESTORE)
 	{
 		PostMessage(hwnd, WM_EXITSIZEMOVE, wparam, lparam);
 	}
@@ -222,9 +231,9 @@ LONG appwindow::onSysCommand( WPARAM wparam, LPARAM lparam )
 	return DefWindowProc(hwnd, WM_SYSCOMMAND, wparam, lparam);
 }
 
-LONG appwindow::onSysKeyDown( WPARAM wparam, LPARAM lparam )
+LONG appwindow::onSysKeyDown(WPARAM wparam, LPARAM lparam)
 {
-	if(wparam == VK_RETURN)
+	if (wparam == VK_RETURN)
 		toggleFullScreen();
 
 	return DefWindowProc(hwnd, WM_SYSKEYDOWN, wparam, lparam);
@@ -237,22 +246,22 @@ void appwindow::toggleFullScreen()
 	showWindow(true);
 }
 
-LONG appwindow::onEnterSizeMove( WPARAM wparam, LPARAM lparam )
+LONG appwindow::onEnterSizeMove(WPARAM wparam, LPARAM lparam)
 {
 	inSizeMove = true;
 	return DefWindowProc(hwnd, WM_ENTERSIZEMOVE, wparam, lparam);
 }
 
-LONG appwindow::onExitSizeMove( WPARAM wparam, LPARAM lparam )
+LONG appwindow::onExitSizeMove(WPARAM wparam, LPARAM lparam)
 {
 	inSizeMove = false;
 	RECT r;
 	GetClientRect(hwnd, &r);
 	int width = r.right - r.left;
 	int height = r.bottom - r.top;
-	
+
 	//LOG("resizing to %i:%i", width, height);
-	if(!settings::getint("system.render.fullscreen"))
+	if (!settings::getint("system.render.fullscreen"))
 		render::resize(width, height);
 
 	return DefWindowProc(hwnd, WM_EXITSIZEMOVE, wparam, lparam);

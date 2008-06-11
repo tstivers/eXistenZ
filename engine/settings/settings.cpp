@@ -3,7 +3,8 @@
 #include "settings/settings.h"
 #include "settings/jssettings.h"
 
-namespace settings {
+namespace settings
+{
 	typedef stdext::hash_map<char*, Setting*, hash_char_ptr_traits> settings_hash_map;
 
 	bool standard_setter(char* name, void* value);
@@ -23,14 +24,14 @@ void settings::init(void)
 void settings::release(void)
 {
 	settings_hash_map::iterator iter;
-	while(!settings_map.empty())
+	while (!settings_map.empty())
 	{
 		Setting* setting = (*settings_map.begin()).second;
 		settings_map.erase(settings_map.begin());
 		delete setting;
 	}
 }
-					    
+
 void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, getFunction getter, void* data)
 {
 	Setting* setting = new Setting();
@@ -39,62 +40,67 @@ void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, ge
 	setting->flags = flags;
 	setting->data = data;
 
-	if(data)
+	if (data)
 		setting->data = data;
-	else switch(type) {	
-			case TYPE_STRING:
-				setting->data = malloc(MAX_PATH);
-				((char*)(setting->data))[0] = 0;
-				setting->flags |= FLAG_MANAGE_MEM;
-				break;
-			case TYPE_INT:
-				setting->data = malloc(sizeof(int));
-				setting->flags |= FLAG_MANAGE_MEM;
-				break;
-			case TYPE_FLOAT:
-				setting->data = malloc(sizeof(float));
-				setting->flags |= FLAG_MANAGE_MEM;
-				break;
-			default:
-				break;
-	}
+	else switch (type)
+		{
+		case TYPE_STRING:
+			setting->data = malloc(MAX_PATH);
+			((char*)(setting->data))[0] = 0;
+			setting->flags |= FLAG_MANAGE_MEM;
+			break;
+		case TYPE_INT:
+			setting->data = malloc(sizeof(int));
+			setting->flags |= FLAG_MANAGE_MEM;
+			break;
+		case TYPE_FLOAT:
+			setting->data = malloc(sizeof(float));
+			setting->flags |= FLAG_MANAGE_MEM;
+			break;
+		default:
+			break;
+		}
 
-	if(setter)
+	if (setter)
 		setting->set = setter;
-	else {
-		switch(type) {
-			case TYPE_STRING:
-				setting->set = string_setter;
-				break;
-			case TYPE_INT:
-				setting->set = int_setter;
-				break;
-			case TYPE_FLOAT:
-				setting->set = float_setter;
-				break;
-			default:
-				break;
+	else
+	{
+		switch (type)
+		{
+		case TYPE_STRING:
+			setting->set = string_setter;
+			break;
+		case TYPE_INT:
+			setting->set = int_setter;
+			break;
+		case TYPE_FLOAT:
+			setting->set = float_setter;
+			break;
+		default:
+			break;
 		}
 	}
 
-	if(getter)
+	if (getter)
 		setting->get = getter;
-	else {
-		switch(type) {
-			case TYPE_STRING:
-				setting->get = string_getter;
-				break;
-			case TYPE_INT:
-				setting->get = int_getter;
-				break;
-			case TYPE_FLOAT:
-				setting->get = float_getter;
-				break;
-			default:
-				break;
+	else
+	{
+		switch (type)
+		{
+		case TYPE_STRING:
+			setting->get = string_getter;
+			break;
+		case TYPE_INT:
+			setting->get = int_getter;
+			break;
+		case TYPE_FLOAT:
+			setting->get = float_getter;
+			break;
+		default:
+			break;
 		}
 	}
-	
+
 	settings_map.insert(settings_hash_map::value_type(setting->name, setting));
 	jssettings::addsetting(setting);
 	//console::log(console::FLAG_INFO, "[settings::addsetting] added \"%s\"", setting->name);
@@ -103,7 +109,8 @@ void settings::addsetting(char* name, U8 type, U32 flags, setFunction setter, ge
 settings::Setting* settings::findsetting(char* name)
 {
 	settings_hash_map::iterator iter = settings_map.find(name);
-	if(iter != settings_map.end()) {
+	if (iter != settings_map.end())
+	{
 		//console::log(console::LVL_INFO, "[settings::addsetting] looked up \"%s\"", name);
 		return (*iter).second;
 	}
@@ -112,7 +119,7 @@ settings::Setting* settings::findsetting(char* name)
 }
 
 bool settings::string_setter(Setting* setting, void* value)
-{	
+{
 	strcpy((char*)setting->data, (char*)value);
 	return true;
 }
@@ -131,7 +138,7 @@ bool settings::float_setter(Setting* setting, void* value)
 
 bool settings::string_getter(Setting* setting, void** value)
 {
-	*value = setting->data;		
+	*value = setting->data;
 	return true;
 }
 
@@ -153,7 +160,7 @@ bool settings::setstring(char* name, char* value)
 	Setting* setting;
 
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	return setting->set(setting, value);
@@ -164,7 +171,7 @@ bool settings::setint(char* name, int value)
 	Setting* setting;
 
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	return setting->set(setting, &value);
@@ -175,7 +182,7 @@ bool settings::setfloat(char* name, float value)
 	Setting* setting;
 
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	return setting->set(setting, &value);
@@ -187,11 +194,11 @@ char* settings::getstring(char* name)
 	char* retval = NULL;
 
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	setting->get(setting, (void**)&retval);
-	
+
 	return retval;
 }
 
@@ -201,11 +208,11 @@ int settings::getint(char* name)
 	int* retval = NULL;
 
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	setting->get(setting, (void**)&retval);
-	
+
 	return *retval;
 }
 
@@ -214,13 +221,13 @@ float settings::getfloat(char* name)
 	Setting* setting;
 	float* retval = NULL;
 
-	
+
 	ASSERT((setting = findsetting(name)));
-	if(!(setting = findsetting(name)))
+	if (!(setting = findsetting(name)))
 		return false;
 
 	setting->get(setting, (void**)&retval);
-	
+
 	return *retval;
 }
 
@@ -228,42 +235,46 @@ void settings::dump(char* pattern, bool sort)
 {
 	list<string> blah;
 
-	if(pattern) {
-		for(settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
-			if(wildcmp(pattern, ((Setting*)((*iter).second))->name))
+	if (pattern)
+	{
+		for (settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
+			if (wildcmp(pattern, ((Setting*)((*iter).second))->name))
 				blah.push_back((string)((Setting*)((*iter).second))->name);
-	} else {
-	for(settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
-		blah.push_back((string)((Setting*)((*iter).second))->name);
+	}
+	else
+	{
+		for (settings_hash_map::iterator iter = settings_map.begin(); iter != settings_map.end(); iter++)
+			blah.push_back((string)((Setting*)((*iter).second))->name);
 	}
 
-	if(sort)
+	if (sort)
 		blah.sort();
 
-	for(list<string>::iterator li = blah.begin(); li != blah.end(); li++)
+	for (list<string>::iterator li = blah.begin(); li != blah.end(); li++)
 	{
-		settings_hash_map::iterator iter = settings_map.find((char*)(*li).c_str());		
+		settings_hash_map::iterator iter = settings_map.find((char*)(*li).c_str());
 		Setting* setting = (Setting*)((*iter).second);
-		switch(setting->type){
-			case TYPE_STRING:
-				INFO("%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
-				break;
-			case TYPE_INT:
-				INFO("%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
-				break;
-			case TYPE_FLOAT:
-				INFO("%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
-				break;
-			default:
-				INFO("// %s = <unkown type>", setting->name);
-				break;
+		switch (setting->type)
+		{
+		case TYPE_STRING:
+			INFO("%s%s = \"%s\";", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getstring(setting->name));
+			break;
+		case TYPE_INT:
+			INFO("%s%s = %i;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getint(setting->name));
+			break;
+		case TYPE_FLOAT:
+			INFO("%s%s = %f;", setting->flags & FLAG_READONLY ? "//" : "", setting->name, getfloat(setting->name));
+			break;
+		default:
+			INFO("// %s = <unkown type>", setting->name);
+			break;
 		}
 	}
 }
 
 void settings::con_settings(int argc, char* argv[], void* user)
 {
-	if(argc == 1)
+	if (argc == 1)
 		dump();
 	else
 		dump(argv[1]);

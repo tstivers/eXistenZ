@@ -2,10 +2,12 @@
 
 #include "vfs/vfs.h"
 
-namespace texture {
-	class DXTexture;	
+namespace texture
+{
+	class DXTexture;
 
-	class Shader {
+	class Shader
+	{
 	public:
 		char* name;
 		int refcount;
@@ -15,9 +17,9 @@ namespace texture {
 		Shader(char* filename);
 		~Shader();
 
-		void init( DXTexture* texture);
-		bool activate( DXTexture* texture);		
-		void deactivate( DXTexture* texture);
+		void init(DXTexture* texture);
+		bool activate(DXTexture* texture);
+		void deactivate(DXTexture* texture);
 		void acquire();
 		void release();
 		bool load(vfs::IFilePtr file);

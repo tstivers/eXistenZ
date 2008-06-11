@@ -2,9 +2,11 @@
 
 class CD3DFont;
 
-namespace ui {
+namespace ui
+{
 
-	class Console {
+	class Console
+	{
 	public:
 		Console();
 		~Console();
@@ -21,7 +23,7 @@ namespace ui {
 		int width;
 		int height;
 		int cmdecho;
-		U32 filter;		
+		U32 filter;
 		CD3DFont* d3dfont;
 
 		deque<char*> scrollback;
@@ -34,4 +36,4 @@ namespace ui {
 
 		typedef deque<char*>::iterator scrollback_iter;
 	};
-};	
+};

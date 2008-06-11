@@ -31,12 +31,12 @@ void Pos::reset()
 
 void Pos::render()
 {
-	if(!draw)
+	if (!draw)
 		return;
 
-	char buf[256];	
+	char buf[256];
 
-	if(d3dfont == NULL)
+	if (d3dfont == NULL)
 	{
 		d3dfont = new CD3DFont("Terminal", 8);
 		d3dfont->InitDeviceObjects(render::device);

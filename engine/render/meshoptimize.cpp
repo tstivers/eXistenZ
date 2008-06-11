@@ -2,7 +2,8 @@
 #include "render/meshoptimize.h"
 #include "NvTriStrip.h"
 
-namespace render {
+namespace render
+{
 };
 
 using namespace render;
@@ -10,45 +11,51 @@ using namespace render;
 void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigned short** indices, unsigned int* num_verts, unsigned int* num_indices, bool dupecheck, bool strip, bool cacheopt)
 {
 
-	if(!(*verts) || !(*indices) || !(*num_verts) || !(*num_indices))
+	if (!(*verts) || !(*indices) || !(*num_verts) || !(*num_indices))
 		return;
 
-	if(dupecheck) {
+	if (dupecheck)
+	{
 		vector<BSPVertex> vert_list;
 		vector<unsigned short> index_map;
 
-		for(unsigned i = 0; i < *num_verts; i++) {
+		for (unsigned i = 0; i < *num_verts; i++)
+		{
 
 			bool found = false;
 
-			for(unsigned j = 0; j < vert_list.size(); j++)
-				if((*verts)[i] == vert_list[j]) {
+			for (unsigned j = 0; j < vert_list.size(); j++)
+				if ((*verts)[i] == vert_list[j])
+				{
 					index_map.push_back(j);
 					found = true;
 					break;
 				}
 
-			if(!found) {
+			if (!found)
+			{
 				vert_list.push_back((*verts)[i]);
 				index_map.push_back(vert_list.size() - 1);
 			}
 		}
 
-		if(vert_list.size() != *num_verts) {
+		if (vert_list.size() != *num_verts)
+		{
 			LOG("mesh reduced from %i to %i verts", *num_verts, vert_list.size());
 			BSPVertex* new_verts = new BSPVertex[vert_list.size()];
-			for(unsigned i = 0; i < vert_list.size(); i++)
+			for (unsigned i = 0; i < vert_list.size(); i++)
 				new_verts[i] = vert_list[i];
-			delete [] (*verts);
+			delete [](*verts);
 			*verts = new_verts;
 			*num_verts = vert_list.size();
-			for(unsigned i = 0; i < *num_indices; i++)
+			for (unsigned i = 0; i < *num_indices; i++)
 				(*indices)[i] = index_map[(*indices)[i]];
 		}
 	}
-				
 
-	if(strip) {
+
+	if (strip)
+	{
 		PrimitiveGroup* primitives;
 		unsigned short num_prims;
 
@@ -60,7 +67,7 @@ void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigne
 
 		unsigned short* new_indices = new unsigned short[primitives[0].numIndices];
 		memcpy(new_indices, primitives[0].indices, primitives[0].numIndices * sizeof(unsigned short));
-		delete [] (*indices);
+		delete [](*indices);
 		*indices = new_indices;
 		*num_indices = primitives[0].numIndices;
 		*primtype = D3DPT_TRIANGLESTRIP;
