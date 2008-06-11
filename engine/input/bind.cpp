@@ -7,7 +7,7 @@
 namespace input
 {
 	char binds[256][3][128] = {0};
-	function < void(char, KEY_STATE) > f_binds[256][3];
+	bound_function_type f_binds[256][3];
 	char* keyName(int id);
 	int keyCode(char* name);
 }
@@ -47,7 +47,7 @@ void input::bindKey(int key, char* cmd)
 	}
 }
 
-void input::bindKey(int key, function < void(char, KEY_STATE) > fun, KEY_STATE state)
+void input::bindKey(int key, bound_function_type fun, KEY_STATE state)
 {
 	if (key < 0 || key >= 256)
 	{

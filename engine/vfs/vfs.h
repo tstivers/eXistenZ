@@ -39,7 +39,7 @@ namespace vfs
 	bool IsDirectory(const string& path);
 	bool IsFile(const string& path);
 
-	typedef function < void(const string&, void*) > WatchCallback;
+	typedef function<void(const string&, void*)> WatchCallback;
 	void watchFile(const string& filename, WatchCallback callback, void* user);
 
 	enum

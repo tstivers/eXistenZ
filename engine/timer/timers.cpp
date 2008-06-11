@@ -17,7 +17,7 @@ namespace timer
 
 		string name;
 		string action;
-		function < void(string) > action_f;
+		function<void(string)> action_f;
 		float frequency_ms;
 		float next_ms;
 	};
@@ -48,7 +48,7 @@ bool timer::addTimer(const string& name, const string& action, float frequency_m
 	return true;
 }
 
-bool timer::addTimer(const string& name, function < void(string) > action, float frequency_ms /* = 0 */, float next_ms /* = 0 */)
+bool timer::addTimer(const string& name, function<void(string)> action, float frequency_ms /* = 0 */, float next_ms /* = 0 */)
 {
 	addTimer(pTimer(new Timer(name, action, frequency_ms, next_ms)));
 	return true;

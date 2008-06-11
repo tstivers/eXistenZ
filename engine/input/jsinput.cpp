@@ -9,7 +9,7 @@ REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
 
 namespace jsinput
 {
-	typedef jsscript::jsfunction < void(int, int) > JSBindFunctionCall;
+	typedef jsscript::jsfunction<void(int, int)> JSBindFunctionCall;
 }
 
 void jsinput::init()

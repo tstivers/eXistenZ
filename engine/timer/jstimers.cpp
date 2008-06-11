@@ -10,7 +10,7 @@ namespace jstimer
 	JSBool jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-	typedef jsscript::jsfunction < void(string) > JSTimerFunctionCall;
+	typedef jsscript::jsfunction<void(string)> JSTimerFunctionCall;
 }
 
 REGISTER_STARTUP_FUNCTION(jstimer, jstimer::init, 10);

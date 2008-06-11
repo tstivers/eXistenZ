@@ -10,8 +10,10 @@ namespace input
 		STATE_FORCE = 0xffff
 	};
 
+	typedef function<void(char, KEY_STATE)> bound_function_type;
+
 	void bindKey(int key, char* cmd);
-	void bindKey(int key, function < void(char, KEY_STATE) > fun, KEY_STATE state = STATE_PRESSED);
+	void bindKey(int key, bound_function_type fun, KEY_STATE state = STATE_PRESSED);
 	void unbind(int key);
 	void listBinds();
 

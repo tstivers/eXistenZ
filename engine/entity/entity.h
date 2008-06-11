@@ -40,39 +40,15 @@ namespace entity
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
-		virtual D3DXVECTOR3& getPos()
-		{
-			return pos;
-		};
-		virtual D3DXVECTOR3& getRot()
-		{
-			return rot;
-		};
-		virtual D3DXVECTOR3& getScale()
-		{
-			return scale;
-		};
-		virtual D3DXMATRIX getTransform()
-		{
-			return transform;
-		};
-		virtual void setPos(const D3DXVECTOR3& pos)
-		{
-			this->pos = pos;
-		};
-		virtual void setRot(const D3DXVECTOR3& rot)
-		{
-			this->rot = rot;
-		};
+		virtual D3DXVECTOR3& getPos() { return pos; }
+		virtual D3DXVECTOR3& getRot() {	return rot;	}
+		virtual D3DXVECTOR3& getScale() { return scale;	}
+		virtual D3DXMATRIX getTransform() {	return transform; }
+		virtual void setPos(const D3DXVECTOR3& pos)	{ this->pos = pos; }
+		virtual void setRot(const D3DXVECTOR3& rot)	{ this->rot = rot; }
 		virtual void setQuatRot(const D3DXQUATERNION& rot);
-		virtual void setScale(const D3DXVECTOR3& scale)
-		{
-			this->scale = scale;
-		};
-		virtual void setTransform(const D3DXMATRIX& transform)
-		{
-			this->transform = transform;
-		};
+		virtual void setScale(const D3DXVECTOR3& scale)	{ this->scale = scale; }
+		virtual void setTransform(const D3DXMATRIX& transform) { this->transform = transform; }
 		virtual void activate();
 		virtual void deactivate();
 		virtual void render(texture::Material* lighting) = 0;

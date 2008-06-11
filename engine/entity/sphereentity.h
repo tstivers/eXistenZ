@@ -26,10 +26,7 @@ namespace entity
 		void setRot(const D3DXVECTOR3& rot);
 
 		void setRadius(const float radius);
-		float getRadius()
-		{
-			return radius;
-		}
+		float getRadius() { return radius; }
 
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
