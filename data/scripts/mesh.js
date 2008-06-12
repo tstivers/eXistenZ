@@ -1,24 +1,39 @@
 unbind(KEY_M);
-bind(KEY_M, createFridge);
 unbind(KEY_B);
+unbind(KEY_N);
+unbind(KEY_COMMA);
+
+bind(KEY_M, createFridge);
 bind(KEY_B, createBigDaddy);
+bind(KEY_N, createSplicer);
+bind(KEY_COMMA, createHam);
+
+function createModelEntity(meshname) {
+    entity = createMeshEntity("model" + num_entities++, meshname);
+    entities[entity.name] = entity;
+    system.scene.addEntity(entity);
+    entity.pos = game.player.pos;
+    entity.rot = game.player.rot;
+    entity.rot.y = -90;
+    return entity;
+}
 
 function createFridge() {
-    fridge = createMeshEntity("fridge" + num_entities++, "meshes/fridge.fbx#Fridge01");
-    entities[fridge.name] = fridge;
-    system.scene.addEntity(fridge);
-    fridge.pos = new Vector(game.player.pos);
-    fridge.rot = new Vector(game.player.rot);
-    fridge.rot.y = -90;
+    fridge = createModelEntity("meshes/fridge.fbx#Fridge01");
     fridge.pos.y -= game.player.size.y;
 }
 
 function createBigDaddy() {
-    fridge = createMeshEntity("daddy" + num_entities++, "meshes/bigdaddy.fbx#10840-mesh");
-    entities[fridge.name] = fridge;
-    system.scene.addEntity(fridge);
-    fridge.pos = new Vector(game.player.pos);
-    fridge.rot = new Vector(game.player.rot);
-    fridge.rot.y = -90;
-    fridge.rot.x -= 90;
+    daddy = createModelEntity("meshes/bigdaddy.fbx#10840-mesh");
+    daddy.rot.x -= 90;
+}
+
+function createSplicer() {
+    splicer = createModelEntity("meshes/splicer.fbx#5084-splicer");
+    splicer.rot.x -= 90;
+}
+
+function createHam() {
+    ham = createModelEntity("meshes/ham.fbx#Cone01");
+    ham.rot.x -= 90;
 }
