@@ -147,7 +147,7 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 
 	if (strchr(watchfile.c_str(), '*') == NULL) // watching a file
 	{
-		IFilePtr file = vfs::getFile(watchfile.c_str());
+		File file = vfs::getFile(watchfile.c_str());
 		if (!file)
 		{
 			INFO("could not find file \"%s\"", watchfile.c_str());

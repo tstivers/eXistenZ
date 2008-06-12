@@ -22,13 +22,19 @@ Mesh* mesh::getMesh(string& name)
 	// nope, try to load it
 	Mesh* mesh = loadMesh(name);
 	if (mesh)
-	{
-		// found it, add it to the cache
-		cache.insert(MeshCache::value_type(name, mesh));
 		return mesh;
-	}
 
 	LOG("failed to find mesh \"%s\"", name.c_str());
 
 	return NULL;
+}
+
+bool mesh::addMesh( Mesh* mesh )
+{
+	if(cache.find(mesh->name) != cache.end())
+		return false;
+
+	cache.insert(MeshCache::value_type(mesh->name, mesh));
+	INFO("cached mesh: \"%s\"", mesh->name.c_str());
+	return true;
 }

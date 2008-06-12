@@ -322,17 +322,13 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	}
 
 	static texture::Material m;
-	if (rg->material && !rg->texture->is_transparent)
+	if (rg->material && !rg->texture->is_transparent && render::lighting && render::diffuse)
 	{
-		if ((!current_material || (*current_material != *rg->material)) && render::lighting && render::diffuse)
-		{
-			device->SetRenderState(D3DRS_LIGHTING, TRUE);
-			device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);
-			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-			m = *rg->material;
-			device->SetLight(0, &rg->material->light);
-			device->LightEnable(0, TRUE);
-		}
+		device->SetRenderState(D3DRS_LIGHTING, TRUE);
+		device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		device->SetLight(0, &rg->material->light);
+		device->LightEnable(0, TRUE);
 		current_material = &m;
 	}
 	else if (current_material)

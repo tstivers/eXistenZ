@@ -11,6 +11,7 @@ namespace jsentity
 	JSBool createStaticEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool createBoxEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool createSphereEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool createMeshEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool getEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
 	// entity property callbacks
@@ -86,6 +87,7 @@ void jsentity::init()
 	gScriptEngine->AddFunction("createStaticEntity", 2, jsentity::createStaticEntity);
 	gScriptEngine->AddFunction("createBoxEntity", 2, jsentity::createBoxEntity);
 	gScriptEngine->AddFunction("createSphereEntity", 2, jsentity::createSphereEntity);
+	gScriptEngine->AddFunction("createMeshEntity", 2, jsentity::createMeshEntity);
 	gScriptEngine->AddFunction("getEntity", 1, jsentity::getEntity);
 
 	entity_prototype = JS_InitClass(gScriptEngine->GetContext(), gScriptEngine->GetGlobal(), NULL, &entity_class, NULL, 0, NULL, entity_methods, NULL, NULL);
@@ -179,6 +181,32 @@ JSBool jsentity::createSphereEntity(JSContext* cx, JSObject* obj, uintN argc, js
 	JS_DefineProperty(cx, object, "velocity", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
 
 	JS_LeaveLocalRootScope(cx);
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::createMeshEntity(JSContext* cx, JSObject* obj, uintN argc, jsval* argv, jsval* rval)
+{
+	*rval = JSVAL_NULL;
+
+	if (argc != 2)
+	{
+		gScriptEngine->ReportError("usage: createMeshEntity(name, mesh)");
+		return JS_FALSE;
+	}
+
+	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string mesh = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+
+	Entity* new_entity = entity::addMeshEntity(name, mesh);
+	if (!new_entity)
+	{
+		gScriptEngine->ReportError("couldn't create entity");
+		return JS_FALSE;
+	}
+
+	*rval = createEntityObject(cx, new_entity);
+	JSObject* object = JSVAL_TO_OBJECT(*rval);
 
 	return JS_TRUE;
 }
@@ -304,6 +332,9 @@ JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 
 	entity->setPos(pos);
 
+	JSObject* vec = jsvector::NewWrappedVector(cx, obj, NULL, false, &posOps, entity);
+	*vp = OBJECT_TO_JSVAL(vec);
+
 	return JS_TRUE;
 
 error:
@@ -322,6 +353,9 @@ JSBool jsentity::rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 		goto error;
 
 	entity->setRot(rot);
+
+	JSObject* vec = jsvector::NewWrappedVector(cx, obj, NULL, false, &rotOps, entity);
+	*vp = OBJECT_TO_JSVAL(vec);
 
 	return JS_TRUE;
 

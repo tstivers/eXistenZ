@@ -1,20 +1,18 @@
 #pragma once
 
-class NxActor;
-
-namespace texture
-{
-	class DXTexture;
-	struct Material;
-}
+#include "entity/entity.h"
+#include "texture/texture.h"
+#include "texture/material.h"
+#include "physics/physics.h"
+#include "mesh/mesh.h"
 
 namespace entity
 {
-	class BoxEntity : public Entity
+	class MeshEntity : public Entity
 	{
 	public:
-		BoxEntity(string name, string texture);
-		~BoxEntity();
+		MeshEntity(string name, string mesh);
+		~MeshEntity();
 		void acquire();
 		void release();
 		void render(texture::Material* lighting);
@@ -26,17 +24,12 @@ namespace entity
 		void setRot(const D3DXVECTOR3& rot);
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
+		D3DXMATRIX getTransform();
 		bool getSleeping();
 		void setSleeping(bool asleep);
 
-		void setSize(const D3DXVECTOR3& size);
-		D3DXVECTOR3 getSize()
-		{
-			return size;
-		}
-
 		NxActor* actor;
 		texture::DXTexture* texture;
-		D3DXVECTOR3 size;
+		mesh::Mesh* mesh;
 	};
 }

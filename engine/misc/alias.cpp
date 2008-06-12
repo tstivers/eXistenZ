@@ -8,7 +8,7 @@ void AliasList::load(const string& filename)
 {
 	list.clear();
 
-	vfs::IFilePtr file = vfs::getFile(filename.c_str());
+	vfs::File file = vfs::getFile(filename.c_str());
 	if (!file)
 		return;
 

@@ -107,6 +107,7 @@ VertexBuffer* render::getVB(unsigned int size, DWORD fvf, unsigned int stride, u
 	ASSERT(size > 0);
 	ASSERT(fvf);
 	ASSERT(stride);
+	ASSERT(size <= render::vertex_buffer_size);
 
 	// see if any existing buffer has enough space
 	for (unsigned i = 0; i < vbcache.size(); i++)

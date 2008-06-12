@@ -121,7 +121,7 @@ texture::DXTexture* texture::loadTexture(const char* name)
 {
 	IDirect3DTexture9* texture = NULL;
 	Shader* shader = NULL;
-	vfs::IFilePtr file;
+	vfs::File file;
 	char buf[MAX_PATH];
 
 	strcpy(buf, name);
@@ -143,6 +143,11 @@ texture::DXTexture* texture::loadTexture(const char* name)
 
 	// try .tga
 	strcpy(endptr, ".tga");
+	file = vfs::getFile(buf);
+	if (file) goto found;
+
+	// try .tif
+	strcpy(endptr, ".tif");
 	file = vfs::getFile(buf);
 	if (file) goto found;
 

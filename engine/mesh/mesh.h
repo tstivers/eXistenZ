@@ -25,6 +25,7 @@ namespace mesh
 		int refcount;
 
 		string material_name;
+		string texture_name;
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
 

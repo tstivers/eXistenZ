@@ -8,11 +8,8 @@ namespace entity
 using namespace entity;
 
 Entity::Entity(string name)
+	: name(name), pos(0,0,0), rot(0,0,0), scale(1.0,1.0,1.0)
 {
-	this->name = name;
-	this->pos =	D3DXVECTOR3(0, 0, 0);
-	this->rot = D3DXVECTOR3(0, 0, 0);
-	this->scale = D3DXVECTOR3(1.0, 1.0, 1.0);
 }
 
 Entity::~Entity()

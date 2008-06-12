@@ -125,7 +125,7 @@ Q3Shader::~Q3Shader()
 bool Q3Shader::load(const char* filename)
 {
 	// open file and skip down to our section
-	vfs::IFilePtr file = vfs::getFile(filename);
+	vfs::File file = vfs::getFile(filename);
 	if (!file)
 		return false;
 
@@ -172,7 +172,7 @@ bool Q3Shader::load(const char* filename)
 	return false;
 }
 
-bool Q3Shader::parse(vfs::IFilePtr file)
+bool Q3Shader::parse(vfs::File file)
 {
 	char buf[1024];
 

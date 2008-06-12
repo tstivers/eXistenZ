@@ -15,7 +15,7 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 		IFile(header->filename, false)
 {
 	size = header->uncompressed_size;
-	IFilePtr file = getFile(archivename);
+	File file = getFile(archivename);
 
 	if (!file)
 	{

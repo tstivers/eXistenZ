@@ -24,7 +24,7 @@ namespace q3bsp
 		texture::DXTexture* lightmap;
 		int num_indices;
 		int num_vertices;
-		BSPVertex* vertices;
+		STDVertex* vertices;
 		unsigned short* indices;
 		IDirect3DVertexBuffer9* vertbuf;
 		IDirect3DIndexBuffer9* indexbuf;

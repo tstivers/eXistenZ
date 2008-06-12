@@ -2,6 +2,7 @@
 #include "mesh/mesh.h"
 #include "render/rendergroup.h"
 #include "math/vertex.h"
+#include "texture/texturecache.h"
 
 namespace mesh
 {
@@ -26,7 +27,10 @@ void Mesh::acquire()
 	if (acquired)
 		return;
 
-	rendergroup = render::getRenderGroup(BSPVertex::FVF, sizeof(BSPVertex), vertice_count, indice_count);
+	if(!texture && texture_name.size())
+		texture = texture::getTexture(texture_name.c_str());
+
+	rendergroup = render::getRenderGroup(STDVertex::FVF, sizeof(STDVertex), vertice_count, indice_count);
 	rendergroup->texture = texture;
 	rendergroup->type = prim_type;
 	rendergroup->primitivecount = poly_count;

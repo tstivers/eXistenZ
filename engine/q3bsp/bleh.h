@@ -102,7 +102,7 @@ namespace q3bsp
 		~BSP();
 
 	public:
-		bool load(vfs::IFilePtr file);
+		bool load(vfs::File file);
 		static BSP* load(const string& filename);
 
 		// render functions
@@ -143,7 +143,7 @@ namespace q3bsp
 
 		int cluster_size;
 
-		BSPVertex		*verts;
+		STDVertex		*verts;
 		int				*indices;
 		BSPFace			*faces;
 		BSPNode			*nodes;

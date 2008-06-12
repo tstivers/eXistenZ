@@ -64,7 +64,7 @@ void q3shader::loadShaderList()
 
 void q3shader::parseShader(char* filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename);
+	vfs::File file = vfs::getFile(filename);
 	if (!file)
 		return;
 

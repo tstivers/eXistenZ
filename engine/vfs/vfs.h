@@ -24,7 +24,7 @@ namespace vfs
 		void writeLine(const char* linebuf, bool flush = true);
 	};
 
-	typedef shared_ptr<IFile> IFilePtr;
+	typedef shared_ptr<IFile> File;
 
 	void init();
 
@@ -32,7 +32,7 @@ namespace vfs
 	const char* getRoot();
 	void addPath(const char* path);
 
-	IFilePtr getFile(const char* filename);
+	File getFile(const char* filename);
 	IFile* createFile(const char* filename);
 	bool fileExists(const char* filename);
 	vector<string> getDirectoriesForPath(const string& path);

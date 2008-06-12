@@ -88,34 +88,34 @@ bool vfs::fileExists(const char* filename)
 	return false;
 }
 
-vfs::IFilePtr vfs::getFile(const char* filename)
+vfs::File vfs::getFile(const char* filename)
 {
 	char sane_path[MAX_PATH];
 
 	if (!filename || !*filename)
-		return IFilePtr();
+		return File();
 
 	sanitizePath(sane_path, filename);
 
 	if (sane_path[1] == ':')  // absolute
 	{
 		if (fileExists(filename))
-			return IFilePtr(new DiskFile(sane_path));
+			return File(new DiskFile(sane_path));
 		else
 		{
 			//LOG("unable to find file \"%s\"", filename);
-			return IFilePtr();
+			return File();
 		}
 	}
 
 	for (PathList::iterator it = paths.begin(); it != paths.end(); ++it)
 	{
 		if ((*it)->fileExists(sane_path))
-			return IFilePtr((*it)->getFile(sane_path));
+			return File((*it)->getFile(sane_path));
 	}
 
 	//LOG("unable to find file \"%s\"", filename);
-	return IFilePtr();
+	return File();
 }
 
 vfs::IFile* vfs::createFile(const char* filename)

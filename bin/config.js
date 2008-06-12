@@ -30,6 +30,7 @@ system.render.lighting = 1;
 system.render.diffuse = 1;
 system.render.lightmaps = 1;
 system.render.transparency = 1;
+system.render.vbsize = 1024 * 1024 * 4; // 4 meg vertex buffers
 system.window.position.x = 20;
 system.window.position.y = 20;
 system.window.title = "eXistenZ";
@@ -372,6 +373,7 @@ execfile("scripts/events.js");
 execfile("scripts/stacks.js");
 execfile("scripts/shoot.js");
 execfile("scripts/screenshot.js");
+execfile("scripts/mesh.js");
 
 // log our start date and time
 print("eXistenZ engine started on " + Date());

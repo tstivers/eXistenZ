@@ -44,7 +44,7 @@ namespace q3shader
 		~Q3Shader();
 
 		bool load(const char* filename);
-		bool parse(vfs::IFilePtr file);
+		bool parse(vfs::File file);
 		void parseLine(char* line);
 
 		bool activate(texture::DXTexture* lightmap, int pass = 0);

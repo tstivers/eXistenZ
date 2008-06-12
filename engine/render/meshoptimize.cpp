@@ -8,7 +8,7 @@ namespace render
 
 using namespace render;
 
-void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigned short** indices, unsigned int* num_verts, unsigned int* num_indices, bool dupecheck, bool strip, bool cacheopt)
+void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, STDVertex** verts, unsigned short** indices, unsigned int* num_verts, unsigned int* num_indices, bool dupecheck, bool strip, bool cacheopt)
 {
 
 	if (!(*verts) || !(*indices) || !(*num_verts) || !(*num_indices))
@@ -16,7 +16,7 @@ void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigne
 
 	if (dupecheck)
 	{
-		vector<BSPVertex> vert_list;
+		vector<STDVertex> vert_list;
 		vector<unsigned short> index_map;
 
 		for (unsigned i = 0; i < *num_verts; i++)
@@ -42,7 +42,7 @@ void render::optimizeMesh(D3DPRIMITIVETYPE* primtype, BSPVertex** verts, unsigne
 		if (vert_list.size() != *num_verts)
 		{
 			LOG("mesh reduced from %i to %i verts", *num_verts, vert_list.size());
-			BSPVertex* new_verts = new BSPVertex[vert_list.size()];
+			STDVertex* new_verts = new STDVertex[vert_list.size()];
 			for (unsigned i = 0; i < vert_list.size(); i++)
 				new_verts[i] = vert_list[i];
 			delete [](*verts);

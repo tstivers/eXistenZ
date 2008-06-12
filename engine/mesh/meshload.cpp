@@ -3,6 +3,7 @@
 #include "mesh/textloader.h"
 #include "mesh/mesh.h"
 #include "mesh/meshsystem.h"
+#include "mesh/fbxloader.h"
 
 namespace mesh
 {
@@ -18,7 +19,10 @@ Mesh* mesh::loadMesh(const string& name)
 	Mesh* mesh;
 
 	// try to load a text mesh;
-	mesh = loadTextMesh(name + EXTENSION_TEXTMESH);
+	if(boost::contains(name, ".fbx"))
+		mesh = loadFBXMesh(name);
+	else
+		mesh = loadTextMesh(name + EXTENSION_TEXTMESH);
 	if (mesh)
 	{
 		mesh->name = name;

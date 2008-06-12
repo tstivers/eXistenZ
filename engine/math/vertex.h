@@ -1,6 +1,6 @@
 #pragma once
 
-struct BSPVertex
+struct STDVertex
 {
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3	nrm;
@@ -9,9 +9,9 @@ struct BSPVertex
 	D3DXVECTOR2 tex2;
 	static const DWORD FVF = (D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_DIFFUSE | D3DFVF_TEX2 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE2(1));
 
-	BSPVertex operator+(const BSPVertex& rhs) const
+	STDVertex operator+(const STDVertex& rhs) const
 	{
-		BSPVertex result;
+		STDVertex result;
 
 		result.pos = pos + rhs.pos;
 		result.nrm = nrm + rhs.nrm;
@@ -21,9 +21,9 @@ struct BSPVertex
 		return result;
 	}
 
-	BSPVertex operator*(const float rhs) const
+	STDVertex operator*(const float rhs) const
 	{
-		BSPVertex result;
+		STDVertex result;
 		result.pos = pos * rhs;
 		result.nrm = nrm * rhs;
 		result.tex1 = tex1 * rhs;
@@ -32,7 +32,7 @@ struct BSPVertex
 		return result;
 	}
 
-	bool operator==(const BSPVertex& rhs)
+	bool operator==(const STDVertex& rhs)
 	{
 		return (pos == rhs.pos) &&
 			   (nrm == rhs.nrm) &&

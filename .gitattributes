@@ -4,6 +4,7 @@ crimson/eXistenZ.prj -text
 data/scripts/events.js -text
 data/scripts/house.js eol=crlf
 data/scripts/keys.js eol=crlf
+data/scripts/mesh.js -text
 data/scripts/q3dm1.js eol=crlf
 data/scripts/q3dm13.js eol=crlf
 data/scripts/q3dm14.js eol=crlf
@@ -55,6 +56,8 @@ engine/entity/entitycache.cpp eol=crlf
 engine/entity/entitycache.h eol=crlf
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
+engine/entity/meshentity.cpp -text
+engine/entity/meshentity.h -text
 engine/entity/sphereentity.cpp -text
 engine/entity/sphereentity.h -text
 engine/entity/staticentity.cpp eol=crlf
@@ -90,6 +93,11 @@ engine/math/aabb.h eol=crlf
 engine/math/math.cpp -text
 engine/math/math.h eol=crlf
 engine/math/vertex.h eol=crlf
+engine/mesh/fbxlib.h -text
+engine/mesh/fbxloader.cpp -text
+engine/mesh/fbxloader.h -text
+engine/mesh/jsmesh.cpp -text
+engine/mesh/jsmesh.h -text
 engine/mesh/mesh.cpp eol=crlf
 engine/mesh/mesh.h eol=crlf
 engine/mesh/meshcache.cpp eol=crlf

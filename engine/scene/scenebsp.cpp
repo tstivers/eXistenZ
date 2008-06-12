@@ -55,7 +55,7 @@ void SceneBSP::init()
 		faces[i].type = face.type;
 		faces[i].prim_type = D3DPT_TRIANGLELIST;
 
-		faces[i].vertices = new BSPVertex[faces[i].num_vertices];
+		faces[i].vertices = new STDVertex[faces[i].num_vertices];
 		for (unsigned j = 0; j < faces[i].num_vertices; j++)
 			faces[i].vertices[j] = bsp->verts[face.vertex + j];
 
@@ -164,7 +164,7 @@ void SceneBSP::acquire()
 			if (face.rendergroup)
 				continue;
 
-			face.rendergroup = render::getRenderGroup(BSPVertex::FVF, sizeof(BSPVertex), face.num_vertices, face.num_indices);
+			face.rendergroup = render::getRenderGroup(STDVertex::FVF, sizeof(STDVertex), face.num_vertices, face.num_indices);
 			face.rendergroup->texture = bsp->textures[face.texture];
 			if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
 				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
@@ -264,7 +264,7 @@ void SceneBSP::render()
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
 			entities[i]->render(&lighting);
-
+			//render::drawLine(entities[i]->pos, entities[i]->pos + lighting.light.Direction, D3DXCOLOR(lighting.light.Diffuse));
 		}
 	}
 

@@ -141,9 +141,9 @@ function doIt()
     offset.rotate(rot);
     offset.mul(20);
     pos.add(offset);
-    pos.y -= 15 * 0.03;
+    pos.y -= (game.player.size.y / 2) + 0.001;
     //createBoxStack(pos, rot, 10, 10);
     //createBoxPyramid(pos, rot, 20);
     //createBoxTower(pos, rot, 10, 10, 20);
-    createRoundTower(pos, 30, 6, 20);
+    createRoundTower(pos, 25, 5, 10);
 }

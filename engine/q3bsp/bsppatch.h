@@ -16,10 +16,10 @@ namespace q3bsp
 		void Tesselate(int newTesselation);
 		void dumpIndices();
 
-		BSPVertex controlPoints[9];
+		STDVertex controlPoints[9];
 
 		int tesselation;
-		BSPVertex * vertices;
+		STDVertex * vertices;
 		unsigned int * indices;
 		int* list;
 		int num_verts, num_indices;

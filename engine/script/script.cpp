@@ -98,7 +98,7 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retv
 	return (JS_TRUE == JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval));
 }
 
-bool ScriptEngine::RunScript(vfs::IFilePtr file)
+bool ScriptEngine::RunScript(vfs::File file)
 {
 	char *script = (char*)malloc(file->size + 1);
 	file->read(script, file->size);

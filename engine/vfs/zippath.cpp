@@ -23,7 +23,7 @@ namespace vfs
 
 vfs::Path* vfs::ZipPath::createPath(const char* path)
 {
-	IFilePtr file = vfs::getFile(path);
+	File file = vfs::getFile(path);
 
 	if (!file)
 	{
@@ -66,7 +66,7 @@ void vfs::ZipPath::readContents()
 	char filename[MAX_PATH];
 	U32 offset;
 
-	IFilePtr file = vfs::getFile(path);
+	File file = vfs::getFile(path);
 
 	if (!file)
 	{

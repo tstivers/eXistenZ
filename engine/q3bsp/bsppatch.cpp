@@ -27,9 +27,9 @@ void MyBiquadraticPatch::Tesselate(int newTesselation)
 	tesselation = newTesselation;
 
 	float px, py;
-	BSPVertex temp[3];
+	STDVertex temp[3];
 	num_verts = (tesselation + 1) * (tesselation + 1);
-	vertices = new BSPVertex[num_verts];
+	vertices = new STDVertex[num_verts];
 
 	for (int v = 0; v <= tesselation; ++v)
 	{
@@ -165,14 +165,14 @@ void BSP::generatePatches()
 		}
 
 		// we have our tesselated patches now, combine them all into one bigass vert/index array
-		BSPVertex* vertices = new BSPVertex[total_vertices];
+		STDVertex* vertices = new STDVertex[total_vertices];
 		int* indices = new int[total_indices];
 		int current_vert = 0;
 		int current_indice = 0;
 
 		for (int i = 0; i < numQuadraticPatches; i++)
 		{
-			memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(BSPVertex));
+			memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(STDVertex));
 			for (int indice = 0; indice < quadraticPatches[i].num_polys * 3; indice++)
 			{
 				indices[current_indice + indice] = quadraticPatches[i].list[indice] + current_vert;
@@ -184,9 +184,9 @@ void BSP::generatePatches()
 		// TODO: optimize mesh here
 
 		// toss onto the end of verts/indices
-		BSPVertex* tmp_verts = new BSPVertex[num_verts + total_vertices];
-		memcpy(tmp_verts, this->verts, num_verts * sizeof(BSPVertex));
-		memcpy(&(tmp_verts[num_verts]), vertices, total_vertices * sizeof(BSPVertex));
+		STDVertex* tmp_verts = new STDVertex[num_verts + total_vertices];
+		memcpy(tmp_verts, this->verts, num_verts * sizeof(STDVertex));
+		memcpy(&(tmp_verts[num_verts]), vertices, total_vertices * sizeof(STDVertex));
 
 		int* tmp_indices = new int[num_indices + total_indices];
 		memcpy(tmp_indices, this->indices, num_indices * sizeof(int));
@@ -243,14 +243,14 @@ void q3bsp::genPatch(scene::BSPFace& face, int width, int height)
 	}
 
 	// we have our tesselated patches now, combine them all into one bigass vert/index array
-	BSPVertex* vertices = new BSPVertex[total_vertices];
+	STDVertex* vertices = new STDVertex[total_vertices];
 	unsigned short* indices = new unsigned short[total_indices];
 	int current_vert = 0;
 	int current_indice = 0;
 
 	for (int i = 0; i < numQuadraticPatches; i++)
 	{
-		memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(BSPVertex));
+		memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(STDVertex));
 		for (int indice = 0; indice < quadraticPatches[i].num_polys * 3; indice++)
 		{
 			indices[current_indice + indice] = quadraticPatches[i].list[indice] + current_vert;

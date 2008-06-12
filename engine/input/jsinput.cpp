@@ -5,12 +5,16 @@
 #include "input/bind.h"
 #include "script/jsfunction.h"
 
-REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
-
 namespace jsinput
 {
 	typedef jsscript::jsfunction<void(int, int)> JSBindFunctionCall;
+	void init(void);
+	void release(void);
+	JSBool jsbind(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsunbind(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
+
+REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
 
 void jsinput::init()
 {

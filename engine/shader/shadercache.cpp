@@ -76,7 +76,7 @@ shader::Shader* shader::getShader(const char* name)
 shader::Shader* shader::loadShader(const char* name)
 {
 	char shader_file[MAX_PATH];
-	vfs::IFilePtr file;
+	vfs::File file;
 	Shader* shader = NULL;
 
 	strcpy(shader_file, name);

@@ -10,7 +10,7 @@
 namespace mesh
 {
 	// TODO: make this go away
-	typedef BSPVertex Vertex;
+	typedef STDVertex Vertex;
 
 	void parseVertex(Vertex* vertex, char* info);
 };
@@ -75,7 +75,7 @@ void mesh::parseVertex(Vertex* vertex, char* info)
 
 Mesh* mesh::loadTextMesh(const string& filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename.c_str());
+	vfs::File file = vfs::getFile(filename.c_str());
 	if (!file)
 		return NULL;
 
@@ -110,7 +110,7 @@ Mesh* mesh::loadTextMesh(const string& filename)
 		if (!_stricmp(this_token, "VERTICEFORMAT:"))
 		{
 			//mesh->vertice_format = fvfFromString(token);
-			mesh->vertice_format = BSPVertex::FVF;
+			mesh->vertice_format = STDVertex::FVF;
 		}
 
 		if (!_stricmp(this_token, "VERTICECOUNT:"))
@@ -148,7 +148,7 @@ Mesh* mesh::loadTextMesh(const string& filename)
 
 MeshSystem* mesh::loadTextMeshSystem(const string& filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename.c_str());
+	vfs::File file = vfs::getFile(filename.c_str());
 	if (!file)
 		return NULL;
 

@@ -13,7 +13,7 @@ namespace texture
 		int refcount;
 
 		Shader();
-		Shader(vfs::IFilePtr file);
+		Shader(vfs::File file);
 		Shader(char* filename);
 		~Shader();
 
@@ -22,7 +22,7 @@ namespace texture
 		void deactivate(DXTexture* texture);
 		void acquire();
 		void release();
-		bool load(vfs::IFilePtr file);
+		bool load(vfs::File file);
 		bool load(char* filename);
 
 		int line; // hack

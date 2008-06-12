@@ -41,7 +41,7 @@ namespace scene
 		D3DPRIMITIVETYPE prim_type;
 		unsigned int num_vertices;
 		unsigned int num_indices;
-		BSPVertex* vertices;
+		STDVertex* vertices;
 		unsigned short* indices;
 		unsigned int frame;
 		render::RenderGroup* rendergroup;

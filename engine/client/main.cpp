@@ -36,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 
 	// load and execute the config script
 	{
-		vfs::IFilePtr file = vfs::getFile("config.js");
+		vfs::File file = vfs::getFile("config.js");
 		if (file)
 		{
 			LOG("reading config from \"%s\"", file->filename);

@@ -225,7 +225,7 @@ bool game::startMap(char* name)
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);
-	vfs::IFilePtr file = vfs::getFile(bspname);
+	vfs::File file = vfs::getFile(bspname);
 	if (file)
 	{
 		gScriptEngine->RunScript(file);

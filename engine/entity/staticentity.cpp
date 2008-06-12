@@ -57,7 +57,7 @@ void StaticEntity::calcAABB()
 	aabb.reset();
 	for (unsigned i = 0; i < meshsys->meshes.size(); i++)
 	{
-		BSPVertex* vertices = (BSPVertex*)meshsys->meshes[i].mesh->vertices;
+		STDVertex* vertices = (STDVertex*)meshsys->meshes[i].mesh->vertices;
 		for (unsigned j = 0; j < meshsys->meshes[i].mesh->vertice_count; j++)
 		{
 			aabb.extend(D3DXVec3TransformCoord(&transformed, &(vertices[j].pos), &transform));

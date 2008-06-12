@@ -14,7 +14,7 @@ void R_ColorShiftLightingBytes(byte *in) ;
 
 BSP* BSP::load(const string& filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename.c_str());
+	vfs::File file = vfs::getFile(filename.c_str());
 
 	if (!file)
 		return NULL;
@@ -29,7 +29,7 @@ BSP* BSP::load(const string& filename)
 	return bsp;
 }
 
-bool BSP::load(vfs::IFilePtr file)
+bool BSP::load(vfs::File file)
 {
 	if (!file)
 		return false;
@@ -51,8 +51,8 @@ bool BSP::load(vfs::IFilePtr file)
 	file->seek(lumps[kVertices].offset, FILE_BEGIN);
 	file->read((void*)tmp_verts, num_verts * sizeof(tBSPVertex));
 
-	verts = new BSPVertex[num_verts];
-	ZeroMemory(verts, num_verts * sizeof(BSPVertex));
+	verts = new STDVertex[num_verts];
+	ZeroMemory(verts, num_verts * sizeof(STDVertex));
 
 	for (int i = 0; i < num_verts; i++)
 	{

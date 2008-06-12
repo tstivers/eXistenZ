@@ -23,7 +23,7 @@ namespace q3bsp
 	} polylist_key;
 
 	typedef std::vector<unsigned short> indice_list;
-	typedef std::vector<BSPVertex> vertice_list;
+	typedef std::vector<STDVertex> vertice_list;
 
 	typedef struct _polylist_value
 	{

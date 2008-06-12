@@ -33,7 +33,7 @@ JSBool jsscript::jsexecfile(JSContext *cx, JSObject *obj, uintN argc,
 		return JS_FALSE;
 	}
 
-	vfs::IFilePtr file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+	vfs::File file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 	if (file)
 	{
 		gScriptEngine->RunScript(file);

@@ -77,14 +77,14 @@ Shader::Shader()
 
 Shader::Shader(char* filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename);
+	vfs::File file = vfs::getFile(filename);
 	if (!file)
 		return;
 
 	load(file);
 }
 
-Shader::Shader(vfs::IFilePtr file)
+Shader::Shader(vfs::File file)
 {
 	load(file);
 }
@@ -103,7 +103,7 @@ void Shader::release()
 
 bool Shader::load(char* filename)
 {
-	vfs::IFilePtr file = vfs::getFile(filename);
+	vfs::File file = vfs::getFile(filename);
 	if (!file)
 		return false;
 
@@ -114,7 +114,7 @@ Shader::~Shader()
 {
 }
 
-bool Shader::load(vfs::IFilePtr file)
+bool Shader::load(vfs::File file)
 {
 	char buf[256];
 

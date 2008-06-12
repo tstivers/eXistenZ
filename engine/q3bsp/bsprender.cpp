@@ -38,9 +38,9 @@ void BSPRenderer::render()
 void BSP::initDeviceObjects()
 {
 	// generate our vertex buffer and drop everything into it
-	if (FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(BSPVertex),
+	if (FAILED(render::device->CreateVertexBuffer(num_verts * sizeof(STDVertex),
 			   D3DUSAGE_WRITEONLY,
-			   BSPVertex::FVF,
+			   STDVertex::FVF,
 			   D3DPOOL_MANAGED,
 			   &dxvertbuf,
 			   NULL)))
@@ -50,13 +50,13 @@ void BSP::initDeviceObjects()
 	}
 
 	void* vertbuf;
-	if (FAILED(dxvertbuf->Lock(0, num_verts * sizeof(BSPVertex), &vertbuf, D3DLOCK_DISCARD)))
+	if (FAILED(dxvertbuf->Lock(0, num_verts * sizeof(STDVertex), &vertbuf, D3DLOCK_DISCARD)))
 	{
 		LOG("failed to lock vertex buffer");
 		return;
 	}
 
-	memcpy(vertbuf, verts, num_verts * sizeof(BSPVertex));
+	memcpy(vertbuf, verts, num_verts * sizeof(STDVertex));
 	dxvertbuf->Unlock();
 
 	// generate our index buffer and drop everything into it
@@ -89,7 +89,7 @@ void BSP::initDeviceObjects()
 	if (q3bsp::debug)
 	{
 		LOG("allocated %ikb vertex buffer, %ikb index buffer",
-			num_verts * sizeof(BSPVertex) / 1024,
+			num_verts * sizeof(STDVertex) / 1024,
 			num_indices * sizeof(int) / 1024);
 	}
 
