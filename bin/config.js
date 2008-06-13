@@ -120,6 +120,8 @@ bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 bind(KEY_V, toggle_vtrace);
 
+model.rot.y = -90;
+
 // functions
 
 system.vfs.watchFile("scripts/*.js", onScriptChange);
@@ -371,9 +373,10 @@ function fireFountain(index)
 
 execfile("scripts/events.js");
 execfile("scripts/stacks.js");
-execfile("scripts/shoot.js");
 execfile("scripts/screenshot.js");
 execfile("scripts/mesh.js");
+execfile("scripts/shoot.js");
+
 
 // log our start date and time
 print("eXistenZ engine started on " + Date());

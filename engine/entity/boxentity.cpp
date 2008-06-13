@@ -43,6 +43,7 @@ void BoxEntity::acquire()
 	actorDesc.userData = dynamic_cast<Entity*>(this);
 	actorDesc.name = name.c_str();
 	actor = physics::gScene->createActor(actorDesc);
+	
 	ASSERT(actor);
 }
 

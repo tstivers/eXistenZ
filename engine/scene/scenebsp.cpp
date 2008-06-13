@@ -208,11 +208,11 @@ void SceneBSP::render()
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
-	const byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
+	byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
 
 	if (current_cluster < 0)
 	{
-		for (unsigned i = 0; i < num_clusters; i++)
+		for (int i = 0; i < num_clusters; i++)
 		{
 
 			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
@@ -220,13 +220,13 @@ void SceneBSP::render()
 
 			render::frame_clusters++;
 
-			for (unsigned j = 0; j < clusters[i].num_faces; j++)
+			for (int j = 0; j < clusters[i].num_faces; j++)
 				clusters[i].faces[j]->frame = render::frame;
 		}
 	}
 	else
 	{
-		for (unsigned i = 0; i < num_clusters; i++)
+		for (int i = 0; i < num_clusters; i++)
 		{
 
 			if (!BSP_TESTVIS(i))
@@ -237,7 +237,7 @@ void SceneBSP::render()
 
 			render::frame_clusters++;
 
-			for (unsigned j = 0; j < clusters[i].num_faces; j++)
+			for (int j = 0; j < clusters[i].num_faces; j++)
 				clusters[i].faces[j]->frame = render::frame;
 		}
 	}
@@ -245,7 +245,7 @@ void SceneBSP::render()
 	bsp->initRenderState();
 	render::alpha_groups.clear();
 
-	for (unsigned i = 0; i < num_faces; i++)
+	for (int i = 0; i < num_faces; i++)
 		if (faces[bsp->sorted_faces[i]].frame == render::frame)
 		{
 			render::frame_faces++;
@@ -259,7 +259,7 @@ void SceneBSP::render()
 	if (render::draw_entities)
 	{
 		unsigned num_entities = entities.size();
-		for (unsigned i = 0; i < num_entities; i++)
+		for (int i = 0; i < num_entities; i++)
 		{
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))

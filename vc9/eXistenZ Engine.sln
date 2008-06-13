@@ -21,6 +21,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "js32", "..\lib\js32\js32.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\js32\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rapidxml", "rapidxml", "{E05AFE98-F7A9-4317-95D0-161F4D5B3F2E}"
+	ProjectSection(SolutionItems) = preProject
+		..\lib\rapidxml\rapidxml.hpp = ..\lib\rapidxml\rapidxml.hpp
+		..\lib\rapidxml\rapidxml_iterators.hpp = ..\lib\rapidxml\rapidxml_iterators.hpp
+		..\lib\rapidxml\rapidxml_print.hpp = ..\lib\rapidxml\rapidxml_print.hpp
+		..\lib\rapidxml\rapidxml_utils.hpp = ..\lib\rapidxml\rapidxml_utils.hpp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +98,7 @@ Global
 		{4B3A1F6D-AEE3-4C47-A34A-531563F91758} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+		{E05AFE98-F7A9-4317-95D0-161F4D5B3F2E} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}

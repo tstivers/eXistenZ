@@ -31,5 +31,6 @@ namespace entity
 		NxActor* actor;
 		texture::DXTexture* texture;
 		mesh::Mesh* mesh;
+		physics::ShapeEntry shapes;
 	};
 }

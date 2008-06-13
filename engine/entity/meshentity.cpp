@@ -10,6 +10,9 @@ MeshEntity::MeshEntity(string name, string mesh)
 	: Entity(name), actor(NULL)
 {
 	this->mesh = mesh::getMesh(mesh);
+	string shapefile = string(this->mesh->name.begin(), boost::find_first(this->mesh->name, ".fbx").begin());
+	shapefile += "_DYNAMIC.xml";
+	this->shapes = physics::getShapeEntry(shapefile);
 }
 
 MeshEntity::~MeshEntity()
@@ -20,18 +23,22 @@ MeshEntity::~MeshEntity()
 
 void MeshEntity::acquire()
 {
-	//NxActorDesc actorDesc;
-	//NxBodyDesc bodyDesc;
-	//NxBoxShapeDesc boxDesc;
-	//boxDesc.dimensions.set((size / physics::scale) / 2);
-	//actorDesc.shapes.pushBack(&boxDesc);
-	//actorDesc.body = &bodyDesc;
-	//actorDesc.density = 10;
-	//actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
-	//actorDesc.userData = dynamic_cast<Entity*>(this);
-	//actorDesc.name = name.c_str();
-	//actor = physics::gScene->createActor(actorDesc);
-	//ASSERT(actor);
+	if(shapes)
+	{
+		NxActorDesc actorDesc;
+		NxBodyDesc bodyDesc;
+
+		for(physics::ShapeList::const_iterator it = shapes->begin(); it != shapes->end(); ++it)
+			actorDesc.shapes.pushBack(&**it);
+		actorDesc.body = &bodyDesc;
+		actorDesc.density = 10;
+		actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
+		actorDesc.userData = dynamic_cast<Entity*>(this);
+		actorDesc.name = name.c_str();
+		actor = physics::gScene->createActor(actorDesc);
+		ASSERT(actor);
+	}
+	
 	if(mesh)
 		mesh->acquire();
 }
@@ -94,7 +101,8 @@ void MeshEntity::render(texture::Material* lighting)
 	render::RenderGroup* rg = mesh->rendergroup;
 	rg->material = lighting;
 	getTransform();
-	render::drawGroup(rg, &transform);
+	D3DXMATRIX m = mesh->mesh_offset * transform;
+	render::drawGroup(rg, &m);
 }
 
 void MeshEntity::calcAABB()
@@ -104,7 +112,8 @@ void MeshEntity::calcAABB()
 void MeshEntity::applyForce(const D3DXVECTOR3 &force)
 {
 	if(actor)
-		actor->addForce((NxVec3&)force, NX_IMPULSE);
+		//actor->addForce((NxVec3&)force, NX_IMPULSE);
+		actor->setLinearVelocity((NxVec3&)force);
 }
 
 void MeshEntity::setSleeping(bool asleep)
@@ -126,12 +135,21 @@ bool MeshEntity::getSleeping()
 
 D3DXMATRIX entity::MeshEntity::getTransform()
 {
-	D3DXQUATERNION q;
 	if(actor)
-		q = (D3DXQUATERNION&)actor->getGlobalOrientationQuat();
+	{
+		float bleh[4][4];
+		actor->getGlobalPose().getColumnMajor44(bleh);
+		D3DXMATRIX rot;
+		D3DXMatrixRotationYawPitchRoll(&rot, D3DXToRadian(render::model_rot.x), D3DXToRadian(render::model_rot.y), D3DXToRadian(render::model_rot.z));
+		transform = rot;
+		transform *= D3DXMATRIX((float*)&bleh[0]);
+		return transform;
+	}
 	else
+	{
+		D3DXQUATERNION q;
 		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
-	getPos();
-	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &q, &pos);
-	return transform;
+		D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &q, &pos);
+		return transform;
+	}
 }

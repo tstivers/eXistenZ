@@ -131,7 +131,7 @@
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)../engine&quot;;&quot;$(SolutionDir)../engine/client&quot;;&quot;$(SolutionDir)../lib/js32&quot;;&quot;$(SolutionDir)../lib/nvtristrip/include&quot;;&quot;$(SolutionDir)../lib&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;STATIC_JS_API"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;STATIC_JS_API;K_PLUGIN;K_FBXSDK;K_NODLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
@@ -155,7 +155,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib fbxsdk_md2008.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""
@@ -1078,6 +1078,14 @@
 			Name="physics"
 			>
 			<File
+				RelativePath="..\engine\physics\jsphysics.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\jsphysics.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\physics\meshdesc.cpp"
 				>
 			</File>
@@ -1098,11 +1106,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\physics\shapecache.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\shapecache.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\physics\stream.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\physics\stream.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\xmlloader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\xmlloader.h"
 				>
 			</File>
 		</Filter>

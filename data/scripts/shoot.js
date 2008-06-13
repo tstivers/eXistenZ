@@ -9,20 +9,18 @@ game.player.shoot = function(key, state)
 
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
-game.player.shootFunction = playerShootSphere;
+game.player.shootFunction = playerShoot;
+game.player.createProjectile = createHam;
 
-function shootSphere(pos, direction, speed)
+
+function shootEntity(entity, pos, direction, speed)
 {
-    sphere = createSphereEntity("sphere" + num_entities++, textures[++current_texture % textures.length]);
-    entities[sphere.name] = sphere;
-    system.scene.addEntity(sphere);
-    sphere.pos = pos;
-    sphere.radius = ((Math.random() * 12) + 3) * 0.03;
-    sphere.applyForce(direction.mul(speed));
-    return sphere;
+    entity.pos = pos;
+    entity.applyForce(direction.mul(speed));
+    return entity;
 }
 
-function playerShootSphere()
+function playerShoot()
 {
     if(lastshot + shootspeed < system.time.ms)
         lastshot = system.time.ms;
@@ -32,9 +30,12 @@ function playerShootSphere()
     var direction = new Vector(0, 0, 1);
     direction.rotate(game.player.rot);
     var pos = new Vector(direction);
-    pos.mul(2);
+    pos.mul(5);
     pos.add(game.player.pos);
-    sphere = shootSphere(pos, direction, shootvelo);
-    sphere.remove = function(){ removeEntity(this.name); };
-    timer.addTimer(sphere.name + "_timer", sphere, sphere.remove, 0, system.time.ms + 10000);
+
+    var projectile = game.player.createProjectile();
+    
+    shootEntity(projectile, pos, direction, shootvelo);
+    projectile.remove = function(){ removeEntity(this.name); };
+    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 10000);
 }

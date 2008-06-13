@@ -118,6 +118,11 @@ vfs::File vfs::getFile(const char* filename)
 	return File();
 }
 
+vfs::File vfs::getFile( const string& filename )
+{
+	return getFile(filename.c_str());
+}
+
 vfs::IFile* vfs::createFile(const char* filename)
 {
 	char sanepath[MAX_PATH];

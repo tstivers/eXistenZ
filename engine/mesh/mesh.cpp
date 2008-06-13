@@ -13,6 +13,7 @@ using namespace mesh;
 Mesh::Mesh()
 {
 	ZeroMemory(this, sizeof(Mesh));
+	D3DXMatrixIdentity(&mesh_offset);
 }
 
 Mesh::~Mesh()

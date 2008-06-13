@@ -17,13 +17,11 @@ namespace mesh
 {
 	KFbxSdkManager* manager = NULL;
 	KFbxScene* scene = NULL;
+
+	bool LoadScene(KFbxSdkManager* pSdkManager, KFbxScene* pScene, const char* pFilename);
+	Mesh* extractMesh(KFbxNode* node, const string& filename, const string& meshname);
 }
 using namespace mesh;
-
-
-
-bool LoadScene(KFbxSdkManager* pSdkManager, KFbxScene* pScene, const char* pFilename);
-Mesh* extractMesh(KFbxNode* node, const string& filename, const string& meshname);
 
 Mesh* mesh::loadFBXMesh(const string& name)
 {
@@ -43,33 +41,35 @@ Mesh* mesh::loadFBXMesh(const string& name)
 	manager = KFbxSdkManager::Create();
 	scene = KFbxScene::Create(manager, filename.c_str());
 
-	if (!LoadScene(manager, scene, f->filename))
-		goto out;
 
-	KFbxNode* node = scene->GetRootNode();
-
-	if(node)
+	if(LoadScene(manager, scene, f->filename))
 	{
-		for(int i = 0; i < node->GetChildCount(); i++)
+		//KFbxAxisSystem s(KFbxAxisSystem::YAxis, KFbxAxisSystem::ParityEven, KFbxAxisSystem::LeftHanded);
+		//s.ConvertScene(scene);
+
+		KFbxNode* node = scene->GetRootNode();
+
+		if (node)
 		{
-			Mesh* m = extractMesh(node->GetChild(i), filename, meshname);
-			if(m)
+			for (int i = 0; i < node->GetChildCount(); i++)
 			{
-				ret = m;
+				Mesh* m = extractMesh(node->GetChild(i), filename, meshname);
+				if (m)
+				{
+					ret = m;
+				}
 			}
 		}
 	}
 
-out:
-	if (manager)
-		manager->Destroy();
+	manager->Destroy();
 	return ret;
 }
 
 #pragma region [LoadScene]
 // Creates an importer object, and uses it to
 // import a file into a scene.
-bool LoadScene(
+bool mesh::LoadScene(
 	KFbxSdkManager* pSdkManager,  // Use this memory manager...
 	KFbxScene* pScene,            // to import into this scene
 	const char* pFilename         // the data from this file.
@@ -200,32 +200,47 @@ bool LoadScene(
 }
 #pragma endregion
 
-Mesh* extractMesh( KFbxNode* node, const string& filename, const string& meshname )
+Mesh* mesh::extractMesh(KFbxNode* node, const string& filename, const string& meshname)
 {
 	Mesh* ret = NULL;
 	string name = node->GetName();
 	INFO("checking node %s", name.c_str());
-	if(node->GetNodeAttribute() == NULL)
+	if (node->GetNodeAttribute() == NULL)
 	{
 	}
 	else
 	{
 		double scale = scene->GetGlobalSettings().GetSystemUnit().GetConversionFactorTo(KFbxSystemUnit::m);
 
-		if(node->GetNodeAttribute()->GetAttributeType() == KFbxNodeAttribute::eMESH)
+		if (node->GetNodeAttribute()->GetAttributeType() == KFbxNodeAttribute::eMESH)
 		{
 
 			KFbxMesh* fbxmesh = (KFbxMesh*)node->GetNodeAttribute();
-			KFbxVector4 scale;
-			node->GetDefaultS(scale);
 
-			INFO("found mesh %s", name.c_str());
-			if(!fbxmesh->IsTriangleMesh())
+			if (!fbxmesh->IsTriangleMesh())
 			{
 				KFbxGeometryConverter c(manager);
 				fbxmesh = c.TriangulateMesh(fbxmesh);
 				INFO("triangulated the mesh");
 			}
+
+			KFbxVector4 rotation, translation, scale;
+
+			node->GetDefaultR(rotation);
+			node->GetDefaultT(translation);
+			node->GetDefaultS(scale);
+
+			INFO("found mesh %s", name.c_str());
+			INFO("mesh rot:   %f, %f, %f", rotation[0], rotation[1], rotation[2]);
+			INFO("mesh pos:   %f, %f, %f", translation[0], translation[1], translation[2]);
+			INFO("mesh scale: %f, %f, %f", scale[0], scale[1], scale[2]);
+
+			D3DXQUATERNION drot;
+			D3DXQuaternionRotationYawPitchRoll(&drot, D3DXToRadian(rotation[0]), D3DXToRadian(rotation[1]), D3DXToRadian(rotation[2]));
+			D3DXVECTOR3 dpos(translation[0], translation[1], translation[2]);
+			D3DXVECTOR3 dscl(scale[0], scale[1], scale[2]);
+			D3DXMATRIX mat;
+			D3DXMatrixTransformation(&mat, NULL, NULL, &dscl, NULL, &drot, &dpos);
 
 			Mesh* mesh = new Mesh();
 			mesh->name = filename + "#" + name;
@@ -236,6 +251,7 @@ Mesh* extractMesh( KFbxNode* node, const string& filename, const string& meshnam
 			mesh->vertices = new STDVertex[mesh->vertice_count];
 			mesh->indice_count = fbxmesh->GetPolygonVertexCount();
 			mesh->indices = new unsigned short[mesh->indice_count];
+			mesh->mesh_offset = mat;
 
 			STDVertex* vertices = (STDVertex*)mesh->vertices;
 			INFO("loading %i vertices", mesh->vertice_count);
@@ -247,18 +263,17 @@ Mesh* extractMesh( KFbxNode* node, const string& filename, const string& meshnam
 
 			mesh->texture_name = lTexture->GetFileName();
 
-			for(int i = 0; i < fbxmesh->GetPolygonCount(); i++)
+			for (int i = 0; i < fbxmesh->GetPolygonCount(); i++)
 			{
-				for(int j = 0; j < 3; j++)
+				for (int j = 0; j < 3; j++)
 				{
 					STDVertex& v = vertices[(i * 3) + j];
 					int index = fbxmesh->GetPolygonVertex(i, j);
-					KFbxVector4 mesh_pos = fbxmesh->GetControlPoints()[index] * scale;
+					KFbxVector4 mesh_pos = fbxmesh->GetControlPoints()[index];
 					KFbxVector4 mesh_nrm;
 					fbxmesh->GetPolygonVertexNormal(i, j, mesh_nrm);
 					KFbxVector2 mesh_uv = mesh_uvs->GetAt(fbxmesh->GetTextureUVIndex(i, j));
 
-					KFbxVector4 pos = mesh_pos * scale;
 					v.pos = D3DXVECTOR3(mesh_pos[0], mesh_pos[1], mesh_pos[2]);
 					v.nrm = D3DXVECTOR3(mesh_nrm[0], mesh_nrm[1], mesh_nrm[2]);
 					v.tex1 = D3DXVECTOR2(mesh_uv[0], mesh_uv[1] * -1.0);
@@ -270,19 +285,19 @@ Mesh* extractMesh( KFbxNode* node, const string& filename, const string& meshnam
 			unsigned short* indices = mesh->indices;
 			int* mesh_indices = fbxmesh->GetPolygonVertices();
 			INFO("loading %i indices", mesh->indice_count);
-			for(int i = 0; i < mesh->indice_count; i++)
+			for (int i = 0; i < mesh->indice_count; i++)
 			{
 				indices[i] = i;
 			}
 
 			addMesh(mesh);
 
-			if(meshname == name)
+			if (meshname == name)
 				ret = mesh;
 		}
 	}
 
-	for(int i = 0; i < node->GetChildCount(); i++)
+	for (int i = 0; i < node->GetChildCount(); i++)
 		extractMesh(node->GetChild(i), filename, meshname);
 
 	return ret;

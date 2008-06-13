@@ -29,6 +29,7 @@
 #include <boost/mpl/count_if.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>

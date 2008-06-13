@@ -292,7 +292,7 @@ void BSP::render()
 	int current_leaf = leafFromPoint(render::cam_pos);
 	int current_cluster = leafs[current_leaf].cluster;
 
-	const byte* clustervis_start = clusters + (current_cluster * cluster_size);
+	byte* clustervis_start = clusters + (current_cluster * cluster_size);
 
 	if (current_cluster < 0)
 	{

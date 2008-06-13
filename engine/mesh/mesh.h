@@ -38,6 +38,7 @@ namespace mesh
 		void* vertices;
 		unsigned short* indices;
 		render::RenderGroup* rendergroup;
+		D3DXMATRIX mesh_offset;
 	};
 
 };

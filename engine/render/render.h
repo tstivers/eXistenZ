@@ -72,6 +72,7 @@ namespace render
 	extern texture::DXTexture* current_lightmap;
 	extern texture::Material* current_material;
 	extern D3DXMATRIX current_transform;
+	extern D3DXVECTOR3 model_rot;
 
 	class CFrustum;
 	extern CFrustum frustum;

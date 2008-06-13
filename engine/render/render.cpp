@@ -74,6 +74,7 @@ namespace render
 	unsigned int frame_clusters;
 	unsigned int frame_faces;
 	unsigned int frame_drawcalls;
+	D3DXVECTOR3 model_rot;
 };
 
 using namespace render;
@@ -100,6 +101,10 @@ void render::init()
 	settings::setint("system.render.resolution.refreshrate", 60);
 	settings::setint("system.render.resolution.bitdepth", 32);
 	settings::setint("system.render.fullscreen", 0);
+
+	settings::addsetting("model.rot.x", settings::TYPE_FLOAT, 0, NULL, NULL, &model_rot.x);
+	settings::addsetting("model.rot.y", settings::TYPE_FLOAT, 0, NULL, NULL, &model_rot.y);
+	settings::addsetting("model.rot.z", settings::TYPE_FLOAT, 0, NULL, NULL, &model_rot.z);
 
 	settings::addsetting("game.camera.pos.x", settings::TYPE_FLOAT, 0, NULL, NULL, &cam_pos.x);
 	settings::addsetting("game.camera.pos.y", settings::TYPE_FLOAT, 0, NULL, NULL, &cam_pos.y);
@@ -190,6 +195,9 @@ void render::init()
 	scene = NULL;
 	windowed_width = xres;
 	windowed_height = yres;
+	model_rot.x = 0;
+	model_rot.y = 0;
+	model_rot.z = 0;
 }
 
 void render::release()

@@ -120,13 +120,14 @@ function createRoundTower(pos, divisions, radius, height)
             offset.rotate((j * (360 / divisions)) + (i * (360 / divisions) / 2), 0, 0);
             offset.mul(radius);
             offset.add(pos);
-            offset.y += i * 1;
-            box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
-            system.scene.addEntity(box);
-            entities[box.name] = box;
-            box.pos = offset;
-            box.rot.x = (j * (360 / divisions)) + (i * (360 / divisions) / 2);
-            box.sleeping = true;
+            offset.y += i * 2;
+            fridge = createMeshEntity("daddy" + num_entities++, "meshes/bigdaddy.fbx#10840-mesh");
+            entities[fridge.name] = fridge;
+            system.scene.addEntity(fridge);
+            fridge.pos = offset;
+            fridge.rot.x = (j * (360 / divisions)) + (i * (360 / divisions) / 2);
+            fridge.rot.y = -90;
+            fridge.sleeping = true;
         }
     }
 }
