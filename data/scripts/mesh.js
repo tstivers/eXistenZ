@@ -13,32 +13,27 @@ function createModelEntity(meshname) {
     entities[entity.name] = entity;
     system.scene.addEntity(entity);
     entity.pos = game.player.pos;
-    entity.rot = game.player.rot;
-    entity.rot.y = -90;
+    entity.rot = [0,0,0];
     return entity;
 }
 
 function createFridge() {
     fridge = createModelEntity("meshes/fridge.fbx#Fridge01");
-    fridge.pos.y -= game.player.size.y;
     return fridge;
 }
 
 function createBigDaddy() {
     daddy = createModelEntity("meshes/bigdaddy.fbx#10840-mesh");
-    daddy.rot.x -= 90;
     return daddy;
 }
 
 function createSplicer() {
     splicer = createModelEntity("meshes/splicer.fbx#5084-splicer");
-    splicer.rot.x -= 90;
     return splicer;
 }
 
 function createHam() {
     ham = createModelEntity("meshes/ham.fbx#Cone01");
-    ham.rot.x -= 90;
     return ham;
 }
 

@@ -5,6 +5,7 @@ data/scripts/events.js -text
 data/scripts/house.js eol=crlf
 data/scripts/keys.js eol=crlf
 data/scripts/mesh.js -text
+data/scripts/physics.js -text
 data/scripts/q3dm1.js eol=crlf
 data/scripts/q3dm13.js eol=crlf
 data/scripts/q3dm14.js eol=crlf

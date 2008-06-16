@@ -361,7 +361,7 @@ JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *
 	else
 		goto error;
 
-	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationYawPitchRoll(&mat, rot.y * (D3DX_PI / 180.0f), rot.x * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
 	D3DXVec3TransformCoord(&vec, &vec, &mat);
 
 	if (!SetVector(cx, obj, vec))

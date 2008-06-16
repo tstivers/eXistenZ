@@ -27,6 +27,9 @@ namespace jsentity
 	JSBool setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool setFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool clearFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+
 	JSBool posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	JSBool posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
@@ -48,6 +51,8 @@ namespace jsentity
 		//{"setScale", setScale, 3, 0, 0},
 		//{"update", update, 0, 0, 0},
 		{"applyForce", applyForce, 3, 0, 0},
+		{"setFlag", setFlag, 1, 0, 0},
+		{"clearFlag", clearFlag, 1, 0, 0},
 		{NULL, NULL, 0, 0, 0}
 	};
 
@@ -74,7 +79,6 @@ namespace jsentity
 	{
 		getVelocity, setVelocity
 	};
-
 };
 
 using namespace jsentity;
@@ -509,6 +513,42 @@ JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 		return JS_FALSE;
 
 	entity->applyForce(vec);
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::setFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+	
+	if(argc != 1)
+		return JS_FALSE;
+
+	int flag = JSVAL_TO_INT(argv[0]);
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	//entity->setVisualizationFlag(flag);
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::clearFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	if(argc != 1)
+		return JS_FALSE;
+
+	int flag = JSVAL_TO_INT(argv[0]);
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	//entity->clearVisualizationFlag(flag);
 
 	return JS_TRUE;
 }

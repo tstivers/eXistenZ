@@ -20,6 +20,7 @@ namespace mesh
 
 	bool LoadScene(KFbxSdkManager* pSdkManager, KFbxScene* pScene, const char* pFilename);
 	Mesh* extractMesh(KFbxNode* node, const string& filename, const string& meshname);
+	D3DXMATRIX conv_mat;
 }
 using namespace mesh;
 
@@ -44,22 +45,30 @@ Mesh* mesh::loadFBXMesh(const string& name)
 
 	if(LoadScene(manager, scene, f->filename))
 	{
-		//KFbxAxisSystem s(KFbxAxisSystem::YAxis, KFbxAxisSystem::ParityEven, KFbxAxisSystem::LeftHanded);
-		//s.ConvertScene(scene);
-
 		KFbxNode* node = scene->GetRootNode();
 
-		if (node)
+		int sign;
+		D3DXVECTOR3 conv_rot;
+		KFbxAxisSystem::eUpVector up = scene->GetGlobalSettings().GetAxisSystem().GetUpVector(sign);
+		switch(up)
 		{
-			for (int i = 0; i < node->GetChildCount(); i++)
-			{
-				Mesh* m = extractMesh(node->GetChild(i), filename, meshname);
-				if (m)
-				{
-					ret = m;
-				}
-			}
+		case KFbxAxisSystem::XAxis:
+			conv_rot = D3DXVECTOR3(0.0, 0.0, 0.0);
+			break;
+		case KFbxAxisSystem::YAxis:
+			conv_rot = D3DXVECTOR3(0.0, 0.0, 0.0);
+			break;
+		case KFbxAxisSystem::ZAxis:
+			conv_rot = D3DXVECTOR3(-90.0, 0.0, 0.0);
+			break;
 		}
+
+		D3DXMatrixRotationYawPitchRoll(&conv_mat, D3DXToRadian(conv_rot.y), D3DXToRadian(conv_rot.x), D3DXToRadian(conv_rot.z));
+
+		INFO("up vector: %s (%i, %i)", up == KFbxAxisSystem::XAxis ? "XAxis" : (up == KFbxAxisSystem::YAxis ? "YAxis" : "ZAxis"), up, sign);
+
+		if (node)
+			ret = extractMesh(node, filename, meshname);
 	}
 
 	manager->Destroy();
@@ -204,13 +213,23 @@ Mesh* mesh::extractMesh(KFbxNode* node, const string& filename, const string& me
 {
 	Mesh* ret = NULL;
 	string name = node->GetName();
-	INFO("checking node %s", name.c_str());
+	KFbxVector4 rotation, translation, scale;
+
+	node->GetDefaultR(rotation);
+	node->GetDefaultT(translation);
+	node->GetDefaultS(scale);
+
+	INFO("found node %s", name.c_str());
+	INFO("node rot:   %f, %f, %f", rotation[0], rotation[1], rotation[2]);
+	INFO("node pos:   %f, %f, %f", translation[0], translation[1], translation[2]);
+	INFO("node scale: %f, %f, %f", scale[0], scale[1], scale[2]);
+
 	if (node->GetNodeAttribute() == NULL)
 	{
 	}
 	else
 	{
-		double scale = scene->GetGlobalSettings().GetSystemUnit().GetConversionFactorTo(KFbxSystemUnit::m);
+		double convscale = scene->GetGlobalSettings().GetSystemUnit().GetConversionFactorTo(KFbxSystemUnit::m);
 
 		if (node->GetNodeAttribute()->GetAttributeType() == KFbxNodeAttribute::eMESH)
 		{
@@ -224,19 +243,8 @@ Mesh* mesh::extractMesh(KFbxNode* node, const string& filename, const string& me
 				INFO("triangulated the mesh");
 			}
 
-			KFbxVector4 rotation, translation, scale;
-
-			node->GetDefaultR(rotation);
-			node->GetDefaultT(translation);
-			node->GetDefaultS(scale);
-
-			INFO("found mesh %s", name.c_str());
-			INFO("mesh rot:   %f, %f, %f", rotation[0], rotation[1], rotation[2]);
-			INFO("mesh pos:   %f, %f, %f", translation[0], translation[1], translation[2]);
-			INFO("mesh scale: %f, %f, %f", scale[0], scale[1], scale[2]);
-
 			D3DXQUATERNION drot;
-			D3DXQuaternionRotationYawPitchRoll(&drot, D3DXToRadian(rotation[0]), D3DXToRadian(rotation[1]), D3DXToRadian(rotation[2]));
+			D3DXQuaternionRotationYawPitchRoll(&drot, D3DXToRadian(rotation[1]), D3DXToRadian(rotation[0]), D3DXToRadian(rotation[2]));
 			D3DXVECTOR3 dpos(translation[0], translation[1], translation[2]);
 			D3DXVECTOR3 dscl(scale[0], scale[1], scale[2]);
 			D3DXMATRIX mat;
@@ -251,7 +259,7 @@ Mesh* mesh::extractMesh(KFbxNode* node, const string& filename, const string& me
 			mesh->vertices = new STDVertex[mesh->vertice_count];
 			mesh->indice_count = fbxmesh->GetPolygonVertexCount();
 			mesh->indices = new unsigned short[mesh->indice_count];
-			mesh->mesh_offset = mat;
+			mesh->mesh_offset = mat * conv_mat;
 
 			STDVertex* vertices = (STDVertex*)mesh->vertices;
 			INFO("loading %i vertices", mesh->vertice_count);
@@ -298,7 +306,11 @@ Mesh* mesh::extractMesh(KFbxNode* node, const string& filename, const string& me
 	}
 
 	for (int i = 0; i < node->GetChildCount(); i++)
-		extractMesh(node->GetChild(i), filename, meshname);
+	{
+		Mesh* m = extractMesh(node->GetChild(i), filename, meshname);
+		if(m)
+			ret = m;
+	}
 
 	return ret;
 }

@@ -17,7 +17,6 @@ namespace render
 	ID3DXLine* D3DXLine = NULL;
 
 	void clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color);
-	D3DMATERIAL9 white_mtrl;
 	CD3DFont* font = NULL;
 }
 
@@ -44,7 +43,7 @@ void render::clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color
 	D3DXPLANE p;
 	D3DXMATRIX m;
 	D3DXVECTOR3 start, end, nrm(0, 0, 1.0f);
-	D3DXMatrixRotationYawPitchRoll(&m, cam_rot.x * (D3DX_PI / 180.0f), cam_rot.y * (D3DX_PI / 180.0f), cam_rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationYawPitchRoll(&m, cam_rot.y * (D3DX_PI / 180.0f), cam_rot.x * (D3DX_PI / 180.0f), cam_rot.z * (D3DX_PI / 180.0f));
 	D3DXVec3TransformCoord(&nrm, &nrm, &m);
 	D3DXPlaneFromPointNormal(&p, &cam_pos, &nrm);
 
@@ -620,16 +619,6 @@ void render::draw3DText(const string text, const D3DXVECTOR3& pos, DWORD flags)
 {
 	if (!font)
 	{
-		ZeroMemory(&white_mtrl, sizeof(white_mtrl));
-		white_mtrl.Ambient.r = 1.0;
-		white_mtrl.Ambient.g = 1.0;
-		white_mtrl.Ambient.b = 1.0;
-		white_mtrl.Ambient.a = 1.0;
-		white_mtrl.Diffuse.r = 1.0;
-		white_mtrl.Diffuse.g = 1.0;
-		white_mtrl.Diffuse.b = 1.0;
-		white_mtrl.Diffuse.a = 1.0;
-
 		font = new CD3DFont("verdana", 42, D3DFONT_ZENABLE);
 		font->InitDeviceObjects(render::device);
 		font->RestoreDeviceObjects();
@@ -657,5 +646,69 @@ void render::draw3DText(const string text, const D3DXVECTOR3& pos, DWORD flags)
 	render::current_material = NULL;
 	render::current_vb = NULL;
 	render::current_ib = NULL;
+	render::current_transform = render::world;
+}
+
+void render::drawPoint( const D3DXVECTOR3* point, D3DCOLOR color /*= D3DCOLOR_ARGB(255, 255, 255, 255)*/ )
+{
+	float pointsize = 4.0f;
+	render::device->SetFVF(D3DFVF_XYZ);
+	render::device->SetRenderState(D3DRS_POINTSIZE, *((DWORD*)&pointsize));
+	render::device->DrawPrimitiveUP(D3DPT_POINTLIST, 1, point, sizeof(D3DXVECTOR3));
+	render::current_vb = NULL;
+	render::current_ib = NULL;
+}
+
+void render::drawLineSegments(const LineVertex* vertices, int count)
+{
+	render::device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	render::device->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+	render::device->SetTransform(D3DTS_WORLD, &render::world);
+	render::device->SetTransform(D3DTS_VIEW, &render::view);
+	render::device->SetTransform(D3DTS_PROJECTION, &render::biased_projection);
+	render::device->DrawPrimitiveUP(D3DPT_LINELIST, count, vertices, sizeof(LineVertex));
+	render::device->SetTransform(D3DTS_PROJECTION, &render::projection);
+	render::current_vb = NULL;
+	render::current_ib = NULL;
+	render::current_material = NULL;
+	render::current_transform = render::world;
+}
+
+void render::drawAxis(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot)
+{
+	D3DXMATRIX m1, m2;
+	D3DXMatrixRotationYawPitchRoll(&m1, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
+	D3DXMatrixTranslation(&m2, pos.x, pos.y, pos.z);
+
+	drawAxis(m1 * m2);
+}
+
+void render::drawAxis(const D3DXMATRIX& transform)
+{
+	LineVertex verts[6];
+	verts[0].pos = D3DXVECTOR3(0,0,0);
+	verts[0].color = D3DCOLOR_XRGB(0xff, 0, 0);
+	verts[1].pos = D3DXVECTOR3(1,0,0);
+	verts[1].color = D3DCOLOR_XRGB(0xff, 0, 0);
+	verts[2].pos = D3DXVECTOR3(0,0,0);
+	verts[2].color = D3DCOLOR_XRGB(0, 0xff, 0);
+	verts[3].pos = D3DXVECTOR3(0,1,0);
+	verts[3].color = D3DCOLOR_XRGB(0, 0xff, 0);
+	verts[4].pos = D3DXVECTOR3(0,0,0);
+	verts[4].color = D3DCOLOR_XRGB(0, 0, 0xff);
+	verts[5].pos = D3DXVECTOR3(0,0,1);
+	verts[5].color = D3DCOLOR_XRGB(0, 0, 0xff);
+
+	render::device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	render::device->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+	render::device->SetTransform(D3DTS_WORLD, &transform);
+	render::device->SetTransform(D3DTS_VIEW, &render::view);
+	render::device->SetTransform(D3DTS_PROJECTION, &render::projection);
+	render::device->DrawPrimitiveUP(D3DPT_LINELIST, 3, verts, sizeof(LineVertex));
+	render::current_vb = NULL;
+	render::current_ib = NULL;
+	render::current_material = NULL;
 	render::current_transform = render::world;
 }

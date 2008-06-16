@@ -10,7 +10,7 @@ game.player.shoot = function(key, state)
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
 game.player.shootFunction = playerShoot;
-game.player.createProjectile = createHam;
+game.player.createProjectile = createSphere;
 
 
 function shootEntity(entity, pos, direction, speed)

@@ -16,6 +16,7 @@
 #include "texture/material.h"
 #include "script/script.h"
 #include "script/jsfunction.h"
+#include "physics/physics.h"
 
 namespace render
 {
@@ -30,7 +31,7 @@ namespace render
 	D3DXVECTOR3 cam_pos, cam_rot;
 	D3DXVECTOR3 cam_offset;
 
-	D3DXMATRIX world, view, projection;
+	D3DXMATRIX world, view, projection, biased_projection;
 	void setMatrices(void);
 
 	int wireframe;
@@ -75,6 +76,7 @@ namespace render
 	unsigned int frame_faces;
 	unsigned int frame_drawcalls;
 	D3DXVECTOR3 model_rot;
+	int visualizeFlags = 0;
 };
 
 using namespace render;
@@ -198,6 +200,7 @@ void render::init()
 	model_rot.x = 0;
 	model_rot.y = 0;
 	model_rot.z = 0;
+
 }
 
 void render::release()
@@ -211,20 +214,18 @@ bool render::start()
 
 void render::setMatrices()
 {
-	D3DXMATRIX pos, rotx, roty;
+	D3DXMATRIX pos, rot, iview;
 
 	D3DXMatrixIdentity(&world);
-	D3DXMatrixIdentity(&view);
 
-	D3DXMatrixTranslation(&pos, cam_pos.x * -1, cam_pos.y * - 1 , cam_pos.z * -1);
-	D3DXMatrixRotationY(&rotx, cam_rot.x * -1 * (D3DX_PI / 180.0f));
-	D3DXMatrixRotationX(&roty, cam_rot.y * -1 * (D3DX_PI / 180.0f));
+	D3DXMatrixTranslation(&pos, cam_pos.x, cam_pos.y, cam_pos.z);
+	D3DXMatrixRotationYawPitchRoll(&rot, D3DXToRadian(cam_rot.y), D3DXToRadian(cam_rot.x), D3DXToRadian(cam_rot.z));
 
-	view *= pos;
-	view *= rotx;
-	view *= roty;
-
+	iview = rot * pos;
+	D3DXMatrixInverse(&view, NULL, &iview);
+	
 	D3DXMatrixPerspectiveFovLH(&projection, D3DX_PI / 4, (float)xres / (float)yres, 0.1f, 10000.0f);
+	D3DXMatrixPerspectiveFovLH(&biased_projection, D3DX_PI / 4, (float)xres / (float)yres, 0.1f + 0.0001f, 10000.0f + 0.0001f);
 
 	device->SetTransform(D3DTS_WORLD, &world);
 	device->SetTransform(D3DTS_VIEW, &view);
@@ -264,6 +265,9 @@ void render::render()
 
 	if (scene)
 		scene->render();
+
+	if(physics::debugRender)
+		physics::renderDebug();
 
 	// call the on_render js event
 	jsscript::jsfunction < void(void) > (gScriptEngine->GetContext(), "on_render")();

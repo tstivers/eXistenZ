@@ -30,7 +30,7 @@ namespace render
 	inline extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
 
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
-	extern D3DXMATRIX world, view, projection;
+	extern D3DXMATRIX world, view, projection, biased_projection;
 
 	extern int wireframe;
 	extern int lightmap;
@@ -73,6 +73,15 @@ namespace render
 	extern texture::Material* current_material;
 	extern D3DXMATRIX current_transform;
 	extern D3DXVECTOR3 model_rot;
+
+	enum
+	{
+		VIS_AXIS				= 1<<0,
+		VIS_BOUNDING_BOX		= 1<<1,
+		VIS_VELOCITY			= 1<<2
+	};
+
+	extern int visualizeFlags;
 
 	class CFrustum;
 	extern CFrustum frustum;

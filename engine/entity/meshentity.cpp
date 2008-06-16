@@ -2,6 +2,7 @@
 #include "entity/meshentity.h"
 #include "mesh/meshcache.h"
 #include "render/render.h"
+#include "render/shapes.h"
 #include "render/rendergroup.h"
 
 using namespace entity;
@@ -32,7 +33,7 @@ void MeshEntity::acquire()
 			actorDesc.shapes.pushBack(&**it);
 		actorDesc.body = &bodyDesc;
 		actorDesc.density = 10;
-		actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
+		actorDesc.globalPose.t = (NxVec3)pos;
 		actorDesc.userData = dynamic_cast<Entity*>(this);
 		actorDesc.name = name.c_str();
 		actor = physics::gScene->createActor(actorDesc);
@@ -60,7 +61,7 @@ void MeshEntity::doTick()
 D3DXVECTOR3& MeshEntity::getPos()
 {
 	if(actor)
-		pos = (D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale;
+		pos = (D3DXVECTOR3&)actor->getGlobalPosition();
 	return pos;
 }
 
@@ -68,7 +69,7 @@ void MeshEntity::setPos(const D3DXVECTOR3& pos)
 {
 	this->pos = pos;
 	if(actor)
-		actor->setGlobalPosition((NxVec3)pos / physics::scale);
+		actor->setGlobalPosition((NxVec3)pos);
 }
 
 D3DXVECTOR3& MeshEntity::getRot()
@@ -91,7 +92,7 @@ void MeshEntity::setRot(const D3DXVECTOR3& rot)
 	if(actor)
 	{
 		D3DXQUATERNION q;
-		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
+		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
 		actor->setGlobalOrientationQuat((NxQuat&)q);
 	}
 }
@@ -102,7 +103,11 @@ void MeshEntity::render(texture::Material* lighting)
 	rg->material = lighting;
 	getTransform();
 	D3DXMATRIX m = mesh->mesh_offset * transform;
+	//D3DXMATRIX m = transform;
 	render::drawGroup(rg, &m);
+
+	if(render::visualizeFlags & render::VIS_AXIS)
+		render::drawAxis(getPos(), getRot());
 }
 
 void MeshEntity::calcAABB()
@@ -131,6 +136,7 @@ bool MeshEntity::getSleeping()
 {
 	if(actor)
 		return actor->isSleeping();
+	return false;
 }
 
 D3DXMATRIX entity::MeshEntity::getTransform()
@@ -140,7 +146,7 @@ D3DXMATRIX entity::MeshEntity::getTransform()
 		float bleh[4][4];
 		actor->getGlobalPose().getColumnMajor44(bleh);
 		D3DXMATRIX rot;
-		D3DXMatrixRotationYawPitchRoll(&rot, D3DXToRadian(render::model_rot.x), D3DXToRadian(render::model_rot.y), D3DXToRadian(render::model_rot.z));
+		D3DXMatrixRotationYawPitchRoll(&rot, D3DXToRadian(render::model_rot.y), D3DXToRadian(render::model_rot.x), D3DXToRadian(render::model_rot.z));
 		transform = rot;
 		transform *= D3DXMATRIX((float*)&bleh[0]);
 		return transform;
@@ -148,7 +154,7 @@ D3DXMATRIX entity::MeshEntity::getTransform()
 	else
 	{
 		D3DXQUATERNION q;
-		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
+		D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
 		D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &q, &pos);
 		return transform;
 	}

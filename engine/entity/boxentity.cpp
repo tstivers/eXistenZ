@@ -3,6 +3,7 @@
 #include "entity/boxentity.h"
 #include "texture/texturecache.h"
 #include "physics/physics.h"
+#include "render/render.h"
 #include "render/shapes.h"
 #include <NxPhysics.h>
 
@@ -19,7 +20,7 @@ namespace physics
 using namespace entity;
 
 BoxEntity::BoxEntity(string name, string texture)
-		: Entity(name), actor(NULL), size(physics::scale, physics::scale, physics::scale)
+		: Entity(name), actor(NULL), size(1.0f, 1.0f, 1.0f)
 {
 	this->texture = texture::getTexture(texture.c_str());
 }
@@ -35,11 +36,11 @@ void BoxEntity::acquire()
 	NxActorDesc actorDesc;
 	NxBodyDesc bodyDesc;
 	NxBoxShapeDesc boxDesc;
-	boxDesc.dimensions.set((size / physics::scale) / 2);
+	boxDesc.dimensions.set(size / 2.0f);
 	actorDesc.shapes.pushBack(&boxDesc);
 	actorDesc.body = &bodyDesc;
 	actorDesc.density = 10;
-	actorDesc.globalPose.t = (NxVec3)pos / physics::scale;
+	actorDesc.globalPose.t = (NxVec3)pos;
 	actorDesc.userData = dynamic_cast<Entity*>(this);
 	actorDesc.name = name.c_str();
 	actor = physics::gScene->createActor(actorDesc);
@@ -55,7 +56,7 @@ void BoxEntity::release()
 
 void BoxEntity::update()
 {
-	actor->setGlobalPosition((NxVec3)pos / physics::scale);
+	actor->setGlobalPosition((NxVec3)pos);
 	//actor->setGlobalOrientation()
 }
 
@@ -68,14 +69,14 @@ void BoxEntity::doTick()
 
 D3DXVECTOR3& BoxEntity::getPos()
 {
-	pos = (D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale;
+	pos = (D3DXVECTOR3&)actor->getGlobalPosition();
 	return pos;
 }
 
 void BoxEntity::setPos(const D3DXVECTOR3& pos)
 {
 	this->pos = pos;
-	actor->setGlobalPosition((NxVec3)pos / physics::scale);
+	actor->setGlobalPosition((NxVec3)pos);
 }
 
 D3DXVECTOR3& BoxEntity::getRot()
@@ -93,13 +94,15 @@ void BoxEntity::setRot(const D3DXVECTOR3& rot)
 {
 	this->rot = rot;
 	D3DXQUATERNION q;
-	D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.x), D3DXToRadian(rot.y), D3DXToRadian(rot.z));
+	D3DXQuaternionRotationYawPitchRoll(&q, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
 	actor->setGlobalOrientationQuat((NxQuat&)q);
 }
 
 void BoxEntity::render(texture::Material* lighting)
 {
-	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition() * physics::scale, (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), size, texture, lighting);
+	render::drawBox((D3DXVECTOR3&)actor->getGlobalPosition(), (D3DXQUATERNION&)actor->getGlobalOrientationQuat(), size, texture, lighting);
+	if(render::visualizeFlags & render::VIS_AXIS)
+		render::drawAxis(getPos(), getRot());
 }
 
 void BoxEntity::calcAABB()

@@ -135,8 +135,8 @@ void game::processInput()
 	}
 
 	// handle mouse crap here for now
-	player->doRotation(D3DXVECTOR3((float)input::mousestate.lX * mouse_sens_x,
-								   (float)input::mousestate.lY * mouse_sens_y,
+	player->doRotation(D3DXVECTOR3((float)input::mousestate.lY * mouse_sens_x,
+								   (float)input::mousestate.lX * mouse_sens_y,
 								   0.0f));
 
 	// process key mappings

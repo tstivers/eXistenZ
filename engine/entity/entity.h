@@ -36,6 +36,7 @@ namespace entity
 	class Entity
 	{
 	public:
+
 		Entity(string name);
 		virtual ~Entity() = 0;
 		virtual void acquire() = 0;

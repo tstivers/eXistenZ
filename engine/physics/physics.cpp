@@ -4,6 +4,7 @@
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "render/render.h"
+#include "render/shapes.h"
 #include <NxPhysics.h>
 #include <NxCooking.h>
 #include <NxCharacter.h>
@@ -61,10 +62,11 @@ namespace physics
 	NxControllerManager* gManager;
 	int debug = 1;
 	bool acquired = false;
-	float scale = 1.0f;
 	float gravity = -9.8f;
 	float maxtimestep = 1.0 / 60.0;
 	int maxiter = 8;
+	int debugRender = 0;
+	const NxDebugRenderable* dbgRenderable;
 
 	bool setGravity(settings::Setting* setting, void* value);
 	bool setTimestep(settings::Setting* setting, void* value);
@@ -78,7 +80,7 @@ REGISTER_STARTUP_FUNCTION(physics, physics::init, 10);
 void physics::init()
 {
 	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
-	settings::addsetting("system.physics.scale", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::scale);
+	settings::addsetting("system.physics.debugrender", settings::TYPE_INT, 0, NULL, NULL, &physics::debugRender);
 	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
 	settings::addsetting("system.physics.maxtimestep", settings::TYPE_FLOAT, 0, setTimestep, NULL, &physics::maxtimestep);
 	settings::addsetting("system.physics.maxiter", settings::TYPE_INT, 0, setMaxIter, NULL, &physics::maxiter);
@@ -173,13 +175,13 @@ void physics::startSimulation()
 
 	if (NX_DBG_IS_CONNECTED())
 	{
-		D3DXVECTOR3 campos = (render::cam_pos + render::cam_offset) / scale;
+		D3DXVECTOR3 campos = render::cam_pos + render::cam_offset;
 		NX_DBG_SET_PARAMETER((NxVec3)campos, render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
 		D3DXMATRIX mat;
-		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
+		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
 		D3DXVECTOR3 lookat;
 		D3DXVec3TransformCoord(&lookat, &D3DXVECTOR3(0, 0, 10), &mat);
-		lookat += ((render::cam_pos + render::cam_offset) / scale);
+		lookat += render::cam_pos + render::cam_offset;
 		NX_DBG_SET_PARAMETER((NxVec3)lookat, render::scene, "Target", NX_DBG_EVENTGROUP_MYOBJECTS);
 		NX_DBG_FLUSH();
 		NX_DBG_FRAME_BREAK();
@@ -192,6 +194,13 @@ void physics::getResults()
 		return;
 
 	gScene->fetchResults(NX_ALL_FINISHED, true);
+
+	if (debugRender)
+	{
+		dbgRenderable = gScene->getDebugRenderable();
+	}
+	else
+		dbgRenderable = NULL;
 }
 
 void physics::release()
@@ -226,3 +235,32 @@ bool physics::setMaxIter(settings::Setting* setting, void* value)
 	return true;
 }
 
+void physics::setParameter(int parameter, float value)
+{
+	gPhysicsSDK->setParameter((NxParameter)parameter, value);
+}
+
+
+void physics::renderDebug()
+{
+	if (!dbgRenderable)
+		return;
+
+	if (!debugRender)
+		return;
+
+	{
+		NxU32 NbLines = dbgRenderable->getNbLines();
+		const NxDebugLine* Lines = dbgRenderable->getLines();
+		vector<render::LineVertex> verts;
+		verts.reserve(NbLines * 2);
+		while (NbLines--)
+		{
+			verts.push_back(render::LineVertex(Lines->p0.x, Lines->p0.y, Lines->p0.z, Lines->color));
+			verts.push_back(render::LineVertex(Lines->p1.x, Lines->p1.y, Lines->p1.z, Lines->color));
+			Lines++;
+		}
+
+		render::drawLineSegments(&verts.front(), verts.size() / 2);
+	}
+}

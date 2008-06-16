@@ -94,7 +94,7 @@ void PhysXPlayer::acquire()
 	NxBoxControllerDesc desc;
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
-	desc.stepOffset = step_up / physics::scale;
+	desc.stepOffset = step_up;
 	desc.callback = &shapehit;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
@@ -108,7 +108,7 @@ bool PhysXPlayer::setPos(D3DXVECTOR3& pos)
 	if (!Player::setPos(pos))
 		return false;
 	if (acquired)
-		if (!nxc->setPosition(NxExtendedVec3(this->pos.x / physics::scale, this->pos.y / physics::scale, this->pos.z / physics::scale)))
+		if (!nxc->setPosition(NxExtendedVec3(this->pos.x, this->pos.y, this->pos.z)))
 			return false;
 	return true;
 }
@@ -119,7 +119,7 @@ bool PhysXPlayer::setStepUp(float step_up)
 		return false;
 
 	if (acquired && mode == MM_WALK)
-		nxc->setStepOffset(this->step_up / physics::scale);
+		nxc->setStepOffset(this->step_up);
 
 	return true;
 }
@@ -135,8 +135,8 @@ bool PhysXPlayer::setMoveMode(t_movemode mode)
 		switch (mode)
 		{
 		case MM_WALK:
-			nxc->setStepOffset(this->step_up / physics::scale);
-			((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale));
+			nxc->setStepOffset(this->step_up);
+			((NxBoxController*)nxc)->setExtents((NxVec3)size);
 			break;
 		default:
 			nxc->setStepOffset(0.0f);
@@ -153,7 +153,7 @@ bool PhysXPlayer::setSize(D3DXVECTOR3& size)
 	if (!Player::setSize(size))
 		return false;
 
-	if (!((NxBoxController*)nxc)->setExtents((NxVec3)(size / physics::scale)))
+	if (!((NxBoxController*)nxc)->setExtents((NxVec3)size))
 		return false;
 
 	return true;
@@ -174,10 +174,10 @@ void PhysXPlayer::doMove(t_impulse impulse)
 void PhysXPlayer::doRotation(D3DXVECTOR3& rotation)
 {
 	rot += rotation;
-	if (rot.x > 360.0f) rot.x -= 360.0f;
-	if (rot.x < 0.0f) rot.x += 360.0f;
-	if (rot.y > 90.0f) rot.y = 90.0f;
-	if (rot.y < -90.0f) rot.y = -90.0f;
+	if (rot.y > 360.0f) rot.y -= 360.0f;
+	if (rot.y < 0.0f) rot.y += 360.0f;
+	if (rot.x > 90.0f) rot.x = 90.0f;
+	if (rot.x < -90.0f) rot.x = -90.0f;
 }
 
 void PhysXPlayer::updatePos()
@@ -243,7 +243,7 @@ void PhysXPlayer::updatePos()
 		}
 	}
 
-	this->pos = D3DXVECTOR3(newpos.x, newpos.y, newpos.z) * physics::scale;
+	this->pos = D3DXVECTOR3(newpos.x, newpos.y, newpos.z);
 
 	for (int i = 0; i < MOVE_MAX; i++)
 		moving[i] = false;
@@ -276,7 +276,7 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 		dis.z -= 1.0f;
 
 	D3DXMATRIX mat;
-	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), rot.y * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationYawPitchRoll(&mat, rot.y * (D3DX_PI / 180.0f), rot.x * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
 
@@ -310,7 +310,7 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 	}
 
 	D3DXMATRIX mat;
-	D3DXMatrixRotationYawPitchRoll(&mat, rot.x * (D3DX_PI / 180.0f), 0, 0);
+	D3DXMatrixRotationYawPitchRoll(&mat, rot.y * (D3DX_PI / 180.0f), 0, 0);
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
 	dis *= timer::delta_s * speed;

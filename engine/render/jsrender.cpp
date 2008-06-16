@@ -13,6 +13,8 @@ namespace jsrender
 	JSBool drawtext(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool resetdevice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool takescreenshot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool setDebugFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+
 }
 
 using namespace jsrender;
@@ -26,6 +28,7 @@ void jsrender::init()
 	gScriptEngine->AddFunction("system.render.reset", 2, jsrender::resetdevice);
 	gScriptEngine->AddFunction("system.render.takescreenshot", 1, jsrender::takescreenshot);
 	gScriptEngine->AddFunction("drawtext", 2, jsrender::drawtext);
+	gScriptEngine->AddFunction("system.render.setDebugFlag", 1, jsrender::setDebugFlag);
 }
 
 JSBool jsrender::drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -56,6 +59,16 @@ error:
 JSBool jsrender::resetdevice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	d3d::setResetDevice();
+	return JS_TRUE;
+}
+
+JSBool jsrender::setDebugFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	int flag = JSVAL_TO_INT(argv[0]);
+	if(JSVAL_TO_BOOLEAN(argv[1]))
+		render::visualizeFlags |= flag;
+	else
+		render::visualizeFlags &= ~flag;
 	return JS_TRUE;
 }
 

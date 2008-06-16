@@ -23,6 +23,7 @@ namespace xmlloader
 	parse_map_type parse_map;
 	void init();
 
+	byte parseNibble(const char c);
 	NxVec3 parseVector(const string& str);
 	NxMat34 parseMatrix(const string& str);
 
@@ -101,40 +102,82 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 		node = node->next_sibling("NxConvexMeshDesc");
 	assert(node);
 
-	vector<string> pts;
-	split(pts, string(node->first_node("points")->value()), is_space(), token_compress_on);
-	assert(pts.size() % 3 == 0);
-
-	vector<float> fpts;
-	for(int i = 0; i < pts.size(); i++)
-		fpts.push_back(lexical_cast<float>(pts[i]));
-	
-	vector<string> tris;
-	split(tris, string(node->first_node("triangles")->value()), is_space(), token_compress_on);
-	assert(tris.size() % 3 == 0);
-
-	vector<int> itris;
-	for(int i = 0; i < tris.size(); i++)
-		itris.push_back(lexical_cast<int>(tris[i]));
-
-	NxConvexMeshDesc md;
-	md.numVertices = pts.size() / 3;
-	md.points = &fpts.front();
-	md.pointStrideBytes = sizeof(float) * 3;
-	md.numTriangles = tris.size() / 3;
-	md.triangles = &itris.front();
-	md.triangleStrideBytes = sizeof(int) * 3;
-	md.flags = 0;
-
 	MemoryWriteBuffer mwBuf;
 
-	bool cooked = gCooking->NxCookConvexMesh(md, mwBuf);
-	ASSERT(cooked);
+	if(node->first_node("cookedDataSize"))
+	{
+		int size = lexical_cast<int>(node->first_node("cookedDataSize")->value());
+		string data = node->first_node("cookedData")->value();
+
+		bool havenibble = false;
+		byte b = 0;
+		for(string::const_iterator it = data.begin(); it != data.end(); it++)
+		{
+			if((*it >= '0' && *it <= '9') || (*it >= 'A' && *it <= 'F'))
+				if(havenibble)
+				{
+					mwBuf.storeByte(b + parseNibble(*it));
+					havenibble = false;
+				}
+				else
+				{
+					b = parseNibble(*it) << 4;
+					havenibble = true;
+				}
+		}
+		assert(havenibble == false);
+		assert(mwBuf.currentSize == size);
+	}
+	else
+	{
+		vector<string> pts;
+		split(pts, string(node->first_node("points")->value()), is_space(), token_compress_on);
+		assert(pts.size() % 3 == 0);
+
+		vector<float> fpts;
+		for(int i = 0; i < pts.size(); i++)
+			fpts.push_back(lexical_cast<float>(pts[i]));
+		
+		vector<string> tris;
+		split(tris, string(node->first_node("triangles")->value()), is_space(), token_compress_on);
+		assert(tris.size() % 3 == 0);
+
+		vector<int> itris;
+		for(int i = 0; i < tris.size(); i++)
+			itris.push_back(lexical_cast<int>(tris[i]));
+
+		NxConvexMeshDesc md;
+		md.numVertices = pts.size() / 3;
+		md.points = &fpts.front();
+		md.pointStrideBytes = sizeof(float) * 3;
+		md.numTriangles = tris.size() / 3;
+		md.triangles = &itris.front();
+		md.triangleStrideBytes = sizeof(int) * 3;
+		md.flags = 0;
+
+		bool cooked = gCooking->NxCookConvexMesh(md, mwBuf);
+		ASSERT(cooked);
+	}
 
 	NxConvexMesh* mesh = gPhysicsSDK->createConvexMesh(MemoryReadBuffer(mwBuf.data));
 	assert(mesh);
 
+	//MemoryWriteBuffer buf2;
+	//if(NxScaleCookedConvexMesh(MemoryReadBuffer(mwBuf.data), 0.080693, buf2)) //Resize the mesh by a factor 0.5
+	//{
+	//	NxConvexShapeDesc convexShapeDesc2;
+	//	mesh = gPhysicsSDK->createConvexMesh(MemoryReadBuffer(buf2.data));
+	//}	
+
 	return mesh;
+}
+
+byte xmlloader::parseNibble( const char c )
+{
+	if(c >= '0' && c <= '9')
+		return c - '0';
+	else
+		return 10 + c - 'A';
 }
 
 ShapeEntry physics::loadDynamicsXML(string filename)
@@ -154,27 +197,27 @@ ShapeEntry physics::loadDynamicsXML(string filename)
 
 	doc.parse<parse_trim_whitespace>(&buffer.front());
 	
-	xml_node<>* shape = doc.first_node()->first_node("NxuPhysicsCollection")->first_node("NxSceneDesc")->first_node("NxActorDesc")->first_node("name")->next_sibling();
+	xml_node<>* shape = doc.first_node()->first_node("NxuPhysicsCollection")->first_node("NxSceneDesc")->first_node("NxActorDesc")->first_node();
 
 	while(shape)
 	{
-		INFO("found shape: %s id=\"%s\"", shape->name(), shape->first_attribute("id")->value());
-
-		if(parse_map.find(shape->name()) == parse_map.end())
+		if(parse_map.find(shape->name()) != parse_map.end())
 		{
-			INFO("ERROR: found unknown shape \"%s\"", shape->name());
-			return ShapeEntry();
-		}
-
-		if(!parse_map[shape->name()](shape, sl))
-		{
-			INFO("ERROR: unable to parse shape \"%s\"", shape->name());
-			return ShapeEntry();
+			if(!parse_map[shape->name()](shape, sl))
+			{
+				INFO("ERROR: unable to parse shape \"%s\"", shape->name());
+				return ShapeEntry();
+			}
+			INFO("parsed shape %s", shape->name());
 		}
 
 		shape = shape->next_sibling();
-		if(shape && !shape->first_node("NxShapeDesc"))
-			shape = NULL;
+	}
+
+	if(sl->size() == 0)
+	{
+		INFO("ERROR: no shapes found");
+		return ShapeEntry();
 	}
 
 	return sl;

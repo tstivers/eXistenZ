@@ -120,7 +120,7 @@ bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
 bind(KEY_V, toggle_vtrace);
 
-model.rot.y = -90;
+//model.rot.y = -90;
 
 // functions
 
@@ -376,6 +376,7 @@ execfile("scripts/stacks.js");
 execfile("scripts/screenshot.js");
 execfile("scripts/mesh.js");
 execfile("scripts/shoot.js");
+execfile("scripts/physics.js");
 
 
 // log our start date and time

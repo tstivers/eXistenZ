@@ -49,7 +49,6 @@
 #pragma comment(lib, "d3dx9.lib")
 #endif
 
-
 #include "js32.h"
 
 using namespace std;
