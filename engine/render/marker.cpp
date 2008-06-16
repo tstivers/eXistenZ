@@ -59,7 +59,7 @@ void render::drawMarker(D3DXVECTOR3 pos, D3DXVECTOR3 color, float scale)
 	float yrot = (float)timer::game_ms / 5.0f;
 	D3DXMATRIX marker_pos, marker_rot, marker_scale, marker;
 	D3DXMatrixTranslation(&marker_pos, pos.x / scale, pos.y / scale, pos.z / scale);
-	D3DXMatrixRotationY(&marker_rot, yrot * -1 * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationY(&marker_rot, D3DXToRadian(yrot * -1));
 	D3DXMatrixScaling(&marker_scale, scale, scale, scale);
 
 	D3DXMatrixIdentity(&marker);
@@ -132,7 +132,7 @@ void render::drawMarkers()
 		mtrl.Diffuse.b = mtrl.Ambient.b = marker->color.b;
 
 		D3DXMatrixTranslation(&marker_pos, marker->pos.x / marker->scale, marker->pos.y / marker->scale, marker->pos.z / marker->scale);
-		D3DXMatrixRotationY(&marker_rot, yrot * (D3DX_PI / 180.0f));
+		D3DXMatrixRotationY(&marker_rot, D3DXToRadian(yrot));
 		D3DXMatrixScaling(&marker_scale, marker->scale, marker->scale, marker->scale);
 
 		D3DXMatrixIdentity(&marker_final);

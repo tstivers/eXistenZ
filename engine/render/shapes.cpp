@@ -43,7 +43,7 @@ void render::clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color
 	D3DXPLANE p;
 	D3DXMATRIX m;
 	D3DXVECTOR3 start, end, nrm(0, 0, 1.0f);
-	D3DXMatrixRotationYawPitchRoll(&m, cam_rot.y * (D3DX_PI / 180.0f), cam_rot.x * (D3DX_PI / 180.0f), cam_rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationYawPitchRoll(&m, D3DXToRadian(cam_rot.y), D3DXToRadian(cam_rot.x), D3DXToRadian(cam_rot.z));
 	D3DXVec3TransformCoord(&nrm, &nrm, &m);
 	D3DXPlaneFromPointNormal(&p, &cam_pos, &nrm);
 

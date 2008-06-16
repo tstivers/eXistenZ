@@ -178,7 +178,7 @@ void physics::startSimulation()
 		D3DXVECTOR3 campos = render::cam_pos + render::cam_offset;
 		NX_DBG_SET_PARAMETER((NxVec3)campos, render::scene, "Origin", NX_DBG_EVENTGROUP_MYOBJECTS);
 		D3DXMATRIX mat;
-		D3DXMatrixRotationYawPitchRoll(&mat, render::cam_rot.y * (D3DX_PI / 180.0f), render::cam_rot.x * (D3DX_PI / 180.0f), render::cam_rot.z * (D3DX_PI / 180.0f));
+		D3DXMatrixRotationYawPitchRoll(&mat, D3DXToRadian(render::cam_rot.y), D3DXToRadian(render::cam_rot.x), D3DXToRadian(render::cam_rot.z));
 		D3DXVECTOR3 lookat;
 		D3DXVec3TransformCoord(&lookat, &D3DXVECTOR3(0, 0, 10), &mat);
 		lookat += render::cam_pos + render::cam_offset;

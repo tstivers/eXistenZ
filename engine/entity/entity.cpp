@@ -31,9 +31,9 @@ void Entity::update()
 {
 	D3DXQUATERNION rotq;
 	D3DXQuaternionRotationYawPitchRoll(&rotq,
-									   rot.y * (D3DX_PI / 180.0f),
-									   rot.x * (D3DX_PI / 180.0f),
-									   rot.z * (D3DX_PI / 180.0f));
+									   D3DXToRadian(rot.y),
+									   D3DXToRadian(rot.x),
+									   D3DXToRadian(rot.z));
 	D3DXMatrixTransformation(&transform, NULL, NULL, &scale, NULL, &rotq, &pos);
 	calcAABB();
 }

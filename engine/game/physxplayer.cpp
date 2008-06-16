@@ -276,7 +276,7 @@ D3DXVECTOR3 PhysXPlayer::getFlyDisplacement()
 		dis.z -= 1.0f;
 
 	D3DXMATRIX mat;
-	D3DXMatrixRotationYawPitchRoll(&mat, rot.y * (D3DX_PI / 180.0f), rot.x * (D3DX_PI / 180.0f), rot.z * (D3DX_PI / 180.0f));
+	D3DXMatrixRotationYawPitchRoll(&mat, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
 
@@ -310,7 +310,7 @@ D3DXVECTOR3 PhysXPlayer::getWalkDisplacement()
 	}
 
 	D3DXMATRIX mat;
-	D3DXMatrixRotationYawPitchRoll(&mat, rot.y * (D3DX_PI / 180.0f), 0, 0);
+	D3DXMatrixRotationYawPitchRoll(&mat, D3DXToRadian(rot.y), 0, 0);
 	D3DXVec3Normalize(&dis, &dis);
 	D3DXVec3TransformCoord(&dis, &dis, &mat);
 	dis *= timer::delta_s * speed;
