@@ -95,7 +95,13 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script)
 
 bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retval)
 {
-	return (JS_TRUE == JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval));
+	if(JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval) != JS_TRUE)
+	{
+		INFO("error executing script \"%s\"", name);
+		CheckException();
+		return false;
+	}
+	return true;
 }
 
 bool ScriptEngine::RunScript(vfs::File file)
@@ -285,6 +291,24 @@ const char* ScriptEngine::GetClassName(JSObject* obj)
 		return c->name;
 
 	return "none";
+}
+
+bool ScriptEngine::CheckException()
+{
+	jsval x;
+	if (JS_IsExceptionPending(cx) && JS_GetPendingException(cx, &x)) 
+	{
+		const char* name;
+		const char* text;
+		name = JS_GetTypeName(cx, JS_TypeOfValue(cx, x));
+		text = JS_GetStringBytes(JS_ValueToString(cx, x));
+		INFO("caught exception: (%s) %s", name, text);
+		if(JSVAL_IS_OBJECT(x))
+			DumpObject(JSVAL_TO_OBJECT(x), true, "exception");
+		JS_ClearPendingException(cx);
+		return true;
+	}
+	return false;
 }
 
 void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)

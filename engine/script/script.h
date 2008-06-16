@@ -22,6 +22,7 @@ public:
 	bool RunScript(char* name, uintN lineno, char* script);
 	bool RunScript(char* name, uintN lineno, char* script, jsval* retval);
 	bool RunScript(vfs::File file);
+	bool CheckException();
 
 	JSFunction* AddFunction(char* name, uintN argc, JSNative call);
 	JSFunction* AddFunction(JSObject* obj, char*name, uintN argc, JSNative call);
