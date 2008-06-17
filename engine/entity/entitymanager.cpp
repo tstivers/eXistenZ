@@ -8,9 +8,10 @@ namespace entity
 
 using namespace entity;
 
-EntityManager::EntityManager()
+EntityManager::EntityManager(scene::Scene* scene)
+: m_scene(scene)
 {
-
+	initScriptObject();
 }
 
 EntityManager::~EntityManager()
@@ -41,6 +42,23 @@ Entity* EntityManager::getEntity(const string& name)
 		return NULL;
 }
 
+// note: this is too slow to be workable, only for debuggin
+Entity* EntityManager::getEntity(int index)
+{
+	if(index > m_entities.size())
+		return NULL;
+
+	entity_map::iterator it = m_entities.begin();
+	std::advance(it, index);
+
+	return it->second.get();
+}
+
+int EntityManager::getEntityCount()
+{
+	return m_entities.size();
+}
+
 void EntityManager::removeEntity(const string& name)
 {
 	m_entities.erase(name);
@@ -65,5 +83,5 @@ void EntityManager::destroyScriptObject()
 
 void EntityManager::initScriptObject()
 {
-	jsObject = createScriptObject();
+	m_scriptObject = createScriptObject();
 }

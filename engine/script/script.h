@@ -59,28 +59,26 @@ namespace script
 	class ScriptedObject
 	{
 	public:
-		ScriptedObject() : jsObject(NULL) 
+		ScriptedObject() : m_scriptObject(NULL) 
 		{
-			initScriptObject();
 		}
 
 		virtual ~ScriptedObject() 
 		{
-			if(jsObject)
+			if(m_scriptObject)
 				destroyScriptObject();
 		}
 
 		virtual JSObject* getScriptObject() 
 		{ 
-			if(!jsObject)
-				jsObject = createScriptObject();
-			return jsObject;
+			if(!m_scriptObject)
+				m_scriptObject = createScriptObject();
+			return m_scriptObject;
 		}
 
 	protected:
 		virtual JSObject* createScriptObject() { return NULL; }
 		virtual void destroyScriptObject() {}
-		virtual void initScriptObject() {}
-		JSObject* jsObject;
+		JSObject* m_scriptObject;
 	};
 };

@@ -1028,6 +1028,14 @@
 			Name="entity"
 			>
 			<File
+				RelativePath="..\engine\entity\component.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\component.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\entity.cpp"
 				>
 			</File>
@@ -1044,6 +1052,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\entity\jscomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jscomponent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\jsentity.cpp"
 				>
 			</File>
@@ -1057,6 +1073,22 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\jsentitymanager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jsposcomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jsposcomponent.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\poscomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\poscomponent.h"
 				>
 			</File>
 		</Filter>
