@@ -2,6 +2,7 @@
 
 namespace entity
 {
+	class EntityManager;
 	class Entity;
 };
 
@@ -48,6 +49,8 @@ namespace scene
 		int type;
 		bool acquired;
 		bool initialized;
+
+		shared_ptr<entity::EntityManager> m_entityManager;
 	};
 
 	void init();
