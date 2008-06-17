@@ -12,8 +12,8 @@ function createModelEntity(meshname) {
     entity = createMeshEntity("model" + num_entities++, meshname);
     entities[entity.name] = entity;
     system.scene.addEntity(entity);
-    entity.pos = game.player.pos;
-    entity.rot = [0,0,0];
+    entity.setPos(game.player.getPos());
+    entity.setRot([0,0,0]);
     return entity;
 }
 
@@ -33,7 +33,12 @@ function createSplicer() {
 }
 
 function createHam() {
-    ham = createModelEntity("meshes/ham.fbx#Cone01");
+    ham = createModelEntity("meshes/ham.fbx#Box01");
+    return ham;
+}
+
+function createSlice() {
+    ham = createModelEntity("meshes/hamslice.fbx#Slice01");
     return ham;
 }
 

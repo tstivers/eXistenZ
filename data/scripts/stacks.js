@@ -24,8 +24,8 @@ function createBoxStack(pos, rot, height, width)
             offset.y = j * 1;
             offset.z = 0;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
         }
 }
 
@@ -42,8 +42,8 @@ function createBoxPyramid(pos, rot, width)
             offset.y = (i * 1);
             offset.z = 0;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
             box.sleeping = true;
         }
 }
@@ -62,8 +62,8 @@ function createBoxTower(pos, rot, length, width, height)
             offset.y = j * 1;
             offset.z = 0;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
             box.sleeping = true;
             
             box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
@@ -74,8 +74,8 @@ function createBoxTower(pos, rot, length, width, height)
             offset.y = j * 1;
             offset.z = (length - 1) * 1;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
             box.sleeping = true;
         }
         
@@ -91,8 +91,8 @@ function createBoxTower(pos, rot, length, width, height)
             offset.y = j * 1;
             offset.z = i * 1;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
             box.sleeping = true;
             
             box = createBoxEntity("box" + num_entities++, textures[++current_texture % textures.length]);
@@ -103,8 +103,8 @@ function createBoxTower(pos, rot, length, width, height)
             offset.y = j * 1;
             offset.z = i * 1;
             offset.rotate(rot);
-            box.pos = offset.add(pos);
-            box.rot = rot;
+            box.setPos(offset.add(pos));
+            box.setRot(rot);
             box.sleeping = true;
         }
     }
@@ -124,9 +124,11 @@ function createRoundTower(pos, divisions, radius, height)
             fridge = createMeshEntity("daddy" + num_entities++, "meshes/bigdaddy.fbx#10840-mesh");
             entities[fridge.name] = fridge;
             system.scene.addEntity(fridge);
-            fridge.pos = offset;
-            fridge.rot.x = (j * (360 / divisions)) + (i * (360 / divisions) / 2);
-            fridge.rot.y = -90;
+            fridge.setPos(offset);
+            var rot = new Vector(0, 0, 0);
+            rot.x = (j * (360 / divisions)) + (i * (360 / divisions) / 2);
+            rot.y = -90;
+            fridge.setrot(rot);
             fridge.sleeping = true;
         }
     }
@@ -135,8 +137,8 @@ function createRoundTower(pos, divisions, radius, height)
 
 function doIt()
 {
-    var pos = new Vector(game.player.pos);
-    var rot = new Vector(game.player.rot);
+    var pos = new Vector(game.player.getPos());
+    var rot = new Vector(game.player.getRot());
     rot.y = 0; rot.z = 0;
     var offset = new Vector(0, 0, 1);
     offset.rotate(rot);

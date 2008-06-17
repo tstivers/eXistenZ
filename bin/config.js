@@ -117,7 +117,7 @@ bind(KEY_E, "toggle_entities");
 bind(KEY_F, "toggle_movemode");
 bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
-bind(KEY_N, "exec fountain(game.player.pos, game.player.rot)");
+bind(KEY_N, "exec fountain(game.player.getPos(), game.player.getRot()");
 bind(KEY_V, toggle_vtrace);
 
 //model.rot.y = -90;
@@ -146,11 +146,8 @@ function map(map_name) {
 }
 
 function home() {
-	game.player.pos.x = 0;
-	game.player.pos.y = 0;
-	game.player.pos.z = 0;
-	game.player.rot.x = 0;
-	game.player.rot.y = 0;
+    game.player.setPos(0, 0, 0);
+    game.player.setRot(0, 0, 0);
 }
 
 function stress() {
@@ -249,7 +246,7 @@ function createBox() {
         current_texture = 0;
     entities[box.name] = box;
     system.scene.addEntity(box);
-    box.pos = game.player.pos;    
+    box.setPos(game.player.getPos());
     print('added box ' + box.name);
     timer.addTimer("box" + num_entities + "_timer", "bounceEntity('" + box.name + "');", 500, 0);
     box.last_y = 0;
@@ -260,11 +257,11 @@ function createSphere() {
     entities[sphere.name] = sphere;
     system.scene.addEntity(sphere);
     var direction = new Vector(0, 0, 1);
-    direction.rotate(game.player.rot);
+    direction.rotate(game.player.getRot());
     var pos = new Vector(direction);
     pos.mul(100);
-    pos.add(game.player.pos);
-    sphere.pos = pos;
+    pos.add(game.player.getPos());
+    sphere.setPos(pos);
     print('added sphere ' + sphere.name);
 //    timer.addTimer("sphere" + num_entities + "_timer", "bounceEntity('" + sphere.name + "');", 500, 0);
 //    sphere.last_y = 0;
@@ -274,15 +271,15 @@ function createSphere() {
 function bounceEntity(entityName)
 {
     var entity = entities[entityName];
-    if(Math.abs(entity.last_y - entity.pos.y) <= 5)
+    if(Math.abs(entity.last_y - entity.getPos().y) <= 5)
     {
         var vec = new Vector();
-        vec.x = game.player.pos.x - entity.pos.x
-        vec.z = game.player.pos.z - entity.pos.z;
+        vec.x = game.player.getPos().x - entity.getPos().x;
+        vec.z = game.player.getPos().z - entity.getPos().z;
         vec.normalize();
         entity.applyForce(Math.random() * 100 * vec.x, Math.random() * 100, Math.random() * 100 * vec.z);
     } else 
-        entity.last_y = entity.pos.y;
+        entity.last_y = entity.getPos().y;
 }
 
 Vector.prototype.toString = function()
@@ -335,6 +332,10 @@ function removeEntity(name)
         system.scene.removeEntity(entities[name]);
         delete entities[name];
     }
+}
+
+function removeTimer(name) {
+    timer.removeTimer(name);
 }
 
 function eraseEverything()

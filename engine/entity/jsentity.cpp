@@ -22,22 +22,18 @@ namespace jsentity
 	JSBool setRadius(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	// entity function callbacks
+	JSBool getPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool applyForceAt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool clearFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getVelocity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool setVelocity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 
-	JSBool posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
-	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
-	JSBool posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool getRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
-	JSBool setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
-	JSBool rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool getVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
-	JSBool setVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user);
 	jsval createEntityObject(JSContext* cx, entity::Entity* entity);
 	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
@@ -46,13 +42,17 @@ namespace jsentity
 
 	JSFunctionSpec entity_methods[] =
 	{
-		//{"setPos", setPos, 3, 0, 0},
-		//{"setRot", setRot, 3, 0, 0},			this junk isn't needed anymore...?
+		{"getPos", getPos, 0, 0, 0},
+		{"setPos", setPos, 3, 0, 0},
+		{"getRot", getRot, 0, 0, 0},
+		{"setRot", setRot, 3, 0, 0},
+		{"getVelocity", getVelocity, 0, 0, 0},
+		{"setVelocity", setVelocity, 3, 0, 0},
 		//{"setScale", setScale, 3, 0, 0},
 		//{"update", update, 0, 0, 0},
 		{"applyForce", applyForce, 3, 0, 0},
-		{"setFlag", setFlag, 1, 0, 0},
-		{"clearFlag", clearFlag, 1, 0, 0},
+		{"applyForceAt", applyForceAt, 2, 0, 0},
+		{"setFlag", setFlag, 2, 0, 0},
 		{NULL, NULL, 0, 0, 0}
 	};
 
@@ -65,20 +65,6 @@ namespace jsentity
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 
-	jsvector::jsVectorOps posOps =
-	{
-		posRead, posChanged
-	};
-
-	jsvector::jsVectorOps rotOps =
-	{
-		getRot, setRot
-	};
-
-	jsvector::jsVectorOps velocityOps =
-	{
-		getVelocity, setVelocity
-	};
 };
 
 using namespace jsentity;
@@ -181,9 +167,6 @@ JSBool jsentity::createSphereEntity(JSContext* cx, JSObject* obj, uintN argc, js
 
 	JS_DefineProperty(cx, object, "radius", JSVAL_NULL, getRadius, setRadius, JSPROP_PERMANENT);
 
-	JSObject* vec = jsvector::NewWrappedVector(cx, object, &((SphereEntity*)new_entity)->velocity, false, &velocityOps, new_entity);
-	JS_DefineProperty(cx, object, "velocity", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT);
-
 	JS_LeaveLocalRootScope(cx);
 
 	return JS_TRUE;
@@ -254,19 +237,6 @@ jsval jsentity::createEntityObject(JSContext* cx, entity::Entity* entity)
 	if (!JS_DefineProperty(cx, object, "name", name, NULL, NULL, JSPROP_READONLY))
 		goto error;
 
-	JSObject* vec;
-	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &posOps, entity);
-	if (!JS_DefineProperty(cx, object, "pos", OBJECT_TO_JSVAL(vec), NULL, posSet, JSPROP_PERMANENT))
-		goto error;
-
-	vec = jsvector::NewWrappedVector(cx, object, NULL, false, &rotOps, entity);
-	if (!JS_DefineProperty(cx, object, "rot", OBJECT_TO_JSVAL(vec), NULL, rotSet, JSPROP_PERMANENT))
-		goto error;
-
-	vec = jsvector::NewWrappedVector(cx, object, &entity->scale, false);
-	if (!JS_DefineProperty(cx, object, "scale", OBJECT_TO_JSVAL(vec), NULL, NULL, JSPROP_PERMANENT))
-		goto error;
-
 	if (!JS_DefineProperty(cx, object, "sleeping", JSVAL_FALSE, getSleeping, setSleeping, JSPROP_PERMANENT))
 		goto error;
 
@@ -279,94 +249,6 @@ error:
 	return JSVAL_NULL;
 }
 
-JSBool jsentity::posRead(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::Entity* entity = (entity::Entity*)user;
-	vec = entity->getPos();
-	return JS_TRUE;
-}
-
-JSBool jsentity::posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::Entity* entity = (entity::Entity*)user;
-	entity->setPos(vec);
-	return JS_TRUE;
-}
-
-JSBool jsentity::getRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::Entity* entity = (entity::Entity*)user;
-	vec = entity->getRot();
-	return JS_TRUE;
-}
-
-JSBool jsentity::setRot(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::Entity* entity = (entity::Entity*)user;
-	entity->setRot(vec);
-	return JS_TRUE;
-}
-
-JSBool jsentity::getVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::SphereEntity* entity = (entity::SphereEntity*)user;
-	vec = entity->getVelocity();
-	return JS_TRUE;
-}
-
-JSBool jsentity::setVelocity(JSContext* cx, JSObject* obj, D3DXVECTOR3& vec, void* user)
-{
-	entity::SphereEntity* entity = (entity::SphereEntity*)user;
-	//entity->setVelocity(vec);
-	return JS_TRUE;
-}
-
-JSBool jsentity::posSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
-{
-	D3DXVECTOR3 pos;
-	if (!jsvector::ParseVector(cx, pos, 1, vp))
-		goto error;
-
-	if (!JS_GetProperty(cx, obj, "pos", vp))
-		goto error;
-
-	entity::Entity* entity = getEntityReserved(cx, obj);
-	if (!entity)
-		goto error;
-
-	entity->setPos(pos);
-
-	JSObject* vec = jsvector::NewWrappedVector(cx, obj, NULL, false, &posOps, entity);
-	*vp = OBJECT_TO_JSVAL(vec);
-
-	return JS_TRUE;
-
-error:
-	JS_ReportError(cx, "[jsentity::setPos] error setting entity position");
-	return JS_FALSE;
-}
-
-JSBool jsentity::rotSet(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
-{
-	D3DXVECTOR3 rot;
-	if (!jsvector::ParseVector(cx, rot, 1, vp))
-		goto error;
-
-	entity::Entity* entity = getEntityReserved(cx, obj);
-	if (!entity)
-		goto error;
-
-	entity->setRot(rot);
-
-	JSObject* vec = jsvector::NewWrappedVector(cx, obj, NULL, false, &rotOps, entity);
-	*vp = OBJECT_TO_JSVAL(vec);
-
-	return JS_TRUE;
-
-error:
-	JS_ReportError(cx, "[jsentity::rotSet] error setting entity rotation");
-	return JS_FALSE;
-}
 
 JSBool jsentity::getName(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 {
@@ -435,6 +317,19 @@ JSBool jsentity::setRadius(JSContext* cx, JSObject* obj, jsval id, jsval* vp)
 	return JS_TRUE;
 }
 
+JSBool jsentity::getPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	JSObject* vec = jsvector::NewVector(cx, NULL, entity->getPos());
+	*rval = OBJECT_TO_JSVAL(vec);
+
+	return JS_TRUE;
+}
 
 JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
@@ -449,6 +344,20 @@ JSBool jsentity::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 		return JS_FALSE;
 
 	entity->setPos(vec);
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::getRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	JSObject* vec = jsvector::NewVector(cx, NULL, entity->getRot());
+	*rval = OBJECT_TO_JSVAL(vec);
 
 	return JS_TRUE;
 }
@@ -470,6 +379,38 @@ JSBool jsentity::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	return JS_TRUE;
 }
 
+JSBool jsentity::getVelocity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	JSObject* vec = jsvector::NewVector(cx, NULL, entity->getRot());
+	*rval = OBJECT_TO_JSVAL(vec);
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::setVelocity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
+
+	if (!jsvector::ParseVector(cx, vec, argc, argv))
+		return JS_FALSE;
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	entity->setVelocity(vec);
+
+	return JS_TRUE;
+}
+
+
 JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
@@ -483,19 +424,6 @@ JSBool jsentity::setScale(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 		return JS_FALSE;
 
 	entity->setScale(vec);
-
-	return JS_TRUE;
-}
-
-JSBool jsentity::update(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	*rval = JSVAL_VOID;
-
-	entity::Entity* entity = getEntityReserved(cx, obj);
-	if (!entity)
-		return JS_FALSE;
-
-	entity->update();
 
 	return JS_TRUE;
 }
@@ -517,6 +445,29 @@ JSBool jsentity::applyForce(JSContext *cx, JSObject *obj, uintN argc, jsval *arg
 	return JS_TRUE;
 }
 
+JSBool jsentity::applyForceAt(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+	D3DXVECTOR3 pos, force;
+
+	if(argc != 2)
+	{
+		JS_ReportError(cx, "applyForceAt: function takes 2 arguments <vector pos, vector force>");
+		return JS_FALSE;
+	}
+
+	if (!jsvector::ParseVector(cx, pos, 1, &argv[0]))
+		return JS_FALSE;
+
+	entity::Entity* entity = getEntityReserved(cx, obj);
+	if (!entity)
+		return JS_FALSE;
+
+	entity->applyForce(pos);
+
+	return JS_TRUE;
+}
+
 JSBool jsentity::setFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	*rval = JSVAL_VOID;
@@ -531,24 +482,6 @@ JSBool jsentity::setFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, 
 		return JS_FALSE;
 
 	//entity->setVisualizationFlag(flag);
-
-	return JS_TRUE;
-}
-
-JSBool jsentity::clearFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	*rval = JSVAL_VOID;
-
-	if(argc != 1)
-		return JS_FALSE;
-
-	int flag = JSVAL_TO_INT(argv[0]);
-
-	entity::Entity* entity = getEntityReserved(cx, obj);
-	if (!entity)
-		return JS_FALSE;
-
-	//entity->clearVisualizationFlag(flag);
 
 	return JS_TRUE;
 }

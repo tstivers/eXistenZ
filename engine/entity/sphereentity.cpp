@@ -9,6 +9,8 @@
 
 namespace entity
 {
+
+	
 }
 
 namespace physics
@@ -108,10 +110,14 @@ void SphereEntity::calcAABB()
 {
 }
 
-D3DXVECTOR3& SphereEntity::getVelocity()
+D3DXVECTOR3 SphereEntity::getVelocity()
 {
-	velocity = (D3DXVECTOR3&)actor->getLinearVelocity();
-	return velocity;
+	return (D3DXVECTOR3&)actor->getLinearVelocity();
+}
+
+void SphereEntity::setVelocity( const D3DXVECTOR3& velocity )
+{
+	actor->setLinearVelocity((const NxVec3&) velocity);
 }
 
 void SphereEntity::applyForce(const D3DXVECTOR3 &force)

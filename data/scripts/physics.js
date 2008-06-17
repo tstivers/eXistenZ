@@ -1,22 +1,20 @@
-unbind(KEY_F2);
-bind(KEY_F2, toggle_physicsDebug);
-unbind(KEY_F3);
-bind(KEY_F3, toggle_entityAxis);
 
 
 var physicsDebug = false;
-function toggle_physicsDebug() {
+toggle_physicsDebug = function() {
     if (!physicsDebug) {
         system.physics.setParameter(NX_VISUALIZATION_SCALE, 1.0);
-        system.physics.setParameter(NX_VISUALIZE_BODY_AXES, 1.0);
+        //system.physics.setParameter(NX_VISUALIZE_BODY_AXES, 1.0);
+        system.physics.setParameter(NX_VISUALIZE_BODY_SLEEP, 1.0);
         system.physics.setParameter(NX_VISUALIZE_WORLD_AXES, 1.0);
         system.physics.setParameter(NX_VISUALIZE_COLLISION_SHAPES, 1.0);
         system.physics.debugrender = 1;
         physicsDebug = true;
+        print("physics debug enabled");
     }
     else {
         system.physics.setParameter(NX_VISUALIZATION_SCALE, 0.0);
-        system.physics.setParameter(NX_VISUALIZE_COLLISION_SHAPES, 0.0)
+        system.physics.setParameter(NX_VISUALIZE_COLLISION_SHAPES, 0.0);
         system.physics.debugrender = 0;
         physicsDebug = false;
     }
@@ -41,3 +39,8 @@ function toggle_entityAxis() {
         print("axis display off")
     }
 }
+
+unbind(KEY_F2);
+bind(KEY_F2, toggle_physicsDebug);
+unbind(KEY_F3);
+bind(KEY_F3, toggle_entityAxis);

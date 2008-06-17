@@ -30,9 +30,9 @@ namespace entity
 
 		D3DXVECTOR3& getRot();
 		D3DXVECTOR3& getPos();
-		D3DXVECTOR3& getVelocity();
+		void setVelocity(const D3DXVECTOR3& velocity);
+		D3DXVECTOR3 getVelocity();
 
-		D3DXVECTOR3 velocity;
 		NxActor* actor;
 		texture::DXTexture* texture;
 		float radius;

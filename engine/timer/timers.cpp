@@ -73,12 +73,13 @@ bool timer::removeTimer(const string& name)
 		return false;
 
 	vector<pTimer> temp;
-	while (timer_queue.top() != i->second)
+	while (!timer_queue.empty() && (timer_queue.top() != i->second))
 	{
 		temp.push_back(timer_queue.top());
 		timer_queue.pop();
 	}
 
+	assert(timer_queue.top() == i->second);
 	timer_queue.pop();
 
 	for (vector<pTimer>::iterator j = temp.begin(); j != temp.end(); j++)

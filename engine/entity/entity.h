@@ -57,6 +57,9 @@ namespace entity
 		virtual void calcAABB() = 0;
 		virtual void doTick();
 		virtual void applyForce(const D3DXVECTOR3 &force);
+		virtual void applyForceAt(const D3DXVECTOR3& pos, const D3DXVECTOR3 &force);
+		virtual D3DXVECTOR3 getVelocity();
+		virtual void setVelocity(const D3DXVECTOR3& velocity);
 		virtual bool getSleeping();
 		virtual void setSleeping(bool asleep);
 		inline void mark(unsigned int frame);

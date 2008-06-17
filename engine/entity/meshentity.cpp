@@ -7,10 +7,11 @@
 
 using namespace entity;
 
-MeshEntity::MeshEntity(string name, string mesh)
+MeshEntity::MeshEntity(string name, string meshname)
 	: Entity(name), actor(NULL)
 {
-	this->mesh = mesh::getMesh(mesh);
+	this->mesh = mesh::getMesh(meshname);
+	assert(mesh);
 	string shapefile = string(this->mesh->name.begin(), boost::find_first(this->mesh->name, ".fbx").begin());
 	shapefile += "_DYNAMIC.xml";
 	this->shapes = physics::getShapeEntry(shapefile);

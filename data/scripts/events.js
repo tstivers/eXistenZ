@@ -6,7 +6,7 @@ function on_tick() {
     if (last_time == 0)
         last_time = system.time.ms;
 
-    //    system.render.drawline(game.player.pos, [0,0,0]);
+    //    system.render.drawline(game.player.getPos(), [0,0,0]);
 
     if (system.time.ms > last_time + 1000) {
         //print("tick! (" + arg + ")");
@@ -28,11 +28,11 @@ function on_render() {
             var length = v.length();
             v.normalize();
             v.mul(length / 5);
-            v.add(entities[name].pos);
-            system.render.drawline(entities[name].pos, v);
+            v.add(entities[name].getPos());
+            system.render.drawline(entities[name].getPos(), v);
         }
         if (system.render.draw_entity_names) {
-            var pos = new Vector(entities[name].pos);
+            var pos = new Vector(entities[name].getPos());
             pos.y += 1;
             drawtext(name, pos);   
         }

@@ -8,8 +8,10 @@ namespace jsplayer
 
 	JSBool posChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user);
 	JSBool sizeChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec, void* user);
-	JSBool setPos(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setRot(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool getPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setStepUp(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
 	JSBool setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
@@ -29,8 +31,10 @@ namespace jsplayer
 
 	JSFunctionSpec player_methods[] =
 	{
-//		{"setPos",	player_setPos,	3,0,0 },
-//		{"setRot",  player_setRot,  3,0,0 },
+		{"getPos",	getPos,	0,0,0 },
+		{"setPos",	setPos,	3,0,0 },
+		{"getRot",	getRot,	0,0,0 },
+		{"setRot",  setRot, 3,0,0 },
 //		{"setSize", player_setSize, 3,0,0 },
 		{0, 0, 0, 0, 0}
 	};
@@ -58,13 +62,8 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 		goto error;
 	JS_ForgetLocalRoot(cx, pobj);
 
-	JSObject* pos = jsvector::NewWrappedVector(cx, pobj, &player->pos, false, &posOps, player);
-	JS_DefineProperty(cx, pobj, "pos", OBJECT_TO_JSVAL(pos), NULL, setPos, JSPROP_PERMANENT);
-	JS_ForgetLocalRoot(cx, pos);
-
-	JSObject* rot = jsvector::NewWrappedVector(cx, pobj, &player->rot, false);
-	JS_DefineProperty(cx, pobj, "rot", OBJECT_TO_JSVAL(rot), NULL, setRot, JSPROP_PERMANENT);
-	JS_ForgetLocalRoot(cx, rot);
+	if (!JS_DefineFunctions(cx, pobj, player_methods))
+		goto error;
 
 	JSObject* size = jsvector::NewWrappedVector(cx, pobj, &player->size, false);
 	JS_DefineProperty(cx, pobj, "size", OBJECT_TO_JSVAL(size), NULL, setSize, JSPROP_PERMANENT);
@@ -109,46 +108,66 @@ JSBool jsplayer::sizeChanged(JSContext* cx, JSObject* obj, D3DXVECTOR3& new_vec,
 	return JS_TRUE;
 }
 
-JSBool jsplayer::setPos(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::getPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
-	D3DXVECTOR3 pos;
-	if (!jsvector::ParseVector(cx, pos, 1, vp))
-		goto error;
+	*rval = JSVAL_VOID;
 
-	if (!JS_GetProperty(cx, obj, "pos", vp))
-		goto error;
+	game::Player* player = getPlayerReserved(cx, obj);
+	if (!player)
+		return JS_FALSE;
 
-	// avoid calling Player->setPos() 3 times (?)
-	//if(!jsvector::SetVector(cx, JSVAL_TO_OBJECT(*vp), pos))
-	//	goto error;
-
-	if (!getPlayerReserved(cx, obj)->setPos(pos))
-		goto error;
+	JSObject* vec = jsvector::NewVector(cx, NULL, player->getPos());
+	*rval = OBJECT_TO_JSVAL(vec);
 
 	return JS_TRUE;
-
-error:
-	JS_ReportError(cx, "[jsplayer::setPos] error setting player position");
-	return JS_FALSE;
 }
 
-JSBool jsplayer::setRot(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
+	*rval = JSVAL_VOID;
 	D3DXVECTOR3 vec;
-	if (!jsvector::ParseVector(cx, vec, 1, vp))
-		goto error;
 
-	if (!JS_GetProperty(cx, obj, "rot", vp))
-		goto error;
+	if (!jsvector::ParseVector(cx, vec, argc, argv))
+		return JS_FALSE;
 
-	if (!getPlayerReserved(cx, obj)->setRot(vec))
-		goto error;
+	game::Player* player = getPlayerReserved(cx, obj);
+	if (!player)
+		return JS_FALSE;
+
+	player->setPos(vec);
 
 	return JS_TRUE;
+}
 
-error:
-	JS_ReportError(cx, "[jsplayer::setRot] error setting player rotation");
-	return JS_FALSE;
+JSBool jsplayer::getRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+
+	game::Player* player = getPlayerReserved(cx, obj);
+	if (!player)
+		return JS_FALSE;
+
+	JSObject* vec = jsvector::NewVector(cx, NULL, player->getRot());
+	*rval = OBJECT_TO_JSVAL(vec);
+
+	return JS_TRUE;
+}
+
+JSBool jsplayer::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	*rval = JSVAL_VOID;
+	D3DXVECTOR3 vec;
+
+	if (!jsvector::ParseVector(cx, vec, argc, argv))
+		return JS_FALSE;
+
+	game::Player* player = getPlayerReserved(cx, obj);
+	if (!player)
+		return JS_FALSE;
+
+	player->setRot(vec);
+
+	return JS_TRUE;
 }
 
 JSBool jsplayer::setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp)

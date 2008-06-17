@@ -4,6 +4,22 @@
 namespace entity
 {
 
+
+	void Entity::applyForceAt( const D3DXVECTOR3& pos, const D3DXVECTOR3 &force )
+	{
+		LOG("attempted to apply force to non-dynamic entity %s", name.c_str());
+	}
+
+	D3DXVECTOR3 Entity::getVelocity()
+	{
+		LOG("attempted to get velocity of non-dynamic entity %s", name.c_str());
+		return D3DXVECTOR3();
+	}
+
+	void Entity::setVelocity( const D3DXVECTOR3& velocity )
+	{
+		LOG("attempted to set velocity of non-dynamic entity %s", name.c_str());
+	}
 };
 
 using namespace entity;

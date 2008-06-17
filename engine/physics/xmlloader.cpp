@@ -15,6 +15,7 @@ namespace physics
 	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxCookingInterface *gCooking;
 	extern NxScene* gScene;
+	NxMat34 axis_convert;
 }
 
 namespace xmlloader
@@ -70,7 +71,7 @@ NxMat34 xmlloader::parseMatrix(const string& str)
 
 void xmlloader::parseShapeDesc( xml_node<>* shape, NxShapeDesc* desc)
 {
-	desc->localPose = parseMatrix(shape->first_node("localPose")->value());
+	desc->localPose = axis_convert * parseMatrix(shape->first_node("localPose")->value());
 }
 
 bool xmlloader::parseBoxShape(xml_node<>* shape, ShapeEntry sl)
@@ -196,8 +197,25 @@ ShapeEntry physics::loadDynamicsXML(string filename)
 	buffer[f->size] = 0;
 
 	doc.parse<parse_trim_whitespace>(&buffer.front());
-	
-	xml_node<>* shape = doc.first_node()->first_node("NxuPhysicsCollection")->first_node("NxSceneDesc")->first_node("NxActorDesc")->first_node();
+	xml_node<>* scene = doc.first_node()->first_node("NxuPhysicsCollection")->first_node("NxSceneDesc");
+	xml_node<>* axis = scene->first_node("upAxis");
+	NxMat33 rot;
+	rot.id();
+	NxVec3 trans(0.0, 0.0, 0.0);
+	if(axis)
+	{
+		switch(lexical_cast<int>(axis->value()))
+		{
+		case 0: // z-axis? whee
+			rot.rotX(D3DXToRadian(-90.0));
+			break;
+		default:
+			INFO("ERROR: unknown up axis in dynamics file");
+			break;
+		}
+	}
+	axis_convert = NxMat34(rot, trans);
+	xml_node<>* shape = scene->first_node("NxActorDesc")->first_node();
 
 	while(shape)
 	{
