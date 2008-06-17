@@ -1028,14 +1028,6 @@
 			Name="entity"
 			>
 			<File
-				RelativePath="..\engine\entity\boxentity.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\boxentity.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\entity\entity.cpp"
 				>
 			</File>
@@ -1044,11 +1036,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\engine\entity\entitycache.cpp"
+				RelativePath="..\engine\entity\entitymanager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\engine\entity\entitycache.h"
+				RelativePath="..\engine\entity\entitymanager.h"
 				>
 			</File>
 			<File
@@ -1060,23 +1052,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\engine\entity\meshentity.cpp"
+				RelativePath="..\engine\entity\jsentitymanager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\engine\entity\meshentity.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\sphereentity.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\sphereentity.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\staticentity.cpp"
+				RelativePath="..\engine\entity\jsentitymanager.h"
 				>
 			</File>
 		</Filter>

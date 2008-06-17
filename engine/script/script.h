@@ -55,4 +55,32 @@ namespace script
 	void init();
 	void release();
 	JSObject* GetObject(const string& name);
+
+	class ScriptedObject
+	{
+	public:
+		ScriptedObject() : jsObject(NULL) 
+		{
+			initScriptObject();
+		}
+
+		virtual ~ScriptedObject() 
+		{
+			if(jsObject)
+				destroyScriptObject();
+		}
+
+		virtual JSObject* getScriptObject() 
+		{ 
+			if(!jsObject)
+				jsObject = createScriptObject();
+			return jsObject;
+		}
+
+	protected:
+		virtual JSObject* createScriptObject() { return NULL; }
+		virtual void destroyScriptObject() {}
+		virtual void initScriptObject() {}
+		JSObject* jsObject;
+	};
 };
