@@ -53,10 +53,12 @@ engine/entity/boxentity.cpp -text
 engine/entity/boxentity.h -text
 engine/entity/entity.cpp eol=crlf
 engine/entity/entity.h eol=crlf
-engine/entity/entitycache.cpp eol=crlf
-engine/entity/entitycache.h eol=crlf
+engine/entity/entitymanager.cpp eol=crlf
+engine/entity/entitymanager.h eol=crlf
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
+engine/entity/jsentitymanager.cpp -text
+engine/entity/jsentitymanager.h -text
 engine/entity/meshentity.cpp -text
 engine/entity/meshentity.h -text
 engine/entity/sphereentity.cpp -text

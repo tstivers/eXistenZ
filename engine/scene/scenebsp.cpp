@@ -263,7 +263,7 @@ void SceneBSP::render()
 		{
 			getEntityLighting(&lighting, entities[i]);
 			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
-			entities[i]->render(&lighting);
+			//entities[i]->render(&lighting);
 			//render::drawLine(entities[i]->pos, entities[i]->pos + lighting.light.Direction, D3DXCOLOR(lighting.light.Diffuse));
 		}
 	}
@@ -280,7 +280,8 @@ void SceneBSP::render()
 
 void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* entity)
 {
-	D3DXVECTOR3 origin(entity->getPos());
+	//D3DXVECTOR3 origin(entity->getPos());
+	D3DXVECTOR3 origin;
 	swap(origin.y, origin.z);
 	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	int pos[3];
