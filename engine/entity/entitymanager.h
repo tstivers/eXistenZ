@@ -31,6 +31,7 @@ namespace entity
 		virtual int getEntityCount();
 		virtual void removeEntity(const string& name);
 		virtual void addEntity(shared_ptr<Entity> entity);
+		virtual int getEntityList(vector<string>& names);
 
 		// iteration functions
 		virtual iterator begin() { return m_entities.begin(); }

@@ -1,6 +1,5 @@
 #include "precompiled.h"
 #include "script/script.h"
-#include "script/jsvector.h"
 #include "console/console.h"
 #include "vfs/file.h"
 
@@ -45,7 +44,7 @@ ScriptEngine::ScriptEngine()
 	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
 	//JS_AddRoot(cx, globalObj);
 	JS_InitStandardClasses(cx, globalObj);
-	jsvector::initVectorClass(cx, globalObj);
+	registeredfunctions::fireScriptFunctions(this);
 
 	JS_SetVersion(cx, JSVERSION_LATEST);
 	INFO("Javascript Engine version %s loaded", JS_VersionToString(JS_GetVersion(cx)));
