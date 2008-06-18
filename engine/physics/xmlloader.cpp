@@ -50,7 +50,7 @@ NxVec3 xmlloader::parseVector(const string& str)
 {
 	vector<string> v;
 	split(v, str, is_space());
-	assert(v.size() == 3);
+	ASSERT(v.size() == 3);
 
 	return NxVec3(lexical_cast<double>(v[0]), lexical_cast<double>(v[1]), lexical_cast<double>(v[2]));
 }
@@ -60,7 +60,7 @@ NxMat34 xmlloader::parseMatrix(const string& str)
 	vector<string> v;
 	split(v, str, is_space(), token_compress_on);
 	
-	assert(v.size() == 12);
+	ASSERT(v.size() == 12);
 
 	float values[12];
 	for(int i = 0; i < 12; i++)
@@ -101,7 +101,7 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 	xml_node<>* node = doc->first_node()->first_node("NxuPhysicsCollection")->first_node("NxConvexMeshDesc");
 	while(node && (string(node->first_attribute("id")->value()) != id))
 		node = node->next_sibling("NxConvexMeshDesc");
-	assert(node);
+	ASSERT(node);
 
 	MemoryWriteBuffer mwBuf;
 
@@ -126,14 +126,14 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 					havenibble = true;
 				}
 		}
-		assert(havenibble == false);
-		assert(mwBuf.currentSize == size);
+		ASSERT(havenibble == false);
+		ASSERT(mwBuf.currentSize == size);
 	}
 	else
 	{
 		vector<string> pts;
 		split(pts, string(node->first_node("points")->value()), is_space(), token_compress_on);
-		assert(pts.size() % 3 == 0);
+		ASSERT(pts.size() % 3 == 0);
 
 		vector<float> fpts;
 		for(int i = 0; i < pts.size(); i++)
@@ -141,7 +141,7 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 		
 		vector<string> tris;
 		split(tris, string(node->first_node("triangles")->value()), is_space(), token_compress_on);
-		assert(tris.size() % 3 == 0);
+		ASSERT(tris.size() % 3 == 0);
 
 		vector<int> itris;
 		for(int i = 0; i < tris.size(); i++)
@@ -161,7 +161,7 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 	}
 
 	NxConvexMesh* mesh = gPhysicsSDK->createConvexMesh(MemoryReadBuffer(mwBuf.data));
-	assert(mesh);
+	ASSERT(mesh);
 
 	//MemoryWriteBuffer buf2;
 	//if(NxScaleCookedConvexMesh(MemoryReadBuffer(mwBuf.data), 0.080693, buf2)) //Resize the mesh by a factor 0.5

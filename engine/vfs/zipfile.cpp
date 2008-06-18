@@ -20,7 +20,7 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 	if (!file)
 	{
 		LOG("error opening \"%s\"", archivename);
-		assert("couldn't open archive");
+		ASSERT("couldn't open archive");
 		return;
 	}
 
@@ -80,7 +80,7 @@ U32 vfs::ZipFile::read(void* buffer, U32 size)
 
 U32 vfs::ZipFile::write(const void* buffer, U32 size, bool flush)
 {
-	assert("tried to write to a zipfile");
+	ASSERT("tried to write to a zipfile");
 	return 0;
 }
 

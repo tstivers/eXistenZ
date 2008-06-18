@@ -18,7 +18,7 @@ vfs::DiskFile::DiskFile(const char* filename, bool write) : IFile(filename, writ
 	if (hfile == INVALID_HANDLE_VALUE)
 	{
 		LOG("error opening \"%s\"", filename);
-		assert(hfile != INVALID_HANDLE_VALUE);
+		ASSERT(hfile != INVALID_HANDLE_VALUE);
 		return;
 	}
 
@@ -37,7 +37,7 @@ U32 vfs::DiskFile::read(void* buffer, U32 size)
 
 	if (!ReadFile(hfile, buffer, size, (LPDWORD) &bytes_read, NULL))
 	{
-		assert("read error");
+		ASSERT("read error");
 		return 0;
 	}
 
@@ -56,7 +56,7 @@ U32 vfs::DiskFile::write(const void* buffer, U32 size, bool flush)
 
 	if (!WriteFile(hfile, buffer, size, (LPDWORD)&bytes_written, NULL))
 	{
-		assert("write error");
+		ASSERT("write error");
 		return 0;
 	}
 

@@ -79,7 +79,7 @@ bool timer::removeTimer(const string& name)
 		timer_queue.pop();
 	}
 
-	assert(timer_queue.top() == i->second);
+	ASSERT(timer_queue.top() == i->second);
 	timer_queue.pop();
 
 	for (vector<pTimer>::iterator j = temp.begin(); j != temp.end(); j++)

@@ -54,7 +54,7 @@ void jsentity::initComponentClass(ScriptEngine* engine)
 		NULL,
 		NULL);
 
-	assert(component_prototype);
+	ASSERT(component_prototype);
 }
 
 entity::Component* jsentity::getComponentReserved(JSContext* cx, JSObject* obj)

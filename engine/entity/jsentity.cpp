@@ -74,7 +74,7 @@ void jsentity::initEntityClass(ScriptEngine* engine)
 		NULL,
 		NULL);
 
-	assert(entity_prototype);
+	ASSERT(entity_prototype);
 
 	components_prototype = JS_InitClass(
 		engine->GetContext(),
@@ -88,7 +88,7 @@ void jsentity::initEntityClass(ScriptEngine* engine)
 		NULL,
 		NULL);
 
-	assert(components_prototype);
+	ASSERT(components_prototype);
 }
 
 JSObject* jsentity::createEntityObject(Entity* entity)
