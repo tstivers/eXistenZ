@@ -5,10 +5,13 @@
 namespace jsentity
 {
 	JSObject* initManagerClass();
-	entity::EntityManager* getManagerReserved(JSContext* cx, JSObject* obj);
+	__forceinline entity::EntityManager* getManagerReserved(JSContext* cx, JSObject* obj);
 
 	JSBool createEntity(JSContext *cx, uintN argc, jsval *vp);
 	JSBool removeEntity(JSContext *cx, uintN argc, jsval *vp);
+
+	JSBool enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
+	JSBool resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 
 	JSObject* manager_prototype = NULL;
 
@@ -25,7 +28,7 @@ namespace jsentity
 		JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_NEW_ENUMERATE,
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
-		(JSEnumerateOp)enumerateEntities, JS_ResolveStub,
+		(JSEnumerateOp)enumerateEntities, (JSResolveOp)resolveEntity,
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 }
@@ -112,12 +115,14 @@ JSBool jsentity::removeEntity(JSContext *cx, uintN argc, jsval *vp)
 
 JSBool jsentity::enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp)
 {
-	EntityManager* manager = getManagerReserved(cx, obj);
-	if(!manager)
+	if(obj == manager_prototype)
 	{
 		*statep = JSVAL_NULL;
 		return JS_TRUE;
 	}
+
+	EntityManager* manager = getManagerReserved(cx, obj);
+	ASSERT(manager);
 
 	EntityManager::iterator* it;
 
@@ -144,6 +149,27 @@ JSBool jsentity::enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enu
 		it = (EntityManager::iterator*)JSVAL_TO_PRIVATE(*statep);
 		*statep = JSVAL_NULL;
 		delete it;
+	}
+
+	return JS_TRUE;
+}
+
+// used for lazily-defined entities (all entities created from c++)
+JSBool jsentity::resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp)
+{
+	*objp = NULL;
+
+	if(!JSVAL_IS_STRING(id) || obj == manager_prototype)
+		return JS_TRUE;
+
+	EntityManager* manager = getManagerReserved(cx, obj);
+	ASSERT(manager);
+
+	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
+	if(Entity* entity = manager->getEntity(name))
+	{
+		entity->getScriptObject(); // this defines the entity
+		*objp = obj;
 	}
 
 	return JS_TRUE;
