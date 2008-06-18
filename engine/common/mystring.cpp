@@ -217,6 +217,6 @@ string StripPathFromFileName(const string& filename)
 string StripFileNameFromPath(const string& filename)
 {
 	size_t pos = filename.find_last_of("/\\");
-	assert(pos != string::npos);
+	ASSERT(pos != string::npos);
 	return string(filename.begin(), filename.begin() + pos);
 }

@@ -51,7 +51,7 @@ void registeredfunctions::fireStartupFunctions()
 {
 	for (startup_list_t::iterator it = getStartupList().begin(); it != getStartupList().end(); it++)
 	{
-		INFO("executing startup function [%s]", it->name.c_str());
+		//INFO("executing startup function [%s]", it->name.c_str());
 		it->func();
 	}
 }

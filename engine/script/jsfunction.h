@@ -87,14 +87,14 @@ namespace jsscript
 			this->fun = 0;
 			this->cx = cx;
 			JSObject* fo = script::GetObject(function_name);
-			assert(fo);
+			ASSERT(fo);
 			if (JS_ObjectIsFunction(cx, fo))
 			{
 				this->fun = OBJECT_TO_JSVAL(fo);
 				this->par = JS_GetParent(cx, JSVAL_TO_OBJECT(fun));
 			}
 
-			assert(fun);
+			ASSERT(fun);
 			acquire_locks();
 		}
 

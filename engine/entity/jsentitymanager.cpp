@@ -51,7 +51,7 @@ JSObject* jsentity::initManagerClass()
 				NULL,
 				NULL);
 
-	assert(proto);
+	ASSERT(proto);
 	JS_SetReservedSlot(gScriptEngine->GetContext(), proto, 0, PRIVATE_TO_JSVAL(0));
 	return proto;
 }
@@ -93,7 +93,7 @@ entity::EntityManager* jsentity::getManagerReserved(JSContext* cx, JSObject* obj
 JSBool jsentity::createEntity(JSContext *cx, uintN argc, jsval *vp)
 {
 	EntityManager* manager = getManagerReserved(cx, JS_THIS_OBJECT(cx, vp));
-	assert(manager);
+	ASSERT(manager);
 
 	Entity* entity = manager->createEntity(JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx, vp)[0])));
 	if (!entity)
@@ -109,7 +109,7 @@ JSBool jsentity::createEntity(JSContext *cx, uintN argc, jsval *vp)
 JSBool jsentity::removeEntity(JSContext *cx, uintN argc, jsval *vp)
 {
 	EntityManager* manager = getManagerReserved(cx, JS_THIS_OBJECT(cx, vp));
-	assert(manager);
+	ASSERT(manager);
 
 	manager->removeEntity(JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx, vp)[0])));
 

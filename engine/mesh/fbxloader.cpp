@@ -30,7 +30,7 @@ Mesh* mesh::loadFBXMesh(const string& name)
 
 	std::vector<std::string> bleh;
 	boost::split(bleh, name, boost::is_any_of("#|"));
-	assert(bleh.size() == 2);
+	ASSERT(bleh.size() == 2);
 
 	string filename = bleh[0];
 	string meshname = bleh[1];
