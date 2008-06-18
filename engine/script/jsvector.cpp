@@ -6,7 +6,7 @@ namespace jsvector
 {
 	JSObject* vector_prototype = NULL;
 
-	JSObject* initVectorClass(JSContext* cx, JSObject* obj);
+	void initVectorClass(ScriptEngine* engine);
 	JSBool vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -27,24 +27,33 @@ namespace jsvector
 
 	JSFunctionSpec vector_methods[] =
 	{
-		{"normalize",	vector_normalize,	0, 0, 0 },
-		{"length",		vector_length, 0, 0, 0},
-		{"rotate",		vector_rotate,		3, 0, 0 },
-//		{"toString",	vector_toString,	0,0,0 },
-		{0, 0, 0, 0, 0}
+		{"normalize",	vector_normalize,	0, 0, 0},
+		{"length",		vector_length,		0, 0, 0},
+		{"rotate",		vector_rotate,		3, 0, 0},
+//		{"toString",	vector_toString,	0, 0, 0},
+		JS_FS_END
 	};
 }
 
 using namespace jsvector;
 
-JSObject* jsvector::initVectorClass(JSContext* cx, JSObject* obj)
+REGISTER_SCRIPT_INIT(vector, initVectorClass, 1);
+
+void jsvector::initVectorClass(ScriptEngine* engine)
 {
-	vector_prototype = JS_InitClass(cx, obj, NULL, &vector_class, vector_construct, 3, NULL, vector_methods, NULL, NULL);
+	vector_prototype = JS_InitClass(
+						   engine->GetContext(),
+						   engine->GetGlobal(),
+						   NULL,
+						   &vector_class,
+						   vector_construct,
+						   3,
+						   NULL,
+						   vector_methods,
+						   NULL,
+						   NULL);
 
-	if (!vector_prototype)
-		return NULL;
-
-	return vector_prototype;
+	ASSERT(vector_prototype);
 }
 
 JSObject* jsvector::NewVector(JSContext* cx, JSObject* parent /* = NULL */, const D3DXVECTOR3& vec)

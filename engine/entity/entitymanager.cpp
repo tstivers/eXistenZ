@@ -42,7 +42,7 @@ Entity* EntityManager::getEntity(const string& name)
 		return NULL;
 }
 
-// note: this is too slow to be workable, only for debuggin
+// note: this is too slow to be workable, only for debugging
 Entity* EntityManager::getEntity(int index)
 {
 	if(index > m_entities.size())
@@ -56,6 +56,15 @@ Entity* EntityManager::getEntity(int index)
 
 int EntityManager::getEntityCount()
 {
+	return m_entities.size();
+}
+
+// another slow debugging method, use the iterator functions instead
+int EntityManager::getEntityList(vector<string>& names)
+{
+	names.reserve(m_entities.size());
+	for(entity_map::iterator it = m_entities.begin(); it != m_entities.end(); ++it)
+		names.push_back(it->first);
 	return m_entities.size();
 }
 
