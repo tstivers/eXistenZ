@@ -1,6 +1,6 @@
 #include "precompiled.h"
 
-void MatrixToYawPitchRoll(D3DXMATRIX* m, D3DXVECTOR3* pVec)
+void MatrixToYawPitchRoll(const D3DXMATRIX* m, D3DXVECTOR3* pVec)
 {
 	D3DXVECTOR3	Scale;
 	D3DXQUATERNION	Rotation;

@@ -931,6 +931,10 @@
 				RelativePath="..\engine\common\utfstring.h"
 				>
 			</File>
+			<File
+				RelativePath="..\engine\common\wrapped_global.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="scene"
@@ -1033,6 +1037,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\component.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\componenttypes.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\componenttypes.h"
 				>
 			</File>
 			<File
