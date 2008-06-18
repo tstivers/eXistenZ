@@ -1,9 +1,6 @@
 #pragma once
 
-namespace entity
-{
-	class Entity;
-}
+#include "entity/entity.h"
 
 namespace jsentity
 {

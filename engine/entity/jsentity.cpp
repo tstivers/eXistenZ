@@ -8,18 +8,18 @@ using namespace entity;
 
 namespace jsentity
 {
-	void initEntityClass(ScriptEngine* engine);
-	entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
+	static void initEntityClass(ScriptEngine* engine);
+	static entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
 
 	// method implementations
-	JSBool removeComponent(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool removeComponent(JSContext *cx, uintN argc, jsval *vp);
 
 	// property implementations
-	JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	// class functions
-	JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
-	JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 
 	JSObject* entity_prototype = NULL;
 	JSObject* components_prototype = NULL;
@@ -120,6 +120,7 @@ void jsentity::destroyEntityObject(entity::Entity* entity)
 
 entity::Entity* jsentity::getEntityReserved(JSContext* cx, JSObject* obj)
 {
+	ASSERT(obj != entity_prototype);
 	jsval entity = JSVAL_VOID;
 	JSBool ret = JS_GetReservedSlot(cx, obj, 0, &entity);
 	ASSERT(ret == JS_TRUE);

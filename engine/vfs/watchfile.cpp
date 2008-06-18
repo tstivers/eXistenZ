@@ -31,9 +31,9 @@ namespace vfs
 	typedef shared_ptr<DirectoryWatcher> DirectoryWatcherPtr;
 
 	typedef map<string, DirectoryWatcherPtr> WatchedDirs;
-	typedef multimap<const DirectoryWatcher*, tuple<string, WatchCallback, void*>> WatchedFiles;
+	typedef multimap<const DirectoryWatcher*, tuple<string, WatchCallback, void*, int>> WatchedFiles;
 	//typedef unordered_map<tuple<WatchCallback, string, void*>, UINT> DelayedCalls;
-	typedef map<UINT_PTR, tuple<WatchCallback, string, void*>> TimerCallbacks; // should be a boost::multimap
+	typedef map<UINT_PTR, tuple<int, WatchCallback, string, void*>> TimerCallbacks; // should be a boost::multimap
 
 	WatchedDirs watched_dir_list;
 	WatchedFiles watched_files_list;
@@ -46,6 +46,7 @@ namespace vfs
 	void onFileChange(DirectoryWatcher* watcher, char* filename);
 	void onDelayedCall(WPARAM timer_id);
 
+	static int tag = 0; // used as a tag because you can't compare boost function objects
 	//std::size_t hash_value(WatchCallback const& b)
 //   {
 //       //hash<int> hasher;
@@ -144,6 +145,7 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 		createWatcherWindow(&watcher_window);
 
 	string filename, path;
+	tag++;
 
 	if (strchr(watchfile.c_str(), '*') == NULL) // watching a file
 	{
@@ -166,13 +168,13 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 		WatchedDirs::iterator wdit = watched_dir_list.find(path);
 		if (wdit != watched_dir_list.end()) // already had a watcher on the dir
 		{
-			watched_files_list.insert(make_pair(wdit->second.get(), make_tuple(filename, callback, user)));
+			watched_files_list.insert(make_pair(wdit->second.get(), make_tuple(filename, callback, user, tag)));
 		}
 		else // new watcher needed
 		{
 			DirectoryWatcherPtr dw(new DirectoryWatcher(path, watcher_window));
 			watched_dir_list.insert(make_pair(path, dw));
-			watched_files_list.insert(make_pair(dw.get(), make_tuple(filename, callback, user)));
+			watched_files_list.insert(make_pair(dw.get(), make_tuple(filename, callback, user, tag)));
 		}
 		INFO("now watching directory \"%s\" for changes to \"%s\"", path.c_str(), filename.c_str());
 	}
@@ -187,13 +189,13 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 			WatchedDirs::iterator wdit = watched_dir_list.find(*it);
 			if (wdit != watched_dir_list.end()) // already had a watcher on the dir
 			{
-				watched_files_list.insert(make_pair(wdit->second.get(), make_tuple(filename, callback, user)));
+				watched_files_list.insert(make_pair(wdit->second.get(), make_tuple(filename, callback, user, tag)));
 			}
 			else // new watcher needed
 			{
 				DirectoryWatcherPtr dw(new DirectoryWatcher(*it, watcher_window));
 				watched_dir_list.insert(make_pair(*it, dw));
-				watched_files_list.insert(make_pair(dw.get(), make_tuple(filename, callback, user)));
+				watched_files_list.insert(make_pair(dw.get(), make_tuple(filename, callback, user, tag)));
 			}
 			INFO("now watching directory \"%s\" for changes to \"%s\"", (*it).c_str(), filename.c_str());
 		}
@@ -210,11 +212,13 @@ void vfs::onFileChange(DirectoryWatcher* watcher, char* filename)
 		if (wildcmp(get<0>(it->second).c_str(), filename))
 		{
 			string filepath(watcher->getPath() + "\\" + filename);
-			tuple<WatchCallback, string, void*> delayed_call = make_tuple(get<1>(it->second), filepath, get<2>(it->second));
+			tuple<int, WatchCallback, string, void*> delayed_call = make_tuple(get<3>(it->second), get<1>(it->second), filepath, get<2>(it->second));
 			TimerCallbacks::iterator tcit;
 			for (tcit = timer_callback_list.begin(); tcit != timer_callback_list.end(); tcit++)
 			{
-				if (tcit->second == delayed_call) // already a call scheduled
+				if ((get<0>(tcit->second) == get<0>(delayed_call)) &&
+					(get<2>(tcit->second) == get<2>(delayed_call)) &&
+					(get<3>(tcit->second) == get<3>(delayed_call))) // already a call scheduled
 				{
 					SetTimer(watcher_window, (UINT_PTR)tcit->first, 1000, NULL);
 					break;
@@ -239,8 +243,8 @@ void vfs::onDelayedCall(WPARAM timer_id)
 	//ASSERT(it != timer_callback_list.end());
 	if (it == timer_callback_list.end())
 		return;
-	WatchCallback callback = get<0>(it->second);
-	callback(get<1>(it->second), get<2>(it->second));
+	WatchCallback callback = get<1>(it->second);
+	callback(get<2>(it->second), get<3>(it->second));
 	KillTimer(watcher_window, timer_id);
 	timer_callback_list.erase(it);
 }

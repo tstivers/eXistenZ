@@ -1,1 +1,76 @@
 #include "precompiled.h"
+#include "entity/jscomponent.h"
+#include "entity/component.h"
+
+using namespace jsentity;
+using namespace entity;
+
+namespace jsentity
+{
+	static void initComponentClass(ScriptEngine* engine);
+	static entity::Component* getComponentReserved(JSContext* cx, JSObject* obj);
+
+	// property implementations
+	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+
+	JSObject* component_prototype = NULL;
+
+	JSFunctionSpec component_methods[] =
+	{
+		//JS_FN("removeComponent", removeComponent, 1, 1, 0),
+		JS_FS_END
+	};
+
+	JSPropertySpec component_props[] =
+	{
+		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
+		JS_PS_END 
+	};
+
+	JSClass component_class =
+	{
+		"Component",
+		JSCLASS_HAS_RESERVED_SLOTS(1),
+		JS_PropertyStub,  JS_PropertyStub,
+		JS_PropertyStub, JS_PropertyStub,
+		JS_EnumerateStub, JS_ResolveStub,
+		JS_ConvertStub,  JS_FinalizeStub
+	};
+}
+
+REGISTER_SCRIPT_INIT(jsentity, initComponentClass, 10);
+
+void jsentity::initComponentClass(ScriptEngine* engine)
+{
+	component_prototype = JS_InitClass(
+		engine->GetContext(),
+		engine->GetGlobal(),
+		NULL,
+		&component_class,
+		NULL,
+		0,
+		component_props,
+		component_methods,
+		NULL,
+		NULL);
+
+	assert(component_prototype);
+}
+
+entity::Component* jsentity::getComponentReserved(JSContext* cx, JSObject* obj)
+{
+	ASSERT(obj != component_prototype);
+	jsval component = JSVAL_VOID;
+	JSBool ret = JS_GetReservedSlot(cx, obj, 0, &component);
+	ASSERT(ret == JS_TRUE);
+	ASSERT(component != JSVAL_VOID);
+	ASSERT(JSVAL_TO_PRIVATE(component) != NULL);
+	return (entity::Component*)JSVAL_TO_PRIVATE(component);
+}
+
+JSBool jsentity::name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+{
+	Component* component = getComponentReserved(cx, obj);
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, component->getName().c_str()));
+	return JS_TRUE;
+}

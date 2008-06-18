@@ -14,17 +14,20 @@ namespace entity
 		PosComponent(Entity* entity, const string& name);
 		~PosComponent();
 
+		// overloads
+		int getType() { return 1; }
+
 		// methods
-		virtual void setPos(const D3DXVECTOR3& pos);
+		virtual void setPos(const D3DXVECTOR3& new_pos);
 		virtual D3DXVECTOR3 getPos();
-		virtual void setRot(const D3DXVECTOR3& vec);
-		virtual void setRot(const D3DXQUATERNION& quat);
+		virtual void setRot(const D3DXVECTOR3& new_rot);
+		virtual void setRot(const D3DXQUATERNION& new_rot);
 		virtual D3DXVECTOR3 getRot();
 		virtual D3DXQUATERNION getRotQuat();
-		virtual void setScale(const D3DXVECTOR3& scl);
+		virtual void setScale(const D3DXVECTOR3& new_scale);
 		virtual D3DXVECTOR3 getScale();
-		virtual void setTransform(const D3DXMATRIX& m);
-		virtual D3DXMATRIX getTransform();
+		virtual void setTransform(const D3DXMATRIX& new_transform);
+		virtual const D3DXMATRIX& getTransform();
 
 		get_set_type setSetFunction(const get_set_type& setter);
 		get_set_type setGetFunction(const get_set_type& getter);
@@ -34,5 +37,5 @@ namespace entity
 		D3DXMATRIX m_transform;
 		get_set_type m_getter;
 		get_set_type m_setter;
-	}
+	};
 }

@@ -1,9 +1,12 @@
 #pragma once
 
 #include "script/script.h"
+#include "entity/componenttypes.h"
 
 namespace entity
 {
+	class Entity;
+
 	class Component : public script::ScriptedObject
 	{
 	public:
@@ -12,7 +15,8 @@ namespace entity
 		virtual ~Component() {}
 
 		virtual const string& getName() { return m_name; }
-		virtual const string& getTypeName() { static string typeName = "Component"; return typeName; }
+		virtual int getType() { return 0; }
+		virtual const string& getTypeName() { return getComponentTypeName(getType()); }
 
 		virtual Entity* getEntity() { return m_entity; }
 

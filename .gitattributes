@@ -45,6 +45,7 @@ engine/common/smart_ptr.h eol=crlf
 engine/common/types.h -text
 engine/common/utfstring.cpp -text
 engine/common/utfstring.h -text
+engine/common/wrapped_global.h -text
 engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf
@@ -53,6 +54,8 @@ engine/entity/boxentity.cpp -text
 engine/entity/boxentity.h -text
 engine/entity/component.cpp -text
 engine/entity/component.h -text
+engine/entity/componenttypes.cpp -text
+engine/entity/componenttypes.h -text
 engine/entity/entity.cpp eol=crlf
 engine/entity/entity.h eol=crlf
 engine/entity/entitymanager.cpp eol=crlf

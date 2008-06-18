@@ -8,6 +8,10 @@
 #include <shlwapi.h>
 #include <float.h>
 
+// disable the buggy visual studio tr1
+#define _HAS_TR1 0
+
+#include <utility>
 #include <string>
 #include <hash_map>
 #include <list>
@@ -15,14 +19,12 @@
 #include <queue>
 #include <vector>
 #include <set>
-#include <functional>
 #include <map>
-#include <algorithm>
-#include <utility>
-#include <tuple>
 #include <memory>
-#include <unordered_map>
 
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -30,11 +32,13 @@
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/bimap.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/unordered_map.hpp>
 
 #include "d3d9.h"
 #include "d3dx9core.h"
@@ -52,8 +56,7 @@
 #include "js32.h"
 
 using namespace std;
-using namespace tr1;
-using namespace std::tr1::placeholders;
+using namespace boost;
 
 #include "common/types.h"
 #include "common/log.h"
