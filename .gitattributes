@@ -62,6 +62,8 @@ engine/entity/entitymanager.cpp eol=crlf
 engine/entity/entitymanager.h eol=crlf
 engine/entity/jscomponent.cpp -text
 engine/entity/jscomponent.h -text
+engine/entity/jscomponentclass.cpp -text
+engine/entity/jscomponentclass.h -text
 engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
 engine/entity/jsentitymanager.cpp -text

@@ -1,12 +1,13 @@
 #include "precompiled.h"
-#include "poscomponent.h"
+#include "entity/poscomponent.h"
+#include "entity/jsposcomponent.h"
 
 using namespace entity;
 
 REGISTER_COMPONENT_TYPE(PosComponent, 1);
 
-PosComponent::PosComponent(Entity* entity, const string& name)
-: Component(entity, name)
+PosComponent::PosComponent(Entity* entity, const string& name, const desc_type& desc)
+: Component(entity, name, desc)
 {
 	D3DXMatrixIdentity(&m_transform);
 }
@@ -149,4 +150,14 @@ PosComponent::get_set_type PosComponent::setSetFunction(const entity::PosCompone
 	get_set_type old_setter = m_setter;
 	m_setter = setter;
 	return old_setter;
+}
+
+JSObject* PosComponent::createScriptObject()
+{
+	return jsentity::createPosComponentObject(this);
+}
+
+void PosComponent::destroyScriptObject()
+{
+	jsentity::destroyPosComponentObject(this);
 }

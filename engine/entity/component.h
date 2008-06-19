@@ -7,10 +7,16 @@ namespace entity
 {
 	class Entity;
 
+	struct ComponentDesc
+	{
+	};
+
 	class Component : public script::ScriptedObject
 	{
 	public:
-		Component(Entity* entity, const string& name)
+		typedef ComponentDesc desc_type;
+
+		Component(Entity* entity, const string& name, const desc_type& desc)
 			: m_name(name), m_entity(entity), m_acquired(false) {}
 		virtual ~Component() {}
 
