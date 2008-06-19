@@ -6,6 +6,11 @@ namespace entity
 {
 	struct PosComponentDesc : public ComponentDesc
 	{
+		D3DXVECTOR3 position;
+		D3DXVECTOR3 rotation;
+		D3DXVECTOR3 scale;
+		PosComponentDesc()
+			: position(0.0, 0.0, 0.0), rotation(0.0, 0.0, 0.0), scale(1.0, 1.0, 1.0) {}
 	};
 
 	class PosComponent : public Component

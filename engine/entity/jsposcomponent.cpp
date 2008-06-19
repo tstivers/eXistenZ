@@ -13,6 +13,7 @@ namespace jsentity
 	extern JSObject* component_prototype;
 
 	static void initClass(ScriptEngine* engine);
+	static bool parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc);
 
 	// method declarations
 	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
@@ -84,6 +85,47 @@ void jsentity::initClass(ScriptEngine* engine)
 	};
 
 	JS_DefineFunctions(engine->GetContext(), entity_prototype, create_methods);
+}
+
+bool jsentity::parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc)
+{
+	jsval v;
+	D3DXVECTOR3 vec;
+	
+	// position
+	if(JS_GetProperty(cx, obj, "position", &v) || JS_GetProperty(cx, obj, "pos", &v))
+	{
+		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
+		{
+			JS_ReportError(cx, "error parsing position");
+			return false;
+		}
+		desc.position = vec;
+	}
+
+	// rotation
+	if(JS_GetProperty(cx, obj, "rotation", &v) || JS_GetProperty(cx, obj, "rot", &v))
+	{
+		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
+		{
+			JS_ReportError(cx, "error parsing rotation");
+			return false;
+		}
+		desc.rotation = vec;
+	}
+
+	// scale
+	if(JS_GetProperty(cx, obj, "rotation", &v) || JS_GetProperty(cx, obj, "rot", &v))
+	{
+		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
+		{
+			JS_ReportError(cx, "error parsing scale");
+			return false;
+		}
+		desc.scale = vec;
+	}
+
+	return true;
 }
 
 JSBool jsentity::createPosComponent(JSContext *cx, uintN argc, jsval *vp)

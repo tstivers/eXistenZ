@@ -9,7 +9,9 @@ REGISTER_COMPONENT_TYPE(PosComponent, 1);
 PosComponent::PosComponent(Entity* entity, const string& name, const desc_type& desc)
 : Component(entity, name, desc)
 {
-	D3DXMatrixIdentity(&m_transform);
+	D3DXQUATERNION q;
+	D3DXQuaternionRotationYawPitchRoll(&q, desc.rotation.y, desc.rotation.x, desc.rotation.z);
+	D3DXMatrixTransformation(&m_transform, NULL, NULL, &desc.scale, NULL, &q, &desc.position);
 }
 
 PosComponent::~PosComponent()
