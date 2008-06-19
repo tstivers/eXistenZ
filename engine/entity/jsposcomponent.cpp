@@ -27,6 +27,8 @@ namespace jsentity
 
 	// property declarations
 	//static JSBool prop_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool parentGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool parentSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	JSObject* poscomponent_prototype = NULL;
 
@@ -45,6 +47,7 @@ namespace jsentity
 	static JSPropertySpec class_properties[] =
 	{
 		//{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
+		{"parent", 0, JSPROP_PERMANENT | JSPROP_SHARED, parentGetter, parentSetter},
 		JS_PS_END 
 	};
 
@@ -92,38 +95,10 @@ bool jsentity::parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& 
 	jsval v;
 	D3DXVECTOR3 vec;
 	
-	// position
-	if(JS_GetProperty(cx, obj, "position", &v) || JS_GetProperty(cx, obj, "pos", &v))
-	{
-		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
-		{
-			JS_ReportError(cx, "error parsing position");
-			return false;
-		}
-		desc.position = vec;
-	}
-
-	// rotation
-	if(JS_GetProperty(cx, obj, "rotation", &v) || JS_GetProperty(cx, obj, "rot", &v))
-	{
-		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
-		{
-			JS_ReportError(cx, "error parsing rotation");
-			return false;
-		}
-		desc.rotation = vec;
-	}
-
-	// scale
-	if(JS_GetProperty(cx, obj, "rotation", &v) || JS_GetProperty(cx, obj, "rot", &v))
-	{
-		if(jsvector::ParseVector(cx, vec, 1, &v) == JS_FALSE)
-		{
-			JS_ReportError(cx, "error parsing scale");
-			return false;
-		}
-		desc.scale = vec;
-	}
+	getProperty(cx, obj, "pos", desc.position);
+	getProperty(cx, obj, "rot", desc.rotation);
+	getProperty(cx, obj, "scale", desc.scale);
+	getProperty(cx, obj, "parent", desc.parentName);
 
 	return true;
 }
@@ -135,9 +110,10 @@ JSBool jsentity::createPosComponent(JSContext *cx, uintN argc, jsval *vp)
 	PosComponent* component;
 	string name = JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx, vp)[0]));
 	PosComponent::desc_type desc;
-	e->createComponent(name, desc, &component);
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	if(argc == 2 && JSVAL_IS_OBJECT(JS_ARGV(cx, vp)[1]))
+		parseDesc(cx, JSVAL_TO_OBJECT(JS_ARGV(cx, vp)[1]), desc);
+	Component* poscomponent = e->createComponent(name, desc, &component);
+	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(poscomponent->getScriptObject()));
 	return JS_TRUE;
 }
 
@@ -250,4 +226,45 @@ JSBool jsentity::getScale(JSContext *cx, uintN argc, jsval *vp)
 	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, v)));
 
 	return JS_TRUE;
+}
+
+JSBool jsentity::parentGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+{
+	PosComponent* pc = getReserved<PosComponent>(cx, obj);
+	PosComponent* parent = pc->getParent();
+	if(parent)
+	{
+		*vp = OBJECT_TO_JSVAL(pc->getParent()->getScriptObject());
+		return JS_TRUE;
+	}
+
+	*vp = JSVAL_VOID;
+	return JS_TRUE;
+}
+
+JSBool jsentity::parentSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+{
+	PosComponent* pc = getReserved<PosComponent>(cx, obj);
+	if(JSVAL_IS_OBJECT(*vp))
+	{
+		if(*vp == JSVAL_NULL) // component.parent = null;
+		{
+			pc->setParent(NULL);
+			return JS_TRUE;
+		}
+
+		JSObject* parent = JSVAL_TO_OBJECT(*vp);
+		pc->setParent(getReserved<PosComponent>(cx, parent));
+		return JS_TRUE;
+	}
+	else if(JSVAL_IS_STRING(*vp))
+	{
+		string name;
+		jsscript::jsval_to_<string>()(cx, *vp, &name);
+		pc->setParent(name);
+		return JS_TRUE;
+	}
+
+	JS_ReportError(cx, "parentSetter: argument must be a position component or component name");
+	return JS_FALSE;
 }

@@ -37,7 +37,7 @@ namespace jsvector
 
 using namespace jsvector;
 
-REGISTER_SCRIPT_INIT(vector, initVectorClass, 1);
+REGISTER_SCRIPT_INIT(Vector, initVectorClass, 1);
 
 void jsvector::initVectorClass(ScriptEngine* engine)
 {

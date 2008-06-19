@@ -22,6 +22,25 @@ namespace jsscript
 
 #pragma endregion
 
+		template<typename T>
+		struct result_wrapper
+		{
+			T operator()(JSContext* cx, jsval v)
+			{
+				T result;
+				jsval_to_<T>(cx, v, &result);
+				return result;
+			}
+		};
+
+		template<>
+		struct result_wrapper<void>
+		{
+			void operator()(JSContext* cx, jsval v)
+			{
+			}
+		};
+
 #pragma region struct root_impl
 
 		// auto root structures for args and return value
@@ -111,12 +130,13 @@ namespace jsscript
 		{
 			typedef typename root_impl<boost::mpl::false_, boost::mpl::bool_<jsfunctioncall_detail::rval_needs_root<typename boost::function_traits<T>::result_type>::value>> root_t;
 		public:
-			inline typename boost::function_traits<T>::result_type operator()(JSContext* cx, JSObject* par, jsval fun)
+			typedef typename boost::function_traits<T>::result_type result_type; 
+			inline result_type operator()(JSContext* cx, JSObject* par, jsval fun)
 			{
 				jsval argv, rval;
 				root_t root(cx, rval);
 				JS_CallFunctionValue(cx, par, fun, 0, &argv, &rval);
-				return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval);
+				return result_wrapper<result_type>()(cx, rval);
 			}
 		};
 
@@ -134,15 +154,16 @@ namespace jsscript
 		typedef typename boost::mpl::if_<arg_root_count, boost::mpl::bool_<true>, boost::mpl::bool_<false>>::type args_need_root; \
 		typedef typename root_impl<args_need_root, boost::mpl::bool_<jsfunctioncall_detail::rval_needs_root<typename boost::function_traits<T>::result_type>::value>> root_t; \
 	public: \
-		inline typename boost::function_traits<T>::result_type operator()(JSContext* cx, JSObject* par, jsval fun \
+		typedef typename boost::function_traits<T>::result_type result_type; \
+		inline result_type operator()(JSContext* cx, JSObject* par, jsval fun \
 				BOOST_PP_REPEAT_FROM_TO_ ## z(1, BOOST_PP_INC(n), JSFUNCTIONCALL_BASE_TYPEDEF_ARG, null) \
-																		 ) \
+				) \
 		{ \
 			jsval argv[n], rval; \
 			root_t root(cx, rval); \
 			BOOST_PP_REPEAT_FROM_TO_ ## z(1, BOOST_PP_INC(n), JSFUNCTIONCALL_BASE_ASSIGN_ARG, null) \
 			JS_CallFunctionValue(cx, par, fun, n, &argv[0], &rval); \
-			return jsval_to_<boost::function_traits<T>::result_type>()(cx, rval); \
+			return result_wrapper<result_type>()(cx, rval); \
 		} \
 	}; \
 	 
@@ -219,7 +240,7 @@ namespace jsscript
 	template <typename T>
 	struct jsval_to_
 	{
-		inline T operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, T* out)
 		{
 			BOOST_STATIC_ASSERT(!"unable to convert arg from jsval");
 		}
@@ -228,26 +249,32 @@ namespace jsscript
 	template<>
 	struct jsval_to_<void>
 	{
-		inline void operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, void* out)
 		{
+			return true;
 		}
 	};
 
 	template<>
 	struct jsval_to_<bool>
 	{
-		inline bool operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, bool* out)
 		{
 			if (JSVAL_IS_BOOLEAN(v))
 			{
-				return JSVAL_TO_BOOLEAN(v) == JS_TRUE;
+				*out =  (JSVAL_TO_BOOLEAN(v) == JS_TRUE);
+				return true;
 			}
 			else
 			{
 				JSBool boolean;
 				if (JS_ValueToBoolean(cx, v, &boolean))
-					return boolean == JS_TRUE;
+				{
+					*out = (boolean == JS_TRUE);
+					return true;
+				}
 			}
+
 			return false;
 		}
 	};
@@ -255,78 +282,99 @@ namespace jsscript
 	template<>
 	struct jsval_to_<string>
 	{
-		inline string operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, string* out)
 		{
 			if (JSVAL_IS_STRING(v))
 			{
-				return string(JS_GetStringBytes(JSVAL_TO_STRING(v)));
+				*out = JS_GetStringBytes(JSVAL_TO_STRING(v));
+				return true;
 			}
 			else if (JSString * s = JS_ValueToString(cx, v))
 			{
-				return string(JS_GetStringBytes(s));
+				*out = JS_GetStringBytes(s);
+				return true;
 			}
-			else
-				return "null";
+
+			return false;
 		}
 	};
 
 	template<>
 	struct jsval_to_<float>
 	{
-		inline float operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, float* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
-				return JSVAL_TO_INT(v);
+				*out = JSVAL_TO_INT(v);
+				return true;
 			}
 			else
 			{
 				jsdouble d;
 				if (JS_ValueToNumber(cx, v, &d))
-					return d;
-				else
-					return 0.0f;
+				{
+					*out = d;
+					return true;
+				}
 			}
+
+			return false;
 		}
 	};
 
 	template<>
 	struct jsval_to_<double>
 	{
-		inline double operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, double* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
-				return JSVAL_TO_INT(v);
+				*out = JSVAL_TO_INT(v);
+				return true;
 			}
 			else
 			{
 				jsdouble d;
 				if (JS_ValueToNumber(cx, v, &d))
-					return d;
-				else
-					return 0.0;
+				{
+					*out = d;
+					return true;
+				}
 			}
+			return false;
 		}
 	};
 
 	template<>
 	struct jsval_to_<int>
 	{
-		inline int operator()(JSContext* cx, jsval v)
+		inline bool operator()(JSContext* cx, jsval v, int* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
-				return JSVAL_TO_INT(v);
+				*out = JSVAL_TO_INT(v);
+				return true;
 			}
 			else
 			{
 				int32 i;
 				if (JS_ValueToInt32(cx, v, &i))
-					return i;
-				else
-					return 0;
+				{
+					*out = i;
+					return true;
+				}
 			}
+			return false;
+		}
+	};
+
+	template<>
+	struct jsval_to_<D3DXVECTOR3>
+	{
+		inline bool operator()(JSContext* cx, jsval v, D3DXVECTOR3* out)
+		{
+			return jsvector::ParseVector(cx, *out, 1, &v);
 		}
 	};
 

@@ -12,6 +12,7 @@
 namespace ui
 {
 	int draw;
+	int printFunctionNames = 0;
 	Console console;
 	FPS fps;
 	Pos pos;
@@ -41,6 +42,7 @@ void ui::init()
 	settings::addsetting("system.ui.console.cmdecho", settings::TYPE_INT, 0, NULL, NULL, &console.cmdecho);
 	settings::addsetting("system.ui.console.wireframe", settings::TYPE_INT, 0, NULL, NULL, &console.wireframe);
 	settings::addsetting("system.ui.console.draw", settings::TYPE_INT, 0, NULL, NULL, &console.draw);
+	settings::addsetting("system.ui.console.printFunctionNames", settings::TYPE_INT, 0, NULL, NULL, &printFunctionNames);
 	settings::setint("system.ui.draw", 1);
 	settings::setint("system.ui.console.x", 20);
 	settings::setint("system.ui.console.y", 400);
@@ -125,7 +127,7 @@ void ui::consoleMessageCallback(const char* file, unsigned int line, const char*
 		return;
 
 	char buffer[512];
-	if (function && *function)
+	if (function && *function & printFunctionNames)
 		sprintf(buffer, "[%s] %s", function, message);
 	else
 		strcpy(buffer, message);
