@@ -12,6 +12,8 @@ namespace jsentity
 
 	// property implementations
 	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool type_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	static JSBool typeName_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
 	JSObject* component_prototype = NULL;
 
@@ -24,6 +26,8 @@ namespace jsentity
 	JSPropertySpec component_props[] =
 	{
 		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
+		{"type", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, type_getter, NULL},
+		{"typeName", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, typeName_getter, NULL},
 		JS_PS_END 
 	};
 
@@ -38,7 +42,7 @@ namespace jsentity
 	};
 }
 
-REGISTER_SCRIPT_INIT(jsentity, initComponentClass, 10);
+REGISTER_SCRIPT_INIT(Component, initComponentClass, 15);
 
 void jsentity::initComponentClass(ScriptEngine* engine)
 {
@@ -72,5 +76,19 @@ JSBool jsentity::name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
 	Component* component = getComponentReserved(cx, obj);
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, component->getName().c_str()));
+	return JS_TRUE;
+}
+
+JSBool jsentity::type_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+{
+	Component* component = getComponentReserved(cx, obj);
+	*vp = INT_TO_JSVAL(component->getType());
+	return JS_TRUE;
+}
+
+JSBool jsentity::typeName_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+{
+	Component* component = getComponentReserved(cx, obj);
+	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, component->getTypeName().c_str()));
 	return JS_TRUE;
 }

@@ -4,14 +4,19 @@
 
 namespace entity
 {
+	struct PosComponentDesc : public ComponentDesc
+	{
+	};
+
 	class PosComponent : public Component
 	{
 	public:
 		// typedefs
+		typedef PosComponentDesc desc_type;
 		typedef function<void(D3DXMATRIX&, const D3DXMATRIX&)> get_set_type;
 
 		// constructor/destructor
-		PosComponent(Entity* entity, const string& name);
+		PosComponent(Entity* entity, const string& name, const desc_type& desc);
 		~PosComponent();
 
 		// overloads
@@ -33,6 +38,10 @@ namespace entity
 		get_set_type setGetFunction(const get_set_type& getter);
 
 	protected:
+		// script functions
+		JSObject* createScriptObject();
+		void destroyScriptObject();
+
 		// members
 		D3DXMATRIX m_transform;
 		get_set_type m_getter;

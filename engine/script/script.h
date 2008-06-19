@@ -46,6 +46,17 @@ public:
 	void DumpObject(JSObject* obj, bool recurse = false, char* objname = "", char* name = "");
 };
 
+template<typename T>
+T* getReserved(JSContext* cx, JSObject* obj)
+{
+	jsval val = JSVAL_VOID;
+	JSBool ret = JS_GetReservedSlot(cx, obj, 0, &val);
+	ASSERT(ret == JS_TRUE);
+	ASSERT(val != JSVAL_VOID);
+	ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
+	return (T*)JSVAL_TO_PRIVATE(val);
+}
+
 // hack, replace with getScriptEngine()
 extern ScriptEngine* gScriptEngine;
 

@@ -2,6 +2,7 @@
 #include "entity/jsentity.h"
 #include "entity/entity.h"
 #include "entity/entitymanager.h"
+#include "entity/component.h"
 
 using namespace jsentity;
 using namespace entity;
@@ -20,17 +21,19 @@ namespace jsentity
 	// class functions
 	static JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 	static JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
+
 
 	JSObject* entity_prototype = NULL;
 	JSObject* components_prototype = NULL;
 
-	JSFunctionSpec entity_methods[] =
+	static JSFunctionSpec entity_methods[] =
 	{
 		JS_FN("removeComponent", removeComponent, 1, 1, 0),
 		JS_FS_END
 	};
 
-	JSPropertySpec entity_props[] =
+	static JSPropertySpec entity_props[] =
 	{
 		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
 		//{"components", 2, JSPROP_PERMANENT | JSPROP_READONLY, NULL, NULL} // lazily resolve this?
@@ -50,15 +53,15 @@ namespace jsentity
 	JSClass components_class = 
 	{
 		"Components",
-		JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_NEW_RESOLVE | JSCLASS_NEW_RESOLVE_GETS_START,
+		JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_NEW_ENUMERATE | JSCLASS_NEW_RESOLVE | JSCLASS_NEW_RESOLVE_GETS_START,
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
-		JS_EnumerateStub, (JSResolveOp)componentsResolveOp,
+		(JSEnumerateOp)componentsEnumerateOp, (JSResolveOp)componentsResolveOp,
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 }
 
-REGISTER_SCRIPT_INIT(jsentity, initEntityClass, 10);
+REGISTER_SCRIPT_INIT(Entity, initEntityClass, 10);
 
 void jsentity::initEntityClass(ScriptEngine* engine)
 {
@@ -164,6 +167,7 @@ JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN f
 	if(name == "components")
 	{
 		JSObject* components = JS_DefineObject(cx, obj, "components", &components_class, components_prototype, JSPROP_PERMANENT | JSPROP_READONLY);
+		JS_SetReservedSlot(cx, components, 0, PRIVATE_TO_JSVAL(entity));
 		ASSERT(components);
 		*objp = obj;
 	}
@@ -187,11 +191,52 @@ JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uin
 	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
 	if(Component* c = entity->getComponent(name))
 	{
-		//c->getScriptObject();
-		//*objp = obj;
+		c->getScriptObject();
+		*objp = obj;
 	}
 	else
 		*objp = NULL;
+
+	return JS_TRUE;
+}
+
+JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp)
+{
+	if(obj == components_prototype)
+	{
+		*statep = JSVAL_NULL;
+		return JS_TRUE;
+	}
+
+	Entity* entity = getReserved<Entity>(cx, obj);
+	ASSERT(entity);
+
+	Entity::component_iterator* it;
+
+	switch(enum_op)
+	{
+	case JSENUMERATE_INIT:
+		it = new Entity::component_iterator();
+		*it = entity->begin();
+		*statep = PRIVATE_TO_JSVAL(it);
+		if(idp)
+			*idp = INT_TO_JSVAL(entity->getComponentCount());
+		break;
+
+	case JSENUMERATE_NEXT:
+		it = (Entity::component_iterator*)JSVAL_TO_PRIVATE(*statep);
+		if(*it != entity->end())
+		{
+			JS_ValueToId(cx, STRING_TO_JSVAL(JS_NewStringCopyZ(cx, (*it)->first.c_str())), idp);
+			(*it)++;
+			return JS_TRUE;
+		}
+		// no break here, we want to fall through if we were at the end
+	case JSENUMERATE_DESTROY:
+		it = (Entity::component_iterator*)JSVAL_TO_PRIVATE(*statep);
+		*statep = JSVAL_NULL;
+		delete it;
+	}
 
 	return JS_TRUE;
 }
