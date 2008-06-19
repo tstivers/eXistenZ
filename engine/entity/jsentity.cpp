@@ -14,6 +14,8 @@ namespace jsentity
 
 	// method implementations
 	static JSBool removeComponent(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool acquire(JSContext* cx, uintN argc, jsval* vp);
+	static JSBool release(JSContext* cx, uintN argc, jsval* vp);
 
 	// property implementations
 	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
@@ -30,6 +32,8 @@ namespace jsentity
 	static JSFunctionSpec entity_methods[] =
 	{
 		JS_FN("removeComponent", removeComponent, 1, 1, 0),
+		JS_FN("acquire", acquire, 0, 0, 0),
+		JS_FN("release", release, 0, 0, 0),
 		JS_FS_END
 	};
 
@@ -238,5 +242,25 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 		delete it;
 	}
 
+	return JS_TRUE;
+}
+
+JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
+{
+	Entity* e = getReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
+
+	e->acquire();
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	return JS_TRUE;
+}
+
+JSBool jsentity::release(JSContext *cx, uintN argc, jsval *vp)
+{
+	Entity* e = getReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
+
+	e->release();
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
 	return JS_TRUE;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vfs/vfs.h"
+#include "script/jsfunctioncall.h"
 
 class ScriptEngine
 {
@@ -55,6 +56,19 @@ T* getReserved(JSContext* cx, JSObject* obj)
 	ASSERT(val != JSVAL_VOID);
 	ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
 	return (T*)JSVAL_TO_PRIVATE(val);
+}
+
+template<typename T>
+bool getProperty(JSContext* cx, JSObject* obj, const char* name, T& value)
+{
+	jsval v;
+
+	if(JS_GetProperty(cx, obj, name, &v) && v != JSVAL_VOID)
+	{
+		return jsscript::jsval_to_<T>()(cx, v, &value);
+	}
+
+	return false;
 }
 
 // hack, replace with getScriptEngine()

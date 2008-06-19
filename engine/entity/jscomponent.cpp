@@ -10,6 +10,11 @@ namespace jsentity
 	static void initComponentClass(ScriptEngine* engine);
 	static entity::Component* getComponentReserved(JSContext* cx, JSObject* obj);
 
+	// method declarations
+	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool acquire(JSContext* cx, uintN argc, jsval* vp);
+	static JSBool release(JSContext* cx, uintN argc, jsval* vp);
+
 	// property implementations
 	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	static JSBool type_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
@@ -20,6 +25,8 @@ namespace jsentity
 	JSFunctionSpec component_methods[] =
 	{
 		//JS_FN("removeComponent", removeComponent, 1, 1, 0),
+		JS_FN("acquire", acquire, 0, 0, 0),
+		JS_FN("release", release, 0, 0, 0),
 		JS_FS_END
 	};
 
@@ -90,5 +97,25 @@ JSBool jsentity::typeName_getter(JSContext *cx, JSObject *obj, jsval id, jsval *
 {
 	Component* component = getComponentReserved(cx, obj);
 	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, component->getTypeName().c_str()));
+	return JS_TRUE;
+}
+
+JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
+{
+	Component* c = getReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
+
+	c->acquire();
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	return JS_TRUE;
+}
+
+JSBool jsentity::release(JSContext *cx, uintN argc, jsval *vp)
+{
+	Component* c = getReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
+
+	c->release();
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
 	return JS_TRUE;
 }

@@ -28,11 +28,12 @@ namespace entity
 
 		// component functions
 		template<typename T>
-		void createComponent(const string& name, const typename T::desc_type& desc, T** component)
+		Component* createComponent(const string& name, const typename T::desc_type& desc, T** component)
 		{
 			ASSERT(getComponent(name) == NULL);
 			shared_ptr<T> ptr(new T(this, name, desc));
 			addComponent(name, ptr);
+			return ptr.get();
 		}
 
 		virtual void addComponent(const string& name, shared_ptr<Component> component);

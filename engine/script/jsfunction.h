@@ -29,7 +29,7 @@ namespace jsscript
 		class jsfunction_baseN<0, T> : public jsfunction_base
 		{
 		public:
-			inline typename boost::function_traits<T>::result_type operator()()
+			inline typename jsfunctioncall<T>::result_type operator()()
 			{
 				return jsfunctioncall<T>()(cx, par, fun);
 			}
