@@ -48,10 +48,10 @@ public:
 };
 
 template<typename T>
-T* getReserved(JSContext* cx, JSObject* obj)
+T* GetReserved(JSContext* cx, JSObject* obj, int index = 0)
 {
 	jsval val = JSVAL_VOID;
-	JSBool ret = JS_GetReservedSlot(cx, obj, 0, &val);
+	JSBool ret = JS_GetReservedSlot(cx, obj, index, &val);
 	ASSERT(ret == JS_TRUE);
 	ASSERT(val != JSVAL_VOID);
 	ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
@@ -59,7 +59,7 @@ T* getReserved(JSContext* cx, JSObject* obj)
 }
 
 template<typename T>
-bool getProperty(JSContext* cx, JSObject* obj, const char* name, T& value)
+bool GetProperty(JSContext* cx, JSObject* obj, const char* name, T& value)
 {
 	jsval v;
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "entity/renderable.h"
+
 namespace entity
 {
 	class EntityManager;
@@ -19,6 +21,10 @@ namespace scene
 	class Scene
 	{
 	public:
+		// TODO: replace with renderablemanager
+		typedef set<entity::Renderable*> renderables_list;
+		renderables_list m_renderables;
+
 		// construction
 		Scene();
 		virtual ~Scene();
@@ -39,6 +45,15 @@ namespace scene
 		virtual void addEntity(entity::Entity* entity) = 0;
 		// virtual void updateEntity(const Entity* entity);
 		virtual void removeEntity(entity::Entity* entity) = 0;
+		virtual void addRenderable(entity::Renderable* renderable)
+		{
+			m_renderables.insert(renderable);
+		}
+
+		virtual void removeRenderable(entity::Renderable* renderable)
+		{
+			m_renderables.erase(renderable);
+		}
 
 		// movement/collision crap (or let game:: handle movement and collide:: handle collision?)
 		// maybe collision:: looks like addCollider(Collider& col) and there are ColliderMesh, ColliderBox(trigger), ColliderBSP, etc.

@@ -40,6 +40,7 @@ engine/common/mystring.cpp eol=crlf
 engine/common/mystring.h eol=crlf
 engine/common/registeredfunctions.cpp -text
 engine/common/registeredfunctions.h -text
+engine/common/safe_bool.h -text
 engine/common/smart_cptr.h eol=crlf
 engine/common/smart_ptr.h eol=crlf
 engine/common/types.h -text
@@ -68,12 +69,17 @@ engine/entity/jsentity.cpp eol=crlf
 engine/entity/jsentity.h eol=crlf
 engine/entity/jsentitymanager.cpp -text
 engine/entity/jsentitymanager.h -text
+engine/entity/jsmeshcomponent.cpp -text
+engine/entity/jsmeshcomponent.h -text
 engine/entity/jsposcomponent.cpp -text
 engine/entity/jsposcomponent.h -text
+engine/entity/meshcomponent.cpp -text
+engine/entity/meshcomponent.h -text
 engine/entity/meshentity.cpp -text
 engine/entity/meshentity.h -text
 engine/entity/poscomponent.cpp -text
 engine/entity/poscomponent.h -text
+engine/entity/renderable.h -text
 engine/entity/sphereentity.cpp -text
 engine/entity/sphereentity.h -text
 engine/entity/staticentity.cpp eol=crlf

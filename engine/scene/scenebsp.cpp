@@ -11,6 +11,7 @@
 #include "render/meshoptimize.h"
 #include "render/shapes.h"
 #include "entity/entity.h"
+#include "entity/entitymanager.h"
 #include "texture/material.h"
 
 namespace scene
@@ -258,13 +259,10 @@ void SceneBSP::render()
 	texture::Material lighting;
 	if (render::draw_entities)
 	{
-		unsigned num_entities = entities.size();
-		for (int i = 0; i < num_entities; i++)
+		for(renderables_list::iterator it = m_renderables.begin(); it != m_renderables.end(); ++it)
 		{
-			getEntityLighting(&lighting, entities[i]);
-			//if(render::box_in_frustrum(entities[i]->aabb.min, entities[i]->aabb.max))
-			//entities[i]->render(&lighting);
-			//render::drawLine(entities[i]->pos, entities[i]->pos + lighting.light.Direction, D3DXCOLOR(lighting.light.Diffuse));
+			getEntityLighting(&lighting, *it);
+			(*it)->render(&lighting);
 		}
 	}
 
@@ -278,10 +276,9 @@ void SceneBSP::render()
 		render::current_lightmap->deactivate();
 }
 
-void SceneBSP::getEntityLighting(texture::Material* material, entity::Entity* entity)
+void SceneBSP::getEntityLighting(texture::Material* material, entity::Renderable* renderable)
 {
-	//D3DXVECTOR3 origin(entity->getPos());
-	D3DXVECTOR3 origin;
+	D3DXVECTOR3 origin(renderable->getRenderOrigin());
 	swap(origin.y, origin.z);
 	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
 	int pos[3];

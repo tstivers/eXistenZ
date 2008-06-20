@@ -2,9 +2,71 @@
 
 #include "script/script.h"
 #include "entity/componenttypes.h"
+#include "common/safe_bool.h"
 
 namespace entity
 {
+	class Component;
+
+	template<typename T>
+	class ComponentLink
+	{
+	public:
+		typedef T link_target_type;
+
+		ComponentLink(Component* parent)
+		{
+			m_parent = parent;
+		}
+
+		inline bool operator=(const string& name)
+		{
+			m_name = name;
+			m_component = NULL;
+			return operator->();
+		}
+
+		inline bool operator=(T* component)
+		{
+			if(component)
+				m_name = component->getName();
+			else
+				m_name.clear();
+
+			m_component = component;
+			return operator->();
+		}
+
+		inline T* operator->() const
+		{
+			if(!m_component && !m_name.empty())
+				m_component = m_parent->getEntity()->getComponent<T>(m_name);
+			return m_component;
+		}
+
+		inline const string& getName() const
+		{
+			return m_name;
+		}
+
+		inline operator T* () const
+		{
+			return operator->();
+		}
+
+		template<typename U>
+		inline bool operator==(const ComponentLink<U> &other)
+		{
+			return this->getName() == other.getName();
+		}
+
+	protected:
+
+		string m_name;
+		mutable T* m_component;
+		Component* m_parent;
+	};
+
 	class Entity;
 
 	struct ComponentDesc

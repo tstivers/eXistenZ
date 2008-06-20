@@ -378,6 +378,20 @@ namespace jsscript
 		}
 	};
 
+	template<>
+	struct jsval_to_<JSObject*>
+	{
+		inline bool operator()(JSContext* cx, jsval v, JSObject** out)
+		{
+			if(!JSVAL_IS_OBJECT(v))
+				return false;
+
+			*out = JSVAL_TO_OBJECT(v);
+			return true;
+		}
+	};
+
+
 #pragma endregion
 
 	template <typename T>
