@@ -212,7 +212,7 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 		return JS_TRUE;
 	}
 
-	Entity* entity = getReserved<Entity>(cx, obj);
+	Entity* entity = GetReserved<Entity>(cx, obj);
 	ASSERT(entity);
 
 	Entity::component_iterator* it;
@@ -247,7 +247,7 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 
 JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
 {
-	Entity* e = getReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
+	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
 
 	e->acquire();
 
@@ -257,7 +257,7 @@ JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
 
 JSBool jsentity::release(JSContext *cx, uintN argc, jsval *vp)
 {
-	Entity* e = getReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
+	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
 
 	e->release();
 

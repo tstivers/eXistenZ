@@ -43,13 +43,11 @@ namespace entity
 		virtual void setTransform(const D3DXMATRIX& new_transform);
 		virtual D3DXMATRIX getTransform();
 
-		virtual string setParent(const string& name);
-		virtual string setParent(PosComponent* parent);
-		virtual string getParentName() { return m_parentName; }
-		virtual PosComponent* getParent() { return dynamic_cast<PosComponent*>(m_entity->getComponent(m_parentName)); }
-
 		get_set_type setSetFunction(const get_set_type& setter);
 		get_set_type setGetFunction(const get_set_type& getter);
+
+		// properties
+		ComponentLink<PosComponent> parent;
 
 	protected:
 		// script functions
@@ -60,7 +58,5 @@ namespace entity
 		D3DXMATRIX m_transform;
 		get_set_type m_getter;
 		get_set_type m_setter;
-		string m_parentName;
-		PosComponent* m_parent;
 	};
 }

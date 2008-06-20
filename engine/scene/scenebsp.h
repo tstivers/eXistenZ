@@ -2,6 +2,7 @@
 
 #include "math/aabb.h"
 #include "math/vertex.h"
+#include "entity/renderable.h"
 
 namespace render
 {
@@ -72,7 +73,7 @@ namespace scene
 		void release();
 		void reload(unsigned int flags = 0);
 		void render();
-		void getEntityLighting(texture::Material* material, entity::Entity* entity);
+		void getEntityLighting(texture::Material* material, entity::Renderable* renderable);
 		void addEntity(entity::Entity* entity);
 		void removeEntity(entity::Entity* entity);
 

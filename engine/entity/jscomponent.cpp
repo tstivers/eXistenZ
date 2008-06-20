@@ -102,7 +102,7 @@ JSBool jsentity::typeName_getter(JSContext *cx, JSObject *obj, jsval id, jsval *
 
 JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
 {
-	Component* c = getReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
+	Component* c = GetReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
 
 	c->acquire();
 
@@ -112,7 +112,7 @@ JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
 
 JSBool jsentity::release(JSContext *cx, uintN argc, jsval *vp)
 {
-	Component* c = getReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
+	Component* c = GetReserved<Component>(cx, JS_THIS_OBJECT(cx, vp));
 
 	c->release();
 

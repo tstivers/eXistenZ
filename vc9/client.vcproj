@@ -920,6 +920,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\common\safe_bool.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\common\types.h"
 				>
 			</File>
@@ -1088,6 +1092,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\entity\jsmeshcomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jsmeshcomponent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\jsposcomponent.cpp"
 				>
 			</File>
@@ -1096,11 +1108,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\entity\meshcomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\meshcomponent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\poscomponent.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\entity\poscomponent.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\renderable.h"
 				>
 			</File>
 		</Filter>
