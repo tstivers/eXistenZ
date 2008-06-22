@@ -138,11 +138,8 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableEnhancedInstructionSet="2"
-				FloatingPointModel="2"
-				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
-				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -272,6 +269,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\script\jsnativecall.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\script\jsscript.cpp"
 				>
 			</File>
@@ -293,6 +294,10 @@
 			</File>
 			<File
 				RelativePath="..\engine\script\script.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\script\wrappedhelpers.hpp"
 				>
 			</File>
 		</Filter>
@@ -1036,6 +1041,14 @@
 			Name="entity"
 			>
 			<File
+				RelativePath="..\engine\entity\actorcomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\actorcomponent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\entity\component.cpp"
 				>
 			</File>
@@ -1065,6 +1078,18 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\entitymanager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\interfaces.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jsactorcomponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\entity\jsactorcomponent.h"
 				>
 			</File>
 			<File
@@ -1121,10 +1146,6 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\poscomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\renderable.h"
 				>
 			</File>
 		</Filter>
@@ -1351,6 +1372,10 @@
 				RelativePath="..\engine\mesh\textloader.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="sound"
+			>
 		</Filter>
 	</Files>
 	<Globals>

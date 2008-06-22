@@ -42,7 +42,7 @@ namespace jsentity
 	};
 }
 
-ScriptedObject::ScriptClass Component::m_scriptClass =
+Component::ScriptClass Component::m_scriptClass =
 {
 	&class_def,
 	class_properties,

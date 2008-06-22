@@ -19,6 +19,8 @@ PosComponent::PosComponent(Entity* entity, const string& name, const desc_type& 
 
 PosComponent::~PosComponent()
 {
+	if(m_scriptObject)
+		destroyScriptObject();
 }
 
 void PosComponent::acquire()
@@ -29,6 +31,7 @@ void PosComponent::acquire()
 void PosComponent::release()
 {
 	Component::release();
+	parent.release();
 }
 
 // TODO: optimization - store pos/rot/scale so you don't have to decompose on every call
@@ -209,4 +212,5 @@ JSObject* PosComponent::createScriptObject()
 void PosComponent::destroyScriptObject()
 {
 	jsentity::destroyPosComponentObject(this);
+	m_scriptObject = NULL;
 }

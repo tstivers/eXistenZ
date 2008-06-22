@@ -7,18 +7,18 @@ namespace jsentity
 	JSObject* initManagerClass();
 	__forceinline entity::EntityManager* getManagerReserved(JSContext* cx, JSObject* obj);
 
-	JSBool createEntity(JSContext *cx, uintN argc, jsval *vp);
-	JSBool removeEntity(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool createEntity(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool removeEntity(JSContext *cx, uintN argc, jsval *vp);
 
-	JSBool enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
-	JSBool resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
+	static JSBool resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 
 	JSObject* manager_prototype = NULL;
 
 	JSFunctionSpec manager_methods[] =
 	{
-		JS_FN("createEntity", createEntity, 1, 1, 0),
-		JS_FN("removeEntity", removeEntity, 1, 1, 0),
+		JS_FN("createEntity", jsentity::createEntity, 1, 1, 0),
+		JS_FN("removeEntity", jsentity::removeEntity, 1, 1, 0),
 		JS_FS_END
 	};
 

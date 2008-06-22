@@ -3,9 +3,8 @@
 #include "entity/entity.h"
 #include "entity/component.h"
 #include "entity/poscomponent.h"
-#include "entity/renderable.h"
+#include "entity/interfaces.h"
 #include "mesh/mesh.h"
-#include "mesh/meshcache.h"
 
 namespace entity
 {

@@ -18,7 +18,14 @@ Entity::Entity(EntityManager* manager, const string& name)
 
 Entity::~Entity()
 {
+	if(m_acquired)
+		release();
 
+	// clear out our components so that things get destroyed in the right order
+	m_components.clear();
+
+	if(m_scriptObject)
+		destroyScriptObject();
 }
 
 void Entity::addComponent(const string& name, shared_ptr<Component> component)
@@ -69,4 +76,5 @@ JSObject* Entity::createScriptObject()
 void Entity::destroyScriptObject()
 {
 	jsentity::destroyEntityObject(this);
+	m_scriptObject = NULL;
 }

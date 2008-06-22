@@ -6,45 +6,23 @@
 
 using namespace jsentity;
 using namespace entity;
+using namespace script;
 
 namespace jsentity
 {
-	static void initEntityClass(ScriptEngine* engine);
-	static entity::Entity* getEntityReserved(JSContext* cx, JSObject* obj);
+	// property declarations
+	// static JSBool propGetter/propSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
-	// method implementations
+	// method declarations
+	// static JSBool methodName(JSContext *cx, uintN argc, jsval *vp);
 	static JSBool removeComponent(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool acquire(JSContext* cx, uintN argc, jsval* vp);
-	static JSBool release(JSContext* cx, uintN argc, jsval* vp);
 
-	// property implementations
-	static JSBool name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
-
-	// class functions
+	// class ops
 	static JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 	static JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
 	static JSBool componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
 
-
-	JSObject* entity_prototype = NULL;
-	JSObject* components_prototype = NULL;
-
-	static JSFunctionSpec entity_methods[] =
-	{
-		JS_FN("removeComponent", removeComponent, 1, 1, 0),
-		JS_FN("acquire", acquire, 0, 0, 0),
-		JS_FN("release", release, 0, 0, 0),
-		JS_FS_END
-	};
-
-	static JSPropertySpec entity_props[] =
-	{
-		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
-		//{"components", 2, JSPROP_PERMANENT | JSPROP_READONLY, NULL, NULL} // lazily resolve this?
-		{0,0,0,0,0}
-	};
-
-	JSClass entity_class =
+	JSClass class_def =
 	{
 		"Entity",
 		JSCLASS_HAS_RESERVED_SLOTS(1) | JSCLASS_NEW_RESOLVE | JSCLASS_NEW_RESOLVE_GETS_START,
@@ -52,6 +30,22 @@ namespace jsentity
 		JS_PropertyStub, JS_PropertyStub,
 		JS_EnumerateStub, (JSResolveOp)entityResolveOp,
 		JS_ConvertStub,  JS_FinalizeStub
+	};
+
+	static JSPropertySpec class_properties[] =
+	{
+		// {"name", id, flags, getter, setter},
+		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Entity, const string&, &Entity::getName>, NULL},
+		{0,0,0,0,0}
+	};
+
+	static JSFunctionSpec class_methods[] =
+	{
+		// JS_FN("name", function, nargs, flags, minargs),
+		JS_FN("acquire", (JSNativeCall<BOOST_TYPEOF(Entity::acquire), &Entity::acquire>), 0, 0, 0),
+		JS_FN("release", (JSNativeCall<BOOST_TYPEOF(Entity::release), &Entity::release>), 0, 0, 0),
+		JS_FN("removeComponent", (JSNativeCall<BOOST_TYPEOF(Entity::removeComponent), &Entity::removeComponent>), 1, 1, 0),
+		JS_FS_END
 	};
 
 	JSClass components_class = 
@@ -63,25 +57,33 @@ namespace jsentity
 		(JSEnumerateOp)componentsEnumerateOp, (JSResolveOp)componentsResolveOp,
 		JS_ConvertStub,  JS_FinalizeStub
 	};
+
+	static JSObject* components_prototype = NULL;
 }
 
-REGISTER_SCRIPT_INIT(Entity, initEntityClass, 10);
-
-void jsentity::initEntityClass(ScriptEngine* engine)
+Entity::ScriptClass entity::Entity::m_scriptClass = 
 {
-	entity_prototype = JS_InitClass(
+	&class_def,
+	class_properties,
+	class_methods,
+	NULL
+};
+
+static void initEntityClass(ScriptEngine* engine)
+{
+	Entity::m_scriptClass.prototype = JS_InitClass(
 		engine->GetContext(),
 		engine->GetGlobal(),
 		NULL,
-		&entity_class,
+		Entity::m_scriptClass.classDef,
 		NULL,
 		0,
-		entity_props,
-		entity_methods,
+		Entity::m_scriptClass.properties,
+		Entity::m_scriptClass.methods,
 		NULL,
 		NULL);
 
-	ASSERT(entity_prototype);
+	ASSERT(Entity::m_scriptClass.prototype);
 
 	components_prototype = JS_InitClass(
 		engine->GetContext(),
@@ -98,6 +100,8 @@ void jsentity::initEntityClass(ScriptEngine* engine)
 	ASSERT(components_prototype);
 }
 
+REGISTER_SCRIPT_INIT(Entity, initEntityClass, 10);
+
 JSObject* jsentity::createEntityObject(Entity* entity)
 {
 	JSContext* cx = gScriptEngine->GetContext();
@@ -108,8 +112,8 @@ JSObject* jsentity::createEntityObject(Entity* entity)
 		cx, 
 		manager, 
 		entity->getName().c_str(), 
-		&entity_class, 
-		entity_prototype, 
+		Entity::m_scriptClass.classDef, 
+		Entity::m_scriptClass.prototype, 
 		JSPROP_ENUMERATE | JSPROP_READONLY);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(entity));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
@@ -125,27 +129,9 @@ void jsentity::destroyEntityObject(entity::Entity* entity)
 	JS_SetReservedSlot(gScriptEngine->GetContext(), entity->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 }
 
-entity::Entity* jsentity::getEntityReserved(JSContext* cx, JSObject* obj)
-{
-	ASSERT(obj != entity_prototype);
-	jsval entity = JSVAL_VOID;
-	JSBool ret = JS_GetReservedSlot(cx, obj, 0, &entity);
-	ASSERT(ret == JS_TRUE);
-	ASSERT(entity != JSVAL_VOID);
-	ASSERT(JSVAL_TO_PRIVATE(entity) != NULL);
-	return (entity::Entity*)JSVAL_TO_PRIVATE(entity);
-}
-
-JSBool jsentity::name_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
-{
-	Entity* e = getEntityReserved(cx, obj);
-	*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, e->getName().c_str()));
-	return JS_TRUE;
-}
-
 JSBool jsentity::removeComponent(JSContext *cx, uintN argc, jsval *vp)
 {
-	Entity* entity = getEntityReserved(cx, JS_THIS_OBJECT(cx, vp));
+	Entity* entity = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
 
 	if(!JSVAL_IS_STRING(JS_ARGV(cx, vp)[0]))
 	{
@@ -159,13 +145,13 @@ JSBool jsentity::removeComponent(JSContext *cx, uintN argc, jsval *vp)
 
 JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp)
 {
-	if(!JSVAL_IS_STRING(id) || obj == entity_prototype)
+	if(!JSVAL_IS_STRING(id) || obj == Entity::m_scriptClass.prototype)
 	{
 		*objp = NULL;
 		return JS_TRUE;
 	}
 
-	Entity* entity = getEntityReserved(cx, obj);
+	Entity* entity = GetReserved<Entity>(cx, obj);
 
 	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
 	if(name == "components")
@@ -190,7 +176,7 @@ JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uin
 	}
 
 	JSObject* jsentity = JS_GetParent(cx, obj);
-	Entity* entity = getEntityReserved(cx, jsentity);
+	Entity* entity = GetReserved<Entity>(cx, jsentity);
 
 	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
 	if(Component* c = entity->getComponent(name))
@@ -242,25 +228,5 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 		delete it;
 	}
 
-	return JS_TRUE;
-}
-
-JSBool jsentity::acquire(JSContext *cx, uintN argc, jsval *vp)
-{
-	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
-
-	e->acquire();
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
-	return JS_TRUE;
-}
-
-JSBool jsentity::release(JSContext *cx, uintN argc, jsval *vp)
-{
-	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
-
-	e->release();
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
 	return JS_TRUE;
 }

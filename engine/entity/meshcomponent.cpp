@@ -6,6 +6,7 @@
 #include "render/render.h"
 #include "render/shapes.h"
 #include "render/rendergroup.h"
+#include "mesh/meshcache.h"
 
 using namespace entity;
 
@@ -21,19 +22,42 @@ MeshComponent::MeshComponent(Entity* entity, const string& name, const desc_type
 
 MeshComponent::~MeshComponent()
 {
+	if(m_scriptObject)
+		destroyScriptObject();
 }
 
 void MeshComponent::acquire()
 {
-	Component::acquire();
+	if(m_acquired)
+		return;
+
+	ASSERT(m_mesh == NULL);
+
 	m_mesh = mesh::getMesh(m_meshName);
+	if(!m_mesh)
+	{
+		INFO("WARNING: unable to acquire mesh \"%s\" on component \"%s.%s\"", m_meshName.c_str(),
+			m_entity->getName().c_str(), m_name.c_str());
+		return;
+	}
+
+	if(!transform)
+	{
+		INFO("WARNING: unable to acquire transform for \"%s.%s\"",
+			m_entity->getName().c_str(), m_name.c_str());
+		m_mesh = NULL;
+		return;
+	}
+
 	m_mesh->acquire();
 	m_entity->getManager()->getScene()->addRenderable(this);
+	Component::acquire();
 }
 
 void MeshComponent::release()
 {
 	Component::release();
+	transform.release();
 	m_mesh = NULL;
 	m_entity->getManager()->getScene()->removeRenderable(this);
 }
@@ -49,6 +73,7 @@ D3DXVECTOR3 MeshComponent::getRenderOrigin() const
 
 void MeshComponent::render(texture::Material* lighting)
 {
+	ASSERT(m_acquired);
 	render::RenderGroup* rg = m_mesh->rendergroup;
 	rg->material = lighting;
 	D3DXMATRIX m = m_mesh->mesh_offset * transform->getTransform();
@@ -66,5 +91,6 @@ JSObject* MeshComponent::createScriptObject()
 void MeshComponent::destroyScriptObject()
 {
 	jsentity::destroyMeshComponentObject(this);
+	m_scriptObject = NULL;
 }
 
