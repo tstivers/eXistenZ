@@ -216,6 +216,7 @@ engine/script/JSArgumentList.cpp -text
 engine/script/JSArgumentList.h -text
 engine/script/jsfunction.h -text
 engine/script/jsfunctioncall.h -text
+engine/script/jsnativecall.h -text
 engine/script/jsscript.cpp eol=crlf
 engine/script/jsscript.h eol=crlf
 engine/script/jsvector.cpp -text
