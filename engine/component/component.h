@@ -1,8 +1,13 @@
 #pragma once
 
-#include "entity/componenttypes.h"
+#include "component/componenttypes.h"
 
 namespace entity
+{
+	class Entity;
+}
+
+namespace component
 {
 	class Component;
 
@@ -70,8 +75,6 @@ namespace entity
 		Component* m_parent;
 	};
 
-	class Entity;
-
 	struct ComponentDesc
 	{
 	};
@@ -81,7 +84,7 @@ namespace entity
 	public:
 		typedef ComponentDesc desc_type;
 
-		Component(Entity* entity, const string& name, const desc_type& desc)
+		Component(entity::Entity* entity, const string& name, const desc_type& desc)
 			: m_name(name), m_entity(entity), m_acquired(false) {}
 		virtual ~Component() {}
 
@@ -89,7 +92,7 @@ namespace entity
 		virtual int getType() = 0;
 		const string& getTypeName() { return getComponentTypeName(getType()); }
 
-		virtual Entity* getEntity() { return m_entity; }
+		virtual entity::Entity* getEntity() { return m_entity; }
 
 		virtual void acquire() { m_acquired = true; }
 		virtual void release() { m_acquired = false; }
@@ -98,7 +101,7 @@ namespace entity
 
 	protected:
 		string m_name;
-		Entity* m_entity;
+		entity::Entity* m_entity;
 		bool m_acquired;
 	};
 }

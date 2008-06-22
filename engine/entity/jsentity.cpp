@@ -2,7 +2,7 @@
 #include "entity/jsentity.h"
 #include "entity/entity.h"
 #include "entity/entitymanager.h"
-#include "entity/component.h"
+#include "component/component.h"
 
 using namespace jsentity;
 using namespace entity;
@@ -179,7 +179,7 @@ JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uin
 	Entity* entity = GetReserved<Entity>(cx, jsentity);
 
 	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
-	if(Component* c = entity->getComponent(name))
+	if(component::Component* c = entity->getComponent(name))
 	{
 		c->getScriptObject();
 		*objp = obj;

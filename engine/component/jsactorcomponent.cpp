@@ -1,13 +1,13 @@
 #include "precompiled.h"
-#include "entity/jsactorcomponent.h"
-#include "entity/jscomponent.h"
+#include "component/jsactorcomponent.h"
+#include "component/jscomponent.h"
 #include "entity/jsentity.h"
 
-using namespace jsentity;
-using namespace entity;
+using namespace jscomponent;
+using namespace component;
 using namespace script;
 
-namespace jsentity
+namespace jscomponent
 {
 	static bool parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc);
 
@@ -56,10 +56,10 @@ REGISTER_SCRIPT_INIT(ActorComponent, initClass, 20);
 static void initClass(ScriptEngine* engine)
 {
 	RegisterClass<ActorComponent, Component>(engine);
-	RegisterCreateFunction(engine, "createActorComponent", createComponent<ActorComponent>);
+	jsentity::RegisterCreateFunction(engine, "createActorComponent", createComponent<ActorComponent>);
 }
 
-bool jsentity::parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc)
+bool jscomponent::parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc)
 {
 	GetProperty(cx, obj, "shapesXml", desc.shapesXml);
 	GetProperty(cx, obj, "transform", desc.transform);

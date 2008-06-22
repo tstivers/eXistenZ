@@ -1,6 +1,6 @@
 #include "precompiled.h"
-#include "entity/meshcomponent.h"
-#include "entity/jscomponent.h"
+#include "component/meshcomponent.h"
+#include "component/jscomponent.h"
 #include "entity/entitymanager.h"
 #include "scene/scene.h"
 #include "render/render.h"
@@ -8,13 +8,13 @@
 #include "render/rendergroup.h"
 #include "mesh/meshcache.h"
 
-using namespace entity;
+using namespace component;
 
 REGISTER_COMPONENT_TYPE(MeshComponent, 2);
 
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 
-MeshComponent::MeshComponent(Entity* entity, const string& name, const desc_type& desc)
+MeshComponent::MeshComponent(entity::Entity* entity, const string& name, const desc_type& desc)
 : Component(entity, name, desc), m_meshName(desc.mesh), transform(this), m_mesh(NULL)
 {
 	transform = desc.transformComponent;
@@ -90,12 +90,12 @@ void MeshComponent::render(texture::Material* lighting)
 
 JSObject* MeshComponent::createScriptObject()
 {
-	return jsentity::createComponentScriptObject(this);
+	return jscomponent::createComponentScriptObject(this);
 }
 
 void MeshComponent::destroyScriptObject()
 {
-	jsentity::destroyComponentScriptObject(this);
+	jscomponent::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }
 

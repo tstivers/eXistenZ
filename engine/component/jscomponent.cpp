@@ -1,13 +1,13 @@
 #include "precompiled.h"
-#include "entity/jscomponent.h"
-#include "entity/component.h"
+#include "component/jscomponent.h"
+#include "component/component.h"
 #include "script/script.h"
 
-using namespace entity;
+using namespace component;
 using namespace script;
-using namespace jsentity;
+using namespace jscomponent;
 
-namespace jsentity
+namespace jscomponent
 {
 	// property declarations
 	// static JSBool propGetter/propSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);

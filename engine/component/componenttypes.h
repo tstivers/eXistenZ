@@ -2,9 +2,9 @@
 
 #undef CONCAT
 #define CONCAT(a,b) a##b
-#define REGISTER_COMPONENT_TYPE(name, id) static entity::ComponentRegistration CONCAT(name, _registration)(#name, id)
+#define REGISTER_COMPONENT_TYPE(name, id) static component::ComponentRegistration CONCAT(name, _registration)(#name, id)
 
-namespace entity
+namespace component
 {
 	void registerComponentType(const string& name, int id);
 	int getComponentTypeId(const string& name);

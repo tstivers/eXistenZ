@@ -276,7 +276,7 @@ void SceneBSP::render()
 		render::current_lightmap->deactivate();
 }
 
-void SceneBSP::getEntityLighting(texture::Material* material, entity::Renderable* renderable)
+void SceneBSP::getEntityLighting(texture::Material* material, Renderable* renderable)
 {
 	D3DXVECTOR3 origin(renderable->getRenderOrigin());
 	swap(origin.y, origin.z);

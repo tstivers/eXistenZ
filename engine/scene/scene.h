@@ -22,7 +22,7 @@ namespace scene
 	{
 	public:
 		// TODO: replace with renderablemanager
-		typedef set<entity::Renderable*> renderables_list;
+		typedef set<Renderable*> renderables_list;
 		renderables_list m_renderables;
 
 		// construction
@@ -45,12 +45,12 @@ namespace scene
 		virtual void addEntity(entity::Entity* entity) = 0;
 		// virtual void updateEntity(const Entity* entity);
 		virtual void removeEntity(entity::Entity* entity) = 0;
-		virtual void addRenderable(entity::Renderable* renderable)
+		virtual void addRenderable(Renderable* renderable)
 		{
 			m_renderables.insert(renderable);
 		}
 
-		virtual void removeRenderable(entity::Renderable* renderable)
+		virtual void removeRenderable(Renderable* renderable)
 		{
 			m_renderables.erase(renderable);
 		}

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "entity/entity.h"
-#include "entity/component.h"
-#include "entity/poscomponent.h"
+#include "component/component.h"
+#include "component/poscomponent.h"
 #include "entity/interfaces.h"
 #include "mesh/mesh.h"
 
-namespace entity
+namespace component
 {
 	struct MeshComponentDesc : public ComponentDesc
 	{
@@ -21,7 +21,7 @@ namespace entity
 		typedef MeshComponentDesc desc_type;
 		
 		// constructor/destructor
-		MeshComponent(Entity* entity, const string& name, const desc_type& desc);
+		MeshComponent(entity::Entity* entity, const string& name, const desc_type& desc);
 		~MeshComponent();
 
 		// component overloads

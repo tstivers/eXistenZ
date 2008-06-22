@@ -1,8 +1,8 @@
 #pragma once
 
-#include "entity/component.h"
+#include "component/component.h"
 
-namespace jsentity
+namespace jscomponent
 {
 	template<typename T>
 	JSObject* createComponentScriptObject(T* component)
@@ -41,7 +41,7 @@ namespace jsentity
 	template<typename T>
 	JSBool createComponent(JSContext *cx, uintN argc, jsval *vp)
 	{
-		Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
+		entity::Entity* e = GetReserved<entity::Entity>(cx, JS_THIS_OBJECT(cx, vp));
 
 		string name;
 		jsscript::jsval_to_(cx, JS_ARGV(cx, vp)[0], &name);
@@ -59,7 +59,7 @@ namespace jsentity
 
 	#define WRAPPED_LINK(name, source, target) {#name, 0, JSPROP_PERMANENT | JSPROP_SHARED, linkGetter<source, target, & ## source ## :: ## name>, linkSetter<source, target, & ## source ## :: ## name>}
 
-	template<typename C, typename T, entity::ComponentLink<T> C::* link>
+	template<typename C, typename T, component::ComponentLink<T> C::* link>
 	JSBool linkGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	{
 		C* c = GetReserved<C>(cx, obj);
@@ -75,7 +75,7 @@ namespace jsentity
 		return JS_TRUE;
 	}
 
-	template<typename C, typename T, entity::ComponentLink<T> C::* link>
+	template<typename C, typename T, component::ComponentLink<T> C::* link>
 	JSBool linkSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	{
 		C* c = GetReserved<C>(cx, obj);
