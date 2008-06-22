@@ -1,6 +1,6 @@
 #include "precompiled.h"
 #include "entity/poscomponent.h"
-#include "entity/jsposcomponent.h"
+#include "entity/jscomponent.h"
 
 using namespace entity;
 
@@ -206,11 +206,11 @@ PosComponent::get_set_type PosComponent::setSetFunction(const entity::PosCompone
 
 JSObject* PosComponent::createScriptObject()
 {
-	return jsentity::createPosComponentObject(this);
+	return jsentity::createComponentScriptObject(this);
 }
 
 void PosComponent::destroyScriptObject()
 {
-	jsentity::destroyPosComponentObject(this);
+	jsentity::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }

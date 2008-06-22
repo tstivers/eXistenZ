@@ -38,6 +38,8 @@ namespace entity
 		// properties
 		ComponentLink<PosComponent> transform;
 
+		static ScriptedObject::ScriptClass m_scriptClass;
+
 	protected:
 		// script functions
 		JSObject* createScriptObject();

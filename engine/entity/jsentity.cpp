@@ -230,3 +230,15 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 
 	return JS_TRUE;
 }
+
+JSBool jsentity::RegisterCreateFunction(ScriptEngine* engine, char* name, JSFastNative create)
+{
+	JSFunctionSpec create_methods[] =
+	{
+		// JS_FN("name", function, nargs, flags, minargs),
+		JS_FN(name, create, 1, 1, 0),
+		JS_FS_END
+	};
+
+	return JS_DefineFunctions(engine->GetContext(), Entity::m_scriptClass.prototype, create_methods);
+}
