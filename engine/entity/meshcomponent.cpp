@@ -1,6 +1,6 @@
 #include "precompiled.h"
 #include "entity/meshcomponent.h"
-#include "entity/jsmeshcomponent.h"
+#include "entity/jscomponent.h"
 #include "entity/entitymanager.h"
 #include "scene/scene.h"
 #include "render/render.h"
@@ -22,6 +22,9 @@ MeshComponent::MeshComponent(Entity* entity, const string& name, const desc_type
 
 MeshComponent::~MeshComponent()
 {
+	if(m_acquired)
+		release();
+
 	if(m_scriptObject)
 		destroyScriptObject();
 }
@@ -64,6 +67,7 @@ void MeshComponent::release()
 
 D3DXVECTOR3 MeshComponent::getRenderOrigin() const
 {
+	ASSERT(transform);
 	D3DXMATRIX m = m_mesh->mesh_offset * transform->getTransform();
 	D3DXVECTOR3 scale, pos;
 	D3DXQUATERNION rot;
@@ -74,6 +78,7 @@ D3DXVECTOR3 MeshComponent::getRenderOrigin() const
 void MeshComponent::render(texture::Material* lighting)
 {
 	ASSERT(m_acquired);
+	ASSERT(transform);
 	render::RenderGroup* rg = m_mesh->rendergroup;
 	rg->material = lighting;
 	D3DXMATRIX m = m_mesh->mesh_offset * transform->getTransform();
@@ -85,12 +90,12 @@ void MeshComponent::render(texture::Material* lighting)
 
 JSObject* MeshComponent::createScriptObject()
 {
-	return jsentity::createMeshComponentObject(this);
+	return jsentity::createComponentScriptObject(this);
 }
 
 void MeshComponent::destroyScriptObject()
 {
-	jsentity::destroyMeshComponentObject(this);
+	jsentity::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }
 

@@ -8,38 +8,34 @@ bind(KEY_B, createBigDaddy);
 bind(KEY_N, createSplicer);
 bind(KEY_COMMA, createHam, STATE_DOWN);
 
-function createModelEntity(meshname) {
-    entity = createMeshEntity("model" + num_entities++, meshname);
-    entities[entity.name] = entity;
-    system.scene.addEntity(entity);
-    entity.setPos(game.player.getPos());
-    entity.setRot([0,0,0]);
+function createModelEntity(meshname, dynamicsname) {
+    entity = system.scene.entities.createEntity("model" + num_entities++);
+    entity.createPosComponent("pos", { pos: game.player.getPos(), rot: game.player.getRot() });
+    entity.createMeshComponent("mesh", { mesh: meshname, transform: "pos" });
+    entity.createActorComponent("actor", { shapesXml: dynamicsname, transform: "pos" });
+    entity.acquire();
     return entity;
 }
 
 function createFridge() {
-    fridge = createModelEntity("meshes/fridge.fbx#Fridge01");
+    fridge = createModelEntity("meshes/fridge.fbx#Fridge01", "meshes/fridge_DYNAMIC.xml");
     return fridge;
 }
 
 function createBigDaddy() {
-    daddy = createModelEntity("meshes/bigdaddy.fbx#10840-mesh");
-    return daddy;
+    return createModelEntity("meshes/bigdaddy.fbx#10840-mesh", "meshes/bigdaddy_DYNAMIC.xml");
 }
 
 function createSplicer() {
-    splicer = createModelEntity("meshes/splicer.fbx#5084-splicer");
-    return splicer;
+    return createModelEntity("meshes/splicer.fbx#5084-splicer");
 }
 
 function createHam() {
-    ham = createModelEntity("meshes/ham.fbx#Box01");
-    return ham;
+    return createModelEntity("meshes/ham.fbx#Box01", "meshes/ham_DYNAMIC.xml");
 }
 
 function createSlice() {
-    ham = createModelEntity("meshes/hamslice.fbx#Slice01");
-    return ham;
+    return createModelEntity("meshes/hamslice.fbx#Slice01", "meshes/hamslice_DYNAMIC.xml");
 }
 
 function createSphere() {

@@ -6,7 +6,6 @@ namespace jsvector
 {
 	JSObject* vector_prototype = NULL;
 
-	void initVectorClass(ScriptEngine* engine);
 	JSBool vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
@@ -39,7 +38,7 @@ using namespace jsvector;
 
 REGISTER_SCRIPT_INIT(Vector, initVectorClass, 1);
 
-void jsvector::initVectorClass(ScriptEngine* engine)
+static void initVectorClass(ScriptEngine* engine)
 {
 	vector_prototype = JS_InitClass(
 						   engine->GetContext(),

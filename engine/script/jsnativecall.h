@@ -210,6 +210,16 @@ namespace script
 
 		BOOST_PP_REPEAT_FROM_TO(0, 10, JSNATIVE_CALL_BASE, NULL)
 
+		#undef JSNATIVECALLMEMBER_ARG_TYPEDEF
+		#undef JSNATIVECALLMEMBER_ARG_ASSIGN
+		#undef JSNATIVECALLMEMBER_ARG_CALL
+		#undef JSNATIVECALLMEMBER_BASE_VOID
+		#undef JSNATIVECALLMEMBER_BASE
+		#undef JSNATIVCECALL_ARG_TYPEDEF
+		#undef JSNATIVCECALL_ARG_ASSIGN
+		#undef JSNATIVECALL_ARG_CALL
+		#undef JSNATIVE_CALL_BASE_VOID
+		#undef JSNATIVE_CALL_BASE
 
 		template<typename function_type, typename function_type function_pointer>
 		struct JSNativeCallSelector 
@@ -233,6 +243,8 @@ namespace script
 			}
 		};
 	}
+	
+	#define WRAP_NATIVE(x) (JSNativeCall<BOOST_TYPEOF(x), &x>)
 
 	template<typename function_type, typename function_type function_pointer>
 	JSBool JSNativeCall(JSContext *cx, uintN argc, jsval *vp)

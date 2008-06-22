@@ -7,6 +7,9 @@ namespace scene
 	class SceneBSP;
 }
 
+void NxMat34ToD3DXMatrix(const NxMat34* in, D3DXMATRIX* out);
+void D3DXMatrixToNxMat34(const D3DXMATRIX* in, NxMat34* out);
+
 namespace physics
 {
 	void init();

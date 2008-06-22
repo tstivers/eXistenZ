@@ -36,6 +36,25 @@ namespace script
 		JSObject* m_scriptObject;
 	};
 
+	template<typename T, typename U>
+	JSObject* RegisterClass(ScriptEngine* engine)
+	{
+		T::m_scriptClass.prototype = JS_InitClass(
+			engine->GetContext(),
+			engine->GetGlobal(),
+			U::m_scriptClass.prototype,
+			T::m_scriptClass.classDef,
+			NULL,
+			0,
+			T::m_scriptClass.properties,
+			T::m_scriptClass.methods,
+			NULL,
+			NULL);
+
+		ASSERT(T::m_scriptClass.prototype);
+		return T::m_scriptClass.prototype;
+	}
+
 	template<typename T>
 	T* GetReserved(JSContext* cx, JSObject* obj, int index = 0)
 	{

@@ -1,8 +1,7 @@
 #include "precompiled.h"
 #include "entity/jsposcomponent.h"
-#include "entity/poscomponent.h"
-#include "entity/entity.h"
-#include "script/jsvector.h"
+#include "entity/jscomponent.h"
+#include "entity/jsentity.h"
 
 using namespace jsentity;
 using namespace entity;
@@ -10,46 +9,15 @@ using namespace script;
 
 namespace jsentity
 {
-	static void initClass(ScriptEngine* engine);
 	static bool parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc);
 
 	// method declarations
 	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool createPosComponent(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool setPos(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool getPos(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool setRot(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool getRot(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool setScale(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool getScale(JSContext *cx, uintN argc, jsval *vp);
 
 	// property declarations
-	//static JSBool prop_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
-	static JSBool parentGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
-	static JSBool parentSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	// static JSBool propGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
-	JSObject* poscomponent_prototype = NULL;
-
-	static JSFunctionSpec class_methods[] =
-	{
-		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("setPos", setPos, 1, 1, 0),
-		JS_FN("getPos", getPos, 0, 0, 0),
-		JS_FN("setRot", setRot, 1, 1, 0),
-		JS_FN("getRot", getRot, 0, 0, 0),
-		JS_FN("setScale", setScale, 1, 1, 0),
-		JS_FN("getScale", getScale, 0, 0, 0),
-		JS_FS_END
-	};
-
-	static JSPropertySpec class_properties[] =
-	{
-		//{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, name_getter, NULL},
-		{"parent", 0, JSPROP_PERMANENT | JSPROP_SHARED, parentGetter, parentSetter},
-		JS_PS_END 
-	};
-
-	static JSClass poscomponent_class =
+	static JSClass class_ops =
 	{
 		"PosComponent",
 		JSCLASS_HAS_RESERVED_SLOTS(1),
@@ -58,34 +26,41 @@ namespace jsentity
 		JS_EnumerateStub, JS_ResolveStub,
 		JS_ConvertStub,  JS_FinalizeStub
 	};
+
+	static JSPropertySpec class_properties[] =
+	{
+		// {"name", id, flags, getter, setter},
+		WRAPPED_LINK(parent, PosComponent, PosComponent),
+		JS_PS_END
+	};
+
+	static JSFunctionSpec class_methods[] =
+	{
+		// JS_FN("name", function, nargs, minargs, flags),
+		JS_FN("setPos", WRAP_NATIVE(PosComponent::setPos), 1, 1, 0),
+		JS_FN("getPos", WRAP_NATIVE(PosComponent::getPos), 0, 0, 0),
+		JS_FN("setRot", (JSNativeCall<void(PosComponent::*)(const D3DXVECTOR3&), &PosComponent::setRot>), 1, 1, 0),
+		JS_FN("getRot", WRAP_NATIVE(PosComponent::getRot), 0, 0, 0),
+		JS_FN("setScale", WRAP_NATIVE(PosComponent::setScale), 1, 1, 0),
+		JS_FN("getScale", WRAP_NATIVE(PosComponent::getScale), 0, 0, 0),
+		JS_FS_END
+	};
 }
+
+ScriptedObject::ScriptClass PosComponent::m_scriptClass =
+{
+	&class_ops,
+	class_properties,
+	class_methods,
+	NULL
+};
 
 REGISTER_SCRIPT_INIT(PosComponent, initClass, 20);
 
-void jsentity::initClass(ScriptEngine* engine)
+static void initClass(ScriptEngine* engine)
 {
-	poscomponent_prototype = JS_InitClass(
-		engine->GetContext(),
-		engine->GetGlobal(),
-		Component::m_scriptClass.prototype,
-		&poscomponent_class,
-		NULL,
-		0,
-		class_properties,
-		class_methods,
-		NULL,
-		NULL);
-
-	ASSERT(poscomponent_prototype);
-
-	JSFunctionSpec create_methods[] =
-	{
-		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("createPosComponent", createPosComponent, 1, 1, 0),
-		JS_FS_END
-	};
-
-	JS_DefineFunctions(engine->GetContext(), Entity::m_scriptClass.prototype, create_methods);
+	RegisterClass<PosComponent, Component>(engine);
+	RegisterCreateFunction(engine, "createPosComponent", createComponent<PosComponent>);
 }
 
 bool jsentity::parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc)
@@ -94,177 +69,5 @@ bool jsentity::parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& 
 	GetProperty(cx, obj, "rot", desc.rotation);
 	GetProperty(cx, obj, "scale", desc.scale);
 	GetProperty(cx, obj, "parent", desc.parentName);
-
 	return true;
-}
-
-JSBool jsentity::createPosComponent(JSContext *cx, uintN argc, jsval *vp)
-{
-	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
-
-	string name = JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx, vp)[0]));
-	PosComponent::desc_type desc;
-	if(argc == 2 && JSVAL_IS_OBJECT(JS_ARGV(cx, vp)[1]))
-		parseDesc(cx, JSVAL_TO_OBJECT(JS_ARGV(cx, vp)[1]), desc);
-	PosComponent* component = e->createComponent(name, desc, &component);
-	if(component)
-		JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(component->getScriptObject()));
-	else
-		JS_SET_RVAL(cx, vp, JSVAL_VOID);
-
-	return JS_TRUE;
-}
-
-JSObject* jsentity::createPosComponentObject(entity::PosComponent* component)
-{
-	JSContext* cx = gScriptEngine->GetContext();
-
-	JS_EnterLocalRootScope(cx);
-	JSObject* entity = component->getEntity()->getScriptObject();
-	jsval cval = JSVAL_VOID;
-	JS_GetProperty(cx, entity, "components", &cval);
-	JSObject* components = JSVAL_TO_OBJECT(cval);
-	JSObject* obj = JS_DefineObject(
-		cx, 
-		components, 
-		component->getName().c_str(), 
-		&poscomponent_class, 
-		poscomponent_prototype, 
-		JSPROP_ENUMERATE | JSPROP_READONLY);
-	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(component));
-	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
-	return obj;
-}
-
-void jsentity::destroyPosComponentObject(entity::PosComponent* component)
-{
-	JSObject* components;
-	GetProperty(gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
-	JS_SetReservedSlot(gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
-	JS_DeleteProperty(
-		gScriptEngine->GetContext(), 
-		components, 
-		component->getName().c_str());
-}
-
-JSBool jsentity::setPos(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v;
-	if(jsvector::ParseVector(cx, v, argc, JS_ARGV(cx, vp)) == JS_FALSE)
-	{
-		JS_ReportError(cx, "posComponent.setPos: unable to parse vector");
-		return JS_FALSE;
-	}
-
-	pc->setPos(v);
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
-	return JS_TRUE;
-}
-
-JSBool jsentity::getPos(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v = pc->getPos();
-	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, v)));
-
-	return JS_TRUE;
-}
-
-JSBool jsentity::setRot(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v;
-	if(jsvector::ParseVector(cx, v, argc, JS_ARGV(cx, vp)) == JS_FALSE)
-	{
-		JS_ReportError(cx, "posComponent.setRot: unable to parse vector");
-		return JS_FALSE;
-	}
-
-	pc->setRot(v);
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
-	return JS_TRUE;
-}
-
-JSBool jsentity::getRot(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v = pc->getRot();
-	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, v)));
-
-	return JS_TRUE;
-}
-
-JSBool jsentity::setScale(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v;
-	if(jsvector::ParseVector(cx, v, argc, JS_ARGV(cx, vp)) == JS_FALSE)
-	{
-		JS_ReportError(cx, "posComponent.setScale: unable to parse vector");
-		return JS_FALSE;
-	}
-
-	pc->setScale(v);
-
-	JS_SET_RVAL(cx, vp, JSVAL_VOID);
-	return JS_TRUE;
-}
-
-JSBool jsentity::getScale(JSContext *cx, uintN argc, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, JS_THIS_OBJECT(cx, vp));
-
-	D3DXVECTOR3 v = pc->getScale();
-	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, v)));
-
-	return JS_TRUE;
-}
-
-JSBool jsentity::parentGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, obj);
-	PosComponent* parent = pc->parent;
-	if(parent)
-	{
-		*vp = OBJECT_TO_JSVAL(pc->parent->getScriptObject());
-		return JS_TRUE;
-	}
-
-	*vp = JSVAL_VOID;
-	return JS_TRUE;
-}
-
-JSBool jsentity::parentSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
-{
-	PosComponent* pc = GetReserved<PosComponent>(cx, obj);
-	if(JSVAL_IS_OBJECT(*vp))
-	{
-		if(*vp == JSVAL_NULL) // component.parent = null;
-		{
-			pc->parent = NULL;
-			return JS_TRUE;
-		}
-
-		JSObject* parent = JSVAL_TO_OBJECT(*vp);
-		pc->parent = GetReserved<PosComponent>(cx, parent);
-		return JS_TRUE;
-	}
-	else if(JSVAL_IS_STRING(*vp))
-	{
-		string name;
-		jsscript::jsval_to_(cx, *vp, &name);
-		pc->parent = name;
-		return JS_TRUE;
-	}
-
-	JS_ReportError(cx, "parentSetter: argument must be a position component or component name");
-	return JS_FALSE;
 }

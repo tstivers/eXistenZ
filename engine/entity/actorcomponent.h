@@ -35,6 +35,9 @@ namespace entity
 		// properties
 		ComponentLink<PosComponent> transform;
 
+		// script class
+		static ScriptedObject::ScriptClass m_scriptClass;
+
 	protected:
 		// methods
 		void setTransform(D3DXMATRIX& current_transform, const D3DXMATRIX& new_transform);

@@ -5,6 +5,7 @@
 #include "timer/timer.h"
 #include "render/render.h"
 #include "render/shapes.h"
+#include "entity/interfaces.h"
 #include <NxPhysics.h>
 #include <NxCooking.h>
 #include <NxCharacter.h>
@@ -71,6 +72,16 @@ namespace physics
 	bool setGravity(settings::Setting* setting, void* value);
 	bool setTimestep(settings::Setting* setting, void* value);
 	bool setMaxIter(settings::Setting* setting, void* value);
+}
+
+void NxMat34ToD3DXMatrix( const NxMat34* in, D3DXMATRIX* out )
+{
+	in->getColumnMajor44((NxF32*)out);
+}
+
+void D3DXMatrixToNxMat34(const D3DXMATRIX* in, NxMat34* out)
+{
+	out->setColumnMajor44((NxF32*)in);
 }
 
 using namespace physics;
@@ -162,7 +173,9 @@ void physics::acquire()
 
 	acquired = true;
 
+	gScene->setGroupCollisionFlag(10, 10, false);
 	startSimulation(); // prime the pump
+	getResults();
 }
 
 void physics::startSimulation()

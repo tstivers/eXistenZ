@@ -49,6 +49,8 @@ namespace entity
 		// properties
 		ComponentLink<PosComponent> parent;
 
+		static ScriptedObject::ScriptClass m_scriptClass;
+
 	protected:
 		// script functions
 		JSObject* createScriptObject();

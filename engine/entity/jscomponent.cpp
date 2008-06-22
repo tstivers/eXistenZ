@@ -1,6 +1,7 @@
 #include "precompiled.h"
 #include "entity/jscomponent.h"
 #include "entity/component.h"
+#include "script/script.h"
 
 using namespace entity;
 using namespace script;

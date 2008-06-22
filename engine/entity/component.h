@@ -1,9 +1,6 @@
 #pragma once
 
-#include "script/script.h"
 #include "entity/componenttypes.h"
-#include "common/safe_bool.h"
-#include "entity/jscomponent.h"
 
 namespace entity
 {

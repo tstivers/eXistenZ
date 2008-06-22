@@ -1,6 +1,6 @@
 #include "precompiled.h"
 #include "entity/actorcomponent.h"
-#include "entity/jsactorcomponent.h"
+#include "entity/jscomponent.h"
 #include "physics/physics.h"
 
 using namespace entity;
@@ -17,7 +17,9 @@ ActorComponent::ActorComponent(Entity* entity, const string& name, const desc_ty
 
 ActorComponent::~ActorComponent()
 {
-	ASSERT(!m_acquired);
+	if(m_acquired)
+		release();
+
 	if(m_scriptObject)
 		destroyScriptObject();
 }
@@ -111,11 +113,11 @@ void ActorComponent::getTransform(D3DXMATRIX& new_transform, const D3DXMATRIX& c
 
 JSObject* entity::ActorComponent::createScriptObject()
 {
-	return jsentity::createActorComponentObject(this);
+	return jsentity::createComponentScriptObject(this);
 }
 
 void entity::ActorComponent::destroyScriptObject()
 {
-	jsentity::destroyActorComponentObject(this);
+	jsentity::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }

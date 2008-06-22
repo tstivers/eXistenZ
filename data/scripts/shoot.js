@@ -1,4 +1,4 @@
-var shootspeed = 100;
+var shootspeed = 500;
 var shootvelo = 15;
 var lastshot = 0;
 
@@ -9,17 +9,17 @@ game.player.shoot = function(key, state)
 
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
-game.player.shootFunction = hamShoot;
+game.player.shootFunction = playerShoot;
 game.player.createProjectile = createHam;
 
 
 function shootEntity(entity, pos, direction, speed) {
-    entity.setPos(pos);
-    entity.setRot(direction);
+    entity.components.pos.setPos(pos);
+    entity.components.pos.setRot(direction);
 
-    var force = new Vector(0, 0, 1);
-    force.rotate(direction);
-    entity.applyForce(force.mul(speed));
+    var velocity = new Vector(0, 0, 1);
+    velocity.rotate(direction);
+    entity.components.actor.setLinearVelocity(velocity.mul(speed));
     return entity;
 }
 
@@ -32,15 +32,17 @@ function playerShoot()
         
     var direction = new Vector(0, 0, 1);
     direction.rotate(game.player.getRot());
+    
     var pos = new Vector(direction);
     pos.mul(5);
     pos.add(game.player.getPos());
 
     var projectile = game.player.createProjectile();
     
-    shootEntity(projectile, pos, direction, shootvelo);
-    projectile.remove = function(){ removeEntity(this.name); };
-    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 10000);
+    shootEntity(projectile, pos, game.player.getRot(), shootvelo);
+    hamgrenade(projectile);
+    projectile.remove = function(){ system.scene.entities.removeEntity(this.name); };
+    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 8000);
 }
 
 function hamShoot() {
@@ -77,4 +79,21 @@ function shootSlice(ham) {
     shootEntity(slice, shootpos, new Vector(ham.getRot()), 5);
     slice.remove = function() { removeEntity(this.name); };
     timer.addTimer(slice.name + "_timer", slice, slice.remove, 0, system.time.ms + 10000);
+}
+
+var grenade_slices = 100;
+function hamgrenade(ham) {
+    timer.addTimer(ham.name + "_grenade", ham, function() {
+        var origin = this.components.pos.getPos();
+        this.removeComponent("mesh");
+        this.removeComponent("actor");
+        for (i = 0; i < grenade_slices; i++) {
+            this.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
+            this.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
+            actor = this.createActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
+            actor.acquire();
+            actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);
+            actor.setAngularVelocity([Math.random() * 100, Math.random() * 100, Math.random() * 100]);
+        }
+    }, 0, system.time.ms + 3000);
 }
