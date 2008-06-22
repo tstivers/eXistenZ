@@ -1,5 +1,5 @@
 #include "precompiled.h"
-#include "entity/jsmeshcomponent.h"
+#include "entity/jsactorcomponent.h"
 #include "entity/entity.h"
 
 using namespace jsentity;
@@ -9,22 +9,26 @@ using namespace script;
 namespace jsentity
 {
 	static void initClass(ScriptEngine* engine);
-	static bool parseDesc(JSContext* cx, JSObject* obj, MeshComponent::desc_type& desc);
+	static bool parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc);
 
 	// method declarations
 	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
-	static JSBool createMeshComponent(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool createActorComponent(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool setLinearVelocity(JSContext *cx, uintN argc, jsval *vp);
+	static JSBool setAngularVelocity(JSContext *cx, uintN argc, jsval *vp);
 
 	// property declarations
 	//static JSBool prop_getter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	static JSBool transformGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 	static JSBool transformSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
 
-	JSObject* meshcomponent_prototype = NULL;
+	JSObject* actorcomponent_prototype = NULL;
 
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
+		JS_FN("setLinearVelocity", setLinearVelocity, 1, 1, 0),
+		JS_FN("setAngularVelocity", setAngularVelocity, 1, 1, 0),
 		JS_FS_END
 	};
 
@@ -35,9 +39,9 @@ namespace jsentity
 		JS_PS_END 
 	};
 
-	static JSClass meshcomponent_class =
+	static JSClass actorcomponent_class =
 	{
-		"MeshComponent",
+		"ActorComponent",
 		JSCLASS_HAS_RESERVED_SLOTS(1),
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
@@ -46,15 +50,15 @@ namespace jsentity
 	};
 }
 
-REGISTER_SCRIPT_INIT(MeshComponent, initClass, 20);
+REGISTER_SCRIPT_INIT(ActorComponent, initClass, 20);
 
 void jsentity::initClass(ScriptEngine* engine)
 {
-	meshcomponent_prototype = JS_InitClass(
+	actorcomponent_prototype = JS_InitClass(
 		engine->GetContext(),
 		engine->GetGlobal(),
 		Component::m_scriptClass.prototype,
-		&meshcomponent_class,
+		&actorcomponent_class,
 		NULL,
 		0,
 		class_properties,
@@ -62,36 +66,36 @@ void jsentity::initClass(ScriptEngine* engine)
 		NULL,
 		NULL);
 
-	ASSERT(meshcomponent_prototype);
+	ASSERT(actorcomponent_prototype);
 
 	JSFunctionSpec create_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("createMeshComponent", createMeshComponent, 1, 1, 0),
+		JS_FN("createActorComponent", createActorComponent, 1, 1, 0),
 		JS_FS_END
 	};
 
 	JS_DefineFunctions(engine->GetContext(), Entity::m_scriptClass.prototype, create_methods);
 }
 
-bool jsentity::parseDesc(JSContext* cx, JSObject* obj, MeshComponent::desc_type& desc)
+bool jsentity::parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc)
 {
-	GetProperty(cx, obj, "mesh", desc.mesh);
-	GetProperty(cx, obj, "transform", desc.transformComponent);
+	GetProperty(cx, obj, "shapesXml", desc.shapesXml);
+	GetProperty(cx, obj, "transform", desc.transform);
 
 	return true;
 }
 
-JSBool jsentity::createMeshComponent(JSContext *cx, uintN argc, jsval *vp)
+JSBool jsentity::createActorComponent(JSContext *cx, uintN argc, jsval *vp)
 {
 	Entity* e = GetReserved<Entity>(cx, JS_THIS_OBJECT(cx, vp));
 
 	string name;
 	jsscript::jsval_to_(cx, JS_ARGV(cx, vp)[0], &name);
-	MeshComponent::desc_type desc;
+	ActorComponent::desc_type desc;
 	if(argc == 2 && JSVAL_IS_OBJECT(JS_ARGV(cx, vp)[1]))
 		parseDesc(cx, JSVAL_TO_OBJECT(JS_ARGV(cx, vp)[1]), desc);
-	MeshComponent* component = e->createComponent(name, desc, &component);
+	ActorComponent* component = e->createComponent(name, desc, &component);
 	if(component)
 		JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(component->getScriptObject()));
 	else
@@ -100,7 +104,7 @@ JSBool jsentity::createMeshComponent(JSContext *cx, uintN argc, jsval *vp)
 	return JS_TRUE;
 }
 
-JSObject* jsentity::createMeshComponentObject(entity::MeshComponent* component)
+JSObject* jsentity::createActorComponentObject(entity::ActorComponent* component)
 {
 	JSContext* cx = gScriptEngine->GetContext();
 
@@ -113,15 +117,15 @@ JSObject* jsentity::createMeshComponentObject(entity::MeshComponent* component)
 		cx, 
 		components, 
 		component->getName().c_str(), 
-		&meshcomponent_class, 
-		meshcomponent_prototype, 
+		&actorcomponent_class, 
+		actorcomponent_prototype, 
 		JSPROP_ENUMERATE | JSPROP_READONLY);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(component));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;
 }
 
-void jsentity::destroyMeshComponentObject(entity::MeshComponent* component)
+void jsentity::destroyActorComponentObject(entity::ActorComponent* component)
 {
 	JSObject* components;
 	GetProperty(gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
@@ -132,9 +136,43 @@ void jsentity::destroyMeshComponentObject(entity::MeshComponent* component)
 		component->getName().c_str());
 }
 
+JSBool jsentity::setLinearVelocity(JSContext *cx, uintN argc, jsval *vp)
+{
+	ActorComponent* c = GetReserved<ActorComponent>(cx, JS_THIS_OBJECT(cx, vp));
+
+	D3DXVECTOR3 v;
+	if(jsvector::ParseVector(cx, v, argc, JS_ARGV(cx, vp)) == JS_FALSE)
+	{
+		JS_ReportError(cx, "ActorComponent.setLinearVelocity: unable to parse vector");
+		return JS_FALSE;
+	}
+
+	c->setLinearVelocity(v);
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	return JS_TRUE;
+}
+
+JSBool jsentity::setAngularVelocity(JSContext *cx, uintN argc, jsval *vp)
+{
+	ActorComponent* c = GetReserved<ActorComponent>(cx, JS_THIS_OBJECT(cx, vp));
+
+	D3DXVECTOR3 v;
+	if(jsvector::ParseVector(cx, v, argc, JS_ARGV(cx, vp)) == JS_FALSE)
+	{
+		JS_ReportError(cx, "ActorComponent.setAngularVelocity: unable to parse vector");
+		return JS_FALSE;
+	}
+
+	c->setAngularVelocity(v);
+
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	return JS_TRUE;
+}
+
 JSBool jsentity::transformGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
-	MeshComponent* c = GetReserved<MeshComponent>(cx, obj);
+	ActorComponent* c = GetReserved<ActorComponent>(cx, obj);
 	PosComponent* transform = c->transform;
 	if(transform)
 	{
@@ -148,7 +186,7 @@ JSBool jsentity::transformGetter(JSContext *cx, JSObject *obj, jsval id, jsval *
 
 JSBool jsentity::transformSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 {
-	MeshComponent* c = GetReserved<MeshComponent>(cx, obj);
+	ActorComponent* c = GetReserved<ActorComponent>(cx, obj);
 	if(JSVAL_IS_OBJECT(*vp))
 	{
 		if(*vp == JSVAL_NULL) // component.parent = null;

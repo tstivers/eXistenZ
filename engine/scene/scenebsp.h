@@ -2,7 +2,7 @@
 
 #include "math/aabb.h"
 #include "math/vertex.h"
-#include "entity/renderable.h"
+#include "entity/interfaces.h"
 
 namespace render
 {

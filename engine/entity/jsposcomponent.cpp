@@ -6,12 +6,10 @@
 
 using namespace jsentity;
 using namespace entity;
+using namespace script;
 
 namespace jsentity
 {
-	extern JSObject* entity_prototype;
-	extern JSObject* component_prototype;
-
 	static void initClass(ScriptEngine* engine);
 	static bool parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc);
 
@@ -69,7 +67,7 @@ void jsentity::initClass(ScriptEngine* engine)
 	poscomponent_prototype = JS_InitClass(
 		engine->GetContext(),
 		engine->GetGlobal(),
-		component_prototype,
+		Component::m_scriptClass.prototype,
 		&poscomponent_class,
 		NULL,
 		0,
@@ -87,7 +85,7 @@ void jsentity::initClass(ScriptEngine* engine)
 		JS_FS_END
 	};
 
-	JS_DefineFunctions(engine->GetContext(), entity_prototype, create_methods);
+	JS_DefineFunctions(engine->GetContext(), Entity::m_scriptClass.prototype, create_methods);
 }
 
 bool jsentity::parseDesc(JSContext* cx, JSObject* obj, PosComponent::desc_type& desc)
@@ -140,11 +138,13 @@ JSObject* jsentity::createPosComponentObject(entity::PosComponent* component)
 
 void jsentity::destroyPosComponentObject(entity::PosComponent* component)
 {
+	JSObject* components;
+	GetProperty(gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
+	JS_SetReservedSlot(gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 	JS_DeleteProperty(
 		gScriptEngine->GetContext(), 
-		component->getEntity()->getScriptObject(), 
+		components, 
 		component->getName().c_str());
-	JS_SetReservedSlot(gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 }
 
 JSBool jsentity::setPos(JSContext *cx, uintN argc, jsval *vp)
@@ -260,7 +260,7 @@ JSBool jsentity::parentSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	else if(JSVAL_IS_STRING(*vp))
 	{
 		string name;
-		jsscript::jsval_to_<string>()(cx, *vp, &name);
+		jsscript::jsval_to_(cx, *vp, &name);
 		pc->parent = name;
 		return JS_TRUE;
 	}

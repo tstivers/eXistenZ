@@ -34,16 +34,26 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/bimap.hpp>
 #include <boost/function_types/parameter_types.hpp>
+#include <boost/function_types/member_function_pointer.hpp>
+#include <boost/function_types/function_pointer.hpp>
+#include <boost/function_types/function_arity.hpp>
+#include <boost/function_types/result_type.hpp>
+#include <boost/function_types/is_member_function_pointer.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/unordered_map.hpp>
+#include <boost/mpl/at.hpp>
+#include <boost/mpl/int.hpp>
+#include <boost/mpl/placeholders.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/typeof/typeof.hpp>
 
-#include "d3d9.h"
-#include "d3dx9core.h"
+#include <d3d9.h>
+#include <d3dx9core.h>
 #define DIRECTINPUT_VERSION 0x0800
-#include "dinput.h"
+#include <dinput.h>
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -55,6 +65,14 @@
 
 #include "js32.h"
 
+#define ASSERT assert
+#define DIK_BUTTON0 0xF0
+#define DIK_BUTTON1 0xF1
+#define DIK_BUTTON2 0xF2
+#define DIK_BUTTON3 0xF3
+#define DIK_MWHEELUP 0xF4
+#define DIK_MWHEELDN 0xF5
+
 using namespace std;
 using namespace boost;
 
@@ -63,12 +81,6 @@ using namespace boost;
 #include "common/mystring.h"
 #include "common/registeredfunctions.h"
 #include "math/math.h"
+#include "script/wrappedhelpers.hpp"
+#include "script/jsnativecall.h"
 
-#define DIK_BUTTON0 0xF0
-#define DIK_BUTTON1 0xF1
-#define DIK_BUTTON2 0xF2
-#define DIK_BUTTON3 0xF3
-#define DIK_MWHEELUP 0xF4
-#define DIK_MWHEELDN 0xF5
-
-#define ASSERT assert

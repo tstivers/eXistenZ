@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity/renderable.h"
+#include "entity/interfaces.h"
 
 namespace entity
 {

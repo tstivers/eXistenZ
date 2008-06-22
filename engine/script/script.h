@@ -47,29 +47,6 @@ public:
 	void DumpObject(JSObject* obj, bool recurse = false, char* objname = "", char* name = "");
 };
 
-template<typename T>
-T* GetReserved(JSContext* cx, JSObject* obj, int index = 0)
-{
-	jsval val = JSVAL_VOID;
-	JSBool ret = JS_GetReservedSlot(cx, obj, index, &val);
-	ASSERT(ret == JS_TRUE);
-	ASSERT(val != JSVAL_VOID);
-	ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
-	return (T*)JSVAL_TO_PRIVATE(val);
-}
-
-template<typename T>
-bool GetProperty(JSContext* cx, JSObject* obj, const char* name, T& value)
-{
-	jsval v;
-
-	if(JS_GetProperty(cx, obj, name, &v) && v != JSVAL_VOID)
-	{
-		return jsscript::jsval_to_<T>()(cx, v, &value);
-	}
-
-	return false;
-}
 
 // hack, replace with getScriptEngine()
 extern ScriptEngine* gScriptEngine;
@@ -81,29 +58,5 @@ namespace script
 	void release();
 	JSObject* GetObject(const string& name);
 
-	class ScriptedObject
-	{
-	public:
-		ScriptedObject() : m_scriptObject(NULL) 
-		{
-		}
-
-		virtual ~ScriptedObject() 
-		{
-			if(m_scriptObject)
-				destroyScriptObject();
-		}
-
-		virtual JSObject* getScriptObject() 
-		{ 
-			if(!m_scriptObject)
-				m_scriptObject = createScriptObject();
-			return m_scriptObject;
-		}
-
-	protected:
-		virtual JSObject* createScriptObject() { return NULL; }
-		virtual void destroyScriptObject() {}
-		JSObject* m_scriptObject;
-	};
+	
 };

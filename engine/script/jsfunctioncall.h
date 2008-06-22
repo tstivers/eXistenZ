@@ -28,7 +28,7 @@ namespace jsscript
 			T operator()(JSContext* cx, jsval v)
 			{
 				T result;
-				jsval_to_<T>(cx, v, &result);
+				jsval_to_(cx, v, &result);
 				return result;
 			}
 		};
@@ -233,32 +233,21 @@ namespace jsscript
 		return OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, vec));
 	}
 
+	inline jsval to_jsval(JSContext* cx, void*)
+	{
+		return JSVAL_VOID;
+	}
+
 #pragma endregion
 
 #pragma region jsval_to_
 
-	template <typename T>
-	struct jsval_to_
+	inline bool jsval_to_(JSContext* cx, jsval v, void* out)
 	{
-		inline bool operator()(JSContext* cx, jsval v, T* out)
-		{
-			BOOST_STATIC_ASSERT(!"unable to convert arg from jsval");
-		}
-	};
+		return true;
+	}
 
-	template<>
-	struct jsval_to_<void>
-	{
-		inline bool operator()(JSContext* cx, jsval v, void* out)
-		{
-			return true;
-		}
-	};
-
-	template<>
-	struct jsval_to_<bool>
-	{
-		inline bool operator()(JSContext* cx, jsval v, bool* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, bool* out)
 		{
 			if (JSVAL_IS_BOOLEAN(v))
 			{
@@ -277,12 +266,8 @@ namespace jsscript
 
 			return false;
 		}
-	};
 
-	template<>
-	struct jsval_to_<string>
-	{
-		inline bool operator()(JSContext* cx, jsval v, string* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, string* out)
 		{
 			if (JSVAL_IS_STRING(v))
 			{
@@ -297,12 +282,8 @@ namespace jsscript
 
 			return false;
 		}
-	};
 
-	template<>
-	struct jsval_to_<float>
-	{
-		inline bool operator()(JSContext* cx, jsval v, float* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, float* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
@@ -321,12 +302,8 @@ namespace jsscript
 
 			return false;
 		}
-	};
 
-	template<>
-	struct jsval_to_<double>
-	{
-		inline bool operator()(JSContext* cx, jsval v, double* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, double* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
@@ -344,12 +321,8 @@ namespace jsscript
 			}
 			return false;
 		}
-	};
 
-	template<>
-	struct jsval_to_<int>
-	{
-		inline bool operator()(JSContext* cx, jsval v, int* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, int* out)
 		{
 			if (JSVAL_IS_INT(v))
 			{
@@ -367,21 +340,13 @@ namespace jsscript
 			}
 			return false;
 		}
-	};
 
-	template<>
-	struct jsval_to_<D3DXVECTOR3>
-	{
-		inline bool operator()(JSContext* cx, jsval v, D3DXVECTOR3* out)
+		inline bool jsval_to_(JSContext* cx, jsval v, D3DXVECTOR3* out)
 		{
 			return jsvector::ParseVector(cx, *out, 1, &v);
 		}
-	};
 
-	template<>
-	struct jsval_to_<JSObject*>
-	{
-		inline bool operator()(JSContext* cx, jsval v, JSObject** out)
+		inline bool jsval_to_(JSContext* cx, jsval v, JSObject** out)
 		{
 			if(!JSVAL_IS_OBJECT(v))
 				return false;
@@ -389,7 +354,6 @@ namespace jsscript
 			*out = JSVAL_TO_OBJECT(v);
 			return true;
 		}
-	};
 
 
 #pragma endregion

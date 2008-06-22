@@ -16,7 +16,11 @@ EntityManager::EntityManager(scene::Scene* scene)
 
 EntityManager::~EntityManager()
 {
+	// clear out entities before the manager goes away
+	m_entities.clear();
 
+	if(m_scriptObject)
+		destroyScriptObject();
 }
 
 Entity* EntityManager::createEntity(const string& name)
@@ -88,6 +92,7 @@ JSObject* EntityManager::createScriptObject()
 void EntityManager::destroyScriptObject()
 {
 	jsentity::destroyEntityManager(this);
+	m_scriptObject = NULL;
 }
 
 void EntityManager::initScriptObject()
