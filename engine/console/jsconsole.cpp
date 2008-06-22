@@ -6,7 +6,7 @@ REGISTER_STARTUP_FUNCTION(jscon, jscon::init, 10);
 
 void jscon::init()
 {
-	gScriptEngine->AddFunction("log", 1, jscon::jslog);
+	script::gScriptEngine->AddFunction("log", 1, jscon::jslog);
 }
 
 JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
@@ -14,7 +14,7 @@ JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("log() takes 1 argument");
+		script::gScriptEngine->ReportError("log() takes 1 argument");
 		return JS_FALSE;
 	}
 

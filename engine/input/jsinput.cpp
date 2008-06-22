@@ -18,8 +18,8 @@ REGISTER_STARTUP_FUNCTION(jsinput, jsinput::init, 10);
 
 void jsinput::init()
 {
-	gScriptEngine->AddFunction("bind", 2, jsinput::jsbind);
-	gScriptEngine->AddFunction("unbind", 1, jsinput::jsunbind);
+	script::gScriptEngine->AddFunction("bind", 2, jsinput::jsbind);
+	script::gScriptEngine->AddFunction("unbind", 1, jsinput::jsunbind);
 }
 
 JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
@@ -27,7 +27,7 @@ JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc < 2)
 	{
-		gScriptEngine->ReportError("bind() takes 2+ arguments");
+		script::gScriptEngine->ReportError("bind() takes 2+ arguments");
 		return JS_FALSE;
 	}
 
@@ -65,7 +65,7 @@ JSBool jsinput::jsunbind(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("unbind() takes 1 argument");
+		script::gScriptEngine->ReportError("unbind() takes 1 argument");
 		return JS_FALSE;
 	}
 

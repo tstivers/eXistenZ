@@ -17,13 +17,13 @@ namespace game
 	public:
 		NxControllerAction  onShapeHit(const NxControllerShapeHit& hit)
 		{
-			if (hit.shape->getActor().getGroup() == 16) // hit the bsp
+			//if (hit.shape->getActor().getGroup() == 16) // hit the bsp
 				return NX_ACTION_NONE;
 
-			INFO("hit %s", hit.shape->getActor().getName());
-			NxActor& actor = hit.shape->getActor();
-			actor.addForceAtPos(hit.dir * (hit.length * 1000), hit.worldNormal);
-			return NX_ACTION_PUSH;
+			//INFO("hit %s", hit.shape->getActor().getName());
+			//NxActor& actor = hit.shape->getActor();
+			//actor.addForceAtPos(hit.dir * (hit.length * 1000), hit.worldNormal);
+			//return NX_ACTION_PUSH;
 		}
 
 		NxControllerAction onControllerHit(const NxControllersHit& hit)
@@ -95,10 +95,11 @@ void PhysXPlayer::acquire()
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
 	desc.stepOffset = step_up;
-	desc.callback = &shapehit;
+	//desc.callback = &shapehit;
 
 	nxc = physics::gManager->createController(physics::gScene, desc);
 	//nxc->setCollision(false);
+	INFO("actor collision group = %i", nxc->getActor()->getShapes()[0]->getGroup());
 
 	acquired = true;
 }

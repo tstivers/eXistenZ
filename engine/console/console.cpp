@@ -106,7 +106,7 @@ bool console::executeCommand(char* cmd)
 
 bool console::executeJS(char* script)
 {
-	return gScriptEngine->RunScript(script);
+	return script::gScriptEngine->RunScript(script);
 }
 
 bool console::processCmd(const char* cmd)

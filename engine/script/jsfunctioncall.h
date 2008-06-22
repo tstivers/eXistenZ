@@ -233,11 +233,6 @@ namespace jsscript
 		return OBJECT_TO_JSVAL(jsvector::NewVector(cx, NULL, vec));
 	}
 
-	inline jsval to_jsval(JSContext* cx, void*)
-	{
-		return JSVAL_VOID;
-	}
-
 #pragma endregion
 
 #pragma region jsval_to_

@@ -24,11 +24,11 @@ REGISTER_STARTUP_FUNCTION(jsrender, jsrender::init, 10);
 
 void jsrender::init()
 {
-	gScriptEngine->AddFunction("system.render.drawline", 2, jsrender::drawline);
-	gScriptEngine->AddFunction("system.render.reset", 2, jsrender::resetdevice);
-	gScriptEngine->AddFunction("system.render.takescreenshot", 1, jsrender::takescreenshot);
-	gScriptEngine->AddFunction("drawtext", 2, jsrender::drawtext);
-	gScriptEngine->AddFunction("system.render.setDebugFlag", 1, jsrender::setDebugFlag);
+	script::gScriptEngine->AddFunction("system.render.drawline", 2, jsrender::drawline);
+	script::gScriptEngine->AddFunction("system.render.reset", 2, jsrender::resetdevice);
+	script::gScriptEngine->AddFunction("system.render.takescreenshot", 1, jsrender::takescreenshot);
+	script::gScriptEngine->AddFunction("drawtext", 2, jsrender::drawtext);
+	script::gScriptEngine->AddFunction("system.render.setDebugFlag", 1, jsrender::setDebugFlag);
 }
 
 JSBool jsrender::drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)

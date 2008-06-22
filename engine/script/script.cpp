@@ -5,27 +5,36 @@
 
 #pragma warning( disable : 4311 4312 )
 
+using namespace script;
+
 namespace script
 {
 	void errorreporter(JSContext *cx, const char *message, JSErrorReport *report);
 	void exec(char* cmd, char* cmdline, void* user);
-}
 
-using namespace script;
-
-REGISTER_STARTUP_FUNCTION(script, script::init, 0);
-
-ScriptEngine::ScriptEngine()
-{
-	static JSClass globalClass =
+	static JSClass class_ops =
 	{
-		"Global", 0,
+		"Global",
+		0,
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
 		JS_EnumerateStub, JS_ResolveStub,
 		JS_ConvertStub,  JS_FinalizeStub
 	};
+}
 
+ScriptedObject::ScriptClass GlobalObject::m_scriptClass =
+{
+	&class_ops,
+	NULL,
+	NULL,
+	NULL
+};
+
+REGISTER_STARTUP_FUNCTION(script, script::init, 0);
+
+ScriptEngine::ScriptEngine()
+{
 	rt = JS_NewRuntime(1024 * 1024 * 32); // 32mb until gc is triggered
 
 	if (rt == NULL)
@@ -41,14 +50,15 @@ ScriptEngine::ScriptEngine()
 
 	//JS_SetGCZeal(cx, 2); //debug allocations
 
-	globalObj = JS_NewObject(cx, &globalClass, 0, 0);
-	//JS_AddRoot(cx, globalObj);
-	JS_InitStandardClasses(cx, globalObj);
+	m_global.m_scriptObject = JS_NewObject(cx, GlobalObject::m_scriptClass.classDef, NULL, NULL);
+	GlobalObject::m_scriptClass.prototype = JS_GetPrototype(cx, m_global.m_scriptObject);
+
+	JS_InitStandardClasses(cx, m_global.m_scriptObject);
+
 	registeredfunctions::fireScriptFunctions(this);
 
 	JS_SetVersion(cx, JSVERSION_LATEST);
 	INFO("Javascript Engine version %s loaded", JS_VersionToString(JS_GetVersion(cx)));
-
 	SetErrorReporter(NULL);
 }
 
@@ -94,7 +104,7 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script)
 
 bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retval)
 {
-	if(JS_EvaluateScript(cx, globalObj, script, (uintN)strlen(script), name, lineno, retval) != JS_TRUE)
+	if(JS_EvaluateScript(cx, m_global.m_scriptObject, script, (uintN)strlen(script), name, lineno, retval) != JS_TRUE)
 	{
 		INFO("error executing script \"%s\"", name);
 		CheckException();
@@ -120,7 +130,7 @@ JSFunction* ScriptEngine::AddFunction(JSObject* obj, char* name, uintN argc, JSN
 
 JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
 {
-	JSObject* obj = globalObj;
+	JSObject* obj = m_global.m_scriptObject;
 	char buf[512];
 	char* funcname;
 
@@ -216,7 +226,7 @@ JSObject* script::GetObject(const string& name)
 	char namebuf[512];
 	char* next = namebuf;
 	char* curr = namebuf;
-	JSObject* currobj = gScriptEngine->GetGlobal();
+	JSObject* currobj = script::gScriptEngine->GetGlobal();
 	strcpy(namebuf, name.c_str());
 	jsval prop;
 
@@ -229,7 +239,7 @@ JSObject* script::GetObject(const string& name)
 			next++;
 		}
 		// check for existing property name
-		if (gScriptEngine->GetProperty(currobj, curr, &prop))
+		if (script::gScriptEngine->GetProperty(currobj, curr, &prop))
 		{
 			if (JSVAL_IS_OBJECT(prop))
 				currobj = JSVAL_TO_OBJECT(prop);
@@ -264,7 +274,7 @@ void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* 
 {
 	char name[512] = "";
 	JSIdArray* ida = JS_Enumerate(cx, obj);
-	JSIdArray* idb = JS_Enumerate(cx, globalObj);
+	JSIdArray* idb = JS_Enumerate(cx, m_global.m_scriptObject);
 	jsval val, maybeobj;
 
 	strcat(name, prevname);
@@ -319,13 +329,13 @@ void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *re
 
 void script::init()
 {
-	gScriptEngine = new ScriptEngine();
+	script::gScriptEngine = new ScriptEngine();
 	console::addCommand("exec", script::exec);
 }
 
 void script::release()
 {
-	delete gScriptEngine;
+	delete script::gScriptEngine;
 }
 
 void script::exec(char* cmd, char* cmdline, void* user)
@@ -333,5 +343,5 @@ void script::exec(char* cmd, char* cmdline, void* user)
 	if (!cmdline)
 		return;
 
-	gScriptEngine->RunScript(cmdline);
+	script::gScriptEngine->RunScript(cmdline);
 }

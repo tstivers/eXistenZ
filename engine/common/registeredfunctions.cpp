@@ -62,7 +62,7 @@ void registeredfunctions::fireShutdownFunctions()
 		it->func();
 }
 
-void registeredfunctions::fireScriptFunctions(ScriptEngine* se)
+void registeredfunctions::fireScriptFunctions(script::ScriptEngine* se)
 {
 	for (script_list_t::iterator it = getScriptList().begin(); it != getScriptList().end(); it++)
 	{

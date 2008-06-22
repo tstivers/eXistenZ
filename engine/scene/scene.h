@@ -8,6 +8,11 @@ namespace entity
 	class Entity;
 };
 
+namespace sound
+{
+	class SoundManager;
+}
+
 namespace scene
 {
 	enum SCENE_TYPE
@@ -35,6 +40,8 @@ namespace scene
 		virtual void acquire() = 0;
 		virtual void release() = 0;
 		virtual void reload(unsigned int flags = 0) = 0;
+
+		virtual void doTick();
 
 		// render crap
 		//TODO: virtual render(render::Camera& cam, render::Frustrum& frust);
@@ -66,6 +73,7 @@ namespace scene
 		bool initialized;
 
 		shared_ptr<entity::EntityManager> m_entityManager;
+		shared_ptr<sound::SoundManager> m_soundManager;
 	};
 
 	void init();

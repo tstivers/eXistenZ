@@ -40,8 +40,8 @@ JSObject* jsentity::initManagerClass()
 {
 	JSObject* proto;
 	proto = JS_InitClass(
-				gScriptEngine->GetContext(),
-				gScriptEngine->GetGlobal(),
+				script::gScriptEngine->GetContext(),
+				script::gScriptEngine->GetGlobal(),
 				NULL,
 				&manager_class,
 				NULL,
@@ -52,7 +52,7 @@ JSObject* jsentity::initManagerClass()
 				NULL);
 
 	ASSERT(proto);
-	JS_SetReservedSlot(gScriptEngine->GetContext(), proto, 0, PRIVATE_TO_JSVAL(0));
+	JS_SetReservedSlot(script::gScriptEngine->GetContext(), proto, 0, PRIVATE_TO_JSVAL(0));
 	return proto;
 }
 
@@ -61,11 +61,11 @@ JSObject* jsentity::createEntityManager(entity::EntityManager* manager)
 	if (!manager_prototype)
 		manager_prototype = initManagerClass();
 
-	JSContext* cx = gScriptEngine->GetContext();
+	JSContext* cx = script::gScriptEngine->GetContext();
 
 	JS_EnterLocalRootScope(cx);
 	// TODO: get scene object from manager
-	JSObject* scene = gScriptEngine->GetObject("system.scene", true);
+	JSObject* scene = script::gScriptEngine->GetObject("system.scene", true);
 	JSObject* obj = JS_DefineObject(cx, scene, "entities", &manager_class, manager_prototype, JSPROP_READONLY | JSPROP_PERMANENT);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(manager));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
@@ -76,8 +76,8 @@ void jsentity::destroyEntityManager(entity::EntityManager* manager)
 {
 	// todo: get script object as manager->getScene()->getScriptObject()
 	// or just not even bother since the scene should go away in theory
-	JSContext* cx = gScriptEngine->GetContext();
-	JSObject* scene = gScriptEngine->GetObject("system.scene", true);
+	JSContext* cx = script::gScriptEngine->GetContext();
+	JSObject* scene = script::gScriptEngine->GetObject("system.scene", true);
 	JSBool found;
 	JS_SetPropertyAttributes(cx, scene, "entities", 0, &found);
 	JS_DeleteProperty(cx, scene, "entities");

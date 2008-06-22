@@ -104,7 +104,7 @@ REGISTER_SCRIPT_INIT(Entity, initEntityClass, 10);
 
 JSObject* jsentity::createEntityObject(Entity* entity)
 {
-	JSContext* cx = gScriptEngine->GetContext();
+	JSContext* cx = script::gScriptEngine->GetContext();
 
 	JS_EnterLocalRootScope(cx);
 	JSObject* manager = entity->getManager()->getScriptObject();
@@ -123,10 +123,10 @@ JSObject* jsentity::createEntityObject(Entity* entity)
 void jsentity::destroyEntityObject(entity::Entity* entity)
 {
 	JS_DeleteProperty(
-		gScriptEngine->GetContext(), 
+		script::gScriptEngine->GetContext(), 
 		entity->getManager()->getScriptObject(), 
 		entity->getName().c_str());
-	JS_SetReservedSlot(gScriptEngine->GetContext(), entity->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
+	JS_SetReservedSlot(script::gScriptEngine->GetContext(), entity->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 }
 
 JSBool jsentity::removeComponent(JSContext *cx, uintN argc, jsval *vp)

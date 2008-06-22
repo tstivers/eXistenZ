@@ -17,11 +17,11 @@ namespace jsscript
 
 void jsscript::init()
 {
-	gScriptEngine->AddFunction("execfile", 1, jsscript::jsexecfile);
-	gScriptEngine->AddFunction("dumpobject", 1, jsscript::jsdumpobject);
-	gScriptEngine->AddFunction("setzeal", 1, jsscript::jssetzeal);
-	gScriptEngine->AddFunction("classof", 1, jsscript::jsclassof);
-	gScriptEngine->AddFunction("parentof", 1, jsscript::jsparentof);
+	script::gScriptEngine->AddFunction("execfile", 1, jsscript::jsexecfile);
+	script::gScriptEngine->AddFunction("dumpobject", 1, jsscript::jsdumpobject);
+	script::gScriptEngine->AddFunction("setzeal", 1, jsscript::jssetzeal);
+	script::gScriptEngine->AddFunction("classof", 1, jsscript::jsclassof);
+	script::gScriptEngine->AddFunction("parentof", 1, jsscript::jsparentof);
 }
 
 JSBool jsscript::jsexecfile(JSContext *cx, JSObject *obj, uintN argc,
@@ -29,18 +29,18 @@ JSBool jsscript::jsexecfile(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("execfile() takes 1 argument");
+		script::gScriptEngine->ReportError("execfile() takes 1 argument");
 		return JS_FALSE;
 	}
 
 	vfs::File file = vfs::getFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 	if (file)
 	{
-		gScriptEngine->RunScript(file);
+		script::gScriptEngine->RunScript(file);
 	}
 	else
 	{
-		gScriptEngine->ReportError("execfile(): unable to open %s", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+		script::gScriptEngine->ReportError("execfile(): unable to open %s", JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
 		return JS_FALSE;
 	}
 
@@ -52,17 +52,17 @@ JSBool jsscript::jsdumpobject(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("dumpobject(): takes 1 argument");
+		script::gScriptEngine->ReportError("dumpobject(): takes 1 argument");
 		return JS_FALSE;
 	}
 
 	if (!JSVAL_IS_OBJECT(argv[0]))
 	{
-		gScriptEngine->ReportError("dumpobject(): argument must be an object");
+		script::gScriptEngine->ReportError("dumpobject(): argument must be an object");
 		return JS_FALSE;
 	}
 
-	gScriptEngine->DumpObject(JSVAL_TO_OBJECT(argv[0]));
+	script::gScriptEngine->DumpObject(JSVAL_TO_OBJECT(argv[0]));
 	return JS_TRUE;
 }
 
@@ -71,13 +71,13 @@ JSBool jsscript::jssetzeal(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("setzeal(): takes 1 argument");
+		script::gScriptEngine->ReportError("setzeal(): takes 1 argument");
 		return JS_FALSE;
 	}
 
 	if (!JSVAL_IS_NUMBER(argv[0]))
 	{
-		gScriptEngine->ReportError("setzeal(): argument must be a number");
+		script::gScriptEngine->ReportError("setzeal(): argument must be a number");
 		return JS_FALSE;
 	}
 
@@ -96,7 +96,7 @@ JSBool jsscript::jsclassof(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("classof(): takes 1 argument");
+		script::gScriptEngine->ReportError("classof(): takes 1 argument");
 		return JS_FALSE;
 	}
 
@@ -105,7 +105,7 @@ JSBool jsscript::jsclassof(JSContext *cx, JSObject *obj, uintN argc,
 		*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, "none"));
 	}
 	else
-		*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, gScriptEngine->GetClassName(JSVAL_TO_OBJECT(argv[0]))));
+		*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, script::gScriptEngine->GetClassName(JSVAL_TO_OBJECT(argv[0]))));
 
 	return JS_TRUE;
 }
@@ -115,7 +115,7 @@ JSBool jsscript::jsparentof(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("parentof(): takes 1 argument");
+		script::gScriptEngine->ReportError("parentof(): takes 1 argument");
 		return JS_FALSE;
 	}
 

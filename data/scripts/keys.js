@@ -255,4 +255,12 @@ const	NX_VISUALIZE_SOFTBODY_VALIDBOUNDS = 93;
 const	NX_VISUALIZE_ACTIVE_VERTICES = 72;
 const	NX_VISUALIZE_FORCE_FIELDS = 91;
  
+ 
+const 	NX_FORCE = 0;                   //!< parameter has unit of mass * distance/ time^2, i.e. a force
+const 	NX_IMPULSE = 1;                 //!< parameter has unit of mass * distance /time
+const 	NX_VELOCITY_CHANGE = 2;			//!< parameter has unit of distance / time, i.e. the effect is mass independent: a velocity change.
+const 	NX_SMOOTH_IMPULSE = 3;          //!< same as NX_IMPULSE but the effect is applied over all substeps. Use this for motion controllers that repeatedly apply an impulse.
+const 	NX_SMOOTH_VELOCITY_CHANGE = 4;	//!< same as NX_VELOCITY_CHANGE but the effect is applied over all substeps. Use this for motion controllers that repeatedly apply an impulse.
+const 	NX_ACCELERATION = 5;				//!< parameter has unit of distance/ time^2, i.e. an acceleration. It gets treated just like a force except the mass is not divided out before integration.
+
 print("Loaded key defines...");

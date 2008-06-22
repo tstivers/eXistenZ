@@ -16,7 +16,7 @@
 #include "script/jsvector.h"
 #include "script/jsfunction.h"
 
-ScriptEngine* gScriptEngine = NULL;
+script::ScriptEngine* script::gScriptEngine = NULL;
 HINSTANCE gHInstance = 0;
 int gActive = 0;
 
@@ -40,7 +40,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 		if (file)
 		{
 			LOG("reading config from \"%s\"", file->filename);
-			gScriptEngine->RunScript(file);
+			script::gScriptEngine->RunScript(file);
 			file.reset();
 		}
 		else LOG("unable to open \"config.js\"");
@@ -136,8 +136,8 @@ int mainloop()
 			game::doTick();
 			physics::startSimulation();
 			render::render();
-			jsscript::jsfunction < void(void) > (gScriptEngine->GetContext(), "on_tick")();
-			JS_MaybeGC(gScriptEngine->GetContext());
+			jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_tick")();
+			JS_MaybeGC(script::gScriptEngine->GetContext());
 		}
 	}
 }

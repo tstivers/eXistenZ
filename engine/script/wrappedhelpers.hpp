@@ -37,7 +37,7 @@ namespace script
 	};
 
 	template<typename T, typename U>
-	JSObject* RegisterClass(ScriptEngine* engine)
+	JSObject* RegisterScriptClass(ScriptEngine* engine)
 	{
 		T::m_scriptClass.prototype = JS_InitClass(
 			engine->GetContext(),

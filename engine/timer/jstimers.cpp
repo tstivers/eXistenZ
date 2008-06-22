@@ -17,8 +17,8 @@ REGISTER_STARTUP_FUNCTION(jstimer, jstimer::init, 10);
 
 void jstimer::init()
 {
-	gScriptEngine->AddFunction("timer.addTimer", 4, jstimer::jsAddTimer);
-	gScriptEngine->AddFunction("timer.removeTimer", 1, jstimer::jsRemoveTimer);
+	script::gScriptEngine->AddFunction("timer.addTimer", 4, jstimer::jsAddTimer);
+	script::gScriptEngine->AddFunction("timer.removeTimer", 1, jstimer::jsRemoveTimer);
 }
 
 JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -27,7 +27,7 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	if (argc < 2)
 	{
-		gScriptEngine->ReportError("addTimer() takes at least 2 parameters (name, action, [frequency_ms], [start_ms])");
+		script::gScriptEngine->ReportError("addTimer() takes at least 2 parameters (name, action, [frequency_ms], [start_ms])");
 		return JS_FALSE;
 	}
 
@@ -40,13 +40,13 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	if ((argc >= opt_start + 1) && (JS_ValueToNumber(cx, argv[opt_start], &frequency) == JS_FALSE))
 	{
-		gScriptEngine->ReportError("frequency must be double");
+		script::gScriptEngine->ReportError("frequency must be double");
 		return JS_FALSE;
 	}
 
 	if ((argc >= opt_start + 2) && (JS_ValueToNumber(cx, argv[opt_start + 1], &start) == JS_FALSE))
 	{
-		gScriptEngine->ReportError("start must be double");
+		script::gScriptEngine->ReportError("start must be double");
 		return JS_FALSE;
 	}
 
@@ -75,7 +75,7 @@ JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 
 	if (argc < 1)
 	{
-		gScriptEngine->ReportError("removeTimer() takes 1 parameter (name)");
+		script::gScriptEngine->ReportError("removeTimer() takes 1 parameter (name)");
 		return JS_FALSE;
 	}
 
