@@ -31,6 +31,9 @@ namespace component
 		// methods
 		void setLinearVelocity(const D3DXVECTOR3& velocity);
 		void setAngularVelocity(const D3DXVECTOR3& velocity);
+		void addForce(const D3DXVECTOR3& force);
+		void addForceType(const D3DXVECTOR3& force, int type);
+		void setShapesGroup(int group);
 
 		// properties
 		ComponentLink<PosComponent> transform;

@@ -14,15 +14,19 @@ namespace sound
 
 		const string& getName() { return m_name; }
 		SoundManager* getManager() { return m_manager; }
+		FMOD::Sound* getSound() { return m_sound; }
+
+		static ScriptedObject::ScriptClass m_scriptClass;
 
 	protected:
 		// script functions
-		JSObject* createScriptObject();
-		void destroyScriptObject();
+		JSObject* createScriptObject() { return NULL; }
+		void destroyScriptObject() {}
 
 		// members
 		string m_name;
+		JSObject* m_scriptObject;
 		SoundManager* m_manager;
-		bool m_acquired;
+		FMOD::Sound* m_sound;
 	};
 }

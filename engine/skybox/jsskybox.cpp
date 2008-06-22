@@ -5,7 +5,7 @@
 
 void jsskybox::init()
 {
-	gScriptEngine->AddFunction("system.render.skybox.reset", 0, jsskybox::jsreset);
+	script::gScriptEngine->AddFunction("system.render.skybox.reset", 0, jsskybox::jsreset);
 }
 
 JSBool jsskybox::jsreset(JSContext *cx, JSObject *obj, uintN argc,

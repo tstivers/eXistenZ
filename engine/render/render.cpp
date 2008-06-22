@@ -270,7 +270,7 @@ void render::render()
 		physics::renderDebug();
 
 	// call the on_render js event
-	jsscript::jsfunction < void(void) > (gScriptEngine->GetContext(), "on_render")();
+	jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_render")();
 
 	// draw any markers
 	render::drawMarkers();
@@ -370,7 +370,7 @@ void render::resize(int width, int height)
 	yres = height;
 	LOG("resizing to %i:%i", width, height);
 	d3d::resize(width, height);
-	jsscript::jsfunction < void(int, int) > (gScriptEngine->GetContext(), "on_resize")(width, height);
+	jsscript::jsfunction < void(int, int) > (script::gScriptEngine->GetContext(), "on_resize")(width, height);
 }
 
 void render::goFullScreen(bool fullscreen)

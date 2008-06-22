@@ -65,7 +65,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="fbxsdk_md2008d.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib NxCooking.lib"
+				AdditionalDependencies="fbxsdk_md2008d.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib NxCooking.lib fmodex_vc.lib"
 				OutputFile="$(OutDir)/client.debug.exe"
 				AdditionalLibraryDirectories=""
 				IgnoreDefaultLibraryNames="LIBCMT"
@@ -154,7 +154,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions=""
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib NxCooking.lib fbxsdk_md2008.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib shlwapi.lib PhysXLoader.lib NxCharacter.lib NxCooking.lib fbxsdk_md2008.lib fmodex_vc.lib"
 				OutputFile="$(OutDir)/client.release.exe"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)../lib/js32/release&quot;;&quot;$(SolutionDir)../lib/zlib/release&quot;;&quot;$(SolutionDir)../lib/nvtristrip/release&quot;"
 				IgnoreDefaultLibraryNames=""

@@ -17,9 +17,9 @@ REGISTER_STARTUP_FUNCTION(jsgame, jsgame::init, 10);
 
 void jsgame::init()
 {
-	gScriptEngine->AddFunction("game.startMap", 1, jsgame::jsstartMap);
-	gScriptEngine->AddFunction("quit", 0, jsgame::jsquit);
-	gScriptEngine->AddFunction("timestamp", 0, jsgame::jstimestamp);
+	script::gScriptEngine->AddFunction("game.startMap", 1, jsgame::jsstartMap);
+	script::gScriptEngine->AddFunction("quit", 0, jsgame::jsquit);
+	script::gScriptEngine->AddFunction("timestamp", 0, jsgame::jstimestamp);
 }
 
 JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
@@ -27,7 +27,7 @@ JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
 {
 	if (argc != 1)
 	{
-		gScriptEngine->ReportError("startMap() takes 1 argument");
+		script::gScriptEngine->ReportError("startMap() takes 1 argument");
 		return JS_FALSE;
 	}
 

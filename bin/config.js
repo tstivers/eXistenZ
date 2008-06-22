@@ -124,6 +124,9 @@ bind(KEY_V, toggle_vtrace);
 
 // functions
 
+game.init_command = "/map q3dm1";
+bind(KEY_F9, function() { print(system.scene.entities.testentity.components.bleh.name); });
+
 system.vfs.watchFile("scripts/*.js", onScriptChange);
 
 function onScriptChange(filename)

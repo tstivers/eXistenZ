@@ -53,7 +53,7 @@ REGISTER_SCRIPT_INIT(MeshComponent, initClass, 20);
 
 static void initClass(ScriptEngine* engine)
 {
-	RegisterClass<MeshComponent, Component>(engine);
+	RegisterScriptClass<MeshComponent, Component>(engine);
 	jsentity::RegisterCreateFunction(engine, "createMeshComponent", createComponent<MeshComponent>);
 }
 

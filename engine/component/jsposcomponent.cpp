@@ -59,7 +59,7 @@ REGISTER_SCRIPT_INIT(PosComponent, initClass, 20);
 
 static void initClass(ScriptEngine* engine)
 {
-	RegisterClass<PosComponent, Component>(engine);
+	RegisterScriptClass<PosComponent, Component>(engine);
 	jsentity::RegisterCreateFunction(engine, "createPosComponent", createComponent<PosComponent>);
 }
 

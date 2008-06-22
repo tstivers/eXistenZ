@@ -92,6 +92,7 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	NxTriangleMeshShapeDesc meshShapeDesc;
 
 	meshShapeDesc.meshData = mesh;
+	meshShapeDesc.group = 1;
 	NxActorDesc actorDesc;
 	actorDesc.shapes.push_back(&meshShapeDesc);
 	actorDesc.name = scene->name.c_str();

@@ -7,7 +7,7 @@ namespace jscomponent
 	template<typename T>
 	JSObject* createComponentScriptObject(T* component)
 	{
-		JSContext* cx = gScriptEngine->GetContext();
+		JSContext* cx = script::gScriptEngine->GetContext();
 
 		JS_EnterLocalRootScope(cx);
 		JSObject* entity = component->getEntity()->getScriptObject();
@@ -30,10 +30,10 @@ namespace jscomponent
 	void destroyComponentScriptObject(T* component)
 	{
 		JSObject* components;
-		script::GetProperty(gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
-		JS_SetReservedSlot(gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
+		script::GetProperty(script::gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
+		JS_SetReservedSlot(script::gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 		JS_DeleteProperty(
-			gScriptEngine->GetContext(), 
+			script::gScriptEngine->GetContext(), 
 			components, 
 			component->getName().c_str());
 	}

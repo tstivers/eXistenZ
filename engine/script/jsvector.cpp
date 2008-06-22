@@ -38,7 +38,7 @@ using namespace jsvector;
 
 REGISTER_SCRIPT_INIT(Vector, initVectorClass, 1);
 
-static void initVectorClass(ScriptEngine* engine)
+static void initVectorClass(script::ScriptEngine* engine)
 {
 	vector_prototype = JS_InitClass(
 						   engine->GetContext(),

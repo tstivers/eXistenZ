@@ -22,7 +22,7 @@ REGISTER_STARTUP_FUNCTION(jssettings, jssettings::init, 10);
 
 void jssettings::init()
 {
-	gScriptEngine->AddFunction("system.settings.dump", 0, jssettings::dump);
+	script::gScriptEngine->AddFunction("system.settings.dump", 0, jssettings::dump);
 }
 
 void jssettings::release()
@@ -49,7 +49,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	*propname = 0;
 	propname++;
 
-	JSObject* obj = gScriptEngine->GetObject(objname, true);
+	JSObject* obj = script::gScriptEngine->GetObject(objname, true);
 
 	// generate the starting value
 	jsval value;
@@ -62,7 +62,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	{
 	case settings::TYPE_STRING:
 		setting->get(setting, (void**)&string_value);
-		value = STRING_TO_JSVAL(JS_NewStringCopyZ(gScriptEngine->GetContext(), string_value));
+		value = STRING_TO_JSVAL(JS_NewStringCopyZ(script::gScriptEngine->GetContext(), string_value));
 		break;
 	case settings::TYPE_INT:
 		setting->get(setting, (void**)&int_value);
@@ -71,7 +71,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	case settings::TYPE_FLOAT:
 		setting->get(setting, (void**)&float_value);
 		bleh = float_value;
-		JS_NewDoubleValue(gScriptEngine->GetContext(), bleh, &value);
+		JS_NewDoubleValue(script::gScriptEngine->GetContext(), bleh, &value);
 		break;
 	}
 
@@ -79,7 +79,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	int flags = JSPROP_ENUMERATE | JSPROP_PERMANENT;
 	if (setting->flags & settings::FLAG_READONLY)
 		flags |= JSPROP_READONLY;
-	gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);
+	script::gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);
 
 	propmap_ptr p;
 	objmap_hash::iterator i = object_map.find(obj);

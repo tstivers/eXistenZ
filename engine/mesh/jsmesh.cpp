@@ -16,7 +16,7 @@ REGISTER_STARTUP_FUNCTION(jsmesh, jsmesh::init, 10);
 
 void jsmesh::init()
 {
-	gScriptEngine->AddFunction("getMesh", 1, getMesh);
+	script::gScriptEngine->AddFunction("getMesh", 1, getMesh);
 }
 
 JSBool jsmesh::getMesh(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)

@@ -119,11 +119,11 @@ void physics::acquire()
 	gPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, &physicsOutputStream);
 	if (!gPhysicsSDK)
 	{
-		LOG("failed to initialize physics sdk");
+		LOG("ERROR: failed to initialize physics sdk");
 		return;
 	}
 	else
-		LOG("sdk initialized");
+		LOG("physics initialized");
 
 	if (physics::debug)
 	{
@@ -173,7 +173,6 @@ void physics::acquire()
 
 	acquired = true;
 
-	gScene->setGroupCollisionFlag(10, 10, false);
 	startSimulation(); // prime the pump
 	getResults();
 }

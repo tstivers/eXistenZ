@@ -51,7 +51,7 @@ REGISTER_STARTUP_FUNCTION(game, game::init, 10);
 void game::init()
 {
 	player = createPlayer(D3DXVECTOR3(0.5, 1 , 0.5));
-	jsplayer::createPlayerObject(gScriptEngine->GetContext(), gScriptEngine->GetObject("game"), "player", player);
+	jsplayer::createPlayerObject(script::gScriptEngine->GetContext(), script::gScriptEngine->GetObject("game"), "player", player);
 	game_state = STATE_RUN;
 	settings::addsetting("game.mouse.sensitivity.x", settings::TYPE_FLOAT, 0, NULL, NULL, &mouse_sens_x);
 	settings::addsetting("game.mouse.sensitivity.y", settings::TYPE_FLOAT, 0, NULL, NULL, &mouse_sens_y);
@@ -97,6 +97,7 @@ void game::doTick()
 	{
 	case STATE_RUN:
 		processInput();
+		render::scene->doTick();
 		break;
 	default:
 		break;
@@ -228,7 +229,7 @@ bool game::startMap(char* name)
 	vfs::File file = vfs::getFile(bspname);
 	if (file)
 	{
-		gScriptEngine->RunScript(file);
+		script::gScriptEngine->RunScript(file);
 	}
 
 	return true;

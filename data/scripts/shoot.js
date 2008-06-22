@@ -29,7 +29,7 @@ function playerShoot()
         lastshot = system.time.ms;
     else
         return;
-        
+    system.scene.sound.playSound("sound/weapons/grenade/grenlf1a.wav", 0.2);
     var direction = new Vector(0, 0, 1);
     direction.rotate(game.player.getRot());
     
@@ -42,7 +42,7 @@ function playerShoot()
     shootEntity(projectile, pos, game.player.getRot(), shootvelo);
     hamgrenade(projectile);
     projectile.remove = function(){ system.scene.entities.removeEntity(this.name); };
-    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 8000);
+    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 18000);
 }
 
 function hamShoot() {
@@ -82,16 +82,31 @@ function shootSlice(ham) {
 }
 
 var grenade_slices = 100;
+
 function hamgrenade(ham) {
+    system.physics.setGroupCollisionFlag(10, 10, false);
+    system.physics.setGroupCollisionFlag(10, 0, true);
     timer.addTimer(ham.name + "_grenade", ham, function() {
         var origin = this.components.pos.getPos();
+        system.scene.sound.playSound3d("sound/weapons/rocket/rocklx1a.wav", origin, 1.0);
         this.removeComponent("mesh");
         this.removeComponent("actor");
+        blasted = system.physics.getEntitiesInSphere(origin, 5);
+        for (i in blasted) {
+            v = blasted[i].transform.getPos();
+            v.sub(origin);
+            distance = v.length();
+            v.normalize();
+            v.mul(10 / (distance * distance));
+            blasted[i].addForceType(v, NX_IMPULSE);
+        }
+
         for (i = 0; i < grenade_slices; i++) {
             this.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
             this.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
             actor = this.createActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
             actor.acquire();
+            actor.setShapesGroup(10);
             actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);
             actor.setAngularVelocity([Math.random() * 100, Math.random() * 100, Math.random() * 100]);
         }

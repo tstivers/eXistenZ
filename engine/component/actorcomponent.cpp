@@ -60,6 +60,8 @@ void ActorComponent::acquire()
 		return;
 	}
 
+	m_actor->userData = this;
+
 	transform->setSetFunction(bind(&ActorComponent::setTransform, this, _1, _2));
 	transform->setGetFunction(bind(&ActorComponent::getTransform, this, _1, _2));
 }
@@ -96,6 +98,40 @@ void ActorComponent::setAngularVelocity(const D3DXVECTOR3& velocity)
 	}
 
 	m_actor->setAngularVelocity((NxVec3)velocity);
+}
+
+void ActorComponent::addForce(const D3DXVECTOR3& force)
+{
+	if(!m_acquired || !m_actor)
+	{
+		INFO("WARNING: tried to set angular velocity on unacquired/invalid ActorComponent \"%s.%s\"", 
+			m_entity->getName().c_str(), m_name.c_str());
+		return;
+	}
+
+	m_actor->addForce((NxVec3)force);
+}
+
+void ActorComponent::addForceType(const D3DXVECTOR3& force, int type)
+{
+	if(!m_acquired || !m_actor)
+	{
+		INFO("WARNING: tried to set angular velocity on unacquired/invalid ActorComponent \"%s.%s\"", 
+			m_entity->getName().c_str(), m_name.c_str());
+		return;
+	}
+
+	m_actor->addForce((NxVec3)force, (NxForceMode)type);
+}
+
+void ActorComponent::setShapesGroup(int group)
+{
+	NxShape * const * shape = m_actor->getShapes();
+	for(int i = m_actor->getNbShapes() - 1; i >= 0; --i)
+	{
+		shape[i]->setGroup(group);
+		shape++;
+	}
 }
 
 void ActorComponent::setTransform(D3DXMATRIX& current_transform, const D3DXMATRIX& new_transform)
