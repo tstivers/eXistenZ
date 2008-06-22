@@ -73,7 +73,7 @@ namespace scene
 		void release();
 		void reload(unsigned int flags = 0);
 		void render();
-		void getEntityLighting(texture::Material* material, entity::Renderable* renderable);
+		void getEntityLighting(texture::Material* material, Renderable* renderable);
 		void addEntity(entity::Entity* entity);
 		void removeEntity(entity::Entity* entity);
 

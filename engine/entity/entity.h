@@ -2,17 +2,20 @@
 
 #include "script/script.h"
 
-namespace entity
+namespace component
 {
 	class Component;
-	struct ComponentDesc;
+}
+
+namespace entity
+{
 	class EntityManager;
 
 	class Entity : public script::ScriptedObject
 	{
 	protected:
 		// typedefs
-		typedef map<string, shared_ptr<Component>> component_map;
+		typedef map<string, shared_ptr<component::Component>> component_map;
 
 	public:
 		// typedefs
@@ -42,8 +45,8 @@ namespace entity
 			return ptr.get();
 		}
 
-		virtual void addComponent(const string& name, shared_ptr<Component> component);
-		virtual Component* getComponent(const string& name);
+		virtual void addComponent(const string& name, shared_ptr<component::Component> component);
+		virtual component::Component* getComponent(const string& name);
 		template<typename T>
 		T* getComponent(const string& name)
 		{
@@ -53,7 +56,7 @@ namespace entity
 		virtual int getComponentCount() { return m_components.size(); }
 
 		// component shortcuts
-		virtual Component* getPositionComponent() { return m_position; } // shortcut for getComponent("pos")
+		virtual component::Component* getPositionComponent() { return m_position; } // shortcut for getComponent("pos")
 
 		// acquire/release methods
 		virtual void acquire();
@@ -123,7 +126,7 @@ namespace entity
 		string m_name;
 		EntityManager* m_manager;
 		component_map m_components;
-		Component* m_position;
+		component::Component* m_position;
 		bool m_acquired;
 	};
 }

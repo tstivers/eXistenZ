@@ -1,13 +1,13 @@
 #include "precompiled.h"
-#include "entity/jsmeshcomponent.h"
-#include "entity/jscomponent.h"
+#include "component/jsmeshcomponent.h"
+#include "component/jscomponent.h"
 #include "entity/jsentity.h"
 
-using namespace jsentity;
-using namespace entity;
+using namespace jscomponent;
+using namespace component;
 using namespace script;
 
-namespace jsentity
+namespace jscomponent
 {
 	static bool parseDesc(JSContext* cx, JSObject* obj, MeshComponent::desc_type& desc);
 
@@ -54,10 +54,10 @@ REGISTER_SCRIPT_INIT(MeshComponent, initClass, 20);
 static void initClass(ScriptEngine* engine)
 {
 	RegisterClass<MeshComponent, Component>(engine);
-	RegisterCreateFunction(engine, "createMeshComponent", createComponent<MeshComponent>);
+	jsentity::RegisterCreateFunction(engine, "createMeshComponent", createComponent<MeshComponent>);
 }
 
-bool jsentity::parseDesc(JSContext* cx, JSObject* obj, MeshComponent::desc_type& desc)
+bool jscomponent::parseDesc(JSContext* cx, JSObject* obj, MeshComponent::desc_type& desc)
 {
 	GetProperty(cx, obj, "mesh", desc.mesh);
 	GetProperty(cx, obj, "transform", desc.transformComponent);

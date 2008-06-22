@@ -1,11 +1,10 @@
 #include "precompiled.h"
 #include "entity/entity.h"
 #include "entity/jsentity.h"
-#include "entity/component.h"
+#include "component/component.h"
 
 namespace entity
 {
-
 }
 
 using namespace entity;
@@ -13,7 +12,6 @@ using namespace entity;
 Entity::Entity(EntityManager* manager, const string& name)
 : m_manager(manager), m_name(name), m_position(NULL), m_acquired(false)
 {
-
 }
 
 Entity::~Entity()
@@ -28,7 +26,7 @@ Entity::~Entity()
 		destroyScriptObject();
 }
 
-void Entity::addComponent(const string& name, shared_ptr<Component> component)
+void Entity::addComponent(const string& name, shared_ptr<component::Component> component)
 {
 	ASSERT(getComponent(name) == NULL);
 	m_components.insert(component_map::value_type(name, component));
@@ -37,7 +35,7 @@ void Entity::addComponent(const string& name, shared_ptr<Component> component)
 		m_position = component.get();
 }
 
-Component* Entity::getComponent(const string& name)
+component::Component* Entity::getComponent(const string& name)
 {
 	component_map::iterator it = m_components.find(name);
 	if(it != m_components.end())

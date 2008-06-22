@@ -1,10 +1,10 @@
 #pragma once
 
-#include "entity/component.h"
+#include "component/component.h"
 #include "entity/interfaces.h"
-#include "entity/poscomponent.h"
+#include "component/poscomponent.h"
 
-namespace entity
+namespace component
 {
 	struct ActorComponentDesc : public ComponentDesc
 	{
@@ -20,7 +20,7 @@ namespace entity
 		typedef ActorComponent component_type;
 
 		// constructor/destructor
-		ActorComponent(Entity* entity, const string& name, const desc_type& desc);
+		ActorComponent(entity::Entity* entity, const string& name, const desc_type& desc);
 		~ActorComponent();
 
 		// Component overloads

@@ -1,15 +1,15 @@
 #include "precompiled.h"
-#include "entity/actorcomponent.h"
-#include "entity/jscomponent.h"
+#include "component/actorcomponent.h"
+#include "component/jscomponent.h"
 #include "physics/physics.h"
 
-using namespace entity;
+using namespace component;
 
 REGISTER_COMPONENT_TYPE(ActorComponent, 3);
 
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 
-ActorComponent::ActorComponent(Entity* entity, const string& name, const desc_type& desc)
+ActorComponent::ActorComponent(entity::Entity* entity, const string& name, const desc_type& desc)
 : Component(entity, name, desc), m_shapesXml(desc.shapesXml), transform(this)
 {
 	transform = desc.transform;
@@ -111,13 +111,13 @@ void ActorComponent::getTransform(D3DXMATRIX& new_transform, const D3DXMATRIX& c
 	NxMat34ToD3DXMatrix(&m_actor->getGlobalPose(), &new_transform);
 }
 
-JSObject* entity::ActorComponent::createScriptObject()
+JSObject* component::ActorComponent::createScriptObject()
 {
-	return jsentity::createComponentScriptObject(this);
+	return jscomponent::createComponentScriptObject(this);
 }
 
-void entity::ActorComponent::destroyScriptObject()
+void component::ActorComponent::destroyScriptObject()
 {
-	jsentity::destroyComponentScriptObject(this);
+	jscomponent::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }

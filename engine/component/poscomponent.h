@@ -1,9 +1,9 @@
 #pragma once
 
 #include "entity/entity.h"
-#include "entity/component.h"
+#include "component/component.h"
 
-namespace entity
+namespace component
 {
 	struct PosComponentDesc : public ComponentDesc
 	{
@@ -23,7 +23,7 @@ namespace entity
 		typedef function<void(D3DXMATRIX&, const D3DXMATRIX&)> get_set_type;
 
 		// constructor/destructor
-		PosComponent(Entity* entity, const string& name, const desc_type& desc);
+		PosComponent(entity::Entity* entity, const string& name, const desc_type& desc);
 		~PosComponent();
 
 		// overloads

@@ -1041,30 +1041,6 @@
 			Name="entity"
 			>
 			<File
-				RelativePath="..\engine\entity\actorcomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\actorcomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\component.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\component.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\componenttypes.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\componenttypes.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\entity\entity.cpp"
 				>
 			</File>
@@ -1085,22 +1061,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\engine\entity\jsactorcomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jsactorcomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jscomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jscomponent.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\entity\jsentity.cpp"
 				>
 			</File>
@@ -1114,38 +1074,6 @@
 			</File>
 			<File
 				RelativePath="..\engine\entity\jsentitymanager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jsmeshcomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jsmeshcomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jsposcomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\jsposcomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\meshcomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\meshcomponent.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\poscomponent.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\entity\poscomponent.h"
 				>
 			</File>
 		</Filter>
@@ -1376,6 +1304,134 @@
 		<Filter
 			Name="sound"
 			>
+			<File
+				RelativePath="..\engine\sound\jssoundeffect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\jssoundeffect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\jssoundmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\jssoundmanager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\sound.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\soundeffect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\soundeffect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\soundmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\sound\soundmanager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="component"
+			>
+			<File
+				RelativePath="..\engine\component\componenttypes.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\component\componenttypes.h"
+				>
+			</File>
+			<Filter
+				Name="actor"
+				>
+				<File
+					RelativePath="..\engine\component\actorcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\actorcomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsactorcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsactorcomponent.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="pos"
+				>
+				<File
+					RelativePath="..\engine\component\jsposcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsposcomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\poscomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\poscomponent.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="mesh"
+				>
+				<File
+					RelativePath="..\engine\component\jsmeshcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsmeshcomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\meshcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\meshcomponent.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="base"
+				>
+				<File
+					RelativePath="..\engine\component\component.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\component.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscomponent.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

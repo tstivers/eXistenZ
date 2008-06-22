@@ -1,14 +1,14 @@
 #include "precompiled.h"
-#include "entity/poscomponent.h"
-#include "entity/jscomponent.h"
+#include "component/poscomponent.h"
+#include "component/jscomponent.h"
 
-using namespace entity;
+using namespace component;
 
 REGISTER_COMPONENT_TYPE(PosComponent, 1);
 
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 
-PosComponent::PosComponent(Entity* entity, const string& name, const desc_type& desc)
+PosComponent::PosComponent(entity::Entity* entity, const string& name, const desc_type& desc)
 : Component(entity, name, desc), parent(this)
 {
 	D3DXQUATERNION q;
@@ -190,14 +190,14 @@ D3DXMATRIX PosComponent::getTransform()
 	return m_transform;
 }
 
-PosComponent::get_set_type PosComponent::setGetFunction(const entity::PosComponent::get_set_type &getter)
+PosComponent::get_set_type PosComponent::setGetFunction(const component::PosComponent::get_set_type &getter)
 {
 	get_set_type old_getter = m_getter;
 	m_getter = getter;
 	return old_getter;
 }
 
-PosComponent::get_set_type PosComponent::setSetFunction(const entity::PosComponent::get_set_type &setter)
+PosComponent::get_set_type PosComponent::setSetFunction(const component::PosComponent::get_set_type &setter)
 {
 	get_set_type old_setter = m_setter;
 	m_setter = setter;
@@ -206,11 +206,11 @@ PosComponent::get_set_type PosComponent::setSetFunction(const entity::PosCompone
 
 JSObject* PosComponent::createScriptObject()
 {
-	return jsentity::createComponentScriptObject(this);
+	return jscomponent::createComponentScriptObject(this);
 }
 
 void PosComponent::destroyScriptObject()
 {
-	jsentity::destroyComponentScriptObject(this);
+	jscomponent::destroyComponentScriptObject(this);
 	m_scriptObject = NULL;
 }
