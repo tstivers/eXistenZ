@@ -51,7 +51,7 @@ bool DXTexture::activate(bool deactivate_current)
 		}
 
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
+		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		render::device->SetTexture(1, texture);
 
 		return true;

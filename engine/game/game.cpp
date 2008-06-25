@@ -97,7 +97,8 @@ void game::doTick()
 	{
 	case STATE_RUN:
 		processInput();
-		render::scene->doTick();
+		if(render::scene)
+			render::scene->doTick();
 		break;
 	default:
 		break;

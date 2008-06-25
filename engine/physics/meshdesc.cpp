@@ -46,8 +46,8 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 		: MeshDescImpl(name)
 {
 	this->type = MESHDESC_BSP;
-	MemoryWriteBuffer mwBuf;
 
+	int faces_processed = 0;
 	for (int i = 0; i < scene->num_faces; i++)
 	{
 		if (scene->faces[i].type != 1 && scene->faces[i].type != 3)
@@ -58,11 +58,19 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 		if (!scene->faces[i].rendergroup)
 			continue;
 
-		if (scene->faces[i].rendergroup->texture->is_transparent)
-			continue;
+		if(scene->faces[i].rendergroup->texture)
+		{
+			if (scene->faces[i].rendergroup->texture->is_transparent)
+				continue;
 
-		if (!scene->faces[i].rendergroup->texture->draw)
-			continue;
+			if (!scene->faces[i].rendergroup->texture->draw)
+				continue;
+		}
+		else // shader-based
+		{
+			if(scene->faces[i].rendergroup->q3shader->is_noclip)
+				continue;
+		}
 
 		unsigned int offset = vertices.size();
 		for (int j = 0;j < scene->faces[i].num_vertices; j++)
@@ -70,6 +78,41 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 
 		for (int j = 0; j < scene->faces[i].num_indices; j++)
 			indices.push_back(scene->faces[i].indices[j] + offset);
+
+		if(faces_processed++ > 1000)
+		{
+			desc.pointStrideBytes = sizeof(D3DXVECTOR3);
+			desc.triangleStrideBytes = sizeof(unsigned int) * 3;
+
+			desc.numVertices = vertices.size();
+			desc.numTriangles = indices.size() / 3;
+
+			desc.points = &vertices[0];
+			desc.triangles = &indices[0];
+
+			ASSERT(desc.isValid());
+
+			MemoryWriteBuffer mwBuf;
+			bool cooked = gCooking->NxCookTriangleMesh(desc, mwBuf);
+			ASSERT(cooked);
+
+			mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(mwBuf.data));
+			ASSERT(mesh);
+
+			NxTriangleMeshShapeDesc meshShapeDesc;
+
+			meshShapeDesc.meshData = mesh;
+			NxActorDesc actorDesc;
+			actorDesc.shapes.push_back(&meshShapeDesc);
+			actorDesc.name = scene->name.c_str();
+			NxActor* newActor = gScene->createActor(actorDesc);
+			ASSERT(newActor);
+
+			vertices.clear();
+			indices.clear();
+			faces_processed = 0;
+			INFO("processed 1k faces");
+		}
 	}
 
 	desc.pointStrideBytes = sizeof(D3DXVECTOR3);
@@ -83,6 +126,7 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 
 	ASSERT(desc.isValid());
 
+	MemoryWriteBuffer mwBuf;
 	bool cooked = gCooking->NxCookTriangleMesh(desc, mwBuf);
 	ASSERT(cooked);
 
@@ -92,13 +136,13 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 	NxTriangleMeshShapeDesc meshShapeDesc;
 
 	meshShapeDesc.meshData = mesh;
-	meshShapeDesc.group = 1;
 	NxActorDesc actorDesc;
 	actorDesc.shapes.push_back(&meshShapeDesc);
 	actorDesc.name = scene->name.c_str();
-	actorDesc.group = 16;
 	NxActor* newActor = gScene->createActor(actorDesc);
 	ASSERT(newActor);
+	vertices.clear();
+	indices.clear();
 }
 
 BSPMeshDescImpl::~BSPMeshDescImpl()

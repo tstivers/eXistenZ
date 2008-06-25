@@ -8,6 +8,7 @@
 #include "vfs/file.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
+#include "q3shader/q3shadercache.h"
 
 using namespace q3bsp;
 void R_ColorShiftLightingBytes(byte *in) ;
@@ -35,7 +36,7 @@ bool BSP::load(vfs::File file)
 		return false;
 
 	if (q3bsp::debug)
-		LOG("loading %s", file->filename);
+		LOG("loading %s", file->getFilename());
 
 	tBSPHeader header;
 	tBSPLump lumps[kMaxLumps];
@@ -251,10 +252,20 @@ bool BSP::load(vfs::File file)
 	file->read((void*)bsptextures, lumps[kTextures].length);
 
 	textures = new texture::DXTexture*[num_textures];
+	shaders = new q3shader::Q3Shader*[num_textures];
 
 	for (int i = 0; i < num_textures; i++)
 	{
-		textures[i] = texture::getTexture(bsptextures[i].name);
+		if(shaders[i] = render::gQ3ShaderCache.getShader(bsptextures[i].name))
+		{
+			INFO("loaded shader for \"%s\"", bsptextures[i].name);
+			textures[i] = NULL;
+		}
+		else
+		{
+			textures[i] = texture::getTexture(bsptextures[i].name);
+			shaders[i] = NULL;
+		}
 	}
 
 	// -------------------------- load lightmaps --------------------------

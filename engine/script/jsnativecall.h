@@ -262,4 +262,87 @@ namespace script
 
 		return ok;
 	}
+
+	template<typename function_type1, typename function_type1 function_pointer1,
+			typename function_type2, typename function_type2 function_pointer2>
+	JSBool JSNativeCall2(JSContext *cx, uintN argc, jsval *vp)
+	{
+		jsval ret = JSVAL_VOID;
+		JSBool ok = detail::JSNativeCallSelector<function_type1, function_pointer1>()(
+			cx, 
+			JS_THIS_OBJECT(cx, vp),
+			argc,
+			JS_ARGV(cx, vp), 
+			&ret);
+
+		if(ok)
+		{
+			JS_SET_RVAL(cx, vp, ret);
+			return JS_TRUE;
+		}
+
+		JSBool ok = detail::JSNativeCallSelector<function_type2, function_pointer2>()(
+			cx, 
+			JS_THIS_OBJECT(cx, vp),
+			argc,
+			JS_ARGV(cx, vp), 
+			&ret);
+
+		if(ok)
+		{
+			JS_SET_RVAL(cx, vp, ret);
+			return JS_TRUE;
+		}
+
+		return JS_FALSE;
+	}
+
+	template<typename function_type1, typename function_type1 function_pointer1,
+		typename function_type2, typename function_type2 function_pointer2,
+		typename function_type3, typename function_type3 function_pointer3>
+
+		JSBool JSNativeCall3(JSContext *cx, uintN argc, jsval *vp)
+	{
+		jsval ret = JSVAL_VOID;
+		JSBool ok = detail::JSNativeCallSelector<function_type1, function_pointer1>()(
+			cx, 
+			JS_THIS_OBJECT(cx, vp),
+			argc,
+			JS_ARGV(cx, vp), 
+			&ret);
+
+		if(ok)
+		{
+			JS_SET_RVAL(cx, vp, ret);
+			return ok;
+		}
+
+		JSBool ok = detail::JSNativeCallSelector<function_type2, function_pointer2>()(
+			cx, 
+			JS_THIS_OBJECT(cx, vp),
+			argc,
+			JS_ARGV(cx, vp), 
+			&ret);
+
+		if(ok)
+		{
+			JS_SET_RVAL(cx, vp, ret);
+			return ok;
+		}
+
+		JSBool ok = detail::JSNativeCallSelector<function_type3, function_pointer3>()(
+			cx, 
+			JS_THIS_OBJECT(cx, vp),
+			argc,
+			JS_ARGV(cx, vp), 
+			&ret);
+
+		if(ok)
+		{
+			JS_SET_RVAL(cx, vp, ret);
+			return ok;
+		}
+
+		return ok;
+	}
 } // namespace jsnative

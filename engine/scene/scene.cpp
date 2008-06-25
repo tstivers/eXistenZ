@@ -4,6 +4,7 @@
 #include "settings/settings.h"
 #include "entity/entitymanager.h"
 #include "sound/sound.h"
+#include "q3shader/q3shadercache.h"
 
 namespace scene
 {
@@ -17,6 +18,7 @@ Scene::Scene()
 {
 	m_entityManager = shared_ptr<entity::EntityManager>(new entity::EntityManager(this));
 	m_soundManager = shared_ptr<sound::SoundManager>(new sound::SoundManager(this));
+	//m_q3shaderCache = shared_ptr<q3shader::Q3ShaderCache>(new q3shader::Q3ShaderCache(this));
 }
 
 Scene::~Scene()

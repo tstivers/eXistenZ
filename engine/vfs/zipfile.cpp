@@ -14,7 +14,7 @@ namespace vfs
 vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 		IFile(header->filename, false)
 {
-	size = header->uncompressed_size;
+	m_size = header->uncompressed_size;
 	File file = getFile(archivename);
 
 	if (!file)
@@ -26,12 +26,12 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 
 	file->seek(header->offset, FILE_BEGIN);
 
-	buffer = new char[size];
-	bufptr = buffer;
+	m_buffer = new char[m_size];
+	m_bufferpos = m_buffer;
 
 	if (header->compressed_size == header->uncompressed_size)
 	{
-		file->read(buffer, size);
+		file->read(m_buffer, m_size);
 	}
 	else
 	{
@@ -43,19 +43,19 @@ vfs::ZipFile::ZipFile(const char* archivename, const ZipFileEntry* header) :
 
 		stream.next_in = cbuffer;
 		stream.avail_in = header->compressed_size;
-		stream.next_out = (Bytef*)buffer;
+		stream.next_out = (Bytef*)m_buffer;
 		stream.avail_out = header->uncompressed_size;
 
 		if (inflateInit2(&stream, -MAX_WBITS) != Z_OK)
 		{
-			LOG("error reading deflate header in \"%s\"", filename);
-			size = 0;
+			LOG("error reading deflate header in \"%s\"", m_filename);
+			m_size = 0;
 		}
 
 		if (inflate(&stream, Z_FINISH) != Z_STREAM_END)
 		{
-			LOG("error decompressing \"%s\"", filename);
-			size = 0;
+			LOG("error decompressing \"%s\"", m_filename);
+			m_size = 0;
 		}
 
 		inflateEnd(&stream);
@@ -70,11 +70,11 @@ vfs::ZipFile::~ZipFile()
 
 U32 vfs::ZipFile::read(void* buffer, U32 size)
 {
-	byte* buf = (byte*)this->buffer;
-	byte* src = (byte*)bufptr;
-	byte* end = MIN((src + size), (buf + this->size));
+	byte* buf = (byte*)this->m_buffer;
+	byte* src = (byte*)m_bufferpos;
+	byte* end = MIN((src + size), (buf + this->m_size));
 	memcpy(buffer, src, end - src);
-	bufptr = (void*)end;
+	m_bufferpos = (char*)end;
 	return (U32)(end - src);
 }
 
@@ -90,24 +90,24 @@ U32 vfs::ZipFile::seek(S32 offset, U32 origin)
 	{
 	case FILE_BEGIN:
 		if (offset < 0) return ((U32) - 1);
-		if ((U32)offset > size) return ((U32) - 1);
-		bufptr = (byte*)buffer + offset;
+		if ((U32)offset > m_size) return ((U32) - 1);
+		m_bufferpos = (char*)m_buffer + offset;
 		break;
 
 	case FILE_CURRENT:
-		if (((byte*)bufptr + offset) < (byte*)buffer) return ((U32) - 1);
-		if (((byte*)bufptr + offset) > (byte*)buffer + size) return ((U32) - 1);
-		bufptr = (byte*)bufptr + offset;
+		if (((byte*)m_bufferpos + offset) < (byte*)m_buffer) return ((U32) - 1);
+		if (((byte*)m_bufferpos + offset) > (byte*)m_buffer + m_size) return ((U32) - 1);
+		m_bufferpos = (char*)m_bufferpos + offset;
 		break;
 
 	case FILE_END:
 		if (offset > 0) return ((U32) - 1);
-		if (offset < -((S32)size)) return ((U32) - 1);
-		bufptr = (byte*)buffer + size + offset;
+		if (offset < -((S32)m_size)) return ((U32) - 1);
+		m_bufferpos = (char*)m_buffer + m_size + offset;
 		break;
 
 	default:
-		return (U32)((char*)bufptr - (char*)buffer);
+		return (U32)((char*)m_bufferpos - (char*)m_buffer);
 	}
 
 	return true;
@@ -115,6 +115,6 @@ U32 vfs::ZipFile::seek(S32 offset, U32 origin)
 
 void* vfs::ZipFile::cache()
 {
-	return buffer;
+	return m_buffer;
 }
 

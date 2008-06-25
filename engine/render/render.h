@@ -11,6 +11,12 @@ namespace texture
 	class Material;
 }
 
+namespace q3shader
+{
+	class Q3Shader;
+	class Q3ShaderCache;
+}
+
 namespace render
 {
 	class RenderGroup;
@@ -86,4 +92,6 @@ namespace render
 	class CFrustum;
 	extern CFrustum frustum;
 	extern int bsp_rendermethod;
+
+	extern q3shader::Q3ShaderCache gQ3ShaderCache;
 };

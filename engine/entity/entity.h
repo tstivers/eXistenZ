@@ -11,6 +11,14 @@ namespace entity
 {
 	class EntityManager;
 
+	enum ENTITY_FLAGS
+	{
+		E_STATIC		= (1<<0),
+		E_DYNAMIC		= (1<<1),
+		E_PROJECTILE	= (1<<2),
+		E_MESH			= (1<<3)
+	};
+
 	class Entity : public script::ScriptedObject
 	{
 	protected:
@@ -58,57 +66,13 @@ namespace entity
 		// component shortcuts
 		virtual component::Component* getPositionComponent() { return m_position; } // shortcut for getComponent("pos")
 
+		// entity flags
+		virtual void setFlags(int flags) { m_flags = flags; }
+		virtual int getFlags() { return m_flags; }
+
 		// acquire/release methods
 		virtual void acquire();
 		virtual void release();
-
-		// test methods
-		void test1(void)
-		{
-			INFO("test1 called");
-		}
-
-		string test2()
-		{
-			return string("test2 string");
-		}
-
-		const D3DXVECTOR3& test3()
-		{
-			static D3DXVECTOR3 bleh(1, 2, 3);
-			return bleh;
-		}
-
-		void test4(string test)
-		{
-			INFO("test 4 called with string \"%s\"", test.c_str());
-		}
-
-		string test5(const string& test)
-		{
-			INFO("test 5 called with string \"%s\"", test.c_str());
-			return test + " was called";
-		}
-
-		void test6(int a, float b, const string& c, D3DXVECTOR3 d)
-		{
-			INFO("test6 called:");
-			INFO("	int a = %i", a);
-			INFO("  float b = %f", b);
-			INFO("  string c = %s", c.c_str());
-			INFO("  vector d = (%f, %f, %f)", d.x, d.y, d.z);
-		}
-
-		float test7(int a, float b, const string& c, D3DXVECTOR3 d)
-		{
-			INFO("test6 called:");
-			INFO("	int a = %i", a);
-			INFO("  float b = %f", b);
-			INFO("  string c = %s", c.c_str());
-			INFO("  vector d = (%f, %f, %f)", d.x, d.y, d.z);
-
-			return 12.6f;
-		}
 
 		// component iterators
 		virtual component_iterator begin() { return m_components.begin(); }
@@ -128,5 +92,6 @@ namespace entity
 		component_map m_components;
 		component::Component* m_position;
 		bool m_acquired;
+		int m_flags;
 	};
 }

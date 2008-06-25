@@ -387,7 +387,7 @@ inline bool BSP::setTexture(const int face_index, const bool queue_transparent)
 		last_lightmap = -1;
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		if (render::lightmap)
-			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
+			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 	}
 	else if (face.lightmap != last_lightmap)
 	{

@@ -17,6 +17,7 @@
 #include "script/script.h"
 #include "script/jsfunction.h"
 #include "physics/physics.h"
+#include "q3shader/q3shadercache.h"
 
 namespace render
 {
@@ -77,6 +78,7 @@ namespace render
 	unsigned int frame_drawcalls;
 	D3DXVECTOR3 model_rot;
 	int visualizeFlags = 0;
+	q3shader::Q3ShaderCache gQ3ShaderCache;
 };
 
 using namespace render;
@@ -313,14 +315,55 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 				current_lightmap->deactivate();
 	}
 
+	if (rg->q3shader)
+	{
+		if(!rg->q3shader->is_nodraw)
+		{
+			if(current_lightmap)
+				current_lightmap->deactivate();
+			if(current_texture)
+				current_texture->deactivate();
+			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			device->SetRenderState(D3DRS_LIGHTING, FALSE);
+			current_material = NULL;
+			if(rg->q3shader->is_offset)
+				device->SetTransform(D3DTS_PROJECTION, &biased_projection);
+			device->SetTransform(D3DTS_WORLD, &world);
+			rg->q3shader->activate(rg->lightmap);
+			for(int i = 0; i < rg->q3shader->getNbPasses(); i++)
+			{
+				rg->q3shader->activatePass(i);
+				render::device->DrawIndexedPrimitive(
+					rg->type,
+					rg->vertexbuffer->offset / rg->stride,
+					0,
+					rg->numvertices,
+					rg->indexbuffer->offset / sizeof(unsigned short),
+					rg->primitivecount);
+				frame_drawcalls++;
+				frame_polys += rg->primitivecount;
+				rg->q3shader->deactivatePass(i);
+			}
+			rg->q3shader->deactivate();
+			current_texture = NULL;
+			current_lightmap = NULL;
+			current_transform = world;
+			current_material = NULL;
+			current_vb = NULL;
+			current_ib = NULL;
+			device->SetTransform(D3DTS_PROJECTION, &projection);
+		}
+		return;
+	}
+
 	if (rg->texture && rg->texture->is_transparent && (!rg->lightmap || !render::lightmap))
 	{
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	}
 
-	if ((!rg->lightmap || !render::lightmap) && !rg->material && !rg->texture->is_transparent && render::diffuse)
+	if ((!rg->lightmap || !render::lightmap) && !rg->material && rg->texture && !rg->texture->is_transparent && render::diffuse)
 	{
-		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 	}
 
 	if (transform && *transform != current_transform)

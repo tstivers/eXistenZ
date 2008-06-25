@@ -13,6 +13,11 @@ namespace sound
 	class SoundManager;
 }
 
+namespace q3shader
+{
+	class Q3ShaderCache;
+}
+
 namespace scene
 {
 	enum SCENE_TYPE
@@ -74,6 +79,7 @@ namespace scene
 
 		shared_ptr<entity::EntityManager> m_entityManager;
 		shared_ptr<sound::SoundManager> m_soundManager;
+	//	shared_ptr<q3shader::Q3ShaderCache> m_q3shaderCache;
 	};
 
 	void init();

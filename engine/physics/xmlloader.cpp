@@ -192,9 +192,9 @@ ShapeEntry physics::loadDynamicsXML(string filename)
 	xml_document<> doc;
 
 	vector<char> buffer;
-	buffer.resize(f->size + 1);
-	f->read(&buffer.front(), f->size);
-	buffer[f->size] = 0;
+	buffer.resize(f->getSize() + 1);
+	f->read(&buffer.front(), f->getSize());
+	buffer[f->getSize()] = 0;
 
 	doc.parse<parse_trim_whitespace>(&buffer.front());
 	xml_node<>* scene = doc.first_node()->first_node("NxuPhysicsCollection")->first_node("NxSceneDesc");

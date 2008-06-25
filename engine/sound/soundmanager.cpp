@@ -22,7 +22,7 @@ static FMOD_RESULT __stdcall sound::OpenCallback(const char *name, int unicode, 
 	if(!f)
 		return FMOD_ERR_FILE_NOTFOUND;
 
-	*filesize = f->size;
+	*filesize = f->getSize();
 
 	*handle = new vfs::File(f);
 	return FMOD_OK;
@@ -202,6 +202,7 @@ FMOD::Channel* SoundManager::playSound3d(const string& name, const D3DXVECTOR3& 
 		return NULL;
 	}
 
+	channel->set3DMinMaxDistance(5.0f, 10000.0f);
 	channel->setVolume(volume);
 	channel->set3DAttributes((FMOD_VECTOR*)&pos, NULL);
 	channel->setPaused(false);

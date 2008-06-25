@@ -69,6 +69,7 @@ namespace scene
 
 		// overloads
 		void init();
+		bool isValidFace(const BSPFace* face);
 		void acquire();
 		void release();
 		void reload(unsigned int flags = 0);

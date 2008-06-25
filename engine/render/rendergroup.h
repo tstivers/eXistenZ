@@ -6,6 +6,11 @@ namespace texture
 	struct Material;
 }
 
+namespace q3shader
+{
+	class Q3Shader;
+}
+
 namespace render
 {
 
@@ -26,6 +31,7 @@ namespace render
 		texture::DXTexture* texture;  // replace with material
 		texture::DXTexture* lightmap; // replace with materialprops
 		texture::Material* material;
+		q3shader::Q3Shader* q3shader;
 
 		DWORD fvf;
 		unsigned int stride;

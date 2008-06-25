@@ -8,9 +8,9 @@ namespace vfs
 
 vfs::DiskFile::DiskFile(const char* filename, bool write) : IFile(filename, write)
 {
-	this->readonly = !write;
+	this->m_readonly = !write;
 
-	if (readonly)
+	if (m_readonly)
 		hfile = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	else
 		hfile = CreateFile(filename, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, 0, NULL);
@@ -22,7 +22,7 @@ vfs::DiskFile::DiskFile(const char* filename, bool write) : IFile(filename, writ
 		return;
 	}
 
-	this->size = GetFileSize(hfile, NULL);
+	this->m_size = GetFileSize(hfile, NULL);
 }
 
 vfs::DiskFile::~DiskFile()
@@ -51,7 +51,7 @@ U32 vfs::DiskFile::write(const void* buffer, U32 size, bool flush)
 	if (!size)
 		return 0;
 
-	if (readonly)
+	if (m_readonly)
 		return 0;
 
 	if (!WriteFile(hfile, buffer, size, (LPDWORD)&bytes_written, NULL))
@@ -73,12 +73,12 @@ U32 vfs::DiskFile::seek(S32 offset, U32 origin)
 
 void* vfs::DiskFile::cache()
 {
-	if (!buffer)
+	if (!m_buffer)
 	{
-		buffer = new char[this->size];
-		read(buffer, this->size);
-		bufptr = buffer;
+		m_buffer = new char[this->m_size];
+		read(m_buffer, this->m_size);
+		m_bufferpos = m_buffer;
 	}
 
-	return buffer;
+	return m_buffer;
 }

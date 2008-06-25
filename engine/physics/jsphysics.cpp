@@ -24,7 +24,7 @@ void jsphysics::init()
 	script::gScriptEngine->AddFunction("loadDynamicsXML", 1, loadDynamicsXML);
 	script::gScriptEngine->AddFunction("system.physics.setParameter", 2, setParameter);
 	script::gScriptEngine->AddFunction("system.physics.setGroupCollisionFlag", 3, setGroupCollisionFlag);
-	script::gScriptEngine->AddFunction("system.physics.getEntitiesInSphere", 2, getShapesFromSphere);
+	script::gScriptEngine->AddFunction("system.physics.getActorsInSphere", 2, getShapesFromSphere);
 
 }
 

@@ -118,7 +118,7 @@ bool Shader::load(vfs::File file)
 {
 	char buf[256];
 
-	name = _strdup(file->filename);
+	name = _strdup(file->getFilename());
 	line = 0;
 	flags = 0;
 
@@ -157,7 +157,7 @@ bool Shader::load(vfs::File file)
 			}
 
 		if (!commands[command_idx].command)
-			LOG("%s[%i]: unknown command \"%s\"", file->filename, line, name);
+			LOG("%s[%i]: unknown command \"%s\"", file->getFilename(), line, name);
 	}
 
 	return true;

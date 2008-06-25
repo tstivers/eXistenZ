@@ -164,10 +164,14 @@ engine/q3bsp/patch.cpp eol=crlf
 engine/q3bsp/patch.h eol=crlf
 engine/q3bsp/q3bsptypes.h eol=crlf
 engine/q3bsp/rendertest.cpp eol=crlf
+engine/q3shader/jsq3shader.cpp -text
+engine/q3shader/jsq3shader.h -text
 engine/q3shader/q3shader.cpp eol=crlf
 engine/q3shader/q3shader.h eol=crlf
 engine/q3shader/q3shadercache.cpp eol=crlf
 engine/q3shader/q3shadercache.h eol=crlf
+engine/q3shader/q3shaderpass.cpp -text
+engine/q3shader/q3shaderpass.h -text
 engine/render/dx.cpp eol=crlf
 engine/render/dx.h eol=crlf
 engine/render/font.cpp eol=crlf

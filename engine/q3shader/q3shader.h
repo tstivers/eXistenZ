@@ -1,54 +1,95 @@
 #pragma once
-#include "vfs/vfs.h"
-#include "texture/texture.h"
 
-#define Q3SURF_TRANS		0x0001
-#define Q3SURF_NOMARKS		0x0002
-#define Q3SURF_NONSOLID		0x0004
-#define Q3SURF_NOLIGHTMAP	0x0008
-#define Q3SURF_NODRAW		0x0010
-
-#define FLAG_CULL			0x0001
-#define FLAG_BLEND			0x0002
-#define FLAG_ALPHATEST		0x0004
-#define FLAG_TCMOD			0x0008
-#define FLAG_DEPTHWRITE		0x0010
-#define FLAG_MAP			0x0100
-#define FLAG_STD_TEXTURE	0x0200
-#define FLAG_DEPTHFUNC		0x0400
+namespace texture
+{
+	class DXTexture;
+}
 
 namespace q3shader
 {
+	class Q3ShaderCache;
+	class Q3Shader;
+	class Q3ShaderPass;
+
 	class Q3Shader
 	{
+		friend class Q3ShaderPass;
+
 	public:
-		char* name;
-		char* filename;
-		int line;
-		int passes;
-		int flags;
-		U32 surfaceparms;
-		int cullmode;
-		int src_blend;
-		int dest_blend;
-		int alpharef;
-		int alphafunc;
-		int depthfunc;
+		
+		enum SORT_ORDER
+		{
+			unset,
+			portal,
+			sky,
+			opaque,
+			banner,
+			underwater,
+			additive,
+			nearest
+		};
 
-		vector<texture::DXTexture*> texture;
-		vector<Q3Shader*> pass;
-		texture::DXTexture* lightmap;
+		typedef vector<string> shader_lines;
 
-		Q3Shader(const char* name);
-		Q3Shader(const char* name, const char* filename);
+		Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext);
 		~Q3Shader();
 
-		bool load(const char* filename);
-		bool parse(vfs::File file);
-		void parseLine(char* line);
+		void activate(texture::DXTexture* lightmap);
+		void activatePass(int index);
+		void deactivatePass(int index);
+		void deactivate();
 
-		bool activate(texture::DXTexture* lightmap, int pass = 0);
+		int getNbPasses(){return m_passes.size(); }
 
-		void deactivate(int pass = 0);
+		static void initParseMap();
+
+		bool is_transparent;
+		bool is_nolightmap;
+		bool is_noclip;
+		bool is_playerclip;
+		bool is_offset;
+		bool is_water;
+		bool is_sky;
+		bool is_nodraw;
+		bool is_slick;
+		bool is_fog;
+		bool is_lava;
+		bool is_slime;
+		bool is_nodynamiclighting;
+
+		SORT_ORDER m_sortorder;
+
+	protected:
+		typedef vector<string> params;
+
+		void parseIgnore(const params& p);
+		void parseSurfaceParm(const params& p);
+		void parseCull(const params& p);
+		void parseDeformVertexes(const params& p);
+		void parsePolygonOffset(const params& p);
+		void parseNoMipmaps(const params& p);
+		void parsePortal(const params& p);
+		void parseSkyParms(const params& p);
+		void parseSort(const params& p);
+		void parseFogParms(const params& p);
+		void parseCloudParms(const params& p);
+		void parseImplicitMask(const params& p);
+
+		HRESULT setRenderState(D3DRENDERSTATETYPE state, DWORD value);
+		HRESULT setSamplerState(DWORD sampler,  D3DSAMPLERSTATETYPE type, DWORD value);
+
+		typedef function<HRESULT(void)> shader_function;
+		typedef vector<shader_function> function_list;
+		function_list m_activate;
+		function_list m_deactivate;
+
+		Q3ShaderCache* m_cache;
+		
+		typedef unordered_map<string, void(Q3Shader::*)(const params&)> parse_map;
+		static parse_map s_parseMap;
+		
+		typedef vector<shared_ptr<Q3ShaderPass>> pass_list;
+		pass_list m_passes;
+		texture::DXTexture* m_lightmap; // hacky
 	};
-};
+}

@@ -70,35 +70,10 @@ namespace script
 	bool GetProperty(JSContext* cx, JSObject* obj, const char* name, T& value)
 	{
 		jsval v;
-
 		if(JS_GetProperty(cx, obj, name, &v) && v != JSVAL_VOID)
-		{
 			return jsscript::jsval_to_(cx, v, &value);
-		}
 
 		return false;
-	}
-
-	template<typename T>
-	JSBool AcquireObject(JSContext *cx, uintN argc, jsval *vp)
-	{
-		T* e = GetReserved<T>(cx, JS_THIS_OBJECT(cx, vp));
-
-		e->acquire();
-
-		JS_SET_RVAL(cx, vp, JSVAL_VOID);
-		return JS_TRUE;
-	}
-
-	template<typename T>
-	JSBool ReleaseObject(JSContext *cx, uintN argc, jsval *vp)
-	{
-		T* e = GetReserved<T>(cx, JS_THIS_OBJECT(cx, vp));
-
-		e->release();
-
-		JS_SET_RVAL(cx, vp, JSVAL_VOID);
-		return JS_TRUE;
 	}
 
 	template<typename T>
@@ -109,7 +84,7 @@ namespace script
 		return JS_TRUE;
 	}
 
-	template<typename T, const std::string &(__thiscall T::* prop)(void) const>
+	template<typename T, const std::string& (T::* prop)(void)>
 	JSBool StringGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
@@ -123,5 +98,20 @@ namespace script
 		T* e = GetReserved<T>(cx, obj);
 		*vp = jsscript::to_jsval(cx, (e->*prop)());
 		return JS_TRUE;
+	}
+
+	template<typename T, typename U, void (T::* prop)(U)>
+	JSBool PropertySetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	{
+		T* e = GetReserved<T>(cx, obj);
+		remove_const<remove_reference<U>::type>::type val;
+		if(jsscript::jsval_to_(cx, *vp, &val))
+		{
+			(e->*prop)(val);
+			return JS_TRUE;
+		}
+
+		JS_ReportError(cx, "argument incorrect for property");
+		return JS_FALSE;
 	}
 }

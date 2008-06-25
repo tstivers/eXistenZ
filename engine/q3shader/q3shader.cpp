@@ -1,530 +1,319 @@
 #include "precompiled.h"
 #include "q3shader/q3shadercache.h"
 #include "q3shader/q3shader.h"
-#include "settings/settings.h"
-#include "vfs/vfs.h"
-#include "vfs/file.h"
-#include "texture/texturecache.h"
+#include "q3shader/q3shaderpass.h"
 #include "render/render.h"
 
 namespace q3shader
 {
+	Q3Shader::parse_map Q3Shader::s_parseMap;
+	static void init();
 
-	typedef void (* parse_command)(Q3Shader* shader, int argc, char* argv[]);
-
-	void parse_surfaceparm(Q3Shader* shader, int argc, char* argv[]);
-	void parse_cull(Q3Shader* shader, int argc, char* argv[]);
-	void parse_map(Q3Shader* shader, int argc, char* argv[]);
-	void parse_blend(Q3Shader* shader, int argc, char* argv[]);
-	void parse_rgbgen(Q3Shader* shader, int argc, char* argv[]);
-	void parse_alphafunc(Q3Shader* shader, int argc, char* argv[]);
-	void parse_depthfunc(Q3Shader* shader, int argc, char* argv[]);
-
-	struct
-	{
-		char* command;
-		int flag;
-		parse_command parse;
-	} commands[] =
-	{
-		// these get ignored
-		{ "qer_*",			0x00, NULL }, // ignore qer crap
-		{ "q3map_*",		0x00, NULL }, // and q3map crap
-		{ "tessSize",		0x00, NULL }, // only for bsp compiler
-
-		// these need processed
-		{ "tcmod",			FLAG_TCMOD, NULL }, // ignore for now
-		{ "depthwrite",		FLAG_DEPTHWRITE, NULL }, // only need the flag
-		{ "depthfunc",		FLAG_DEPTHFUNC,	parse_depthfunc },
-		{ "surfaceparm",	0x00, parse_surfaceparm },
-		{ "cull",			FLAG_CULL, parse_cull },
-		{ "map",			FLAG_MAP, parse_map },
-		{ "blendfunc",		FLAG_BLEND, parse_blend },
-		{ "rgbgen",			0x00, parse_rgbgen },
-		{ "alphafunc",		FLAG_ALPHATEST, parse_alphafunc },
-		{ NULL, NULL }
-	};
-
-	struct
-	{
-		char* key;
-		int value;
-	} constants[] =
-	{
-		// surfaceparm
-		{ "trans",			Q3SURF_TRANS },
-		{ "nomarks",		Q3SURF_NOMARKS },
-		{ "nonsolid",		Q3SURF_NONSOLID },
-		{ "nolightmap",		Q3SURF_NOLIGHTMAP },
-		{ "nodraw",			Q3SURF_NODRAW },
-		{ "lava",			0x0020 },
-		{ "noimpact",		0x0040 },
-		{ "playerclip",		0x0080 },
-		{ "structural",		0x0100 },
-		{ "hint",			0x0200 },
-		{ "donotenter",		0x0400 },
-		{ "nodamage",		0x0800 },
-		{ "alphashadow",	0x1000 },
-		{ "slime",			0x2000 },
-		{ "nodrop",			0x4000 },
-		{ "clusterportal",	0x8000 },
-		{ "water",			0x010000 },
-		{ "metalsteps",		0x020000 },
-		{ "areaportal",		0x040000 },
-
-		// cull
-		{ "none",				D3DCULL_NONE },
-		{ "disable",			D3DCULL_NONE },
-
-		// blend modes
-		{ "GL_ONE",					D3DBLEND_ONE },
-		{ "GL_ZERO",				D3DBLEND_ZERO },
-		{ "GL_SRC_ALPHA",			D3DBLEND_SRCALPHA },
-		{ "GL_DST_ALPHA",			D3DBLEND_DESTALPHA },
-		{ "GL_ONE_MINUS_SRC_ALPHA", D3DBLEND_INVSRCALPHA },
-		{ "GL_ONE_MINUS_DST_ALPHA", D3DBLEND_INVDESTALPHA },
-		{ "GL_SRC_COLOR",			D3DBLEND_SRCCOLOR },
-		{ "GL_DST_COLOR",			D3DBLEND_DESTCOLOR },
-		{ "GL_ONE_MINUS_SRC_COLOR",	D3DBLEND_INVSRCCOLOR },
-		{ "GL_ONE_MINUS_DST_COLOR",	D3DBLEND_INVDESTCOLOR },
-
-		// end
-		{ NULL, 0 }
-	};
-
-	int getConstant(const char* key);
-};
+}
 
 using namespace q3shader;
 
-Q3Shader::Q3Shader(const char* name)
+REGISTER_STARTUP_FUNCTION(Q3Shader, Q3Shader::initParseMap, 10);
+
+void Q3Shader::initParseMap()
 {
-	this->name = _strdup(name);
-	this->flags = 0;
-	this->surfaceparms = 0;
-	this->passes = 0;
-	this->line = 0;
+	s_parseMap["surfaceparm"] = &Q3Shader::parseSurfaceParm;
+	s_parseMap["light"] = &Q3Shader::parseIgnore;
+	s_parseMap["cull"] = &Q3Shader::parseCull;
+	s_parseMap["nopicmip"] = &Q3Shader::parseIgnore;
+	s_parseMap["light1"] = &Q3Shader::parseIgnore; // no idea what this is; for the editor maybe?
+	s_parseMap["tesssize"] = &Q3Shader::parseIgnore; // used by the editor to tesselate faces
+	s_parseMap["deformvertexes"] = &Q3Shader::parseDeformVertexes;
+	s_parseMap["polygonoffset"] = &Q3Shader::parsePolygonOffset;
+	s_parseMap["nomipmaps"] = &Q3Shader::parseNoMipmaps;
+	s_parseMap["portal"] = &Q3Shader::parsePortal;
+	s_parseMap["skyparms"] = &Q3Shader::parseSkyParms;
+	s_parseMap["sort"] = &Q3Shader::parseSort;
+	s_parseMap["fogonly"] = &Q3Shader::parseIgnore; // not documented, ignore I guess
+	s_parseMap["fogparms"] = &Q3Shader::parseFogParms;
+	s_parseMap["entitymergable"] = &Q3Shader::parseIgnore; // not documented, for the editor?
+	s_parseMap["cloudparms"] = &Q3Shader::parseCloudParms;
+	s_parseMap["lightning"] = &Q3Shader::parseIgnore; // undocumented but I can guess
+	s_parseMap["implicitmask"] = &Q3Shader::parseImplicitMask;
+	s_parseMap["sky"] = &Q3Shader::parseIgnore; // I do my own skybox drawing
+	s_parseMap["foggen"] = &Q3Shader::parseIgnore; // no idea
+	s_parseMap["backsided"] = &Q3Shader::parseIgnore; // no idea
 }
 
-Q3Shader::Q3Shader(const char* name, const char* filename)
+void Q3Shader::parseImplicitMask(const params& p)
 {
-	this->name = _strdup(name);
-	this->filename = _strdup(filename);
-	this->flags = 0;
-	this->surfaceparms = 0;
-	this->passes = 0;
-	this->line = 0;
-}
-
-
-Q3Shader::~Q3Shader()
-{
-}
-
-
-bool Q3Shader::load(const char* filename)
-{
-	// open file and skip down to our section
-	vfs::File file = vfs::getFile(filename);
-	if (!file)
-		return false;
-
-	this->filename = _strdup(filename);
-
-	char buf[1024];
-	line = 0;
-	int level = 0;
-
-	while (file->readLine(buf, 1024))
+	if(p[1] == "-")
 	{
-
-		line++;
-
-		char* comment = strstr(buf, "//");
-		if (comment) *comment = 0;
-
-		strip(buf);
-
-		if (!buf[0]) continue;
-		//LOG("processing \"%s\"", buf);
-		char* token = buf;
-		char* this_token;
-		while (this_token = getToken(&token, " \t"))
-		{
-			if (this_token[0] == '{')
-				level++;
-			else if (this_token[0] == '}')
-				level--;
-			else if (this_token[0] && level == 0)
-			{
-				if (!_stricmp(this_token, this->name))
-				{
-					file->readLine(buf, 1024);
-					line++;
-					parse(file);
-
-					return true;
-				}
-			}
-		}
+		// dunno
 	}
-
-	return false;
+	else // anything using this?
+	{
+		// dunno if this needs to be drawn or not
+	}
 }
 
-bool Q3Shader::parse(vfs::File file)
+void Q3Shader::parseCloudParms(const params& p)
 {
-	char buf[1024];
+	// undocumented ?
+	//INFO("TODO: parse cloud parms");
+}
 
-	while (file->readLine(buf, 1024))
+void Q3Shader::parseFogParms(const params& p)
+{
+	// format is <r> <g> <b> <distance to opaque>
+	//INFO("TODO: parse fog parms");
+}
+
+void Q3Shader::parseSort(const params& p)
+{
+	ASSERT(p.size() == 2);
+
+	if(p[1] == "additive")
+		m_sortorder = additive;
+	else if(p[1] == "nearest")
+		m_sortorder = nearest;
+	else if(p[1] == "underwater")
+		m_sortorder = underwater;
+	else if(p[1] == "banner")
+		m_sortorder = banner;
+	else if(p[1] == "6")
+		m_sortorder = banner;
+	else if(p[1] == "opaque")
+		m_sortorder = opaque;
+	else if(p[1] == "5")
+		m_sortorder = unset;
+	else
+		ASSERT(false);
+}
+
+void Q3Shader::parseSkyParms(const params& p)
+{
+	// format is skyParms <farbox> <cloudheight> <nearbox>
+	//INFO("TODO: parse skyParms");
+}
+
+void Q3Shader::parsePortal(const params& p)
+{
+	m_sortorder = portal;
+}
+
+
+void Q3Shader::parseIgnore(const params& p)
+{
+}
+
+void Q3Shader::parseNoMipmaps(const params& p)
+{
+	m_activate.push_back(bind(&Q3Shader::setSamplerState, this, 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE));
+	m_deactivate.push_back(bind(&Q3Shader::setSamplerState, this, 0, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC));
+}
+
+void Q3Shader::parsePolygonOffset(const params& p)
+{
+	is_offset = true;
+}
+
+void Q3Shader::parseDeformVertexes(const params& p)
+{
+	//INFO("TODO: handle deformVertexes");
+}
+
+void Q3Shader::parseCull(const params& p)
+{
+	if(p.size() == 1 || p[1] == "front")
 	{
+		m_activate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CW));
+		m_deactivate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CCW));
+	}
+	else if(p[1] == "back" || p[1] == "backsided")
+	{
+		// this is the default, don't do anything
+	}
+	else if(p[1] == "disable" || p[1] == "none" || p[1] == "twosided")
+	{
+		m_activate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_NONE));
+		m_deactivate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CCW));
+	}
+	else
+		ASSERT(false);
 
-		line++;
+}
 
-		char* comment = strstr(buf, "//");
-		if (comment) *comment = 0;
-		strip(buf);
-		if (!buf[0]) continue;
+void Q3Shader::parseSurfaceParm(const params& p)
+{
+	if(p.size() == 1)
+		return;
 
-		if (buf[0] == '{')
+	if(p[1] == "trans")
+		is_transparent = true;
+	else if(p[1] == "metalsteps") // ignore
+		{}
+	else if(p[1] == "nomarks")
+	{
+	}
+	else if(p[1] == "alphashadow")
+	{
+	}
+	else if(p[1] == "nolightmap")
+	{
+		is_nolightmap = true;
+	}
+	else if(p[1] == "nonsolid")
+	{
+		is_noclip = true;
+	}
+	else if(p[1] == "noimpact")
+	{
+	}
+	else if(p[1] == "nodamage")
+	{
+	}
+	else if(p[1] == "playerclip")
+	{
+		is_playerclip = true;
+	}
+	else if(p[1] == "lightfilter") // only used by radiant I believe
+	{
+	}
+	else if(p[1] == "water")
+	{
+		is_water = true;
+	}
+	else if(p[1] == "sky")
+	{
+		is_sky = true;
+		is_nodraw = true; // don't draw the sky
+	}
+	else if(p[1] == "nodraw")
+	{
+		is_nodraw = true;
+	}
+	else if (p[1] == "nodrop")
+	{
+	}
+	else if (p[1] == "structural")
+	{
+	}
+	else if(p[1] == "slick")
+	{
+		is_slick = true;
+	}
+	else if(p[1] == "origin")
+	{
+		// no clue
+	}
+	else if(p[1] == "areaportal")
+	{
+	}
+	else if(p[1] == "detail")
+	{
+		// dunno, not documented
+	}
+	else if(p[1] == "clusterportal")
+	{
+		// only used by map processor
+	}
+	else if(p[1] == "donotenter")
+	{
+		// bot only
+	}
+	else if(p[1] == "fog")
+	{
+		is_fog = true;
+	}
+	else if(p[1] == "lava")
+	{
+		is_lava = true;
+	}
+	else if(p[1] == "solid")
+	{
+		// this is the default
+	}
+	else if(p[1] == "pointlight")
+	{
+		// used by qeradiant ?
+	}
+	else if(p[1] == "slime")
+	{
+		is_slime = true;
+	}
+	else if(p[1] == "nodlight")
+	{
+		is_nodynamiclighting = true;
+	}
+	else if(p[1] == "nomipmaps")
+	{
+		parseNoMipmaps(p);
+	}
+	else
+		ASSERT(false);
+}
+
+HRESULT Q3Shader::setRenderState(D3DRENDERSTATETYPE state, DWORD value)
+{
+	return render::device->SetRenderState(state, value);
+}
+
+HRESULT Q3Shader::setSamplerState( DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value )
+{
+	return render::device->SetSamplerState(sampler, type, value);
+}
+
+
+Q3Shader::Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext)
+	: m_cache(cache), is_transparent(false), is_nolightmap(false), is_noclip(false), is_playerclip(false), is_offset(false),
+	m_sortorder(unset), is_water(false), is_sky(false), is_nodraw(false), is_slick(false), is_fog(false), is_lava(false),
+	is_slime(false), is_nodynamiclighting(false)
+{
+	for(shader_lines::const_iterator it = shadertext.begin(); it != shadertext.end(); ++it)
+	{
+		if(*it == "{")
 		{
-			passes++;
-			Q3Shader* shader = new Q3Shader(this->name, this->filename);
-			shader->line = line;
-			shader->parse(file);
-			pass.push_back(shader);
-			this->line = shader->line;
-		}
-		else if (buf[0] == '}')
-		{
-			return true;
+			vector<string> passlines;
+			while(*(++it) != "}")
+				passlines.push_back(*it);
+			m_passes.push_back(shared_ptr<Q3ShaderPass>(new Q3ShaderPass(this, passlines)));
 		}
 		else
 		{
-			parseLine(buf);
+			vector<string> v;
+			split(v, *it, is_space(), token_compress_on);
+			to_lower(v[0]);
+			if(starts_with(v[0], string("qer_")) || starts_with(v[0], string("q3map_"))) // ignore all editor and map parms
+				continue;
+			//ASSERT(s_parseMap.find(v[0]) != s_parseMap.end());
+			(this->*s_parseMap[v[0]])(v);
 		}
 	}
 
-	return true;
+	if(getNbPasses() == 0)
+		is_nodraw = true;
 }
 
-void Q3Shader::parseLine(char* line)
+Q3Shader::~Q3Shader()
 {
-	LOG("parsing [%s]", line);
-	char * name = line;
-	char* args = strchr(name, ' ');
-	int argc;
-	char* argv[32];
 
-	if (args)
-		*(args++) = 0;
-	argv[0] = name;
-	argc = countArgs(args) + 1;
-	for (int arg_idx = 1; arg_idx < argc; arg_idx++)
-		argv[arg_idx] = getToken(&args, " \t");
-
-	int command_idx;
-	for (command_idx = 0; commands[command_idx].command; command_idx++)
-		if (wildcmp(commands[command_idx].command, name))
-		{
-			flags |= commands[command_idx].flag;
-			if (commands[command_idx].parse)
-				commands[command_idx].parse(this, argc, argv);
-			break;
-		}
-
-	if (!commands[command_idx].command)
-		LOG("unknown command \"%s\"", name);
 }
 
-void q3shader::parse_surfaceparm(Q3Shader* shader, int argc, char* argv[])
+void Q3Shader::activate(texture::DXTexture* lightmap)
 {
-	strip(argv[1]);
-	int flag = getConstant(argv[1]);
-	if (flag != 0)
-	{
-		shader->surfaceparms |= flag;
-		return;
-	}
-
-	LOG("%s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	m_lightmap = lightmap;
+	for(function_list::iterator it = m_activate.begin(); it != m_activate.end(); it++)
+		(*it)();
 }
 
-void q3shader::parse_cull(Q3Shader* shader, int argc, char* argv[])
+void Q3Shader::deactivate()
 {
-	strip(argv[1]);
-	int cullmode = getConstant(argv[1]);
-	if (cullmode != 0)
-	{
-		shader->cullmode = cullmode;
-		return;
-	}
-
-	LOG("%s[%i] : unknown parm \"%s\"", shader->filename, shader->line, argv[1]);
+	for(function_list::iterator it = m_deactivate.begin(); it != m_deactivate.end(); it++)
+		(*it)();
 }
 
-void q3shader::parse_map(Q3Shader* shader, int argc, char* argv[])
+void Q3Shader::activatePass(int index)
 {
-	strip(argv[1]);
-
-	if (!_stricmp(argv[1], "$lightmap"))
-	{
-		shader->texture.push_back((texture::DXTexture*) 0x01);
-		return;
-	}
-
-	char* ext = strrchr(argv[1], '.');
-	if (ext)
-		*ext = 0;
-
-	//LOG("%s[%i] : loading \"%s\"", shader->filename, shader->line, argv[1]);
-
-	texture::DXTexture* texture = texture::getTexture(argv[1]);
-	if (texture)
-	{
-		shader->texture.push_back(texture);
-		return;
-	}
-
-	LOG("%s[%i] : couldn't load \"%s\"", shader->filename, shader->line, argv[1]);
+	m_passes[index]->activate();
 }
 
-void q3shader::parse_blend(Q3Shader* shader, int argc, char* argv[])
+void Q3Shader::deactivatePass(int index)
 {
-	strip(argv[1]);
-
-	if (!_stricmp(argv[1], "add"))
-	{
-		shader->src_blend = D3DBLEND_ONE;
-		shader->dest_blend = D3DBLEND_ONE;
-		return;
-	}
-
-	if (!_stricmp(argv[1], "filter"))
-	{
-		shader->src_blend = D3DBLEND_ZERO;
-		shader->dest_blend = D3DBLEND_SRCCOLOR;
-		return;
-	}
-
-	if (!_stricmp(argv[1], "blend"))
-	{
-		shader->src_blend = D3DBLEND_SRCALPHA;
-		shader->dest_blend = D3DBLEND_INVSRCALPHA;
-		return;
-	}
-
-	int blend_mode = getConstant(argv[1]);
-	if (blend_mode != 0)
-	{
-		shader->src_blend = blend_mode;
-	}
-	else
-	{
-		LOG("%s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[1]);
-	}
-
-	blend_mode = getConstant(argv[2]);
-	if (blend_mode != 0)
-	{
-		shader->src_blend = blend_mode;
-	}
-	else
-	{
-		LOG("%s[%i] : unknown blend mode \"%s\"", shader->filename, shader->line, argv[2]);
-	}
-}
-
-void q3shader::parse_alphafunc(Q3Shader* shader, int argc, char* argv[])
-{
-	strip(argv[1]);
-
-	if (!_stricmp(argv[1], "gt0"))
-	{
-		shader->alpharef = 0;
-		shader->alphafunc = D3DCMP_GREATER;
-		return;
-	}
-
-	if (!_stricmp(argv[1], "lt128"))
-	{
-		shader->alpharef = 128;
-		shader->alphafunc = D3DCMP_LESS;
-		return;
-	}
-
-	if (!_stricmp(argv[1], "ge128"))
-	{
-		shader->alpharef = 128;
-		shader->alphafunc = D3DCMP_GREATEREQUAL;
-		return;
-	}
-
-	LOG("%s[%i] : unknown test mode \"%s\"", shader->filename, shader->line, argv[1]);
-}
-
-void q3shader::parse_depthfunc(Q3Shader* shader, int argc, char* argv[])
-{
-	strip(argv[1]);
-
-	if (!_stricmp(argv[1], "lequal"))
-	{
-		shader->depthfunc = D3DCMP_LESSEQUAL;
-		return;
-	}
-
-	if (!_stricmp(argv[1], "equal"))
-	{
-		shader->alphafunc = D3DCMP_EQUAL;
-		return;
-	}
-
-	LOG("%s[%i] : unknown depth func \"%s\"", shader->filename, shader->line, argv[1]);
-}
-
-
-void q3shader::parse_rgbgen(Q3Shader* shader, int argc, char* argv[])
-{
-	strip(argv[1]);
-
-	if (!_stricmp(argv[1], "identity") || !_stricmp(argv[1], "identityLighting"))
-		return;
-
-	LOG("%s[%i] : unknown rgbgen mode \"%s\"", shader->filename, shader->line, argv[1]);
-}
-
-
-int q3shader::getConstant(const char* key)
-{
-	for (int const_idx = 0; constants[const_idx].key; const_idx++)
-		if (!_stricmp(key, constants[const_idx].key))
-			return constants[const_idx].value;
-
-	return 0;
-}
-
-#define BLEH if(!_stricmp(this->name, "textures/base_wall/protobanner"))
-
-bool Q3Shader::activate(texture::DXTexture* lightmap, int pass)
-{
-	this->lightmap = lightmap;
-
-	BLEH
-	{
-		LOG("activating banner");
-	}
-
-	if (pass == 0)
-	{
-		if (surfaceparms & Q3SURF_NODRAW)
-			return false;
-
-		if (this->flags & FLAG_STD_TEXTURE)
-		{
-			if (texture[0])
-				render::device->SetTexture(0, texture[0]->texture);
-
-			if (lightmap && render::lightmap)
-			{
-				render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
-				render::device->SetTexture(1, lightmap->texture);
-			}
-			else
-				render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-			return true;
-		}
-
-		if (flags & FLAG_MAP)
-		{
-			if (texture[0] == (texture::DXTexture*)0x01)
-			{
-				if (lightmap && render::lightmap)
-				{
-					//render::device->SetTextureStageState( 0, D3DTSS_TEXCOORDINDEX, 1);
-					render::device->SetTexture(0, lightmap->texture);
-				}
-			}
-			else
-				render::device->SetTexture(0, texture[0]->texture);
-		}
-
-		if (flags & FLAG_BLEND)
-		{
-			render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-			render::device->SetRenderState(D3DRS_SRCBLEND, src_blend);
-			render::device->SetRenderState(D3DRS_DESTBLEND, dest_blend);
-			if (!(flags & FLAG_DEPTHWRITE))
-				render::device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-		}
-
-		if (flags & FLAG_CULL)
-		{
-			render::device->SetRenderState(D3DRS_CULLMODE, cullmode);
-		}
-
-		if (flags & FLAG_DEPTHFUNC)
-		{
-			render::device->SetRenderState(D3DRS_ZFUNC, depthfunc);
-		}
-
-		if (flags & FLAG_ALPHATEST)
-		{
-			render::device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-			render::device->SetRenderState(D3DRS_ALPHAREF, alpharef);
-			render::device->SetRenderState(D3DRS_ALPHAFUNC, alphafunc);
-		}
-
-		return true;
-	}
-	else
-		return this->pass[pass - 1]->activate(lightmap);
-
-	return true;
-}
-
-void Q3Shader::deactivate(int pass)
-{
-	if (pass == 0)
-	{
-		if (surfaceparms & Q3SURF_NODRAW)
-			return;
-
-		if (flags & FLAG_STD_TEXTURE)
-		{
-			render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-			return;
-		}
-
-		if (flags & FLAG_MAP)
-		{
-			render::device->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
-			render::device->SetTexture(0, NULL);
-		}
-
-		if (flags & FLAG_BLEND)
-		{
-			render::device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-			if (!(flags & FLAG_DEPTHWRITE))
-				render::device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		}
-
-		if (flags & FLAG_CULL)
-		{
-			render::device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-		}
-
-		if (flags & FLAG_DEPTHFUNC)
-		{
-			render::device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		}
-
-		if (flags & FLAG_ALPHATEST)
-		{
-			render::device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-		}
-
-		return;
-	}
-	else
-		this->pass[pass - 1]->deactivate();
+	m_passes[index]->deactivate();
 }
