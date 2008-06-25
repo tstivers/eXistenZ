@@ -8,7 +8,7 @@ namespace vfs
 	{
 	public:
 		HANDLE hfile;
-		bool readonly;
+		bool m_readonly;
 
 	public:
 		DiskFile(const char* filename, bool write = false);

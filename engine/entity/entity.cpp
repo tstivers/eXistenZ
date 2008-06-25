@@ -10,7 +10,7 @@ namespace entity
 using namespace entity;
 
 Entity::Entity(EntityManager* manager, const string& name)
-: m_manager(manager), m_name(name), m_position(NULL), m_acquired(false)
+: m_manager(manager), m_name(name), m_position(NULL), m_acquired(false), m_flags(0)
 {
 }
 

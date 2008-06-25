@@ -91,7 +91,7 @@ function hamgrenade(ham) {
         system.scene.sound.playSound3d("sound/weapons/rocket/rocklx1a.wav", origin, 1.0);
         this.removeComponent("mesh");
         this.removeComponent("actor");
-        blasted = system.physics.getEntitiesInSphere(origin, 5);
+        blasted = system.physics.getActorsInSphere(origin, 5);
         for (i in blasted) {
             v = blasted[i].transform.getPos();
             v.sub(origin);

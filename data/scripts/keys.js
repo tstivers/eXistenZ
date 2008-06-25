@@ -177,6 +177,11 @@ const STATE_PRESSED = 0;
 const STATE_DOWN = 1;
 const STATE_RELEASED = 2;
 
+// entity flags
+const E_STATIC		= 1;
+const E_DYNAMIC		= 2;
+const E_PROJECTILE	= 4;
+
 const 	NX_VISUALIZATION_SCALE = 9;
 
 const	NX_VISUALIZE_WORLD_AXES = 10;

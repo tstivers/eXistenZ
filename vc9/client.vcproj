@@ -881,6 +881,14 @@
 			Name="q3shader"
 			>
 			<File
+				RelativePath="..\engine\q3shader\jsq3shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\q3shader\jsq3shader.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\q3shader\q3shader.cpp"
 				>
 			</File>
@@ -894,6 +902,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\q3shader\q3shadercache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\q3shader\q3shaderpass.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\q3shader\q3shaderpass.h"
 				>
 			</File>
 		</Filter>
@@ -1431,6 +1447,10 @@
 					RelativePath="..\engine\component\jscomponent.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="playercontroller"
+				>
 			</Filter>
 		</Filter>
 	</Files>

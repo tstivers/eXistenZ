@@ -156,8 +156,8 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 			return;
 		}
 
-		filename = StripPathFromFileName(file->filename);
-		path = StripFileNameFromPath(file->filename);
+		filename = StripPathFromFileName(file->getFilename());
+		path = StripFileNameFromPath(file->getFilename());
 
 		if (!IsDirectory(path))
 		{

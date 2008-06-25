@@ -8,40 +8,42 @@ namespace vfs
 
 vfs::IFile::IFile(const char* filename, bool write)
 {
-	this->filename = strDup(filename);
-	this->buffer = NULL;
+	this->m_filename = strDup(filename);
+	this->m_buffer = NULL;
 }
 
 vfs::IFile::~IFile()
 {
-	delete [] filename;
-	delete [] buffer;
+	delete [] m_filename;
+	delete [] m_buffer;
 }
 
-U32 vfs::IFile::readLine(char* linebuf, U32 bufsize)
+bool vfs::IFile::readLine(char* linebuf, U32 bufsize)
 {
-	if (!buffer)
+	if (!m_buffer)
 		cache();
 
-	char* buf = (char*)buffer;
-	char* pos = (char*)bufptr;
-	char* linepos = linebuf;
+	if(m_bufferpos == m_buffer + m_size)
+		return false;
 
-	while ((pos < (buf + this->size)) &&
-			(*pos != 13) &&
-			(*pos != 10) &&
-			(linepos < (linebuf + (bufsize - 1))))
-		*linepos++ = *pos++;
+	char* out = linebuf;
+	while((*m_bufferpos != 10) &&
+		(*m_bufferpos != 13) &&
+		(m_bufferpos < m_buffer + m_size))
+	{
+		*out = *m_bufferpos;
+		out++;
+		m_bufferpos++;
+	}
 
-	*linepos = 0;
+	if(out < linebuf + bufsize)
+		*out = 0;
 
-	while ((pos < (buf + this->size)) &&
-			((*pos == 13) ||
-			 (*pos == 10)))
-		pos++;
+	while(((*m_bufferpos == 10)||(*m_bufferpos == 13)) &&
+		m_bufferpos < m_buffer + m_size)
+		m_bufferpos++;
 
-	bufptr = (void*)pos;
-	return (U32)(linepos - linebuf);
+	return true;
 }
 
 void vfs::IFile::writeLine(const char* linebuf, bool flush)

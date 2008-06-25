@@ -1,39 +1,40 @@
-//textures/* textures/shaders/fire1
-textures/skin/tongue_trans textures/skin/tongue
-textures/sfx/flameanim_green_pj textures/sfx/flameanim_green_pj // don't map this to default fire shader
-textures/sfx/flame*	textures/shaders/fire1
-textures/sfx/xflame1side	textures/shaders/fire1
-textures/gothic_trim/pitted_rust2_trans textures/gothic_trim/pitted_rust2
-textures/gothic_light/pentagram_light1* textures/gothic_light/pentagram_light1
-textures/skin/surface8_trans textures/skin/surface8
-textures/liquids/lavahellflat_400 textures/liquids/lavahell
-textures/liquids/lavahell_750 textures/liquids/lavahell
-textures/gothic_light/gothic_light2*	textures/gothic_light/gothic_light2
-textures/gothic_light/gothic_light3_lrg* textures/gothic_light/gothic_light2_lrg
-textures/gothic_light/gothic_light3*	textures/gothic_light/gothic_light3
-textures/gothic_light/goth_lt2_lrg*	textures/gothic_light/gothic_light2_lrg
-textures/base_trim/border12b_pj		textures/base_trim/border12b
-textures/base_light/proto_light*	textures/base_light/proto_light
-textures/base_light/patch10_pj_lite2*	textures/base_light/patch10_pj_lite2
-//textures/base_wall/glass01 textures/base_wall/rusted
-textures/base_support/support2rust textures/base_support/support1rust
-textures/base_light/baslt4_1*	textures/base_light/baslt4_1
-textures/skin/skin5* textures/skin/skin5
-textures/skin/skin6* textures/skin/skin6
-textures/gothic_light/ironcrosslt2* textures/gothic_light/ironcrosslt2
-textures/house/static1 textures/shaders/static
-textures/sfx/xq1metalbig_jumppad textures/sfx/bounce_xq1metalbig
-textures/sfx/diamond2cjumppad textures/sfx/bouncepad01_diamond2cTGA
-textures/sfx/blocks11b_jumppad textures/gothic_block/blocks11b
-textures/base_ceiling/beams1 textures/base_ceiling/metceil1d
-textures/sfx/border11c textures/base_trim/border11c
-textures/base_light/*ceil1_39*	textures/base_light/ceil1_39
-textures/base_light/*ceil1_38*	textures/base_light/ceil1_38
-textures/liquids/*lavahell*	textures/liquids/lavahell
-textures/sfx/*fog*		textures/liquids/lavahell
-textures/sfx/teslacoil		textures/sfx/tesla1
-textures/gothic_block/blocks15_e	textures/gothic_block/blocks15
-textures/gothic_trim/supportborderside_shiney	textures/gothic_trim/supportborderside
-textures/gothic_block/evil_e3bwindow 	textures/gothic_block/windowevil2c_block18c
-textures/gothic_door/tourneyarch_bottom2b textures/gothic_door/xian_tourneyarch_bottom2
-textures/gothic_block/killblock_i4b	textures/gothic_block/killblock_i4
+// textures/* textures/shaders/fire1
+// textures/skin/tongue_trans textures/skin/tongue
+// textures/sfx/flameanim_green_pj textures/sfx/flameanim_green_pj // don't map this to default fire shader
+// textures/sfx/flame*	textures/shaders/fire1
+// textures/sfx/xflame1side	textures/shaders/fire1
+// textures/gothic_trim/pitted_rust2_trans textures/gothic_trim/pitted_rust2
+// textures/gothic_light/pentagram_light1* textures/gothic_light/pentagram_light1
+// textures/skin/surface8_trans textures/skin/surface8
+// textures/liquids/lavahellflat_400 textures/liquids/lavahell
+// textures/liquids/lavahell_750 textures/liquids/lavahell
+// textures/gothic_light/gothic_light2*	textures/gothic_light/gothic_light2
+// textures/gothic_light/gothic_light3_lrg* textures/gothic_light/gothic_light2_lrg
+// textures/gothic_light/gothic_light3*	textures/gothic_light/gothic_light3
+// textures/gothic_light/goth_lt2_lrg*	textures/gothic_light/gothic_light2_lrg
+// textures/base_trim/border12b_pj		textures/base_trim/border12b
+// textures/base_light/proto_light*	textures/base_light/proto_light
+// textures/base_light/patch10_pj_lite2*	textures/base_light/patch10_pj_lite2
+// textures/base_wall/glass01 textures/base_wall/rusted
+// textures/base_support/support2rust textures/base_support/support1rust
+// textures/base_light/baslt4_1*	textures/base_light/baslt4_1
+// textures/skin/skin5* textures/skin/skin5
+// textures/skin/skin6* textures/skin/skin6
+// textures/gothic_light/ironcrosslt2* textures/gothic_light/ironcrosslt2
+// textures/house/static1 textures/shaders/static
+// textures/sfx/xq1metalbig_jumppad textures/sfx/bounce_xq1metalbig
+// textures/sfx/diamond2cjumppad textures/sfx/bouncepad01_diamond2cTGA
+// textures/sfx/blocks11b_jumppad textures/gothic_block/blocks11b
+// textures/base_ceiling/beams1 textures/base_ceiling/metceil1d
+// textures/sfx/border11c textures/base_trim/border11c
+// textures/base_light/*ceil1_39*	textures/base_light/ceil1_39
+// textures/base_light/*ceil1_38*	textures/base_light/ceil1_38
+// textures/liquids/*lavahell*	textures/liquids/lavahell
+// textures/sfx/*fog*		textures/liquids/lavahell
+// textures/sfx/teslacoil		textures/sfx/tesla1
+// textures/gothic_block/blocks15_e	textures/gothic_block/blocks15
+// textures/gothic_trim/supportborderside_shiney	textures/gothic_trim/supportborderside
+// textures/gothic_block/evil_e3bwindow 	textures/gothic_block/windowevil2c_block18c
+// textures/gothic_door/tourneyarch_bottom2b textures/gothic_door/xian_tourneyarch_bottom2
+// textures/gothic_block/killblock_i4b	textures/gothic_block/killblock_i4
+// 

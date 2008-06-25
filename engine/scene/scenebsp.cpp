@@ -16,6 +16,19 @@
 
 namespace scene
 {
+	bool SceneBSP::isValidFace( const BSPFace* face )
+	{
+		if((face->texture < 0)|| (face->texture > bsp->num_textures))
+			return false;
+		if(!(bsp->textures[face->texture] || bsp->shaders[face->texture]))
+			return false;
+		if(bsp->textures[face->texture] && !bsp->textures[face->texture]->draw)
+			return false;
+		if(bsp->shaders[face->texture] && bsp->shaders[face->texture]->is_nodraw)
+			return false;
+
+		return true;
+	}
 };
 
 namespace render
@@ -104,10 +117,7 @@ void SceneBSP::init()
 			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
 
 			// don't even bother adding invalid faces
-			if ((face->texture < 0) ||
-					(face->texture > bsp->num_textures) ||
-					(!bsp->textures[face->texture]) ||
-					(!bsp->textures[face->texture]->draw))
+			if (!isValidFace(face))
 				continue;
 
 			cluster.num_faces++;
@@ -137,10 +147,7 @@ void SceneBSP::init()
 			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
 
 			// don't even bother adding invalid faces
-			if ((face->texture < 0) ||
-					(face->texture > bsp->num_textures) ||
-					(!bsp->textures[face->texture]) ||
-					(!bsp->textures[face->texture]->draw))
+			if (!isValidFace(face))
 				continue;
 
 			cluster.faces[cluster.num_faces] = face;
@@ -167,6 +174,7 @@ void SceneBSP::acquire()
 
 			face.rendergroup = render::getRenderGroup(STDVertex::FVF, sizeof(STDVertex), face.num_vertices, face.num_indices);
 			face.rendergroup->texture = bsp->textures[face.texture];
+			face.rendergroup->q3shader = bsp->shaders[face.texture];
 			if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
 				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
 			face.rendergroup->type = face.prim_type;
@@ -247,14 +255,26 @@ void SceneBSP::render()
 	render::alpha_groups.clear();
 
 	for (int i = 0; i < num_faces; i++)
+	{
 		if (faces[bsp->sorted_faces[i]].frame == render::frame)
 		{
 			render::frame_faces++;
-			if (faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
-				render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
+			if (faces[bsp->sorted_faces[i]].rendergroup->texture)
+			{
+				if(faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
+					render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
+				else
+					render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
+			}
 			else
-				render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
+			{
+				if(faces[bsp->sorted_faces[i]].rendergroup->q3shader->is_transparent)
+					render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
+				else
+					render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
+			}
 		}
+	}
 
 	texture::Material lighting;
 	if (render::draw_entities)

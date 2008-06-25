@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 		vfs::File file = vfs::getFile("config.js");
 		if (file)
 		{
-			LOG("reading config from \"%s\"", file->filename);
+			LOG("reading config from \"%s\"", file->getFilename());
 			script::gScriptEngine->RunScript(file);
 			file.reset();
 		}

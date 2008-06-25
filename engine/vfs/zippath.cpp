@@ -135,7 +135,11 @@ vfs::IFile* vfs::ZipPath::getFile(const char* filename)
 U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse)
 {
 	char filepath[MAX_PATH];
+	char sanepath[MAX_PATH];
 	char* filename;
+
+	strcpy(sanepath, path);
+	sanitizepath(sanepath);
 
 	for (ZipFileEntryList::iterator it = this->file_list.begin(); it != this->file_list.end(); ++it)
 	{
@@ -151,7 +155,7 @@ U32 vfs::ZipPath::getFileList(file_list_t& file_list, const char* path, const ch
 			*strrchr(filepath, '\\') = 0;
 			filename++;
 		}
-		if (!strcmp(filepath, path))
+		if (!strcmp(filepath, sanepath))
 		{
 			if (wildcmp(filespec, (*it)->filename))
 			{

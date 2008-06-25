@@ -8,6 +8,7 @@
 #include "render/render.h"
 #include "render/dx.h"
 #include "misc/alias.h"
+#include "q3bsp/bspload.h"
 
 namespace texture
 {
@@ -44,7 +45,7 @@ void texture::init()
 	settings::addsetting("system.render.texture.texture_alias_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.texture.shader_alias_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.texture.shader_map_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
-	settings::setstring("system.render.texture.default_texture", "textures/proto/default.bmp");
+	settings::setstring("system.render.texture.default_texture", "textures/default/uvmap.png");
 	settings::setstring("system.render.texture.texture_alias_file", "textures/texture_alias.txt");
 	settings::setstring("system.render.texture.shader_alias_file", "textures/shader_alias.txt");
 	settings::setstring("system.render.texture.shader_map_file", "textures/shader_map.txt");
@@ -167,7 +168,7 @@ found:
 		NULL,
 		&texture); */
 
-	HRESULT hr = D3DXCreateTextureFromFileInMemory(render::device, file->cache(), file->size, &texture);
+	HRESULT hr = D3DXCreateTextureFromFileInMemory(render::device, file->cache(), file->getSize(), &texture);
 
 	if (FAILED(hr))
 		goto err;
@@ -257,33 +258,18 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 	{
 		for (int col = 0; col < 128; col++)
 		{
-			float r, g, b;
+			byte color[3];
 
-			r = (float)data->imageBits[row][col][0] + boost;
-			g = (float)data->imageBits[row][col][1] + boost;
-			b = (float)data->imageBits[row][col][2] + boost;
+			color[0] = data->imageBits[row][col][0];
+			color[1] = data->imageBits[row][col][1];
+			color[2] = data->imageBits[row][col][2];
 
-			r *= gamma / 255.0f;
-			g *= gamma / 255.0f;
-			b *= gamma / 255.0f;
-
-			//find the value to scale back up
-			float scale = 1.0f;
-			float temp;
-			if (r > 1.0f && (temp = (1.0f / r)) < scale) scale = temp;
-			if (g > 1.0f && (temp = (1.0f / g)) < scale) scale = temp;
-			if (b > 1.0f && (temp = (1.0f / b)) < scale) scale = temp;
-
-			// scale up color values
-			scale *= 255.0f;
-			r *= scale;
-			g *= scale;
-			b *= scale;
+			R_ColorShiftLightingBytes(color);
 
 			dstbits[row][col][3] = 0;
-			dstbits[row][col][2] = (byte)r;
-			dstbits[row][col][1] = (byte)g;
-			dstbits[row][col][0] = (byte)b;
+			dstbits[row][col][2] = color[0];
+			dstbits[row][col][1] = color[1];
+			dstbits[row][col][0] = color[2];
 
 			//console::log(console::FLAG_DEBUG, "[dst] %i, %i, %i, %i", dstbits[row][col][0], dstbits[row][col][1], dstbits[row][col][2], dstbits[row][col][3]);
 		}

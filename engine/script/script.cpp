@@ -85,24 +85,24 @@ JSErrorReporter ScriptEngine::SetErrorReporter(JSErrorReporter reporter)
 	return prev_reporter;
 }
 
-bool ScriptEngine::RunScript(char* script)
+bool ScriptEngine::RunScript(const char* script)
 {
 	jsval retval;
 	return RunScript(script, &retval);
 }
 
-bool ScriptEngine::RunScript(char* script, jsval* retval)
+bool ScriptEngine::RunScript(const char* script, jsval* retval)
 {
 	return RunScript("script", 1, script, retval);
 }
 
-bool ScriptEngine::RunScript(char* name, uintN lineno, char* script)
+bool ScriptEngine::RunScript(const char* name, uintN lineno, const char* script)
 {
 	jsval retval;
 	return RunScript(name, lineno, script, &retval);
 }
 
-bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retval)
+bool ScriptEngine::RunScript(const char* name, uintN lineno, const char* script, jsval* retval)
 {
 	if(JS_EvaluateScript(cx, m_global.m_scriptObject, script, (uintN)strlen(script), name, lineno, retval) != JS_TRUE)
 	{
@@ -115,20 +115,20 @@ bool ScriptEngine::RunScript(char* name, uintN lineno, char* script, jsval* retv
 
 bool ScriptEngine::RunScript(vfs::File file)
 {
-	char *script = (char*)malloc(file->size + 1);
-	file->read(script, file->size);
-	script[file->size] = 0;
-	bool retval = RunScript(file->filename, 1, script);
+	char *script = (char*)malloc(file->getSize() + 1);
+	file->read(script, file->getSize());
+	script[file->getSize()] = 0;
+	bool retval = RunScript(file->getFilename(), 1, script);
 	free(script);
 	return retval;
 }
 
-JSFunction* ScriptEngine::AddFunction(JSObject* obj, char* name, uintN argc, JSNative call)
+JSFunction* ScriptEngine::AddFunction(JSObject* obj, const char* name, uintN argc, JSNative call)
 {
 	return JS_DefineFunction(cx, obj, name, call, argc, 0);
 }
 
-JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
+JSFunction* ScriptEngine::AddFunction(const char* name, uintN argc, JSNative call)
 {
 	JSObject* obj = m_global.m_scriptObject;
 	char buf[512];
@@ -143,7 +143,7 @@ JSFunction* ScriptEngine::AddFunction(char* name, uintN argc, JSNative call)
 		obj = GetObject(buf, true);
 	}
 	else
-		funcname = name;
+		funcname = buf;
 
 	return AddFunction(obj, funcname, argc, call);
 }
@@ -161,7 +161,7 @@ void ScriptEngine::ReportError(char* format, ...)
 }
 
 
-JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
+JSObject* ScriptEngine::AddObject(const char* name, JSObject* parent)
 {
 	static JSClass def_class =
 	{
@@ -179,7 +179,7 @@ JSObject* ScriptEngine::AddObject(char* name, JSObject* parent)
 	return obj;
 }
 
-JSObject* ScriptEngine::GetObject(char* name, bool create)
+JSObject* ScriptEngine::GetObject(const char* name, bool create)
 {
 	char namebuf[512];
 	char* next = namebuf;
@@ -260,17 +260,17 @@ JSObject* script::GetObject(const string& name)
 }
 
 
-bool ScriptEngine::AddProperty(JSObject* obj, char* name, jsval value, JSPropertyOp getter, JSPropertyOp setter, uintN flags)
+bool ScriptEngine::AddProperty(JSObject* obj, const char* name, jsval value, JSPropertyOp getter, JSPropertyOp setter, uintN flags)
 {
 	return (JS_DefineProperty(cx, obj, name, value, getter, setter, flags) == JS_TRUE);
 }
 
-bool ScriptEngine::GetProperty(JSObject* parent, char* name, jsval* object)
+bool ScriptEngine::GetProperty(JSObject* parent, const char* name, jsval* object)
 {
 	return ((JS_GetProperty(cx, parent, name, object) == JS_TRUE) && !JSVAL_IS_VOID(*object));
 }
 
-void ScriptEngine::DumpObject(JSObject* obj, bool recurse, char* objname, char* prevname)
+void ScriptEngine::DumpObject(JSObject* obj, bool recurse, const char* objname,const char* prevname)
 {
 	char name[512] = "";
 	JSIdArray* ida = JS_Enumerate(cx, obj);

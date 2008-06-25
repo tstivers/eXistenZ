@@ -37,8 +37,8 @@ namespace jscomponent
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("acquire", AcquireObject<Component>, 0, 0, 0),
-		JS_FN("release", ReleaseObject<Component>, 0, 0, 0),
+		JS_FN("acquire", WRAP_NATIVE(Component::acquire), 0, 0, 0),
+		JS_FN("release", WRAP_NATIVE(Component::release), 0, 0, 0),
 		JS_FS_END
 	};
 }

@@ -43,7 +43,7 @@ Mesh* mesh::loadFBXMesh(const string& name)
 	scene = KFbxScene::Create(manager, filename.c_str());
 
 
-	if(LoadScene(manager, scene, f->filename))
+	if(LoadScene(manager, scene, f->getFilename()))
 	{
 		KFbxNode* node = scene->GetRootNode();
 

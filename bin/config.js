@@ -23,6 +23,7 @@ system.render.backbuffercount = 2;
 system.vfs.addPath("../data");
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
+system.render.texture.use_default = 0;
 system.render.bsp.debug = 1;
 system.render.boost = 0;
 system.render.gamma = 2.0;
@@ -124,7 +125,7 @@ bind(KEY_V, toggle_vtrace);
 
 // functions
 
-game.init_command = "/map q3dm1";
+//game.init_command = "/map q3dm1";
 bind(KEY_F9, function() { print(system.scene.entities.testentity.components.bleh.name); });
 
 system.vfs.watchFile("scripts/*.js", onScriptChange);
@@ -138,6 +139,13 @@ function onScriptChange(filename)
 var paks = system.vfs.listFiles("/", "*.pk3");
 for (file in paks) {
     system.vfs.addPath(paks[file]);
+}
+
+print("loading q3 shaders");
+var shaderfiles = system.vfs.listFiles("/scripts", "*.shader");
+for (i in shaderfiles) {
+    //print("loading shaders from " + shaderfiles[i]);
+    loadShadersFromFile(shaderfiles[i]);
 }
 
 function print(message) {
@@ -341,12 +349,11 @@ function removeTimer(name) {
     timer.removeTimer(name);
 }
 
-function eraseEverything()
-{
-    for(i in entities)
+function eraseEverything() {
+    print("removing entities...");
+    for(i in system.scene.entities)
     {
-        system.scene.removeEntity(entities[i]);
-        delete entities[i];
+        system.scene.entities.removeEntity(system.scene.entities[i]);
     }
 }
 

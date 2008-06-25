@@ -5,6 +5,7 @@
 #include "q3bsp/bspcollide.h"
 #include "math/vertex.h"
 #include "vfs/vfs.h"
+#include "q3shader/q3shader.h"
 
 namespace q3bsp
 {
@@ -163,6 +164,7 @@ namespace q3bsp
 
 		texture::DXTexture** textures;
 		texture::DXTexture** lightmaps;
+		q3shader::Q3Shader** shaders;
 
 		// render vars
 		int	*sorted_faces;

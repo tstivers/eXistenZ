@@ -36,15 +36,16 @@ namespace jsentity
 	{
 		// {"name", id, flags, getter, setter},
 		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Entity, const string&, &Entity::getName>, NULL},
+		{"flags", 1, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<Entity, int, &Entity::getFlags>, PropertySetter<Entity, int, &Entity::setFlags>},
 		{0,0,0,0,0}
 	};
 
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("acquire", (JSNativeCall<BOOST_TYPEOF(Entity::acquire), &Entity::acquire>), 0, 0, 0),
-		JS_FN("release", (JSNativeCall<BOOST_TYPEOF(Entity::release), &Entity::release>), 0, 0, 0),
-		JS_FN("removeComponent", (JSNativeCall<BOOST_TYPEOF(Entity::removeComponent), &Entity::removeComponent>), 1, 1, 0),
+		JS_FN("acquire", WRAP_NATIVE(Entity::acquire), 0, 0, 0),
+		JS_FN("release", WRAP_NATIVE(Entity::release), 0, 0, 0),
+		JS_FN("removeComponent", WRAP_NATIVE(Entity::removeComponent), 1, 1, 0),
 		JS_FS_END
 	};
 
