@@ -323,7 +323,17 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 				current_lightmap->deactivate();
 			if(current_texture)
 				current_texture->deactivate();
-			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			if(!rg->lightmap)
+			{
+				render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+			}
+			else
+			{
+				if(!rg->q3shader->is_useslightmap) // doesn't seem to use the lightmap
+					rg->lightmap->activate();
+				else
+					render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			}
 			device->SetRenderState(D3DRS_LIGHTING, FALSE);
 			current_material = NULL;
 			if(rg->q3shader->is_offset)
@@ -345,6 +355,8 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 				rg->q3shader->deactivatePass(i);
 			}
 			rg->q3shader->deactivate();
+			if(rg->lightmap)
+				rg->lightmap->deactivate();
 			current_texture = NULL;
 			current_lightmap = NULL;
 			current_transform = world;

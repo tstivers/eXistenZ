@@ -51,6 +51,8 @@ namespace q3shader
 		HRESULT setLightmapTexture();
 
 		float m_animfrequency;
+		float m_lastswitched;
+		int m_current_map;
 		vector<string> m_animapnames;
 		vector<texture::DXTexture*> m_animaps;
 	};

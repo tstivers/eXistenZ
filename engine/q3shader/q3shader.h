@@ -56,6 +56,7 @@ namespace q3shader
 		bool is_lava;
 		bool is_slime;
 		bool is_nodynamiclighting;
+		bool is_useslightmap;
 
 		SORT_ORDER m_sortorder;
 

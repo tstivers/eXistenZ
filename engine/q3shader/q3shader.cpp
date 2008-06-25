@@ -82,6 +82,8 @@ void Q3Shader::parseSort(const params& p)
 		m_sortorder = opaque;
 	else if(p[1] == "5")
 		m_sortorder = unset;
+	else if(p[1] == "10")
+		m_sortorder = additive;
 	else
 		ASSERT(false);
 }
@@ -122,11 +124,11 @@ void Q3Shader::parseCull(const params& p)
 {
 	if(p.size() == 1 || p[1] == "front")
 	{
-		m_activate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CW));
-		m_deactivate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CCW));
 	}
 	else if(p[1] == "back" || p[1] == "backsided")
 	{
+		m_activate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CW));
+		m_deactivate.push_back(bind(&Q3Shader::setRenderState, this, D3DRS_CULLMODE, D3DCULL_CCW));
 		// this is the default, don't do anything
 	}
 	else if(p[1] == "disable" || p[1] == "none" || p[1] == "twosided")
@@ -263,7 +265,7 @@ HRESULT Q3Shader::setSamplerState( DWORD sampler, D3DSAMPLERSTATETYPE type, DWOR
 Q3Shader::Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext)
 	: m_cache(cache), is_transparent(false), is_nolightmap(false), is_noclip(false), is_playerclip(false), is_offset(false),
 	m_sortorder(unset), is_water(false), is_sky(false), is_nodraw(false), is_slick(false), is_fog(false), is_lava(false),
-	is_slime(false), is_nodynamiclighting(false)
+	is_slime(false), is_nodynamiclighting(false), is_useslightmap(false)
 {
 	for(shader_lines::const_iterator it = shadertext.begin(); it != shadertext.end(); ++it)
 	{

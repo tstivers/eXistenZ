@@ -444,10 +444,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\data\scripts\house.js"
-					>
-				</File>
-				<File
 					RelativePath="..\data\scripts\keys.js"
 					>
 				</File>
@@ -457,10 +453,6 @@
 				</File>
 				<File
 					RelativePath="..\data\scripts\physics.js"
-					>
-				</File>
-				<File
-					RelativePath="..\data\scripts\q3dm1.js"
 					>
 				</File>
 				<File
@@ -475,6 +467,30 @@
 					RelativePath="..\data\scripts\stacks.js"
 					>
 				</File>
+				<Filter
+					Name="maps"
+					>
+					<File
+						RelativePath="..\data\scripts\house.js"
+						>
+					</File>
+					<File
+						RelativePath="..\data\scripts\q3dm1.js"
+						>
+					</File>
+					<File
+						RelativePath="..\data\scripts\simpsons_q3.js"
+						>
+					</File>
+					<File
+						RelativePath="..\data\scripts\summer.js"
+						>
+					</File>
+					<File
+						RelativePath="..\data\scripts\winter.js"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="alias maps"

@@ -11,7 +11,10 @@ data/scripts/q3dm13.js eol=crlf
 data/scripts/q3dm14.js eol=crlf
 data/scripts/screenshot.js -text
 data/scripts/shoot.js -text
+data/scripts/simpsons_q3.js -text
 data/scripts/stacks.js -text
+data/scripts/summer.js -text
+data/scripts/winter.js -text
 data/textures/shader_alias.txt eol=crlf
 data/textures/shader_map.txt eol=crlf
 data/textures/shaders/add_blend.shader eol=crlf
