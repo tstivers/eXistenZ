@@ -5,6 +5,7 @@
 #include "render/render.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
+#include "timer/timer.h"
 
 namespace q3shader
 {
@@ -52,7 +53,7 @@ void Q3ShaderPass::parseAlphaMap(const params& p)
 
 void Q3ShaderPass::parseAnimMap(const params& p)
 {
-	m_animfrequency = lexical_cast<float>(p[1]);
+	m_animfrequency = 1000.0 / lexical_cast<float>(p[1]);
 	for(int i = 2; i < p.size(); i++)
 		m_animapnames.push_back(p[i]);
 	m_activate.push_back(bind(&Q3ShaderPass::setAnimatedTexture, this));
@@ -111,10 +112,10 @@ void Q3ShaderPass::parseAlphaFunc(const params& p)
 
 void Q3ShaderPass::parseClampMap(const params& p)
 {
-	m_activate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP));
-	m_activate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP));
-	m_deactivate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP));
-	m_deactivate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP));
+	//m_activate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP));
+	//m_activate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP));
+	//m_deactivate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP));
+	//m_deactivate.push_back(bind(&Q3ShaderPass::setSamplerState, this, 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP));
 	parseMap(p);
 }
 
@@ -161,6 +162,7 @@ void Q3ShaderPass::parseBlendFunc(const params& p)
 	m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_SRCBLEND, blend_modes[p[1]]));
 	m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_DESTBLEND, blend_modes[p[2]]));
 	m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ALPHABLENDENABLE, TRUE));
+	m_activate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1));
 	if(!m_overridedepth)
 		m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ZWRITEENABLE, FALSE));
 	m_deactivate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ALPHABLENDENABLE, FALSE));
@@ -187,7 +189,8 @@ void Q3ShaderPass::parseMap(const params& p)
 		m_activate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 1));
 		m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 0));
 		// hacky: activate z-writing for anything that accepts a lightmap
-		parseDepthWrite(p);
+		//parseDepthWrite(p);
+		m_shader->is_useslightmap = true;
 	}
 	else
 	{
@@ -198,7 +201,7 @@ void Q3ShaderPass::parseMap(const params& p)
 }
 
 Q3ShaderPass::Q3ShaderPass(Q3Shader* shader, const shader_lines& shadertext)
-: m_shader(shader), m_activated(false), m_animfrequency(0), m_overridedepth(false)
+: m_shader(shader), m_activated(false), m_animfrequency(0), m_overridedepth(false), m_current_map(0), m_lastswitched(0.0)
 {
 	for(shader_lines::const_iterator it = shadertext.begin(); it != shadertext.end(); ++it)
 	{
@@ -236,6 +239,8 @@ HRESULT Q3ShaderPass::setTexture()
 			m_map = texture::getTexture(m_mapname.c_str());
 		}
 		m_activated = true;
+		if(!m_map)
+			INFO("ERROR: unable to load texture: %s", m_mapname.c_str());
 	}
 
 	if(m_map)
@@ -262,8 +267,17 @@ HRESULT Q3ShaderPass::setAnimatedTexture()
 		m_activated = true;
 	}
 
-	if(m_animaps[0])
-		return render::device->SetTexture(0, m_animaps[0]->texture);
+
+	if(m_lastswitched + m_animfrequency < timer::game_ms)
+	{
+		m_current_map++;
+		m_lastswitched = timer::game_ms;
+		if(m_current_map == m_animaps.size())
+			m_current_map = 0;
+	}
+
+	if(m_animaps[m_current_map])
+		return render::device->SetTexture(0, m_animaps[m_current_map]->texture);
 	else
 		return render::device->SetTexture(0, NULL);
 }

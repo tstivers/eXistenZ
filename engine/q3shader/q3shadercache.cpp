@@ -20,10 +20,6 @@ void Q3ShaderCache::loadShaders(vfs::File file)
 	if(!file)
 		return;
 
-	bool debug  = ends_with(file->getFilename(), "scripts\\sfx.shader");
-	if(debug)
-		INFO("parsing %s", file->getFilename());
-
 	char buffer[512];
 	int parselevel = 0;
 	vector<string> shadertext;
@@ -32,10 +28,9 @@ void Q3ShaderCache::loadShaders(vfs::File file)
 	bool skip = false;
 	while(skip || file->readLine(buffer, 512))
 	{
-		if(debug)
-			INFO("[%d] %s", parselevel, buffer);
-
 		skip = false;
+		char* comment = strstr(buffer, "//");
+		if (comment) *comment = 0;
 		strip(buffer);
 		to_lower(buffer);
 
