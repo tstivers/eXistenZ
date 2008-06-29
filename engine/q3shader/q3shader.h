@@ -34,8 +34,9 @@ namespace q3shader
 		Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext);
 		~Q3Shader();
 
-		void activate(texture::DXTexture* lightmap);
+		void activate();
 		void activatePass(int index);
+		bool isPassLightmap(int index);
 		void deactivatePass(int index);
 		void deactivate();
 

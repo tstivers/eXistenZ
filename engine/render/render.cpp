@@ -339,7 +339,7 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 			if(rg->q3shader->is_offset)
 				device->SetTransform(D3DTS_PROJECTION, &biased_projection);
 			device->SetTransform(D3DTS_WORLD, &world);
-			rg->q3shader->activate(rg->lightmap);
+			//rg->q3shader->activate(rg->lightmap);
 			for(int i = 0; i < rg->q3shader->getNbPasses(); i++)
 			{
 				rg->q3shader->activatePass(i);

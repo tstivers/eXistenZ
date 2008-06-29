@@ -53,24 +53,21 @@ BSPMeshDescImpl::BSPMeshDescImpl(const char* name, scene::SceneBSP* scene)
 		if (scene->faces[i].type != 1 && scene->faces[i].type != 3)
 			continue;
 
-		//if(scene->bsp->bsptextures[scene->faces[i].texture].flags & 0x4000)
-		//continue;
-		if (!scene->faces[i].rendergroup)
+		if(scene->faces[i].texture_group)
+		{
+			if (scene->faces[i].texture_group->texture->is_transparent)
+				continue;
+
+			if (!scene->faces[i].texture_group->texture->draw)
+				continue;
+		}
+		else if(scene->faces[i].shader_group) // shader-based
+		{
+			if(scene->faces[i].shader_group->shader->is_noclip)
+				continue;
+		}
+		else // no texture/shader group
 			continue;
-
-		if(scene->faces[i].rendergroup->texture)
-		{
-			if (scene->faces[i].rendergroup->texture->is_transparent)
-				continue;
-
-			if (!scene->faces[i].rendergroup->texture->draw)
-				continue;
-		}
-		else // shader-based
-		{
-			if(scene->faces[i].rendergroup->q3shader->is_noclip)
-				continue;
-		}
 
 		unsigned int offset = vertices.size();
 		for (int j = 0;j < scene->faces[i].num_vertices; j++)

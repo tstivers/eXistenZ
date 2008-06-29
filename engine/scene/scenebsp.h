@@ -14,41 +14,66 @@ namespace q3bsp
 	class BSP;
 }
 
+namespace q3shader
+{
+	class Q3Shader;
+}
+
 namespace entity
 {
 	class Entity;
-
 	typedef vector<Entity*> EntityList;
-};
+}
 
 namespace texture
 {
 	struct Material;
+	class DXTexture;
 }
 
 namespace scene
 {
 
-	class BSPFace
+	struct BSPTextureGroup;
+	struct BSPShaderGroup;
+
+	struct BSPFace
 	{
-	public:
-		~BSPFace()
-		{
-			delete [] vertices;
-		}
 		int texture;
 		int lightmap;
 		int type; // remove?
-		D3DPRIMITIVETYPE prim_type;
 		unsigned int num_vertices;
 		unsigned int num_indices;
 		STDVertex* vertices;
 		unsigned short* indices;
 		unsigned int frame;
-		render::RenderGroup* rendergroup;
+		int vertices_start;
+		int indices_start;
+		BSPTextureGroup* texture_group;
+		BSPShaderGroup* shader_group;
 	};
 
-	typedef vector<BSPFace*> BSPFacePtrList;
+	typedef vector<BSPFace*> faceptr_vector;
+
+	struct BSPTextureGroup
+	{
+		texture::DXTexture* texture;
+		texture::DXTexture* lightmap;
+		IDirect3DVertexBuffer9* vb;
+		IDirect3DIndexBuffer9* ib;
+		faceptr_vector faces;
+		unsigned int frame;
+	};
+
+	struct BSPShaderGroup
+	{
+		q3shader::Q3Shader* shader;
+		IDirect3DVertexBuffer9* vb;
+		IDirect3DIndexBuffer9* ib;
+		typedef multimap<texture::DXTexture*, BSPFace*> FaceMap;
+		FaceMap faces;
+		unsigned int frame;
+	};
 
 	class BSPCluster
 	{
@@ -89,5 +114,10 @@ namespace scene
 		BSPFace* faces;
 
 		entity::EntityList entities;
+
+		typedef map<pair<texture::DXTexture*, texture::DXTexture*>, shared_ptr<BSPTextureGroup>> TextureGroupMap;
+		typedef map<q3shader::Q3Shader*, shared_ptr<BSPShaderGroup>> ShaderGroupMap;
+		TextureGroupMap m_textureGroups;
+		ShaderGroupMap m_shaderGroups;
 	};
 };
