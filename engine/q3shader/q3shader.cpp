@@ -297,9 +297,8 @@ Q3Shader::~Q3Shader()
 
 }
 
-void Q3Shader::activate(texture::DXTexture* lightmap)
+void Q3Shader::activate()
 {
-	m_lightmap = lightmap;
 	for(function_list::iterator it = m_activate.begin(); it != m_activate.end(); it++)
 		(*it)();
 }
@@ -313,6 +312,11 @@ void Q3Shader::deactivate()
 void Q3Shader::activatePass(int index)
 {
 	m_passes[index]->activate();
+}
+
+bool Q3Shader::isPassLightmap(int index)
+{
+	 return m_passes[index]->useLightmapHack;
 }
 
 void Q3Shader::deactivatePass(int index)

@@ -65,7 +65,13 @@ bool BSP::load(vfs::File file)
 		verts[i].nrm.y = tmp_verts[i].vNormal[2];
 		verts[i].nrm.z = tmp_verts[i].vNormal[1];
 
-		verts[i].diffuse = D3DCOLOR_ARGB(tmp_verts[i].color[3], tmp_verts[i].color[0], tmp_verts[i].color[1], tmp_verts[i].color[2]);
+		byte color[3];
+		color[0] = tmp_verts[i].color[0];
+		color[1] = tmp_verts[i].color[1];
+		color[2] = tmp_verts[i].color[2];
+		R_ColorShiftLightingBytes(color);
+
+		verts[i].diffuse = D3DCOLOR_ARGB(tmp_verts[i].color[3], color[0], color[1], color[2]);
 
 		verts[i].tex1.x = tmp_verts[i].vTextureCoord[0];
 		verts[i].tex1.y = tmp_verts[i].vTextureCoord[1];

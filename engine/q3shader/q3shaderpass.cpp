@@ -185,7 +185,8 @@ void Q3ShaderPass::parseMap(const params& p)
 {
 	if(p[1] == "$lightmap")
 	{
-		m_activate.push_back(bind(&Q3ShaderPass::setLightmapTexture, this));
+		useLightmapHack = true;
+		//m_activate.push_back(bind(&Q3ShaderPass::setLightmapTexture, this));
 		m_activate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 1));
 		m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 0));
 		// hacky: activate z-writing for anything that accepts a lightmap
@@ -201,7 +202,8 @@ void Q3ShaderPass::parseMap(const params& p)
 }
 
 Q3ShaderPass::Q3ShaderPass(Q3Shader* shader, const shader_lines& shadertext)
-: m_shader(shader), m_activated(false), m_animfrequency(0), m_overridedepth(false), m_current_map(0), m_lastswitched(0.0)
+	: m_shader(shader), m_activated(false), m_animfrequency(0), m_overridedepth(false), m_current_map(0),
+	m_lastswitched(0.0), useLightmapHack(false)
 {
 	for(shader_lines::const_iterator it = shadertext.begin(); it != shadertext.end(); ++it)
 	{
@@ -299,8 +301,8 @@ HRESULT Q3ShaderPass::setTextureStageState(DWORD stage, D3DTEXTURESTAGESTATETYPE
 
 HRESULT Q3ShaderPass::setLightmapTexture()
 {
-	if(m_shader->m_lightmap)
-		return render::device->SetTexture(0, m_shader->m_lightmap->texture);
-	else
+	//if(m_shader->m_lightmap)
+	//	return render::device->SetTexture(0, m_shader->m_lightmap->texture);
+	//else
 		return render::device->SetTexture(0, NULL);
 }

@@ -22,11 +22,6 @@ namespace scene
 			return false;
 		if(!(bsp->textures[face->texture] || bsp->shaders[face->texture]))
 			return false;
-		if(bsp->textures[face->texture] && !bsp->textures[face->texture]->draw)
-			return false;
-		if(bsp->shaders[face->texture] && bsp->shaders[face->texture]->is_nodraw)
-			return false;
-
 		return true;
 	}
 };
@@ -67,7 +62,6 @@ void SceneBSP::init()
 		faces[i].texture = face.texture;
 		faces[i].lightmap = face.lightmap;
 		faces[i].type = face.type;
-		faces[i].prim_type = D3DPT_TRIANGLELIST;
 
 		faces[i].vertices = new STDVertex[faces[i].num_vertices];
 		for (unsigned j = 0; j < faces[i].num_vertices; j++)
@@ -76,6 +70,10 @@ void SceneBSP::init()
 		faces[i].indices = new unsigned short[faces[i].num_indices];
 		for (unsigned j = 0; j < faces[i].num_indices; j++)
 			faces[i].indices[j] = bsp->indices[face.meshvertex + j];
+		faces[i].vertices_start = -1;
+		faces[i].indices_start = -1;
+		faces[i].texture_group = NULL;
+		faces[i].shader_group = NULL;
 	}
 
 	// optimize faces (convert stupid patches, stripify, cache)
@@ -84,8 +82,8 @@ void SceneBSP::init()
 		if (faces[i].type == 2)
 			q3bsp::genPatch(faces[i], bsp->faces[i].size[0], bsp->faces[i].size[1]);
 
-		if (scene::optimize_bsp)
-			render::optimizeMesh(&faces[i].prim_type, &faces[i].vertices, &faces[i].indices, &faces[i].num_vertices, &faces[i].num_indices, true, true, false);
+		//if (scene::optimize_bsp)
+		//	render::optimizeMesh(&faces[i].prim_type, &faces[i].vertices, &faces[i].indices, &faces[i].num_vertices, &faces[i].num_indices, true, true, false);
 	}
 
 	// load clusters
@@ -135,13 +133,11 @@ void SceneBSP::init()
 			continue;
 
 		BSPCluster& cluster = clusters[bsp->leafs[i].cluster];
-
 		if (!cluster.faces)
 		{
 			cluster.faces = new BSPFace*[cluster.num_faces];
 			cluster.num_faces = 0;
 		}
-
 		for (unsigned j = 0; j < bsp->leafs[i].numleaffaces; j++)
 		{
 			BSPFace* face = &faces[bsp->leaffaces[bsp->leafs[i].leafface + j]];
@@ -161,28 +157,169 @@ void SceneBSP::acquire()
 	if (acquired)
 		return;
 
-	// loop through clusters and create rendergroups for faces
-	//		get vbuffers, ibuffers, textures
+	int num_textures = 0;
+	int num_shaders = 0;
+
+	// loop through clusters and add faces to texturegroups/shadergroups
 	for (unsigned i = 0; i < num_clusters; i++)
 	{
 		for (unsigned j = 0; j < clusters[i].num_faces; j++)
 		{
 			BSPFace& face = *(clusters[i].faces[j]);
 
-			if (face.rendergroup)
+			if (face.texture_group || face.shader_group) // already processed
 				continue;
 
-			face.rendergroup = render::getRenderGroup(STDVertex::FVF, sizeof(STDVertex), face.num_vertices, face.num_indices);
-			face.rendergroup->texture = bsp->textures[face.texture];
-			face.rendergroup->q3shader = bsp->shaders[face.texture];
-			if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
-				face.rendergroup->lightmap = bsp->lightmaps[face.lightmap];
-			face.rendergroup->type = face.prim_type;
-			face.rendergroup->primitivecount = face.prim_type == D3DPT_TRIANGLELIST ? face.num_indices / 3 : face.num_indices - 2;
-			face.rendergroup->acquire();
-			face.rendergroup->update(face.vertices, face.indices);
+			if(bsp->textures[face.texture]) // texture-based face
+			{
+				texture::DXTexture* texture = bsp->textures[face.texture];
+				texture::DXTexture* lightmap = NULL;
+				if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
+					lightmap = bsp->lightmaps[face.lightmap];
+
+				TextureGroupMap::iterator it = m_textureGroups.find(make_pair(texture, lightmap));
+				if(it == m_textureGroups.end())
+				{
+					shared_ptr<BSPTextureGroup> group(new BSPTextureGroup());
+					group->texture = texture;
+					group->lightmap = lightmap;
+					group->faces.push_back(clusters[i].faces[j]);
+					face.texture_group = group.get();
+					num_textures++;
+					m_textureGroups.insert(make_pair(make_pair(texture, lightmap), group));
+				}
+				else
+				{
+					face.texture_group = it->second.get();
+					it->second->faces.push_back(clusters[i].faces[j]);
+				}
+			}
+			else if(bsp->shaders[face.texture]) // shader-based face
+			{
+				q3shader::Q3Shader* shader = bsp->shaders[face.texture];
+				texture::DXTexture* lightmap = NULL;
+				if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
+					lightmap = bsp->lightmaps[face.lightmap];
+				ShaderGroupMap::iterator it = m_shaderGroups.find(shader);
+				if(it == m_shaderGroups.end())
+				{
+					shared_ptr<BSPShaderGroup> group(new BSPShaderGroup());
+					group->shader = shader;
+					group->faces.insert(make_pair(lightmap, clusters[i].faces[j]));
+					face.shader_group = group.get();
+					num_shaders++;
+					m_shaderGroups.insert(make_pair(shader, group));
+				}
+				else
+				{
+					face.shader_group = it->second.get();
+					it->second->faces.insert(make_pair(lightmap, clusters[i].faces[j]));
+				}
+			}
 		}
 	}
+
+	// loop through texturegroups and acquire everything
+	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
+	{
+		BSPTextureGroup* group = it->second.get();
+
+		int total_v = 0;
+		int total_i = 0;
+
+		// count vertices/indices, set offsets
+		for(faceptr_vector::iterator it = group->faces.begin(); it != group->faces.end(); ++it)
+		{
+			BSPFace* face = *it;
+			face->vertices_start = total_v;
+			face->indices_start = total_i;
+			total_v += face->num_vertices;
+			total_i += face->num_indices;
+		}
+		
+		ASSERT(total_v < 0xffff);
+
+		// allocate vertex and index buffers
+		render::device->CreateVertexBuffer(total_v * sizeof(STDVertex), D3DUSAGE_WRITEONLY, STDVertex::FVF, D3DPOOL_MANAGED, &group->vb, NULL);
+		render::device->CreateIndexBuffer(total_i * sizeof(short), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &group->ib, NULL);
+
+		void* data_v;
+		void* data_i;
+		int offset_v = 0;
+		int offset_i = 0;
+
+		// lock and copy vertices/indices
+		group->vb->Lock(0, total_v * sizeof(STDVertex), &data_v, D3DLOCK_DISCARD);
+		group->ib->Lock(0, total_i * sizeof(short), &data_i, D3DLOCK_DISCARD);
+		for(faceptr_vector::iterator it = group->faces.begin(); it != group->faces.end(); ++it)
+		{
+			BSPFace* face = *it;
+			memcpy((void*)((byte*)data_v + (offset_v * sizeof(STDVertex))), face->vertices, face->num_vertices * sizeof(STDVertex));
+			short* indices = (short*)data_i;
+			for(int i = 0; i < face->num_indices; i++)
+			{
+				indices[i + offset_i] = face->indices[i] + offset_v;
+			}
+			offset_v += face->num_vertices;
+			offset_i += face->num_indices;
+		}
+		group->vb->Unlock();
+		group->ib->Unlock();
+	}
+
+	// loop through shadergroups and acquire everything
+	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
+	{
+		BSPShaderGroup* group = it->second.get();
+
+		int total_v = 0;
+		int total_i = 0;
+
+		// count vertices/indices, set offsets
+		for(BSPShaderGroup::FaceMap::iterator it = group->faces.begin(); it != group->faces.end(); it++)
+		{
+			BSPFace* face = it->second;
+			face->vertices_start = total_v;
+			face->indices_start = total_i;
+			total_v += face->num_vertices;
+			total_i += face->num_indices;
+		}
+
+		ASSERT(total_v < 0xffff);
+
+		// allocate vertex and index buffers
+		if(FAILED(render::device->CreateVertexBuffer(total_v * sizeof(STDVertex), D3DUSAGE_WRITEONLY, STDVertex::FVF, D3DPOOL_MANAGED, &group->vb, NULL)))
+		{
+			INFO("WARNING: failed to create vertex buffer");
+		}
+		render::device->CreateIndexBuffer(total_i * sizeof(short), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &group->ib, NULL);
+
+		void* data_v;
+		void* data_i;
+		int offset_v = 0;
+		int offset_i = 0;
+
+		// lock and copy vertices/indices
+		group->vb->Lock(0, total_v * sizeof(STDVertex), &data_v, D3DLOCK_DISCARD);
+		group->ib->Lock(0, total_i * sizeof(short), &data_i, D3DLOCK_DISCARD);
+		for(BSPShaderGroup::FaceMap::iterator it = group->faces.begin(); it != group->faces.end(); it++)
+		{
+			BSPFace* face = it->second;
+			memcpy((void*)((byte*)data_v + (offset_v * sizeof(STDVertex))), face->vertices, face->num_vertices * sizeof(STDVertex));
+			short* indices = (short*)data_i;
+			for(int i = 0; i < face->num_indices; i++)
+			{
+				indices[i + offset_i] = face->indices[i] + offset_v;
+			}
+			offset_v += face->num_vertices;
+			offset_i += face->num_indices;
+		}
+		group->vb->Unlock();
+		group->ib->Unlock();
+	}
+
+
+	INFO("[bsp render bins] textures: %d  shaders: %d  total: %d", num_textures, num_shaders, num_textures + num_shaders);
 
 	// loop through entities and acquire everything
 	unsigned num_entities = entities.size();
@@ -219,7 +356,7 @@ void SceneBSP::render()
 
 	byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
 
-	if (current_cluster < 0)
+	if (current_cluster < 0) // outside of bsp, mark all faces that are in the frustrum
 	{
 		for (int i = 0; i < num_clusters; i++)
 		{
@@ -230,10 +367,16 @@ void SceneBSP::render()
 			render::frame_clusters++;
 
 			for (int j = 0; j < clusters[i].num_faces; j++)
+			{
 				clusters[i].faces[j]->frame = render::frame;
+				if(clusters[i].faces[j]->texture_group)
+					clusters[i].faces[j]->texture_group->frame = render::frame;
+				else
+					clusters[i].faces[j]->shader_group->frame = render::frame;
+			}
 		}
 	}
-	else
+	else // mark faces in pvs list and in frustrum
 	{
 		for (int i = 0; i < num_clusters; i++)
 		{
@@ -247,33 +390,223 @@ void SceneBSP::render()
 			render::frame_clusters++;
 
 			for (int j = 0; j < clusters[i].num_faces; j++)
+			{
 				clusters[i].faces[j]->frame = render::frame;
+				if(clusters[i].faces[j]->texture_group)
+					clusters[i].faces[j]->texture_group->frame = render::frame;
+				else
+					clusters[i].faces[j]->shader_group->frame = render::frame;
+			}
 		}
 	}
 
 	bsp->initRenderState();
 	render::alpha_groups.clear();
 
-	for (int i = 0; i < num_faces; i++)
+	// todo: loop through shadergroups/texturegroups and render faces
+	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
 	{
-		if (faces[bsp->sorted_faces[i]].frame == render::frame)
+		BSPTextureGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		render::frame_bufswaps++;
+		render::device->SetStreamSource(0, group->vb, 0, sizeof(STDVertex));
+		render::device->SetFVF(STDVertex::FVF);
+
+		render::frame_bufswaps++;
+		render::device->SetIndices(group->ib);
+
+		if(render::current_texture != group->texture)
+			group->texture->activate();
+
+		if(render::current_lightmap != group->lightmap)
 		{
-			render::frame_faces++;
-			if (faces[bsp->sorted_faces[i]].rendergroup->texture)
-			{
-				if(faces[bsp->sorted_faces[i]].rendergroup->texture->is_transparent)
-					render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
-				else
-					render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
-			}
+			if(group->lightmap)
+				group->lightmap->activate();
 			else
 			{
-				if(faces[bsp->sorted_faces[i]].rendergroup->q3shader->is_transparent)
-					render::alpha_groups.push_back(faces[bsp->sorted_faces[i]].rendergroup);
-				else
-					render::drawGroup(faces[bsp->sorted_faces[i]].rendergroup, &render::world);
+				if(render::current_lightmap)
+					render::current_lightmap->deactivate();
+				render::current_lightmap = NULL;
+				render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 			}
 		}
+
+		bool started = false;
+		int start_v = 0;
+		int start_i = 0;
+		int end_v = 0;
+		int end_i = 0;
+		for(faceptr_vector::iterator it = group->faces.begin(); it != group->faces.end(); ++it)
+		{
+			BSPFace* face = *it;
+			if(face->frame == render::frame) // got one
+			{
+				if(!started) // starting a new batch
+				{
+					start_v = face->vertices_start;
+					start_i = face->indices_start;
+					end_v = start_v + face->num_vertices;
+					end_i = start_i + face->num_indices;
+					started = true;
+					render::frame_faces++;
+				}
+				else // extending an existing batch
+				{
+					end_v += face->num_vertices;
+					end_i += face->num_indices;
+					render::frame_faces++;
+				}
+			}
+			else if(started) // need to dump our current batch
+			{
+				render::device->DrawIndexedPrimitive(
+					D3DPT_TRIANGLELIST,
+					0,
+					0,
+					end_v - start_v,
+					start_i,
+					(end_i - start_i) / 3);
+				render::frame_drawcalls++;
+				render::frame_polys += (end_i - start_i) / 3;
+				started = false;
+			}
+		}
+		if(started) // pick up the last batch
+		{
+			render::device->DrawIndexedPrimitive(
+				D3DPT_TRIANGLELIST,
+				0,
+				0,
+				end_v - start_v,
+				start_i,
+				(end_i - start_i) / 3);
+			render::frame_drawcalls++;
+			render::frame_polys += (end_i - start_i) / 3;
+		}
+	}
+
+	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
+	{
+		BSPShaderGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		if(group->shader->is_nodraw) // skip nodraw shaders
+			continue;
+
+		render::frame_bufswaps++;
+		render::device->SetStreamSource(0, group->vb, 0, sizeof(STDVertex));
+		render::device->SetFVF(STDVertex::FVF);
+
+		render::frame_bufswaps++;
+		render::device->SetIndices(group->ib);
+
+		group->shader->activate();
+		if(group->shader->is_offset)
+			render::device->SetTransform(D3DTS_PROJECTION, &render::biased_projection);
+		if(group->shader->is_useslightmap)
+			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		for(int i = 0; i < group->shader->getNbPasses(); i++)
+		{
+			bool started = false;
+			int start_v = 0;
+			int start_i = 0;
+			int end_v = 0;
+			int end_i = 0;
+
+			group->shader->activatePass(i);
+			texture::DXTexture* lightmap = NULL;
+			for(BSPShaderGroup::FaceMap::iterator it = group->faces.begin(); it != group->faces.end(); it++)
+			{
+				if(it->first != lightmap)
+				{
+					if(started) // dump this batch because our lightmap changed
+					{
+						render::device->DrawIndexedPrimitive(
+							D3DPT_TRIANGLELIST,
+							0,
+							0,
+							end_v - start_v,
+							start_i,
+							(end_i - start_i) / 3);
+						render::frame_drawcalls++;
+						render::frame_polys += (end_i - start_i) / 3;
+						started = false;
+					}
+
+					if(lightmap)
+						lightmap->deactivate();
+
+					if(!it->first)
+						render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+					else
+					{
+						if(!group->shader->is_useslightmap) // doesn't seem to use the lightmap
+							it->first->activate();
+						else
+							render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+					}
+					lightmap = it->first;
+					if(group->shader->isPassLightmap(i) && lightmap)
+						render::device->SetTexture(0, lightmap->texture);
+				}
+
+				BSPFace* face = it->second;
+				if(face->frame == render::frame) // got one
+				{
+					if(!started) // starting a new batch
+					{
+						start_v = face->vertices_start;
+						start_i = face->indices_start;
+						end_v = start_v + face->num_vertices;
+						end_i = start_i + face->num_indices;
+						started = true;
+						render::frame_faces++;
+					}
+					else // extending an existing batch
+					{
+						end_v += face->num_vertices;
+						end_i += face->num_indices;
+						render::frame_faces++;
+					}
+				}
+				else if(started) // need to dump our current batch
+				{
+					render::device->DrawIndexedPrimitive(
+						D3DPT_TRIANGLELIST,
+						0,
+						0,
+						end_v - start_v,
+						start_i,
+						(end_i - start_i) / 3);
+					render::frame_drawcalls++;
+					render::frame_polys += (end_i - start_i) / 3;
+					started = false;
+				}
+			} // faces
+			if(started) // pick up the last batch
+			{
+				render::device->DrawIndexedPrimitive(
+					D3DPT_TRIANGLELIST,
+					0,
+					0,
+					end_v - start_v,
+					start_i,
+					(end_i - start_i) / 3);
+				render::frame_drawcalls++;
+				render::frame_polys += (end_i - start_i) / 3;
+			}
+			group->shader->deactivatePass(i);
+			if(lightmap)
+				lightmap->deactivate();
+		} // passes
+		if(group->shader->is_offset)
+			render::device->SetTransform(D3DTS_PROJECTION, &render::projection);
+		group->shader->deactivate();
 	}
 
 	texture::Material lighting;
@@ -286,8 +619,7 @@ void SceneBSP::render()
 		}
 	}
 
-	for (int i = render::alpha_groups.size(); i > 0; i--)
-		render::drawGroup(render::alpha_groups[i - 1], &render::world);
+	// todo: loop through transparent shadergroups/texturegroups and render faces
 
 	if (render::current_texture)
 		render::current_texture->deactivate();

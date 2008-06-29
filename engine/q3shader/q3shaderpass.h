@@ -12,6 +12,7 @@ namespace q3shader
 		void deactivate();
 
 		static void initParseMap();
+		bool useLightmapHack;
 
 	protected:
 		typedef vector<string> params;
