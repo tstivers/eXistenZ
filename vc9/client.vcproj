@@ -1465,8 +1465,20 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="playercontroller"
+				Name="controller"
 				>
+				<File
+					RelativePath="..\engine\component\controller.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\controller.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscontroller.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

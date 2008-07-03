@@ -53,7 +53,6 @@ namespace scene
 		BSPShaderGroup* shader_group;
 	};
 
-	typedef vector<BSPFace*> faceptr_vector;
 
 	struct BSPTextureGroup
 	{
@@ -61,8 +60,13 @@ namespace scene
 		texture::DXTexture* lightmap;
 		IDirect3DVertexBuffer9* vb;
 		IDirect3DIndexBuffer9* ib;
-		faceptr_vector faces;
+		typedef vector<BSPFace*> FaceList;
+		FaceList faces;
 		unsigned int frame;
+
+		void acquire();
+		void release();
+		void render();
 	};
 
 	struct BSPShaderGroup
@@ -73,6 +77,11 @@ namespace scene
 		typedef multimap<texture::DXTexture*, BSPFace*> FaceMap;
 		FaceMap faces;
 		unsigned int frame;
+		bool use32bitindex;
+
+		void acquire();
+		void release();
+		void render();
 	};
 
 	class BSPCluster

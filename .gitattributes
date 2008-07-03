@@ -56,10 +56,13 @@ engine/component/component.cpp -text
 engine/component/component.h -text
 engine/component/componenttypes.cpp -text
 engine/component/componenttypes.h -text
+engine/component/controller.cpp -text
+engine/component/controller.h -text
 engine/component/jsactorcomponent.cpp -text
 engine/component/jsactorcomponent.h -text
 engine/component/jscomponent.cpp -text
 engine/component/jscomponent.h -text
+engine/component/jscontroller.cpp -text
 engine/component/jsmeshcomponent.cpp -text
 engine/component/jsmeshcomponent.h -text
 engine/component/jsposcomponent.cpp -text
