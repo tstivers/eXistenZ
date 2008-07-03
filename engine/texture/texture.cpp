@@ -46,9 +46,9 @@ bool DXTexture::activate(bool deactivate_current)
 		{
 			if (render::current_lightmap)
 				render::current_lightmap->deactivate();
-
-			render::current_lightmap = this;
 		}
+
+		render::current_lightmap = this;
 
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
@@ -61,21 +61,18 @@ bool DXTexture::activate(bool deactivate_current)
 	{
 		if (render::current_texture)
 			render::current_texture->deactivate();
-
-		render::current_texture = this;
 	}
 
-	if (shader)
-		shader->activate(this);
+	render::current_texture = this;
 
-	if (!use_texture)
-		return true;
+	//if (shader)
+	//	shader->activate(this);
 
-	if (texture)
-		render::device->SetTexture(0, texture);
-	else
-		render::device->SetTexture(0, NULL);
+	//if (!use_texture)
+	//	return true;
 
+	render::device->SetTexture(0, texture);
+	
 	return true;
 }
 
@@ -83,6 +80,7 @@ void DXTexture::deactivate()
 {
 	if (is_lightmap)
 	{
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		render::current_lightmap = NULL;
 		return;
@@ -90,8 +88,8 @@ void DXTexture::deactivate()
 
 	render::current_texture = NULL;
 
-	if (shader)
-		shader->deactivate(this);
+	//if (shader)
+	//	shader->deactivate(this);
 }
 
 void DXTexture::acquire()
