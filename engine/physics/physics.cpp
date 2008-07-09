@@ -1,6 +1,6 @@
 #include "precompiled.h"
 #include "physics/physics.h"
-#include "physics/meshdesc.h"
+#include "physics/cook.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
 #include "render/render.h"
@@ -226,9 +226,9 @@ void physics::release()
 	acquired = false;
 }
 
-void physics::addStaticMesh(string name, scene::SceneBSP* scene)
+void physics::addStaticBSP(string name, scene::SceneBSP* scene)
 {
-	MeshDesc* desc = createMeshDesc(name.c_str(), scene);
+	NxActor* actor = CreateBSPActor(name.c_str(), scene);
 }
 
 bool physics::setTimestep(settings::Setting* setting, void* value)

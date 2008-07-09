@@ -123,7 +123,7 @@ vfs::File vfs::getFile( const string& filename )
 	return getFile(filename.c_str());
 }
 
-vfs::IFile* vfs::createFile(const char* filename)
+vfs::File vfs::createFile(const char* filename)
 {
 	char sanepath[MAX_PATH];
 	char actualpath[MAX_PATH];
@@ -137,7 +137,7 @@ vfs::IFile* vfs::createFile(const char* filename)
 
 	PathCanonicalize(canonpath, actualpath);
 
-	return new DiskFile(canonpath, true);
+	return File(new DiskFile(canonpath, true));
 }
 
 U32 vfs::getFileList(file_list_t& file_list, const char* path, const char* filespec, U32 flags, bool recurse)
@@ -168,4 +168,20 @@ bool vfs::IsFile(const string& path)
 {
 	DWORD d = GetFileAttributes(path.c_str());
 	return ((d != INVALID_FILE_ATTRIBUTES) && !(d & FILE_ATTRIBUTE_DIRECTORY));
+}
+
+bool vfs::CreateDirectory(const string& path)
+{
+	char sanepath[MAX_PATH];
+	char actualpath[MAX_PATH];
+	char canonpath[MAX_PATH];
+
+	sanitizePath(sanepath, path.c_str());
+	if (sanepath[1] != ':')
+		sprintf(actualpath, "%s\\%s", root, sanepath); // normal
+	else
+		strcpy(actualpath, sanepath); // absolute
+
+	PathCanonicalize(canonpath, actualpath);
+	return (::CreateDirectory(canonpath, NULL) == TRUE);
 }

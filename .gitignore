@@ -18,6 +18,7 @@ bin/*.pdb
 bin/*.png
 bin/*.suo
 bin/BuildLog.htm
+bin/cooked
 bin/engine_debug
 bin/engine_release
 bin/js32_debug
