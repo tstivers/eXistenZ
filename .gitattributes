@@ -135,11 +135,10 @@ engine/mesh/textloader.cpp eol=crlf
 engine/mesh/textloader.h eol=crlf
 engine/misc/alias.cpp -text
 engine/misc/alias.h -text
+engine/physics/cook.cpp -text
+engine/physics/cook.h -text
 engine/physics/jsphysics.cpp -text
 engine/physics/jsphysics.h -text
-engine/physics/meshdesc.cpp -text
-engine/physics/meshdesc.h -text
-engine/physics/meshdescimpl.h -text
 engine/physics/physics.cpp -text
 engine/physics/physics.h -text
 engine/physics/shapecache.cpp -text

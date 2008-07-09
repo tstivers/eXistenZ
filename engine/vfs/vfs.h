@@ -36,10 +36,11 @@ namespace vfs
 
 	File getFile(const char* filename);
 	File getFile(const string& filename);
-	IFile* createFile(const char* filename);
+	File createFile(const char* filename);
 	bool fileExists(const char* filename);
 	vector<string> getDirectoriesForPath(const string& path);
 	bool IsDirectory(const string& path);
+	bool CreateDirectory(const string& path);
 	bool IsFile(const string& path);
 
 	typedef function<void(const string&, void*)> WatchCallback;

@@ -18,7 +18,7 @@ namespace physics
 	void destroy();
 	void startSimulation();
 	void getResults();
-	void addStaticMesh(string name, scene::SceneBSP* scene);
+	void addStaticBSP(string name, scene::SceneBSP* scene);
 	void setParameter(int parameter, float value);
 	void renderDebug();
 
