@@ -1,31 +1,29 @@
 #pragma once
 
-#include "entity/entity.h"
 #include "component/component.h"
 #include "component/poscomponent.h"
 #include "entity/interfaces.h"
-#include "mesh/mesh.h"
 
 namespace component
 {
-	struct MeshComponentDesc : public ComponentDesc
+	struct JSRenderComponentDesc : public ComponentDesc
 	{
-		string mesh;
 		string transformComponent;
 	};
 
-	class MeshComponent : public Component, public IRenderable
+	class JSRenderComponent : public Component, public IRenderable
 	{
 	public:
 		// typedefs
-		typedef MeshComponentDesc desc_type;
-		
-		// constructor/destructor
-		MeshComponent(entity::Entity* entity, const string& name, const desc_type& desc);
-		~MeshComponent();
+		typedef JSRenderComponentDesc desc_type;
+		typedef JSRenderComponent component_type;
 
-		// component overloads
-		int getType() { return MESHCOMPONENT; }
+		// constructor/destructor
+		JSRenderComponent(entity::Entity* entity, const string& name, const desc_type& desc);
+		~JSRenderComponent();
+
+		// Component overloads
+		int getType() { return JSRENDERCOMPONENT; }
 		void acquire();
 		void release();
 
@@ -34,19 +32,18 @@ namespace component
 		void render(texture::Material* lighting);
 
 		// methods
-
+		
 		// properties
 		ComponentLink<PosComponent> transform;
 
+		// script class
 		static ScriptedObject::ScriptClass m_scriptClass;
 
 	protected:
-		// script functions
+		// ScriptedObject overrides
 		JSObject* createScriptObject();
 		void destroyScriptObject();
 
 		// members
-		string m_meshName;
-		mesh::Mesh* m_mesh;
 	};
 }

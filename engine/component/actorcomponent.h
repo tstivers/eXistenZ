@@ -12,7 +12,7 @@ namespace component
 		string transform;
 	};
 
-	class ActorComponent : public Component, public PhysicsObject
+	class ActorComponent : public Component, public IPhysicsObject
 	{
 	public:
 		// typedefs
@@ -24,7 +24,7 @@ namespace component
 		~ActorComponent();
 
 		// Component overloads
-		int getType() { return 3; }
+		int getType() { return ACTORCOMPONENT; }
 		void acquire();
 		void release();
 

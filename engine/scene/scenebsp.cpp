@@ -696,7 +696,7 @@ void SceneBSP::render()
 	resetMapping();
 }
 
-void SceneBSP::getEntityLighting(texture::Material* material, Renderable* renderable)
+void SceneBSP::getEntityLighting(texture::Material* material, IRenderable* renderable)
 {
 	D3DXVECTOR3 origin(renderable->getRenderOrigin());
 	swap(origin.y, origin.z);
