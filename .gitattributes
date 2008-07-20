@@ -63,10 +63,13 @@ engine/component/jsactorcomponent.h -text
 engine/component/jscomponent.cpp -text
 engine/component/jscomponent.h -text
 engine/component/jscontroller.cpp -text
+engine/component/jsjsrendercomponent.cpp -text
 engine/component/jsmeshcomponent.cpp -text
 engine/component/jsmeshcomponent.h -text
 engine/component/jsposcomponent.cpp -text
 engine/component/jsposcomponent.h -text
+engine/component/jsrendercomponent.cpp -text
+engine/component/jsrendercomponent.h -text
 engine/component/meshcomponent.cpp -text
 engine/component/meshcomponent.h -text
 engine/component/poscomponent.cpp -text

@@ -1113,23 +1113,19 @@
 			Name="physics"
 			>
 			<File
+				RelativePath="..\engine\physics\cook.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\physics\cook.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\physics\jsphysics.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\physics\jsphysics.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\physics\meshdesc.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\physics\meshdesc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\physics\meshdescimpl.h"
 				>
 			</File>
 			<File
@@ -1477,6 +1473,22 @@
 				</File>
 				<File
 					RelativePath="..\engine\component\jscontroller.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="jsrender"
+				>
+				<File
+					RelativePath="..\engine\component\jsjsrendercomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsrendercomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsrendercomponent.h"
 					>
 				</File>
 			</Filter>

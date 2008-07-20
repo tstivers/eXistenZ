@@ -27,7 +27,7 @@ namespace component
 		~PosComponent();
 
 		// overloads
-		int getType() { return 1; }
+		int getType() { return POSCOMPONENT; }
 		void acquire();
 		void release();
 

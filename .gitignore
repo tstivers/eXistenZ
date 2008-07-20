@@ -28,6 +28,9 @@ bin/maya_release
 data/*
 data/textures/*
 /eXistenZ[!!-~]Engine.ncb
+vc8/*.ncb
+vc8/*.suo
+vc8/*.user
 vc9/*.JPG
 vc9/*.bmp
 vc9/*.dat

@@ -4,6 +4,11 @@
 #define CONCAT(a,b) a##b
 #define REGISTER_COMPONENT_TYPE(name, id) static component::ComponentRegistration CONCAT(name, _registration)(#name, id)
 
+#define ACTORCOMPONENT		3
+#define MESHCOMPONENT		2
+#define POSCOMPONENT		1
+#define JSRENDERCOMPONENT	4
+
 namespace component
 {
 	void registerComponentType(const string& name, int id);

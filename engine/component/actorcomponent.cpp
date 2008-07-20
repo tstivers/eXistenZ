@@ -32,7 +32,7 @@ void ActorComponent::acquire()
 	NxBodyDesc bodydesc;
 	actordesc.body = &bodydesc;
 	D3DXMatrixToNxMat34(&(transform->getTransform()), &actordesc.globalPose);
-	actordesc.userData = dynamic_cast<PhysicsObject*>(this);
+	actordesc.userData = dynamic_cast<IPhysicsObject*>(this);
 	actordesc.name = m_name.c_str();
 	actordesc.density = 10.0;
 	if(!m_shapesXml.empty())

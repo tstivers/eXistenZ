@@ -191,9 +191,14 @@ void Q3ShaderPass::parseMap(const params& p)
 		m_activate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 1));
 		m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_TEXCOORDINDEX, 0));
 		// hacky: activate z-writing for anything that accepts a lightmap
-		//parseDepthWrite(p);
+		parseDepthWrite(p);
 		m_shader->is_useslightmap = true;
 	}
+	//else if(p[1] == "$whiteimage")
+	//{
+	//	m_mapname = "textures/default/white";
+	//	m_activate.push_back(bind(&Q3ShaderPass::setTexture, this));
+	//}
 	else
 	{
 		ASSERT(m_mapname.empty());
