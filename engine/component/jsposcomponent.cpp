@@ -37,12 +37,12 @@ namespace jscomponent
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("setPos", WRAP_NATIVE(PosComponent::setPos), 1, 1, 0),
-		JS_FN("getPos", WRAP_NATIVE(PosComponent::getPos), 0, 0, 0),
-		JS_FN("setRot", (JSNativeCall<void(PosComponent::*)(const D3DXVECTOR3&), &PosComponent::setRot>), 1, 1, 0),
-		JS_FN("getRot", WRAP_NATIVE(PosComponent::getRot), 0, 0, 0),
-		JS_FN("setScale", WRAP_NATIVE(PosComponent::setScale), 1, 1, 0),
-		JS_FN("getScale", WRAP_NATIVE(PosComponent::getScale), 0, 0, 0),
+		JS_FN("setPos", WRAP_NATIVE(PosComponent::setPos), 1, 0),
+		JS_FN("getPos", WRAP_NATIVE(PosComponent::getPos), 0, 0),
+		JS_FN("setRot", (JSNativeCall<void(PosComponent::*)(const D3DXVECTOR3&), &PosComponent::setRot>), 1, 0),
+		JS_FN("getRot", WRAP_NATIVE(PosComponent::getRot), 0, 0),
+		JS_FN("setScale", WRAP_NATIVE(PosComponent::setScale), 1, 0),
+		JS_FN("getScale", WRAP_NATIVE(PosComponent::getScale), 0, 0),
 		JS_FS_END
 	};
 }

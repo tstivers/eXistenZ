@@ -17,6 +17,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "js32", "..\lib\js32\js32.vcproj", "{D9BE4917-EFC7-495B-AB71-6F5CFD99B682}"
 	ProjectSection(ProjectDependencies) = postProject
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {215F4C42-EFF3-4495-9FBD-2BD636A8D841}
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6} = {5AA6FC68-3C0B-47F3-982A-2409F6E207A6}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautocfg", "..\lib\js32\jsautocfg.vcproj", "{215F4C42-EFF3-4495-9FBD-2BD636A8D841}"
@@ -28,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rapidxml", "rapidxml", "{E0
 		..\lib\rapidxml\rapidxml_print.hpp = ..\lib\rapidxml\rapidxml_print.hpp
 		..\lib\rapidxml\rapidxml_utils.hpp = ..\lib\rapidxml\rapidxml_utils.hpp
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsautooplen", "..\lib\js32\jsautooplen.vcproj", "{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +92,16 @@ Global
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Win32.ActiveCfg = Release|Win32
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841}.Release|Win32.Build.0 = Release|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Debug|Win32.Build.0 = Debug|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Release|Any CPU.ActiveCfg = Release|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Release|Win32.ActiveCfg = Release|Win32
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +112,7 @@ Global
 		{D9BE4917-EFC7-495B-AB71-6F5CFD99B682} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{215F4C42-EFF3-4495-9FBD-2BD636A8D841} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 		{E05AFE98-F7A9-4317-95D0-161F4D5B3F2E} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
+		{5AA6FC68-3C0B-47F3-982A-2409F6E207A6} = {67764B00-DAA7-4B94-80FA-67E675AEB3D9}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
