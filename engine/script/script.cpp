@@ -172,7 +172,7 @@ JSObject* ScriptEngine::AddObject(const char* name, JSObject* parent)
 		JS_ConvertStub,  JS_FinalizeStub
 	};
 
-	JSObject* obj = JS_DefineObject(cx, parent, name, &def_class, NULL, JSPROP_ENUMERATE | JSPROP_EXPORTED);
+	JSObject* obj = JS_DefineObject(cx, parent, name, &def_class, NULL, JSPROP_ENUMERATE);
 	if (obj)
 		JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(NULL));
 
