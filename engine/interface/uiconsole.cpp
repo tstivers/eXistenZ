@@ -94,14 +94,15 @@ void Console::render()
 	float top = (float)ypos;
 	float curr_y = (float)(ypos + height - 25);
 
+	sbmutex.lock();
 	scrollback_iter line = scrollback.begin();
-
 	while ((curr_y > top) && (line != scrollback.end()))
 	{
 		d3dfont->DrawText(x, curr_y, color, *line, wireframe ? D3DFONT_WIREFRAME : 0);
 		line++;
 		curr_y -= 12;
 	}
+	sbmutex.unlock();
 
 	char cursor = 0x01;
 	if (ui::has_focus && (((int)timer::time_ms / 300) % 2))
@@ -115,16 +116,20 @@ void Console::render()
 
 void Console::addMessage(const char* message)
 {
+	sbmutex.lock();
 	char* line = scrollback.back();
 	strcpy(line, message);
 	scrollback.pop_back();
 	scrollback.push_front(line);
+	sbmutex.unlock();
 }
 
 void Console::clear()
 {
+	sbmutex.lock();
 	for (scrollback_iter line = scrollback.begin(); line != scrollback.end(); line++)
 		(*line)[0] = 0;
+	sbmutex.unlock();
 }
 
 void Console::keypressed(char key, bool extended)
