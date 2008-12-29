@@ -49,6 +49,7 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/typeof/typeof.hpp>
+#include <boost/thread/mutex.hpp>
 
 #include <d3d9.h>
 #include <d3dx9core.h>

@@ -33,6 +33,7 @@ namespace ui
 		unsigned int historypos;
 		int wireframe;
 		int draw;
+		mutex sbmutex;
 
 		typedef deque<char*>::iterator scrollback_iter;
 	};
