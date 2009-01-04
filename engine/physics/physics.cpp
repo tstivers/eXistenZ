@@ -20,7 +20,7 @@ namespace physics
 	{
 		void reportError(NxErrorCode code, const char* message, const char* file, int line)
 		{
-			ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
+			//ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
 		}
 
 		NxAssertResponse reportAssertViolation(const char *message, const char *file, int line)
@@ -62,6 +62,7 @@ namespace physics
 	NxCookingInterface *gCooking;
 	NxControllerManager* gManager;
 	int debug = 1;
+	int use_hw = 1;
 	bool acquired = false;
 	float gravity = -9.8f;
 	float maxtimestep = 1.0 / 60.0;
@@ -95,6 +96,7 @@ void physics::init()
 	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, setGravity, NULL, &physics::gravity);
 	settings::addsetting("system.physics.maxtimestep", settings::TYPE_FLOAT, 0, setTimestep, NULL, &physics::maxtimestep);
 	settings::addsetting("system.physics.maxiter", settings::TYPE_INT, 0, setMaxIter, NULL, &physics::maxiter);
+	settings::addsetting("system.physics.use_hw", settings::TYPE_INT, 0, NULL, NULL, &physics::use_hw);
 }
 
 bool physics::setGravity(settings::Setting* setting, void* value)
@@ -152,6 +154,11 @@ void physics::acquire()
 	NxSceneDesc sceneDesc;
 	NxVec3 gDefaultGravity(0, gravity, 0);
 	sceneDesc.gravity = gDefaultGravity;
+	if(physics::use_hw && gPhysicsSDK->getHWVersion() != NX_HW_VERSION_NONE)
+	{
+		sceneDesc.simType = NX_SIMULATION_HW;
+		LOG("using hardware physics");
+	}
 	//sceneDesc.upAxis = 1;
 	//sceneDesc.maxBounds->min.x = render::scene->
 	gScene = gPhysicsSDK->createScene(sceneDesc);

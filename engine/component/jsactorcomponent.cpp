@@ -37,11 +37,11 @@ namespace jscomponent
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("setLinearVelocity",  WRAP_NATIVE(ActorComponent::setLinearVelocity),  1, 1, 0),
-		JS_FN("setAngularVelocity", WRAP_NATIVE(ActorComponent::setAngularVelocity), 1, 1, 0),
-		JS_FN("addForce", WRAP_NATIVE(ActorComponent::addForce), 1, 1, 0),
-		JS_FN("addForceType", WRAP_NATIVE(ActorComponent::addForceType), 2, 2, 0),
-		JS_FN("setShapesGroup", WRAP_NATIVE(ActorComponent::setShapesGroup), 1, 1, 0),
+		JS_FN("setLinearVelocity",  WRAP_NATIVE(ActorComponent::setLinearVelocity),  1, 0),
+		JS_FN("setAngularVelocity", WRAP_NATIVE(ActorComponent::setAngularVelocity), 1, 0),
+		JS_FN("addForce", WRAP_NATIVE(ActorComponent::addForce), 1, 0),
+		JS_FN("addForceType", WRAP_NATIVE(ActorComponent::addForceType), 2, 0),
+		JS_FN("setShapesGroup", WRAP_NATIVE(ActorComponent::setShapesGroup), 1, 0),
 		JS_FS_END
 	};
 }

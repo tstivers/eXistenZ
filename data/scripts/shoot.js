@@ -82,7 +82,6 @@ function shootSlice(ham) {
 }
 
 var grenade_slices = 100;
-
 function hamgrenade(ham) {
     system.physics.setGroupCollisionFlag(10, 10, false);
     system.physics.setGroupCollisionFlag(10, 0, true);
@@ -95,7 +94,7 @@ function hamgrenade(ham) {
         for (i in blasted) {
             v = blasted[i].transform.getPos();
             v.sub(origin);
-            distance = v.length();
+            distance = v.length() + 1;
             v.normalize();
             v.mul(10 / (distance * distance));
             blasted[i].addForceType(v, NX_IMPULSE);

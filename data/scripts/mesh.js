@@ -40,6 +40,10 @@ function createSlice() {
     return createModelEntity("meshes/hamslice.fbx#Slice01", "meshes/hamslice_DYNAMIC.xml");
 }
 
+function createZard() {
+    return createModelEntity("meshes/zard creature.fbx#LOW POLY", "meshes/zard creature_DYNAMIC.xml")
+}
+
 function createSphere() {
     var sphere = createSphereEntity("sphere" + num_entities++, textures[++current_texture % textures.length]);
     entities[sphere.name] = sphere;

@@ -45,9 +45,9 @@ namespace sound
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("getSound", WRAP_NATIVE(SoundManager::getSound), 1, 1, 0),
-		JS_FN("playSound", WRAP_NATIVE(SoundManager::playSound), 2, 2, 0),
-		JS_FN("playSound3d", WRAP_NATIVE(SoundManager::playSound3d), 3, 3, 0),
+		JS_FN("getSound", WRAP_NATIVE(SoundManager::getSound), 1, 0),
+		JS_FN("playSound", WRAP_NATIVE(SoundManager::playSound), 2, 0),
+		JS_FN("playSound3d", WRAP_NATIVE(SoundManager::playSound3d), 3, 0),
 		JS_FS_END
 	};
 

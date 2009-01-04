@@ -8,8 +8,8 @@ system.render.wait_vtrace = 0;
 system.render.resolution.x = 1024;
 system.render.resolution.y = 768;
 system.render.fullscreen = 0;
-system.render.fullscreenres.x = 1280;
-system.render.fullscreenres.y = 1024;
+system.render.fullscreenres.x = 1920;
+system.render.fullscreenres.y = 1200;
 
 //system.render.resolution.x = 1280;
 //system.render.resolution.y = 1024;
@@ -19,7 +19,7 @@ system.render.fullscreenres.y = 1024;
 system.render.refdevice = 0;
 system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
 system.render.anisotropylevel = 16;
-system.render.backbuffercount = 2;
+system.render.backbuffercount = 3;
 system.vfs.addPath("../data");
 system.vfs.debug = 0;
 system.render.texture.debug = 0;
