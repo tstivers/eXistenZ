@@ -17,8 +17,8 @@ namespace jsentity
 
 	JSFunctionSpec manager_methods[] =
 	{
-		JS_FN("createEntity", jsentity::createEntity, 1, 1, 0),
-		JS_FN("removeEntity", jsentity::removeEntity, 1, 1, 0),
+		JS_FN("createEntity", jsentity::createEntity, 1, 0),
+		JS_FN("removeEntity", jsentity::removeEntity, 1, 0),
 		JS_FS_END
 	};
 

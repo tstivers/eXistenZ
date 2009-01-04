@@ -206,7 +206,7 @@ done:
 	return dxtex;
 
 err:
-//	if(debug)
+	if(debug)
 	LOG("failed to load %s", name);
 
 	return NULL;

@@ -43,9 +43,9 @@ namespace jsentity
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("acquire", WRAP_NATIVE(Entity::acquire), 0, 0, 0),
-		JS_FN("release", WRAP_NATIVE(Entity::release), 0, 0, 0),
-		JS_FN("removeComponent", WRAP_NATIVE(Entity::removeComponent), 1, 1, 0),
+		JS_FN("acquire", WRAP_NATIVE(Entity::acquire), 0, 0),
+		JS_FN("release", WRAP_NATIVE(Entity::release), 0, 0),
+		JS_FN("removeComponent", WRAP_NATIVE(Entity::removeComponent), 1, 0),
 		JS_FS_END
 	};
 
@@ -237,7 +237,7 @@ JSBool jsentity::RegisterCreateFunction(ScriptEngine* engine, char* name, JSFast
 	JSFunctionSpec create_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN(name, create, 1, 1, 0),
+		JS_FN(name, create, 1, 0),
 		JS_FS_END
 	};
 

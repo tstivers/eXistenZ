@@ -264,7 +264,8 @@ bool BSP::load(vfs::File file)
 	{
 		if(shaders[i] = render::gQ3ShaderCache.getShader(bsptextures[i].name))
 		{
-			INFO("loaded shader for \"%s\"", bsptextures[i].name);
+			if(texture::debug)
+				INFO("loaded shader for \"%s\"", bsptextures[i].name);
 			textures[i] = NULL;
 		}
 		else

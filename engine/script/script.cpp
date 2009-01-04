@@ -58,6 +58,7 @@ ScriptEngine::ScriptEngine()
 	registeredfunctions::fireScriptFunctions(this);
 
 	JS_SetVersion(cx, JSVERSION_LATEST);
+	JS_ToggleOptions(cx, JSOPTION_JIT);
 	INFO("Javascript Engine version %s loaded", JS_VersionToString(JS_GetVersion(cx)));
 	SetErrorReporter(NULL);
 }

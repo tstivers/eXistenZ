@@ -3,6 +3,7 @@
 namespace texture
 {
 	class Shader;
+	extern int debug;
 
 	class DXTexture
 	{
