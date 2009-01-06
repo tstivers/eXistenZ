@@ -120,6 +120,7 @@ bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.getPos(), game.player.getRot()");
 bind(KEY_V, toggle_vtrace);
+bind(KEY_F4, "toggle_parallel");
 
 //model.rot.y = -90;
 

@@ -13,6 +13,7 @@
 #include "entity/entity.h"
 #include "entity/entitymanager.h"
 #include "texture/material.h"
+#include "timer/timer.h"
 
 namespace scene
 {
@@ -568,6 +569,9 @@ void SceneBSP::reload(unsigned int flags)
 
 void SceneBSP::render()
 {
+	if(render::parallel)
+		return parallel_render();
+
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
@@ -581,7 +585,7 @@ void SceneBSP::render()
 			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
 				continue;
 
-			render::frame_clusters++;
+			//render::frame_clusters++;
 
 			for (int j = 0; j < clusters[i].num_faces; j++)
 			{
@@ -604,7 +608,7 @@ void SceneBSP::render()
 			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
 				continue;
 
-			render::frame_clusters++;
+			//render::frame_clusters++;
 
 			for (int j = 0; j < clusters[i].num_faces; j++)
 			{
@@ -695,6 +699,139 @@ void SceneBSP::render()
 	
 	resetMapping();
 }
+
+void SceneBSP::parallel_render()
+{
+	int current_leaf = bsp->leafFromPoint(render::cam_pos);
+	int current_cluster = bsp->leafs[current_leaf].cluster;
+
+	byte* clustervis_start = bsp->clusters + (current_cluster * bsp->cluster_size);
+
+	if (current_cluster < 0) // outside of bsp, mark all faces that are in the frustrum
+	{
+		#pragma omp parallel for schedule(dynamic, 100)
+		for (int i = 0; i < num_clusters; i++)
+		{
+
+			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+				continue;
+
+			//render::frame_clusters++;
+
+			for (int j = 0; j < clusters[i].num_faces; j++)
+			{
+				clusters[i].faces[j]->frame = render::frame;
+				if(clusters[i].faces[j]->texture_group)
+					clusters[i].faces[j]->texture_group->frame = render::frame;
+				else
+					clusters[i].faces[j]->shader_group->frame = render::frame;
+			}
+		}
+	}
+	else // mark faces in pvs list and in frustrum
+	{
+		#pragma omp parallel for schedule(dynamic, 100)
+		for (int i = 0; i < num_clusters; i++)
+		{
+
+			if (!BSP_TESTVIS(i))
+				continue;
+
+			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+				continue;
+
+			//render::frame_clusters++;
+
+			for (int j = 0; j < clusters[i].num_faces; j++)
+			{
+				clusters[i].faces[j]->frame = render::frame;
+				if(clusters[i].faces[j]->texture_group)
+					clusters[i].faces[j]->texture_group->frame = render::frame;
+				else
+					clusters[i].faces[j]->shader_group->frame = render::frame;
+			}
+		}
+	}
+
+	bsp->initRenderState();
+	resetMapping();
+
+	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
+	{
+		BSPTextureGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		if(group->texture->is_transparent) // skip transparent textures
+			continue;
+
+		group->render();
+	}
+
+	resetMapping();
+
+	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
+	{
+		BSPShaderGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		if(group->shader->is_nodraw || group->shader->is_transparent) // skip nodraw/transparent shaders
+			continue;
+
+		group->render();
+	}
+
+	resetMapping();
+
+	texture::Material lighting;
+	if (render::draw_entities)
+	{
+		for(renderables_list::iterator it = m_renderables.begin(); it != m_renderables.end(); ++it)
+		{
+			getEntityLighting(&lighting, *it);
+			(*it)->render(&lighting);
+		}
+	}
+
+	resetMapping();
+	render::device->SetTransform(D3DTS_WORLD, &render::world);
+	render::device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	render::current_material = NULL;
+
+	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
+	{
+		BSPTextureGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		if(!group->texture->is_transparent) // skip non-transparent textures
+			continue;
+
+		group->render();
+	}
+
+	resetMapping();
+
+	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
+	{
+		BSPShaderGroup* group = it->second.get();
+
+		if(group->frame != render::frame) // skip groups with no faces in this frame
+			continue;
+
+		if(group->shader->is_nodraw || !group->shader->is_transparent) // skip nodraw/non-transparent shaders
+			continue;
+
+		group->render();
+	}
+
+	resetMapping();
+}
+
 
 void SceneBSP::getEntityLighting(texture::Material* material, IRenderable* renderable)
 {

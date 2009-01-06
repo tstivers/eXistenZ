@@ -47,6 +47,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;STATIC_JS_API;DEBUG;D3D_DEBUG_INFO;K_PLUGIN;K_FBXSDK;K_NODLL"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="true"
+				OpenMP="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
 				DebugInformationFormat="3"
@@ -138,6 +139,7 @@
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				EnableEnhancedInstructionSet="2"
+				OpenMP="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="precompiled.h"
 			/>
