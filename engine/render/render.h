@@ -38,6 +38,7 @@ namespace render
 	extern D3DXVECTOR3 cam_pos, cam_rot, cam_offset;
 	extern D3DXMATRIX world, view, projection, biased_projection;
 
+	extern int parallel;
 	extern int wireframe;
 	extern int lightmap;
 	extern float gamma;

@@ -16,7 +16,10 @@ namespace timer
 	float time_scale;
 	float min_ms;
 	float max_ms;
-};
+
+	__int64 Stopwatch::timer_frequency_ = 0;
+	double Stopwatch::ticks_per_ms_ = 0.0;
+}
 
 REGISTER_STARTUP_FUNCTION(timer, timer::init, 10);
 

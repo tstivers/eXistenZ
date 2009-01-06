@@ -51,6 +51,7 @@ namespace render
 	int diffuse;
 	int lighting;
 	int maxanisotropy = 0;
+	int parallel = 0;
 
 	int use_scenegraph;
 	unsigned int max_node_level;
@@ -99,6 +100,7 @@ void render::init()
 	settings::addsetting("system.render.draw_entities", settings::TYPE_INT, 0, NULL, NULL, &draw_entities);
 	settings::addsetting("system.render.multisampletype", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.anisotropylevel", settings::TYPE_INT, 0, NULL, NULL, &maxanisotropy);
+	settings::addsetting("system.render.parallel", settings::TYPE_INT, 0, NULL, NULL, &parallel);
 
 	settings::setint("system.render.resolution.x", 800);
 	settings::setint("system.render.resolution.y", 600);
@@ -157,6 +159,7 @@ void render::init()
 	console::addCommand("toggle_diffuse", console::toggle_int, &diffuse);
 	console::addCommand("toggle_entities", console::toggle_int, &draw_entities);
 	console::addCommand("toggle_lighting", console::toggle_int, &lighting);
+	console::addCommand("toggle_parallel", console::toggle_int, &parallel);
 
 	boost = 0;
 	gamma = 1.0;

@@ -114,6 +114,7 @@ namespace scene
 
 		// new stuff
 		static SceneBSP* loadBSP(const string& name);
+		void parallel_render();
 		q3bsp::BSP *bsp;
 
 		unsigned int num_clusters;
