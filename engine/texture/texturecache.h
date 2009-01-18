@@ -15,7 +15,9 @@ namespace texture
 
 	DXTexture* getTexture(const char* name, bool use_alias = true);
 	DXTexture* loadTexture(const char* name);
-	DXTexture* genLightmap(tBSPLightmap* data, float gamma = 1.0, int boost = 0);
+	DXTexture* createTexture(const char* name, int width, int height);
+	DXTexture* genLightmap(tBSPLightmap* data, float gamma, int boost, texture::DXTexture* overbright = NULL);
+	bool textureExists(const std::string& name);
 	void flush();
 
 	extern Shader* active_shader;

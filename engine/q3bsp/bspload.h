@@ -1,1 +1,1 @@
-void R_ColorShiftLightingBytes(byte* in);
+void R_ColorShiftLightingBytes(byte* in, int shift = 1);

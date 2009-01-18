@@ -12,17 +12,9 @@ namespace texture
 
 using namespace texture;
 
-DXTexture::DXTexture()
+DXTexture::DXTexture(const std::string& name)
+: texture(NULL), shader(NULL), name(name), is_transparent(false), use_texture(true), is_lightmap(false), draw(true), sky(false), overbright(NULL)
 {
-	texture = NULL;
-	shader = NULL;
-	name = NULL;
-	is_transparent = false;
-	use_texture = true;
-	is_lightmap = false;
-	draw = true;
-	sky = false;
-	refcount = 1;
 }
 
 DXTexture::~DXTexture()
@@ -33,7 +25,7 @@ DXTexture::~DXTexture()
 	if (shader)
 		shader->release();
 
-	delete name;
+	delete overbright;
 }
 
 bool DXTexture::activate(bool deactivate_current)
@@ -51,7 +43,7 @@ bool DXTexture::activate(bool deactivate_current)
 		render::current_lightmap = this;
 
 		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		render::device->SetTexture(1, texture);
 
 		return true;
@@ -80,7 +72,7 @@ void DXTexture::deactivate()
 {
 	if (is_lightmap)
 	{
-		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 		render::current_lightmap = NULL;
 		return;
@@ -94,12 +86,8 @@ void DXTexture::deactivate()
 
 void DXTexture::acquire()
 {
-	refcount++;
 }
 
 void DXTexture::release()
 {
-	refcount--;
-	if (!refcount)
-		delete this;
 }

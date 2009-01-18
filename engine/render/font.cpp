@@ -407,7 +407,7 @@ HRESULT CD3DFont::RestoreDeviceObjects()
 		m_pd3dDevice->SetRenderState(D3DRS_COLORWRITEENABLE,
 									 D3DCOLORWRITEENABLE_RED  | D3DCOLORWRITEENABLE_GREEN |
 									 D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_ALPHA);
-		m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);
+		m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE2X);
 		m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		m_pd3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
 		m_pd3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
