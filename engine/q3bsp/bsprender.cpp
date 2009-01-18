@@ -157,7 +157,7 @@ inline int BSP::leafFromPoint(const D3DXVECTOR3 &point)
 // sets up render state
 //
 
-inline void BSP::initRenderState(void)
+void BSP::initRenderState(void)
 {
 	last_texture = -1;
 	last_lightmap = -1;
