@@ -176,9 +176,15 @@ void Q3ShaderPass::parseRGBGen(const params& p)
 	{
 		// do nothing? material should be 1.0 1.0 1.0
 	}
-	else
+	else if (p[1] == "const")
 	{
-		// TODO: parse rgbgen params
+		float rgb[3];
+		for(int i = 0; i < 3; i++)
+			rgb[i] = lexical_cast<float>(p[i + 3]);
+		D3DCOLOR color = D3DXCOLOR(rgb[0], rgb[1], rgb[2], 1.0f);
+		m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_TEXTUREFACTOR, color));
+		m_activate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_COLORARG1, D3DTA_TFACTOR));
+		m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_COLORARG1, D3DTA_TEXTURE));
 	}
 }
 

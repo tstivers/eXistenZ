@@ -275,7 +275,7 @@ void render::render()
 		physics::renderDebug();
 
 	// call the on_render js event
-	jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_render")();
+	//jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_render")();
 
 	// draw any markers
 	render::drawMarkers();

@@ -87,7 +87,7 @@ bind(KEY_S, "*move_back");
 bind(KEY_D, "*move_right");
 bind(KEY_SPACE, "*move_jump");
 
-bind(KEY_F1, "toggle_wireframe");
+//bind(KEY_F1, "toggle_wireframe");
 bind(KEY_L, "toggle_lightmap");
 bind(KEY_T, "toggle_transparency");
 bind(KEY_P, "toggle_patches");
@@ -120,14 +120,14 @@ bind(KEY_X, "exec explodeEverything()");
 bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.getPos(), game.player.getRot()");
 bind(KEY_V, toggle_vtrace);
-bind(KEY_F4, "toggle_parallel");
+//bind(KEY_F4, "toggle_parallel");
 
 //model.rot.y = -90;
 
 // functions
 
 //game.init_command = "/map q3dm1";
-bind(KEY_F9, function() { print(system.scene.entities.testentity.components.bleh.name); });
+//bind(KEY_F9, function() { print(system.scene.entities.testentity.components.bleh.name); });
 
 system.vfs.watchFile("scripts/*.js", onScriptChange);
 

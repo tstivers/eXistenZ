@@ -31,9 +31,10 @@ namespace q3shader
 
 		typedef vector<string> shader_lines;
 
-		Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext);
+		Q3Shader(Q3ShaderCache* cache, const string& name, const shader_lines& shadertext);
 		~Q3Shader();
 
+		const string& getName() { return m_name; }
 		void activate();
 		void activatePass(int index);
 		bool isPassLightmap(int index);
@@ -80,6 +81,7 @@ namespace q3shader
 		HRESULT setRenderState(D3DRENDERSTATETYPE state, DWORD value);
 		HRESULT setSamplerState(DWORD sampler,  D3DSAMPLERSTATETYPE type, DWORD value);
 
+		string m_name;
 		typedef function<HRESULT(void)> shader_function;
 		typedef vector<shader_function> function_list;
 		function_list m_activate;

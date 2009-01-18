@@ -14,6 +14,7 @@
 #include "entity/entitymanager.h"
 #include "texture/material.h"
 #include "timer/timer.h"
+#include "physics/cook.h"
 
 namespace scene
 {
@@ -53,11 +54,15 @@ namespace scene
 			total_i += face->num_indices;
 		}
 
-		ASSERT(total_v < 0xffff);
+		use32bitindex = total_v > 0xffff;
 
 		// allocate vertex and index buffers
 		render::device->CreateVertexBuffer(total_v * sizeof(STDVertex), D3DUSAGE_WRITEONLY, STDVertex::FVF, D3DPOOL_MANAGED, &vb, NULL);
-		render::device->CreateIndexBuffer(total_i * sizeof(short), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &ib, NULL);
+		render::device->CreateIndexBuffer(
+			use32bitindex ? total_i * sizeof(int) : total_i * sizeof(short), 
+			D3DUSAGE_WRITEONLY, 
+			use32bitindex ? D3DFMT_INDEX32 : D3DFMT_INDEX16, 
+			D3DPOOL_MANAGED, &ib, NULL);
 
 		void* data_v;
 		void* data_i;
@@ -66,15 +71,30 @@ namespace scene
 
 		// lock and copy vertices/indices
 		vb->Lock(0, total_v * sizeof(STDVertex), &data_v, D3DLOCK_DISCARD);
-		ib->Lock(0, total_i * sizeof(short), &data_i, D3DLOCK_DISCARD);
+		ib->Lock(
+			0, 
+			use32bitindex ? total_i * sizeof(int) : total_i * sizeof(short), 
+			&data_i, 
+			D3DLOCK_DISCARD);
 		for(FaceList::iterator it = faces.begin(); it != faces.end(); ++it)
 		{
 			BSPFace* face = *it;
 			memcpy((void*)((byte*)data_v + (offset_v * sizeof(STDVertex))), face->vertices, face->num_vertices * sizeof(STDVertex));
-			short* indices = (short*)data_i;
-			for(int i = 0; i < face->num_indices; i++)
+			if(use32bitindex)
 			{
-				indices[i + offset_i] = face->indices[i] + offset_v;
+				int* indices = (int*)data_i;
+				for(int i = 0; i < face->num_indices; i++)
+				{
+					indices[i + offset_i] = face->indices[i] + offset_v;
+				}
+			}
+			else
+			{
+				short* indices = (short*)data_i;
+				for(int i = 0; i < face->num_indices; i++)
+				{
+					indices[i + offset_i] = face->indices[i] + offset_v;
+				}
 			}
 			offset_v += face->num_vertices;
 			offset_i += face->num_indices;
@@ -172,8 +192,7 @@ namespace scene
 			total_i += face->num_indices;
 		}
 
-		if(total_v > 0xffff)
-			use32bitindex = true;
+		use32bitindex = total_v > 0xffff;
 
 		// allocate vertex and index buffers
 		render::device->CreateVertexBuffer(
@@ -538,6 +557,10 @@ void SceneBSP::acquire()
 		it->second->acquire();
 
 	INFO("[bsp render bins] textures: %d  shaders: %d  total: %d", num_textures, num_shaders, num_textures + num_shaders);
+
+	// create the entity for the BSP
+	entity::Entity* bsp_entity = m_entityManager->createEntity(name);
+	physics::CreateBSPEntity(name, this, bsp_entity);
 
 	// loop through entities and acquire everything
 	unsigned num_entities = entities.size();

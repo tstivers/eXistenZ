@@ -50,7 +50,6 @@ namespace component
 		JSObject* createScriptObject();
 		void destroyScriptObject();
 
-
 		// members
 		string m_shapesXml;
 		NxActor* m_actor;

@@ -5,7 +5,7 @@
 
 using namespace component;
 
-REGISTER_COMPONENT_TYPE(ActorComponent, 3);
+REGISTER_COMPONENT_TYPE(ActorComponent, ACTORCOMPONENT);
 
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 
@@ -32,8 +32,6 @@ void ActorComponent::acquire()
 	NxBodyDesc bodydesc;
 	actordesc.body = &bodydesc;
 	D3DXMatrixToNxMat34(&(transform->getTransform()), &actordesc.globalPose);
-	actordesc.userData = dynamic_cast<IPhysicsObject*>(this);
-	actordesc.name = m_name.c_str();
 	actordesc.density = 10.0;
 	if(!m_shapesXml.empty())
 	{
@@ -60,7 +58,7 @@ void ActorComponent::acquire()
 		return;
 	}
 
-	m_actor->userData = this;
+	m_actor->userData = dynamic_cast<IPhysicsObject*>(this);
 
 	transform->setSetFunction(bind(&ActorComponent::setTransform, this, _1, _2));
 	transform->setGetFunction(bind(&ActorComponent::getTransform, this, _1, _2));

@@ -63,6 +63,7 @@ namespace scene
 		typedef vector<BSPFace*> FaceList;
 		FaceList faces;
 		unsigned int frame;
+		bool use32bitindex;
 
 		void acquire();
 		void release();

@@ -7,7 +7,12 @@ namespace scene
 	class SceneBSP;
 }
 
+namespace entity
+{
+	class Entity;
+}
+
 namespace physics
 {
-	NxActor* CreateBSPActor(const string& name, const scene::SceneBSP* scene);
+	void CreateBSPEntity(const string& name, const scene::SceneBSP* scene, entity::Entity* entity);
 }

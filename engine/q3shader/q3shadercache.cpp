@@ -73,7 +73,7 @@ void Q3ShaderCache::loadShaders(vfs::File file)
 				ASSERT(false);
 				break;
 			case 1: // closing shader
-				m_shaders.insert(shader_map::value_type(name, shared_ptr<Q3Shader>(new Q3Shader(this, shadertext))));
+				m_shaders.insert(shader_map::value_type(name, shared_ptr<Q3Shader>(new Q3Shader(this, name, shadertext))));
 				shadertext.clear();
 				name.clear();
 				parselevel--;

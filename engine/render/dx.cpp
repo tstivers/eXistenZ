@@ -46,7 +46,8 @@ bool d3d::init()
 	{
 		D3DADAPTER_IDENTIFIER9 id;
 		HRESULT res = d3d->GetAdapterIdentifier(i, 0, &id);
-		if (!strcmp(id.Description, "NVIDIA NVPerfHUD"))
+		LOG("found adapter: %s", id.Description);
+		if (strstr(id.Description, "PerfHUD") != 0)
 		{
 			adapter = i;
 			devicetype = D3DDEVTYPE_REF;
@@ -92,7 +93,7 @@ bool d3d::init()
 				   appwindow::getHwnd(),
 				   D3DCREATE_HARDWARE_VERTEXPROCESSING,
 				   &d3dpp,
-				   &d3dDevice)))
+				   &d3dDevice)))				   
 	{
 		MessageBox(NULL, "[d3d::init] unable to create device", "ERROR", MB_OK);
 		exit(1);
@@ -121,6 +122,7 @@ bool d3d::checkDevice()
 		d3dpp.BackBufferFormat = d3dpp.Windowed ? D3DFMT_UNKNOWN : D3DFMT_X8R8G8B8;
 		d3dpp.PresentationInterval = render::wait_vtrace ? D3DPRESENT_INTERVAL_ONE : D3DPRESENT_INTERVAL_IMMEDIATE;
 		HRESULT result;
+		
 		if (FAILED(result = d3dDevice->Reset(&d3dpp)))
 		{
 			char* reason = "UNKNOWN";

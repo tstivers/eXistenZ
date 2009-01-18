@@ -218,12 +218,14 @@ bool game::startMap(char* name)
 	if (!render::scene)
 		return false;
 
+	render::scene->name = name;
+
 	render::scene->init();
 
 	physics::acquire();
 	player->acquire();
 	render::scene->acquire();
-	physics::addStaticBSP(name, (scene::SceneBSP*)render::scene);
+	//physics::addStaticBSP(name, (scene::SceneBSP*)render::scene);
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);

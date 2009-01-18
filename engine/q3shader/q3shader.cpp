@@ -262,10 +262,10 @@ HRESULT Q3Shader::setSamplerState( DWORD sampler, D3DSAMPLERSTATETYPE type, DWOR
 }
 
 
-Q3Shader::Q3Shader(Q3ShaderCache* cache, const shader_lines& shadertext)
+Q3Shader::Q3Shader(Q3ShaderCache* cache, const string& name, const shader_lines& shadertext)
 	: m_cache(cache), is_transparent(false), is_nolightmap(false), is_noclip(false), is_playerclip(false), is_offset(false),
 	m_sortorder(unset), is_water(false), is_sky(false), is_nodraw(false), is_slick(false), is_fog(false), is_lava(false),
-	is_slime(false), is_nodynamiclighting(false), is_useslightmap(false)
+	is_slime(false), is_nodynamiclighting(false), is_useslightmap(false), m_name(name)
 {
 	for(shader_lines::const_iterator it = shadertext.begin(); it != shadertext.end(); ++it)
 	{

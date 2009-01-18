@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <shlwapi.h>
 #include <float.h>
+#include <intrin.h>
 
 // disable the buggy visual studio tr1
 #define _HAS_TR1 0
@@ -85,4 +86,5 @@ using namespace boost;
 #include "math/math.h"
 #include "script/wrappedhelpers.hpp"
 #include "script/jsnativecall.h"
+#include "timer/timer.h"
 
