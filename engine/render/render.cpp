@@ -327,7 +327,7 @@ void render::drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform)
 	{
 		device->SetRenderState(D3DRS_LIGHTING, TRUE);
 		device->SetRenderState(D3DRS_AMBIENT, rg->material->ambient);
-		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		device->SetLight(0, &rg->material->light);
 		device->LightEnable(0, TRUE);
 		current_material = &m;

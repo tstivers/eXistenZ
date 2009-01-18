@@ -3,6 +3,7 @@
 #include "q3bsp/bspcache.h"
 #include "q3bsp/q3bsptypes.h"
 #include "q3bsp/bspconvert.h"
+#include "q3bsp/bspload.h"
 #include "render/render.h" // get rid of this
 #include "vfs/vfs.h"
 #include "vfs/file.h"
@@ -11,7 +12,6 @@
 #include "q3shader/q3shadercache.h"
 
 using namespace q3bsp;
-void R_ColorShiftLightingBytes(byte *in) ;
 
 BSP* BSP::load(const string& filename)
 {
@@ -348,12 +348,9 @@ bool BSP::load(vfs::File file)
 	return true;
 }
 
-void R_ColorShiftLightingBytes(byte* in)
+void R_ColorShiftLightingBytes(byte* in, int shift)
 {
-	int		shift, r, g, b;
-
-	// shift the color data based on overbright range
-	shift = 1;
+	int		r, g, b;
 
 	// shift the data based on overbright range
 	r = in[0] << shift;

@@ -35,7 +35,7 @@ namespace scene
 		if(render::current_lightmap)
 			render::current_lightmap->deactivate();
 
-		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 		render::device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	}
 
@@ -350,7 +350,7 @@ namespace scene
 			render::device->SetTransform(D3DTS_PROJECTION, &render::projection);
 		shader->deactivate();
 		if(shader->is_useslightmap)
-			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 	}
 };
 
@@ -412,6 +412,20 @@ void SceneBSP::init()
 
 		//if (scene::optimize_bsp)
 		//	render::optimizeMesh(&faces[i].prim_type, &faces[i].vertices, &faces[i].indices, &faces[i].num_vertices, &faces[i].num_indices, true, true, false);
+	}
+
+	// convert lightmap texture coords for lightmap atlas
+	if(texture::use_atlas)
+	{
+		for(int i = 0; i < num_faces; i++)
+		{
+			BSPFace* face = &faces[i];
+			for(int j = 0; j < face->num_vertices; j++)
+			{
+				face->vertices[j].tex2.x = ((1.0 / 16.0) * face->vertices[j].tex2.x) + ((1.0 / 16.0) * (float)(face->lightmap % 16));
+				face->vertices[j].tex2.y = ((1.0 / 16.0) * face->vertices[j].tex2.y) + ((1.0 / 16.0) * (float)(face->lightmap / 16));
+			}
+		}
 	}
 
 	// load clusters
@@ -527,7 +541,7 @@ void SceneBSP::acquire()
 				q3shader::Q3Shader* shader = bsp->shaders[face.texture];
 				texture::DXTexture* lightmap = NULL;
 				if ((face.lightmap >= 0) && (face.lightmap <= bsp->num_lightmaps))
-					lightmap = bsp->lightmaps[face.lightmap];
+					lightmap = bsp->lightmaps[face.lightmap]->overbright;
 				ShaderGroupMap::iterator it = m_shaderGroups.find(shader);
 				if(it == m_shaderGroups.end())
 				{

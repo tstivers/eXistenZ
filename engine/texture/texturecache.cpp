@@ -15,9 +15,10 @@ namespace texture
 	int debug;
 	int draw_unknown;
 	int use_default;
+	int use_atlas = 1;
 
-	typedef stdext::hash_map<char*, DXTexture*, hash_char_ptr_traits> texture_hash_map;
-	typedef stdext::hash_map<char*, Shader*, hash_char_ptr_traits> shader_hash_map;
+	typedef stdext::hash_map<string, DXTexture*> texture_hash_map;
+	typedef stdext::hash_map<string, Shader*> shader_hash_map;
 
 	texture_hash_map texture_cache;
 	shader_hash_map shader_cache;
@@ -29,6 +30,8 @@ namespace texture
 	void init();
 	DXTexture* active_texture;
 	Shader* active_shader;
+
+	DXTexture* genLightmapAtlas(tBSPLightmap* data, float gamma, int boost, DXTexture* overbright = NULL);
 };
 
 REGISTER_STARTUP_FUNCTION(texture, texture::init, 10);
@@ -45,6 +48,7 @@ void texture::init()
 	settings::addsetting("system.render.texture.texture_alias_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.texture.shader_alias_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.texture.shader_map_file", settings::TYPE_STRING, 0, NULL, NULL, NULL);
+	settings::addsetting("system.render.texture.use_atlas", settings::TYPE_INT, 0, NULL, NULL, &use_atlas);
 	settings::setstring("system.render.texture.default_texture", "textures/default/uvmap.png");
 	settings::setstring("system.render.texture.texture_alias_file", "textures/texture_alias.txt");
 	settings::setstring("system.render.texture.shader_alias_file", "textures/shader_alias.txt");
@@ -68,6 +72,32 @@ void texture::load_maps()
 	shader_map.load(settings::getstring("system.render.texture.shader_map_file"));
 	texture_alias.load(settings::getstring("system.render.texture.texture_alias_file"));
 	shader_alias.load(settings::getstring("system.render.texture.shader_alias_file"));
+}
+
+texture::DXTexture* texture::createTexture(const char* name, int width, int height)
+{
+	IDirect3DTexture9* texture = NULL;
+	HRESULT hr;
+
+	if (FAILED(render::device->CreateTexture(
+		width,	// width
+		height,	// height
+		1,		// levels
+		0,	// flags
+		D3DFMT_X8R8G8B8, // format
+		D3DPOOL_MANAGED, // pool
+		&texture,
+		NULL)))
+	{
+		LOG("failed to create texture");
+		return NULL;
+	}
+
+	DXTexture* t = new DXTexture(name);
+	t->texture = texture;
+	ASSERT(!textureExists(name));
+	texture_cache.insert(make_pair(name, t));
+	return t;
 }
 
 texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
@@ -100,8 +130,7 @@ texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 		if (texture)
 		{
 			// set the fake name
-			free(texture->name);
-			texture->name = _strdup(name);
+			texture->name = name;
 			texture_cache.insert(texture_hash_map::value_type(texture->name, texture));
 			return texture;
 		}
@@ -109,7 +138,7 @@ texture::DXTexture* texture::getTexture(const char* texname, bool use_alias)
 
 	// hand back an empty texture I guess
 	if (draw_unknown)
-		return new DXTexture();
+		return new DXTexture(name);
 	else
 		return NULL;
 }
@@ -196,10 +225,9 @@ done:
 	if (!texture && !shader)
 		goto err;
 
-	DXTexture* dxtex = new DXTexture();
+	DXTexture* dxtex = new DXTexture(name);
 	dxtex->texture = texture;
 	dxtex->shader = shader;
-	dxtex->name = _strdup(name);
 	if (shader)
 		shader->init(dxtex);
 
@@ -212,11 +240,19 @@ err:
 	return NULL;
 }
 
-texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int boost)
+bool texture::textureExists(const std::string& name)
+{
+	return texture_cache.find(name) != texture_cache.end();
+}
+
+texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int boost, texture::DXTexture* overbright)
 {
 	IDirect3DTexture9* texture = NULL;
 	IDirect3DSurface9* surface = NULL;
 	HRESULT hr;
+
+	if(use_atlas)
+		return genLightmapAtlas(data, gamma, boost);
 
 	if (FAILED(render::device->CreateTexture(
 				   128,	// width
@@ -264,7 +300,7 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 			color[1] = data->imageBits[row][col][1];
 			color[2] = data->imageBits[row][col][2];
 
-			R_ColorShiftLightingBytes(color);
+			R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
 
 			dstbits[row][col][3] = 0;
 			dstbits[row][col][2] = color[0];
@@ -286,9 +322,12 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 
 	//texture->GenerateMipSubLevels();
 
-	DXTexture* dxtex = new DXTexture();
+	static int count = 0;
+	DXTexture* dxtex = new DXTexture(string("lightmap_") + lexical_cast<string>(count++));
 	dxtex->texture = texture;
 	dxtex->is_lightmap = true;
+	if(!overbright)
+		dxtex->overbright = genLightmap(data, gamma, boost, dxtex);	
 	return dxtex;
 }
 
@@ -296,12 +335,84 @@ void texture::con_list_textures(int argc, char* argv[], void* user)
 {
 	for (texture_hash_map::iterator it = texture_cache.begin(); it != texture_cache.end(); ++it)
 	{
-		if ((argc == 1) || ((argc == 2) && wildcmp(argv[1], it->first)) ||
-				((argc == 3) && wildcmp(argv[1], it->first) && it->second->shader && wildcmp(argv[2], it->second->shader->name)))
+		if ((argc == 1) || ((argc == 2) && wildcmp(argv[1], it->first.c_str())) ||
+				((argc == 3) && wildcmp(argv[1], it->first.c_str()) && it->second->shader && wildcmp(argv[2], it->second->shader->name)))
 			INFO("%s %s%s%s",
-				 it->second->name,
+				 it->second->name.c_str(),
 				 it->second->shader ? "(" : "",
 				 it->second->shader ? it->second->shader->name : "",
 				 it->second->shader ? ")" : "");
 	}
+}
+
+texture::DXTexture* texture::genLightmapAtlas(tBSPLightmap* data, float gamma, int boost, DXTexture* overbright)
+{
+	static int count = 0;
+	DXTexture* lightmap = NULL;
+	if(!textureExists("lightmap_atlas"))
+	{
+		lightmap = createTexture("lightmap_atlas", 2048, 2048);
+		lightmap->is_lightmap = true;
+		lightmap->overbright = createTexture("lightmap_atlas_overbright", 2048, 2048);
+		lightmap->overbright->is_lightmap = true;
+	}
+	else if(overbright)
+		lightmap = overbright;
+	else
+		lightmap = getTexture("lightmap_atlas", false);
+
+	ASSERT(lightmap);
+
+	IDirect3DSurface9* surface = NULL;
+	if (FAILED(lightmap->texture->GetSurfaceLevel(0, &surface)))
+	{
+		LOG("failed to get surface");
+		return NULL;
+	}
+
+	D3DLOCKED_RECT bleh;
+	if (FAILED(surface->LockRect(&bleh, NULL, 0)))
+	{
+		LOG("failed to lock surface");
+		return NULL;
+	}
+
+	// 2 = red 1 = green 0 = blue 3 = null
+	byte dstbits[128][128][4];
+
+	for (int row = 0; row < 128; row++)
+	{
+		for (int col = 0; col < 128; col++)
+		{
+			byte color[3];
+
+			color[0] = data->imageBits[row][col][0];
+			color[1] = data->imageBits[row][col][1];
+			color[2] = data->imageBits[row][col][2];
+
+			R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
+
+			dstbits[row][col][3] = 0;
+			dstbits[row][col][2] = color[0];
+			dstbits[row][col][1] = color[1];
+			dstbits[row][col][0] = color[2];
+		}
+	}
+
+	for(int i = 0; i < 128; i++)
+		memcpy((char*)bleh.pBits + ((count % 16) * 512) + ((count / 16) * bleh.Pitch * 128) + (i * bleh.Pitch), dstbits[i], 128 * 4);
+
+	if (FAILED(surface->UnlockRect()))
+	{
+		LOG("failed to unlock surface");
+		return NULL;
+	}
+
+	surface->Release();
+	if(!overbright)
+		genLightmapAtlas(data, gamma, boost, lightmap->overbright);
+	else
+		count++;
+	ASSERT(count < 256);
+	return lightmap;
 }

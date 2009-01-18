@@ -167,7 +167,7 @@ void Q3ShaderPass::parseBlendFunc(const params& p)
 		m_activate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ZWRITEENABLE, FALSE));
 	m_deactivate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ALPHABLENDENABLE, FALSE));
 	m_deactivate.push_back(bind(&Q3ShaderPass::setRenderState, this, D3DRS_ZWRITEENABLE, TRUE));
-	m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_COLOROP, D3DTOP_MODULATE));
+	m_deactivate.push_back(bind(&Q3ShaderPass::setTextureStageState, this, 0, D3DTSS_COLOROP, D3DTOP_MODULATE2X));
 }
 
 void Q3ShaderPass::parseRGBGen(const params& p)

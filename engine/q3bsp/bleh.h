@@ -165,6 +165,7 @@ namespace q3bsp
 		texture::DXTexture** textures;
 		texture::DXTexture** lightmaps;
 		q3shader::Q3Shader** shaders;
+		texture::DXTexture* lightmap;
 
 		// render vars
 		int	*sorted_faces;
