@@ -604,11 +604,8 @@ void SceneBSP::reload(unsigned int flags)
 // check into vector<bool> since i'm walking clusters now
 #define BSP_TESTVIS(to) (*(clustervis_start + ((to)>>3)) & (1 << ((to) & 7)))
 
-void SceneBSP::render()
+void SceneBSP::mark()
 {
-	if(render::parallel)
-		return parallel_render();
-
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
@@ -638,7 +635,6 @@ void SceneBSP::render()
 	{
 		for (int i = 0; i < num_clusters; i++)
 		{
-
 			if (!BSP_TESTVIS(i))
 				continue;
 
@@ -657,6 +653,14 @@ void SceneBSP::render()
 			}
 		}
 	}
+}
+
+void SceneBSP::render()
+{
+	if(render::parallel)
+		return parallel_render();
+		
+	this->mark();
 
 	bsp->initRenderState();
 	resetMapping();

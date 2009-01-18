@@ -109,7 +109,7 @@ namespace q3bsp
 		// render functions
 		void initDeviceObjects();
 		void sortFaces();
-		inline void initRenderState();
+		void initRenderState();
 		void render();
 		inline int leafFromPoint(const D3DXVECTOR3 &point);
 		inline bool setTexture(const int face_index, const bool queue_transparent);
