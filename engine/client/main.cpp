@@ -136,7 +136,7 @@ int mainloop()
 			game::doTick();
 			physics::startSimulation();
 			render::render();
-			jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_tick")();
+			//jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_tick")();
 			JS_MaybeGC(script::gScriptEngine->GetContext());
 		}
 	}

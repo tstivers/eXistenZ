@@ -13,12 +13,6 @@ namespace timer
 
 	extern float time_scale;
 
-	inline unsigned __int64 RDTSC(void)
-	{
-		_asm _emit 0x0F
-		_asm _emit 0x31
-	}
-
 	class Stopwatch
 	{
 	protected:
@@ -209,7 +203,7 @@ namespace timer
 
 	public:
 		AutoRDTSCTimer()
-			: message_(NULL), start_cycle_(RDTSC()), pause_time_(0)
+			: message_(NULL), start_cycle_(__rdtsc()), pause_time_(0)
 		{
 		}
 
@@ -220,23 +214,24 @@ namespace timer
 		}
 
 		explicit AutoRDTSCTimer(const char* message) :
-		message_(message), start_cycle_(RDTSC()), pause_time_(0)
+		message_(message), start_cycle_(__rdtsc()), pause_time_(0)
 		{
 		}
 
-		inline void LogInterval(const char* message) const
+		__forceinline void LogInterval(const char* message) const
 		{
-			INFO((format("%1% : %2% ticks") % message % (unsigned __int64)((RDTSC() - start_cycle_) - pause_time_)).str().c_str());
+			unsigned __int64 log_time = __rdtsc();
+			INFO((format("%1% : %2% ticks") % message % (unsigned __int64)((log_time - start_cycle_) - pause_time_)).str().c_str());
 		}
 
-		inline void Pause()
+		__forceinline void Pause()
 		{
-			pause_start_ = RDTSC();
+			pause_start_ = __rdtsc();
 		}
 
-		inline void Resume()
+		__forceinline void Resume()
 		{
-			pause_time_ += RDTSC() - pause_start_;
+			pause_time_ += __rdtsc() - pause_start_;
 		}
 	};
 }

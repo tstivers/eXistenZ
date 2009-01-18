@@ -9,7 +9,7 @@ game.player.shoot = function(key, state)
 
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
-game.player.shootFunction = playerShoot;
+game.player.shootFunction = probeShoot;
 game.player.createProjectile = createHam;
 
 
@@ -43,6 +43,19 @@ function playerShoot()
     hamgrenade(projectile);
     projectile.remove = function(){ system.scene.entities.removeEntity(this.name); };
     timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 18000);
+}
+
+function probeShoot() {
+    var direction = new Vector(0, 0, 1);
+    direction.rotate(game.player.getRot());
+    var pos = new Vector(direction);
+    pos.mul(3);
+    pos.add(game.player.getPos());
+    var component = system.physics.getFirstActorInRay(pos, direction, 100.0);
+    if (component)
+        print("hit component " + component.name);
+
+    system.render.drawline(game.player.getPos(), pos);
 }
 
 function hamShoot() {

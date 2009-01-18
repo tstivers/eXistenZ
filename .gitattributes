@@ -70,10 +70,14 @@ engine/component/jsposcomponent.cpp -text
 engine/component/jsposcomponent.h -text
 engine/component/jsrendercomponent.cpp -text
 engine/component/jsrendercomponent.h -text
+engine/component/jsstaticactorcomponent.cpp -text
+engine/component/jsstaticactorcomponent.h -text
 engine/component/meshcomponent.cpp -text
 engine/component/meshcomponent.h -text
 engine/component/poscomponent.cpp -text
 engine/component/poscomponent.h -text
+engine/component/staticactorcomponent.cpp -text
+engine/component/staticactorcomponent.h -text
 engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf

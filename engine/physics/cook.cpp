@@ -7,6 +7,8 @@
 #include "render/rendergroup.h"
 #include "texture/texture.h"
 #include "q3shader/q3shader.h"
+#include "entity/entity.h"
+#include "component/staticactorcomponent.h"
 #include <NxPhysics.h>
 #include <NxCooking.h>
 #include "vfs/vfs.h"
@@ -16,109 +18,124 @@ namespace physics
 	extern NxPhysicsSDK* gPhysicsSDK;
 	extern NxCookingInterface *gCooking;
 	extern NxScene* gScene;
-	shared_ptr<NxTriangleMeshShapeDesc> CookMesh(vector<D3DXVECTOR3>& vertices, vector<unsigned int>& indices, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
+	shared_ptr<NxTriangleMeshShapeDesc> CookMesh(const std::string& name, vector<D3DXVECTOR3>& vertices, vector<unsigned int>& indices, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
 	void SaveCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
 	void LoadCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
 }
 
 using namespace physics;
 
-NxActor* physics::CreateBSPActor(const string& name, const scene::SceneBSP* scene)
+void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, entity::Entity* entity)
 {
-	NxActor* actor = NULL;
-	string cached_file = "cooked/" + name + ".physx";
+	string cached_filename = "cooked/" + name + ".physx";
 	vector<shared_ptr<NxTriangleMeshShapeDesc>> meshes;
 	vector<shared_ptr<MemoryWriteBuffer>> buffers;
 
-	if(vfs::File cooked_mesh = vfs::getFile(cached_file))
+	if(vfs::File cooked_bsp = vfs::getFile(cached_filename))
 	{
-		LoadCookedMeshes(cooked_mesh, buffers);
+		LoadCookedMeshes(cooked_bsp, buffers);
 		for(int i = 0; i < buffers.size(); i++)
 		{
 			NxTriangleMesh* mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(buffers[i]->data));
 			ASSERT(mesh);
-			NxTriangleMeshShapeDesc* desc = new NxTriangleMeshShapeDesc();
-			desc->meshData = mesh;
-			meshes.push_back(shared_ptr<NxTriangleMeshShapeDesc>(desc));
+			NxTriangleMeshShapeDesc mesh_desc;
+			mesh_desc.meshData = mesh;
+
+			component::StaticActorComponentDesc actor_desc;
+			actor_desc.shape = &mesh_desc;
+			component::StaticActorComponent* c;
+			entity->createComponent(buffers[i]->name + "_" + lexical_cast<string>(i), actor_desc,  &c);
+			//INFO("loaded actor %s", c->getName().c_str());
+			c->setShapesGroup(1);
 		}
 
-		NxActorDesc desc;
-		desc.name = name.c_str();
-
-		for(int i = 0; i < meshes.size(); i++)
-			desc.shapes.push_back(meshes[i].get());
-
-		actor = gScene->createActor(desc);
-		ASSERT(actor);
-
-		return actor;
+		return;
 	}
 
 	// not cached, cook it from scratch
-
-	vector<D3DXVECTOR3> vertices;
-	vector<unsigned int> indices;
 	
-
-	int faces_processed = 0;
-	for (int i = 0; i < scene->num_faces; i++)
+	int i = 0;
+	for (scene::SceneBSP::TextureGroupMap::const_iterator it = scene->m_textureGroups.begin(); it != scene->m_textureGroups.end(); it++)
 	{
-		if (scene->faces[i].type != 1 && scene->faces[i].type != 3)
-			continue;
+		vector<D3DXVECTOR3> vertices;
+		vector<unsigned int> indices;
 
-		if(scene->faces[i].texture_group)
+		int offset_v = 0;
+		for(scene::BSPTextureGroup::FaceList::iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
 		{
-			if (scene->faces[i].texture_group->texture->is_transparent)
-				continue;
-
-			if (!scene->faces[i].texture_group->texture->draw)
-				continue;
+			scene::BSPFace* face = *fit;
+			for(int i =0; i < face->num_vertices; i++)
+				vertices.push_back(face->vertices[i].pos);
+			for(int i = 0; i < face->num_indices; i++)
+				indices.push_back(face->indices[i] + offset_v);
+			offset_v += face->num_vertices;
 		}
-		else if(scene->faces[i].shader_group) // shader-based
+
+		shared_ptr<NxTriangleMeshShapeDesc> mesh_desc = CookMesh(it->second->texture->name, vertices, indices, buffers);
+		meshes.push_back(mesh_desc);
+
+		component::StaticActorComponentDesc actor_desc;
+		actor_desc.shape = mesh_desc.get();
+		component::StaticActorComponent* c;
+		entity->createComponent(string(it->second->texture->name) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+		INFO("created actor %s", c->getName().c_str());
+		i++;
+	}
+
+	// process shadergroups
+	for (scene::SceneBSP::ShaderGroupMap::const_iterator it = scene->m_shaderGroups.begin(); it != scene->m_shaderGroups.end(); it++)
+	{
+		vector<D3DXVECTOR3> vertices;
+		vector<unsigned int> indices;
+
+		INFO("creating mesh for %s", it->second->shader->getName().c_str());
+
+		int offset_v = 0;
+		for(scene::BSPShaderGroup::FaceMap::iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
 		{
-			if(scene->faces[i].shader_group->shader->is_noclip)
-				continue;
+			scene::BSPFace* face = fit->second;
+			for(int i =0; i < face->num_vertices; i++)
+				vertices.push_back(face->vertices[i].pos);
+			for(int i = 0; i < face->num_indices; i++)
+				indices.push_back(face->indices[i] + offset_v);
+			offset_v += face->num_vertices;
+
+			if(vertices.size() > 100000)
+			{
+				shared_ptr<NxTriangleMeshShapeDesc> mesh_desc = CookMesh(it->second->shader->getName(), vertices, indices, buffers);
+				meshes.push_back(mesh_desc);
+
+				component::StaticActorComponentDesc actor_desc;
+				actor_desc.shape = mesh_desc.get();
+				component::StaticActorComponent* c;
+				entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+				INFO("created actor %s", c->getName().c_str());
+				i++;
+				vertices.clear();
+				indices.clear();
+				offset_v = 0;
+			}
 		}
-		else // no texture/shader group
-			continue;
 
-		unsigned int offset = vertices.size();
-		for (int j = 0;j < scene->faces[i].num_vertices; j++)
-			vertices.push_back(scene->faces[i].vertices[j].pos);
-
-		for (int j = 0; j < scene->faces[i].num_indices; j++)
-			indices.push_back(scene->faces[i].indices[j] + offset);
-
-		if(faces_processed++ > 1000 && !vertices.empty()) // cook this batch of faces
+		if(vertices.size())
 		{
-			meshes.push_back(CookMesh(vertices, indices, buffers));
-			vertices.clear();
-			indices.clear();
-			faces_processed = 0;
+			shared_ptr<NxTriangleMeshShapeDesc> mesh_desc = CookMesh(it->second->shader->getName(), vertices, indices, buffers);
+			meshes.push_back(mesh_desc);
+
+			component::StaticActorComponentDesc actor_desc;
+			actor_desc.shape = mesh_desc.get();
+			component::StaticActorComponent* c;
+			entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+			INFO("created actor %s", c->getName().c_str());
+			i++;
 		}
 	}
 
-	if(!vertices.empty()) // cook the remaining faces
-	{
-		meshes.push_back(CookMesh(vertices, indices, buffers));
-	}
-
-	NxActorDesc desc;
-	desc.name = name.c_str();
-
-	for(int i = 0; i < meshes.size(); i++)
-		desc.shapes.push_back(meshes[i].get());
-
-	actor = gScene->createActor(desc);
-	ASSERT(actor);
-
-	vfs::File f = vfs::createFile(cached_file.c_str());
+	vfs::File f = vfs::createFile(cached_filename.c_str());
 	SaveCookedMeshes(f, buffers);
-
-	return actor;
 }
 
-shared_ptr<NxTriangleMeshShapeDesc> physics::CookMesh(vector<D3DXVECTOR3>& vertices, vector<unsigned int>& indices,  vector<shared_ptr<MemoryWriteBuffer>>& buffers)
+shared_ptr<NxTriangleMeshShapeDesc> physics::CookMesh(const std::string& name, vector<D3DXVECTOR3>& vertices, vector<unsigned int>& indices,  vector<shared_ptr<MemoryWriteBuffer>>& buffers)
 {
 	NxTriangleMeshDesc desc;
 	desc.pointStrideBytes = sizeof(D3DXVECTOR3);
@@ -133,6 +150,7 @@ shared_ptr<NxTriangleMeshShapeDesc> physics::CookMesh(vector<D3DXVECTOR3>& verti
 	ASSERT(desc.isValid());
 
 	MemoryWriteBuffer* mwBuf = new MemoryWriteBuffer();
+	mwBuf->name = name;
 	bool cooked = gCooking->NxCookTriangleMesh(desc, *mwBuf);
 	ASSERT(cooked);
 
@@ -153,6 +171,9 @@ void physics::SaveCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuf
 	file->write(&count, sizeof(count));
 	for(int i = 0; i < count; i++)
 	{
+		NxU32 namelen = buffers[i]->name.length();
+		file->write(&namelen, sizeof(namelen));
+		file->write(buffers[i]->name.c_str(), namelen);
 		NxU32 size = buffers[i]->currentSize;
 		file->write(&size, sizeof(size));
 		file->write(buffers[i]->data, size);
@@ -162,15 +183,21 @@ void physics::SaveCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuf
 void physics::LoadCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuffer>>& buffers)
 {
 	int count;
+	char namebuf[255];
 	file->read(&count, sizeof(count));
 	for(int i = 0; i < count; i++)
 	{
+		namebuf[0] = 0;
 		NxU32 size;
+		file->read(&size, sizeof(size)); // name length
+		file->read(namebuf, size);
+		namebuf[size] = 0;
 		file->read(&size, sizeof(size));
 		byte* b = new byte[size];
 		file->read(b, size);
 		MemoryWriteBuffer* buffer = new MemoryWriteBuffer();
 		buffer->storeBuffer(b, size);
+		buffer->name = namebuf;
 		delete[] b;
 		buffers.push_back(shared_ptr<MemoryWriteBuffer>(buffer));
 	}

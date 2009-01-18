@@ -8,6 +8,7 @@
 #define MESHCOMPONENT		2
 #define POSCOMPONENT		1
 #define JSRENDERCOMPONENT	4
+#define STATICACTORCOMPONENT 5
 
 namespace component
 {

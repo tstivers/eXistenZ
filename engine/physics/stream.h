@@ -23,7 +23,7 @@ public:
 	virtual		NxStream&		storeDouble(NxF64 f);
 	virtual		NxStream&		storeBuffer(const void* buffer, NxU32 size);
 
-	FILE*			fp;
+	FILE*			fp;	
 };
 
 class MemoryWriteBuffer : public NxStream
@@ -73,6 +73,7 @@ public:
 	NxU32			currentSize;
 	NxU32			maxSize;
 	NxU8*			data;
+	std::string		name;
 };
 
 class MemoryReadBuffer : public NxStream
@@ -120,6 +121,7 @@ public:
 	}
 
 	mutable		const NxU8*		buffer;
+	std::string					name;
 };
 
 #endif

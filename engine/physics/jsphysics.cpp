@@ -12,7 +12,8 @@ namespace jsphysics
 	JSBool loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setParameter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setGroupCollisionFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool getShapesFromSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getActorsInSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getFirstActorInRay(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
 using namespace jsphysics;
@@ -24,8 +25,8 @@ void jsphysics::init()
 	script::gScriptEngine->AddFunction("loadDynamicsXML", 1, loadDynamicsXML);
 	script::gScriptEngine->AddFunction("system.physics.setParameter", 2, setParameter);
 	script::gScriptEngine->AddFunction("system.physics.setGroupCollisionFlag", 3, setGroupCollisionFlag);
-	script::gScriptEngine->AddFunction("system.physics.getActorsInSphere", 2, getShapesFromSphere);
-
+	script::gScriptEngine->AddFunction("system.physics.getActorsInSphere", 2, getActorsInSphere);
+	script::gScriptEngine->AddFunction("system.physics.getFirstActorInRay", 3, getFirstActorInRay);
 }
 
 JSBool jsphysics::loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
@@ -61,7 +62,7 @@ JSBool jsphysics::setGroupCollisionFlag(JSContext *cx, JSObject *obj, uintN argc
 	return JS_TRUE;
 }
 
-JSBool jsphysics::getShapesFromSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsphysics::getActorsInSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	D3DXVECTOR3 origin;
 	float radius;
@@ -92,6 +93,33 @@ JSBool jsphysics::getShapesFromSphere(JSContext *cx, JSObject *obj, uintN argc, 
 			JS_SetElement(cx, ret, index++, &v);
 		}
 	}
+
+	return JS_TRUE;
+}
+
+JSBool jsphysics::getFirstActorInRay(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+{
+	D3DXVECTOR3 origin;
+	D3DXVECTOR3 direction;
+	float distance;
+
+	jsscript::jsval_to_(cx, argv[0], &origin);
+	jsscript::jsval_to_(cx, argv[1], &direction);
+	jsscript::jsval_to_(cx, argv[2], &distance);
+
+	NxRay ray((NxVec3)origin, (NxVec3)direction);
+	NxRaycastHit hit;
+	NxShape* shape = physics::gScene->raycastClosestShape(ray, NX_ALL_SHAPES, hit);
+	if(shape)
+	{	
+		component::Component* c;
+		NxActor& actor = shape->getActor();
+		c = (component::Component*)actor.userData;
+		if(c)
+			*rval = OBJECT_TO_JSVAL(c->getScriptObject());
+	}
+	else
+		*rval = JSVAL_NULL;
 
 	return JS_TRUE;
 }

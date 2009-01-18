@@ -233,11 +233,6 @@ void physics::release()
 	acquired = false;
 }
 
-void physics::addStaticBSP(string name, scene::SceneBSP* scene)
-{
-	NxActor* actor = CreateBSPActor(name.c_str(), scene);
-}
-
 bool physics::setTimestep(settings::Setting* setting, void* value)
 {
 	settings::float_setter(setting, value);
