@@ -37,7 +37,7 @@ JSBool jsinput::jsbind(JSContext *cx, JSObject *obj, uintN argc,
 
 	JS_ValueToInt32(cx, argv[0], (int32*)&key);
 
-	if (JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[1])))
+	if (JSVAL_IS_OBJECT(argv[1]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[1])))
 	{
 		if (argc == 3)
 			JS_ValueToInt32(cx, argv[2], (int32*)&state);
