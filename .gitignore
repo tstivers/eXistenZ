@@ -36,9 +36,13 @@ vc9/*.bmp
 vc9/*.dat
 vc9/*.ncb
 vc9/*.png
+vc9/*.psess
 vc9/*.suo
+vc9/*.user
 vc9/*.vcproj.*
+vc9/*.vsp
 vc9/Debug
 vc9/Release
+vc9/_ReSharper.eXistenZ[!!-~]Engine
 vc9/debug
 vc9/release

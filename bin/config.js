@@ -67,6 +67,7 @@ execfile("scripts/keys.js");
 
 // map keys here
 bind(KEY_PGUP, "*move_up");
+print("bind 1 done");
 bind(KEY_PGDN, "*move_down");
 bind(KEY_LEFT, "*move_left");
 bind(KEY_RIGHT, "*move_right");
@@ -87,7 +88,7 @@ bind(KEY_S, "*move_back");
 bind(KEY_D, "*move_right");
 bind(KEY_SPACE, "*move_jump");
 
-//bind(KEY_F1, "toggle_wireframe");
+bind(KEY_F1, "toggle_wireframe");
 bind(KEY_L, "toggle_lightmap");
 bind(KEY_T, "toggle_transparency");
 //bind(KEY_P, "toggle_patches");
@@ -122,14 +123,14 @@ bind(KEY_R, "exec eraseEverything()");
 bind(KEY_N, "exec fountain(game.player.getPos(), game.player.getRot()");
 bind(KEY_V, toggle_vtrace);
 //bind(KEY_F4, "toggle_parallel");
-
+print("binds complete");
 //model.rot.y = -90;
 
 // functions
 
 //game.init_command = "/map q3dm1";
 //bind(KEY_F9, function() { print(system.scene.entities.testentity.components.bleh.name); });
-
+print("watching files");
 system.vfs.watchFile("scripts/*.js", onScriptChange);
 
 function onScriptChange(filename)

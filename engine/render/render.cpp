@@ -18,6 +18,7 @@
 #include "script/jsfunction.h"
 #include "physics/physics.h"
 #include "q3shader/q3shadercache.h"
+#include "timer/timer.h"
 
 namespace render
 {
@@ -52,6 +53,7 @@ namespace render
 	int lighting;
 	int maxanisotropy = 0;
 	int parallel = 0;
+	int max_fps = 0;
 
 	int use_scenegraph;
 	unsigned int max_node_level;
@@ -80,6 +82,7 @@ namespace render
 	D3DXVECTOR3 model_rot;
 	int visualizeFlags = 0;
 	q3shader::Q3ShaderCache gQ3ShaderCache;
+	timer::Stopwatch frame_timer;
 };
 
 using namespace render;
@@ -101,6 +104,7 @@ void render::init()
 	settings::addsetting("system.render.multisampletype", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.anisotropylevel", settings::TYPE_INT, 0, NULL, NULL, &maxanisotropy);
 	settings::addsetting("system.render.parallel", settings::TYPE_INT, 0, NULL, NULL, &parallel);
+	settings::addsetting("system.render.max_fps", settings::TYPE_INT, 0, NULL, NULL, &max_fps);
 
 	settings::setint("system.render.resolution.x", 800);
 	settings::setint("system.render.resolution.y", 600);
@@ -206,6 +210,7 @@ void render::init()
 	model_rot.y = 0;
 	model_rot.z = 0;
 
+	frame_timer.Start();
 }
 
 void render::release()
@@ -259,7 +264,6 @@ void render::render()
 		return;
 
 	// clear the scene
-	d3d::clear();
 	d3d::begin();
 
 	// set up world/view matrices
@@ -288,7 +292,15 @@ void render::render()
 	// show it rarr
 	//if(swapchain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_DONOTWAIT) == D3DERR_WASSTILLDRAWING) {
 	//	LOG("Had to wait for drawing");
+
+	// spin if max_fps is set
+	if(max_fps)
+		while(frame_timer.Elapsed() < (1000.0 / (double)max_fps)); 
+
 	d3d::present();
+	frame_timer.Reset();
+	d3d::clear();
+
 	//}
 }
 

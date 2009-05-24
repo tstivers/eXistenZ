@@ -41,25 +41,25 @@ namespace scene
 
 	void BSPTextureGroup::acquire()
 	{
-		int total_v = 0;
-		int total_i = 0;
+		int total_vertices = 0;
+		int total_indices = 0;
 
 		// count vertices/indices, set offsets
 		for(FaceList::iterator it = faces.begin(); it != faces.end(); ++it)
 		{
 			BSPFace* face = *it;
-			face->vertices_start = total_v;
-			face->indices_start = total_i;
-			total_v += face->num_vertices;
-			total_i += face->num_indices;
+			face->vertices_start = total_vertices;
+			face->indices_start = total_indices;
+			total_vertices += face->num_vertices;
+			total_indices += face->num_indices;
 		}
 
-		use32bitindex = total_v > 0xffff;
+		bool use32bitindex = total_vertices > 0xffff;
 
 		// allocate vertex and index buffers
-		render::device->CreateVertexBuffer(total_v * sizeof(STDVertex), D3DUSAGE_WRITEONLY, STDVertex::FVF, D3DPOOL_MANAGED, &vb, NULL);
+		render::device->CreateVertexBuffer(total_vertices * sizeof(STDVertex), D3DUSAGE_WRITEONLY, STDVertex::FVF, D3DPOOL_MANAGED, &vb, NULL);
 		render::device->CreateIndexBuffer(
-			use32bitindex ? total_i * sizeof(int) : total_i * sizeof(short), 
+			use32bitindex ? total_indices * sizeof(int) : total_indices * sizeof(short), 
 			D3DUSAGE_WRITEONLY, 
 			use32bitindex ? D3DFMT_INDEX32 : D3DFMT_INDEX16, 
 			D3DPOOL_MANAGED, &ib, NULL);
@@ -70,10 +70,10 @@ namespace scene
 		int offset_i = 0;
 
 		// lock and copy vertices/indices
-		vb->Lock(0, total_v * sizeof(STDVertex), &data_v, D3DLOCK_DISCARD);
+		vb->Lock(0, total_vertices * sizeof(STDVertex), &data_v, D3DLOCK_DISCARD);
 		ib->Lock(
 			0, 
-			use32bitindex ? total_i * sizeof(int) : total_i * sizeof(short), 
+			use32bitindex ? total_indices * sizeof(int) : total_indices * sizeof(short), 
 			&data_i, 
 			D3DLOCK_DISCARD);
 		for(FaceList::iterator it = faces.begin(); it != faces.end(); ++it)
@@ -192,7 +192,7 @@ namespace scene
 			total_i += face->num_indices;
 		}
 
-		use32bitindex = total_v > 0xffff;
+		bool use32bitindex = total_v > 0xffff;
 
 		// allocate vertex and index buffers
 		render::device->CreateVertexBuffer(
@@ -352,7 +352,7 @@ namespace scene
 		if(shader->is_useslightmap)
 			render::device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE2X);
 	}
-};
+} // namespace scene
 
 namespace render
 {
@@ -365,12 +365,12 @@ using namespace scene;
 SceneBSP::SceneBSP()
 {
 	bsp = NULL;
-};
+}
 
 SceneBSP::~SceneBSP()
 {
 	// release/delete everything
-};
+}
 
 void SceneBSP::init()
 {
@@ -522,17 +522,17 @@ void SceneBSP::acquire()
 				TextureGroupMap::iterator it = m_textureGroups.find(make_pair(texture, lightmap));
 				if(it == m_textureGroups.end())
 				{
-					shared_ptr<BSPTextureGroup> group(new BSPTextureGroup());
+					BSPTextureGroup* group = new BSPTextureGroup();
 					group->texture = texture;
 					group->lightmap = lightmap;
 					group->faces.push_back(clusters[i].faces[j]);
-					face.texture_group = group.get();
+					face.texture_group = group;
 					num_textures++;
-					m_textureGroups.insert(make_pair(make_pair(texture, lightmap), group));
+					m_textureGroups.insert(make_pair(texture, lightmap), group);
 				}
 				else
 				{
-					face.texture_group = it->second.get();
+					face.texture_group = it->second;
 					it->second->faces.push_back(clusters[i].faces[j]);
 				}
 			}
@@ -545,17 +545,16 @@ void SceneBSP::acquire()
 				ShaderGroupMap::iterator it = m_shaderGroups.find(shader);
 				if(it == m_shaderGroups.end())
 				{
-					shared_ptr<BSPShaderGroup> group(new BSPShaderGroup());
+					BSPShaderGroup* group = new BSPShaderGroup();
 					group->shader = shader;
 					group->faces.insert(make_pair(lightmap, clusters[i].faces[j]));
-					group->use32bitindex = false;
-					face.shader_group = group.get();
+					face.shader_group = group;
 					num_shaders++;
-					m_shaderGroups.insert(make_pair(shader, group));
+					m_shaderGroups.insert(shader, group);
 				}
 				else
 				{
-					face.shader_group = it->second.get();
+					face.shader_group = it->second;
 					it->second->faces.insert(make_pair(lightmap, clusters[i].faces[j]));
 				}
 			}
@@ -605,7 +604,7 @@ void SceneBSP::reload(unsigned int flags)
 #define BSP_TESTVIS(to) (*(clustervis_start + ((to)>>3)) & (1 << ((to) & 7)))
 
 void SceneBSP::mark()
-{
+{	
 	int current_leaf = bsp->leafFromPoint(render::cam_pos);
 	int current_cluster = bsp->leafs[current_leaf].cluster;
 
@@ -635,21 +634,24 @@ void SceneBSP::mark()
 	{
 		for (int i = 0; i < num_clusters; i++)
 		{
+			BSPCluster& c = clusters[i];
+
 			if (!BSP_TESTVIS(i))
 				continue;
 
-			if (!render::box_in_frustrum(clusters[i].aabb.min, clusters[i].aabb.max))
+			if (!render::box_in_frustrum(c.aabb.min, c.aabb.max))
 				continue;
 
 			//render::frame_clusters++;
 
-			for (int j = 0; j < clusters[i].num_faces; j++)
+			for (int j = 0; j < c.num_faces; j++)
 			{
-				clusters[i].faces[j]->frame = render::frame;
-				if(clusters[i].faces[j]->texture_group)
-					clusters[i].faces[j]->texture_group->frame = render::frame;
+				BSPFace& face = *c.faces[j];
+				face.frame = render::frame;
+				if(face.texture_group)
+					face.texture_group->frame = render::frame;
 				else
-					clusters[i].faces[j]->shader_group->frame = render::frame;
+					face.shader_group->frame = render::frame;
 			}
 		}
 	}
@@ -667,7 +669,7 @@ void SceneBSP::render()
 
 	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
 	{
-		BSPTextureGroup* group = it->second.get();
+		BSPTextureGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -682,7 +684,7 @@ void SceneBSP::render()
 
 	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
 	{
-		BSPShaderGroup* group = it->second.get();
+		BSPShaderGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -712,7 +714,7 @@ void SceneBSP::render()
 
 	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
 	{
-		BSPTextureGroup* group = it->second.get();
+		BSPTextureGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -727,7 +729,7 @@ void SceneBSP::render()
 
 	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
 	{
-		BSPShaderGroup* group = it->second.get();
+		BSPShaderGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -799,7 +801,7 @@ void SceneBSP::parallel_render()
 
 	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
 	{
-		BSPTextureGroup* group = it->second.get();
+		BSPTextureGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -814,7 +816,7 @@ void SceneBSP::parallel_render()
 
 	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
 	{
-		BSPShaderGroup* group = it->second.get();
+		BSPShaderGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -844,7 +846,7 @@ void SceneBSP::parallel_render()
 
 	for(TextureGroupMap::iterator it = m_textureGroups.begin(); it != m_textureGroups.end(); ++it)
 	{
-		BSPTextureGroup* group = it->second.get();
+		BSPTextureGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
@@ -859,7 +861,7 @@ void SceneBSP::parallel_render()
 
 	for(ShaderGroupMap::iterator it = m_shaderGroups.begin(); it != m_shaderGroups.end(); ++it)
 	{
-		BSPShaderGroup* group = it->second.get();
+		BSPShaderGroup* group = it->second;
 
 		if(group->frame != render::frame) // skip groups with no faces in this frame
 			continue;
