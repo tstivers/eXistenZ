@@ -9,7 +9,7 @@ game.player.shoot = function(key, state)
 
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
-game.player.shootFunction = probeShoot;
+game.player.shootFunction = playerShoot;
 game.player.createProjectile = createHam;
 
 
@@ -116,7 +116,7 @@ function hamgrenade(ham) {
         for (i = 0; i < grenade_slices; i++) {
             this.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
             this.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
-            actor = this.createActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
+            actor = this.createDynamicActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
             actor.acquire();
             actor.setShapesGroup(10);
             actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);

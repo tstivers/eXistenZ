@@ -10,7 +10,7 @@
 
 using namespace component;
 
-REGISTER_COMPONENT_TYPE(MeshComponent, 2);
+REGISTER_COMPONENT_TYPE(MeshComponent, MESHCOMPONENT);
 
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 

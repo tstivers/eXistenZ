@@ -10,7 +10,7 @@ REGISTER_COMPONENT_TYPE(StaticActorComponent, STATICACTORCOMPONENT);
 #pragma warning(disable: 4355) // disable warning for using 'this' as an initializer
 
 StaticActorComponent::StaticActorComponent(entity::Entity* entity, const string& name, const desc_type& desc)
-: Component(entity, name, desc)
+: ActorComponent(entity, name, desc)
 {
 	
 	NxActorDesc actor_desc;
@@ -39,25 +39,16 @@ StaticActorComponent::~StaticActorComponent()
 
 void StaticActorComponent::acquire()
 {
-	Component::acquire();
+	ActorComponent::acquire();
 }
 
 void StaticActorComponent::release()
 {
-	Component::release();
-	physics::gScene->releaseActor(*m_actor);
-	m_actor = NULL;
+	if(!m_acquired)
+		return;	
+	ActorComponent::release();
 }
 
-void StaticActorComponent::setShapesGroup(int group)
-{
-	NxShape * const * shape = m_actor->getShapes();
-	for(int i = m_actor->getNbShapes() - 1; i >= 0; --i)
-	{
-		shape[i]->setGroup(group);
-		shape++;
-	}
-}
 
 JSObject* component::StaticActorComponent::createScriptObject()
 {

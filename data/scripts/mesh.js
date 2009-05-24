@@ -14,7 +14,7 @@ function createModelEntity(meshname, dynamicsname) {
     entity = system.scene.entities.createEntity("model" + num_entities++);
     entity.createPosComponent("pos", { pos: game.player.getPos(), rot: game.player.getRot() });
     entity.createMeshComponent("mesh", { mesh: meshname, transform: "pos" });
-    entity.createActorComponent("actor", { shapesXml: dynamicsname, transform: "pos" });
+    entity.createDynamicActorComponent("actor", { shapesXml: dynamicsname, transform: "pos" });
     entity.acquire();
     return entity;
 }

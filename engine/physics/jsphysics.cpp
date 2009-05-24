@@ -3,7 +3,7 @@
 #include "physics/physics.h"
 #include "script/script.h"
 #include "physics/shapecache.h"
-#include "component/actorcomponent.h"
+#include "component/dynamicactorcomponent.h"
 
 
 namespace jsphysics
@@ -85,9 +85,9 @@ JSBool jsphysics::getActorsInSphere(JSContext *cx, JSObject *obj, uintN argc, js
 	int index = 0;
 	for(int i = 0; i < nbshapes; i++)
 	{
-		component::ActorComponent* actor;
-		component::Component* c = (component::Component*)shapes[i]->getActor().userData;
-		if(c && (actor = dynamic_cast<component::ActorComponent*>(c)))
+		component::DynamicActorComponent* actor;
+		component::Component* c = (component::Component*)(shapes[i]->getActor().userData);
+		if(c && (actor = dynamic_cast<component::DynamicActorComponent*>(c)))
 		{
 			jsval v = OBJECT_TO_JSVAL(actor->getScriptObject());
 			JS_SetElement(cx, ret, index++, &v);

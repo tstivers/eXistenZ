@@ -35,6 +35,36 @@ namespace scene
 		typedef set<IRenderable*> renderables_list;
 		renderables_list m_renderables;
 
+		// cameras
+		typedef set<ICamera*> camera_list;
+		camera_list m_cameras;
+		ICamera* m_current_camera;
+	
+		virtual void addCamera(ICamera* camera)
+		{
+			ASSERT(m_cameras.find(camera) == m_cameras.end());
+			m_cameras.insert(camera);
+		}
+
+		virtual void removeCamera(ICamera* camera)
+		{
+			ASSERT(m_cameras.find(camera) != m_cameras.end());
+			if(m_current_camera == camera)
+				m_current_camera = NULL;
+			m_cameras.erase(camera);
+		}
+
+		virtual void setCurrentCamera(ICamera* camera)
+		{
+			ASSERT(m_cameras.find(camera) != m_cameras.end());
+			m_current_camera = camera;
+		}
+
+		virtual ICamera* getCurrentCamera()
+		{
+			return m_current_camera;
+		}
+
 		// construction
 		Scene();
 		virtual ~Scene();

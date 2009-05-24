@@ -14,7 +14,7 @@ namespace scene
 using namespace scene;
 
 Scene::Scene()
-		: acquired(false), initialized(false)
+		: acquired(false), initialized(false), m_current_camera(NULL)
 {
 	m_entityManager = shared_ptr<entity::EntityManager>(new entity::EntityManager(this));
 	m_soundManager = shared_ptr<sound::SoundManager>(new sound::SoundManager(this));
