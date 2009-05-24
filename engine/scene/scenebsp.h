@@ -53,6 +53,12 @@ namespace scene
 		BSPShaderGroup* shader_group;
 	};
 
+	struct FaceCluster
+	{
+		unsigned int num_vertices;
+		unsigned int num_indices;
+
+	};
 
 	struct BSPTextureGroup
 	{
@@ -63,11 +69,10 @@ namespace scene
 		typedef vector<BSPFace*> FaceList;
 		FaceList faces;
 		unsigned int frame;
-		bool use32bitindex;
 
 		void acquire();
 		void release();
-		void render();
+		void render();		
 	};
 
 	struct BSPShaderGroup
@@ -78,11 +83,10 @@ namespace scene
 		typedef multimap<texture::DXTexture*, BSPFace*> FaceMap;
 		FaceMap faces;
 		unsigned int frame;
-		bool use32bitindex;
-
+		
 		void acquire();
 		void release();
-		void render();
+		void render();		
 	};
 
 	class BSPCluster
@@ -127,8 +131,8 @@ namespace scene
 
 		entity::EntityList entities;
 
-		typedef map<pair<texture::DXTexture*, texture::DXTexture*>, shared_ptr<BSPTextureGroup>> TextureGroupMap;
-		typedef map<q3shader::Q3Shader*, shared_ptr<BSPShaderGroup>> ShaderGroupMap;
+		typedef ptr_map<pair<texture::DXTexture*, texture::DXTexture*>, BSPTextureGroup> TextureGroupMap;
+		typedef ptr_map<q3shader::Q3Shader*, BSPShaderGroup> ShaderGroupMap;
 		TextureGroupMap m_textureGroups;
 		ShaderGroupMap m_shaderGroups;
 	};

@@ -8,7 +8,7 @@ namespace script
 		JSArgumentList(JSContext* cx);
 		~JSArgumentList();
 
-		JSArgumentList& addParam(jsval val, bool rooted = false);
+		JSArgumentList& addParam(jsval val, bool rooted);
 		JSArgumentList& addParam(int i);
 		JSArgumentList& addParam(float f);
 		JSArgumentList& addParam(double d);

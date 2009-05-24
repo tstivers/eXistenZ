@@ -55,13 +55,15 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 	// not cached, cook it from scratch
 	
 	int i = 0;
-	for (scene::SceneBSP::TextureGroupMap::const_iterator it = scene->m_textureGroups.begin(); it != scene->m_textureGroups.end(); it++)
+	for (scene::SceneBSP::TextureGroupMap::const_iterator it = scene->m_textureGroups.begin(); 
+		it != scene->m_textureGroups.end(); 
+		++it)
 	{
 		vector<D3DXVECTOR3> vertices;
 		vector<unsigned int> indices;
 
 		int offset_v = 0;
-		for(scene::BSPTextureGroup::FaceList::iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
+		for(scene::BSPTextureGroup::FaceList::const_iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
 		{
 			scene::BSPFace* face = *fit;
 			for(int i =0; i < face->num_vertices; i++)
@@ -91,7 +93,7 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 		INFO("creating mesh for %s", it->second->shader->getName().c_str());
 
 		int offset_v = 0;
-		for(scene::BSPShaderGroup::FaceMap::iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
+		for(scene::BSPShaderGroup::FaceMap::const_iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
 		{
 			scene::BSPFace* face = fit->second;
 			for(int i =0; i < face->num_vertices; i++)
