@@ -1,5 +1,5 @@
 #include "precompiled.h"
-#include "component/jsactorcomponent.h"
+#include "component/jscameracomponent.h"
 #include "component/jscomponent.h"
 #include "entity/jsentity.h"
 
@@ -9,7 +9,7 @@ using namespace script;
 
 namespace jscomponent
 {
-	static bool parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc);
+	static bool parseDesc(JSContext* cx, JSObject* obj, CameraComponent::desc_type& desc);
 
 	// method declarations
 	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
@@ -19,7 +19,7 @@ namespace jscomponent
 
 	static JSClass class_ops =
 	{
-		"ActorComponent",
+		"CameraComponent",
 		JSCLASS_HAS_RESERVED_SLOTS(1),
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
@@ -30,18 +30,18 @@ namespace jscomponent
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
-		JS_PS_END
+		WRAPPED_LINK(transform, CameraComponent, PosComponent),
+		JS_PS_END 
 	};
 
 	static JSFunctionSpec class_methods[] =
 	{
-		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("setShapesGroup", WRAP_NATIVE(ActorComponent::setShapesGroup), 1, 0),
+		// JS_FN("name", function, nargs, flags, minargs),
 		JS_FS_END
 	};
 }
 
-ScriptedObject::ScriptClass ActorComponent::m_scriptClass =
+ScriptedObject::ScriptClass CameraComponent::m_scriptClass =
 {
 	&class_ops,
 	class_properties,
@@ -49,15 +49,16 @@ ScriptedObject::ScriptClass ActorComponent::m_scriptClass =
 	NULL
 };
 
-REGISTER_SCRIPT_INIT(ActorComponent, initClass, 20);
+REGISTER_SCRIPT_INIT(CameraComponent, initClass, 20);
 
 static void initClass(ScriptEngine* engine)
 {
-	RegisterScriptClass<ActorComponent, Component>(engine);
-	//jsentity::RegisterCreateFunction(engine, "createActorComponent", createComponent<ActorComponent>);
+	RegisterScriptClass<CameraComponent, Component>(engine);
+	jsentity::RegisterCreateFunction(engine, "createCameraComponent", createComponent<CameraComponent>);
 }
 
-bool jscomponent::parseDesc(JSContext* cx, JSObject* obj, ActorComponent::desc_type& desc)
+bool jscomponent::parseDesc(JSContext* cx, JSObject* obj, CameraComponent::desc_type& desc)
 {
+	GetProperty(cx, obj, "transform", desc.transform);
 	return true;
 }

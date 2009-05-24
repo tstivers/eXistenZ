@@ -3,36 +3,34 @@
 #include "component/component.h"
 #include "entity/interfaces.h"
 #include "component/poscomponent.h"
-#include "component/actorcomponent.h"
 
 namespace component
 {
-	struct StaticActorComponentDesc : public ActorComponentDesc
+	struct CameraComponentDesc : public ComponentDesc
 	{
-		NxShapeDesc* shape;
+		string transform;
 	};
 
-	class StaticActorComponent : public ActorComponent
+	class CameraComponent : public Component, public ICamera
 	{
 	public:
 		// typedefs
-		typedef StaticActorComponentDesc desc_type;
-		typedef StaticActorComponent component_type;
+		typedef CameraComponentDesc desc_type;
+		typedef CameraComponent component_type;
 
 		// constructor/destructor
-		StaticActorComponent(entity::Entity* entity, const string& name, const desc_type& desc);
-		~StaticActorComponent();
+		CameraComponent(entity::Entity* entity, const string& name, const desc_type& desc);
+		~CameraComponent();
 
 		// Component overloads
-		int getType() { return STATICACTORCOMPONENT; }
+		int getType() { return CAMERACOMPONENT; }
 		void acquire();
 		void release();
 
-		// IPhysicsObject overrides
-
-		// methods
+		// methods		
 
 		// properties
+		ComponentLink<PosComponent> transform;
 
 		// script class
 		static ScriptedObject::ScriptClass m_scriptClass;

@@ -1513,6 +1513,46 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="camera"
+				>
+				<File
+					RelativePath="..\engine\component\cameracomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\cameracomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscameracomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscameracomponent.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="dynamicactor"
+				>
+				<File
+					RelativePath="..\engine\component\dynamicactorcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\dynamicactorcomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsdynamicactorcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jsdynamicactorcomponent.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

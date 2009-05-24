@@ -11,9 +11,14 @@ public:
 	virtual void render(texture::Material* lighting) = 0;
 };
 
-class IPhysicsObject
+class IPhysicsObject // not used?
 {
 public:
-	virtual NxActor* getActor() { return NULL; }
-	virtual void updateTransform() {}
+	virtual NxActor* getActor() const = 0;
+	virtual void updateTransform() = 0;
+};
+
+class ICamera
+{
+public:
 };
