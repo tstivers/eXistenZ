@@ -219,6 +219,7 @@ JSObject* SoundManager::createScriptObject()
 void SoundManager::destroyScriptObject()
 {
 	DestroySoundManagerObject(this);
+	m_scriptObject = NULL;
 }
 
 void SoundManager::initScriptObject()

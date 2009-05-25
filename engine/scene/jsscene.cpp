@@ -28,7 +28,7 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 {
 	*rval = JSVAL_VOID;
 
-	if (!render::scene)
+	if (!g_scene)
 	{
 		script::gScriptEngine->ReportError("addEntity(): no scene loaded");
 		return JS_FALSE;
@@ -56,7 +56,7 @@ JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv,
 	jsval entity_val;
 	JS_GetReservedSlot(cx, entity_obj, 0, &entity_val);
 	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
-	render::scene->addEntity(entity);
+	g_scene->addEntity(entity);
 
 	return JS_TRUE;
 }
@@ -65,7 +65,7 @@ JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
 {
 	*rval = JSVAL_VOID;
 
-	if (!render::scene)
+	if (!g_scene)
 	{
 		script::gScriptEngine->ReportError("addEntity(): no scene loaded");
 		return JS_FALSE;
@@ -93,7 +93,7 @@ JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *ar
 	jsval entity_val;
 	JS_GetReservedSlot(cx, entity_obj, 0, &entity_val);
 	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
-	render::scene->removeEntity(entity);
+	g_scene->removeEntity(entity);
 	//entity::removeEntity(entity);
 	JS_ClearScope(cx, entity_obj);
 	JS_SetReservedSlot(cx, entity_obj, 0, JSVAL_NULL);

@@ -934,6 +934,10 @@
 			Name="common"
 			>
 			<File
+				RelativePath="..\engine\common\forwards.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\common\log.cpp"
 				>
 			</File>
@@ -1135,14 +1139,6 @@
 			</File>
 			<File
 				RelativePath="..\engine\physics\physics.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\physics\shapecache.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\physics\shapecache.h"
 				>
 			</File>
 			<File

@@ -37,6 +37,7 @@ engine/client/main.cpp eol=crlf
 engine/client/main.h eol=crlf
 engine/client/precompiled.cpp eol=crlf
 engine/client/precompiled.h eol=crlf
+engine/common/forwards.h -text
 engine/common/log.cpp -text
 engine/common/log.h -text
 engine/common/mystring.cpp eol=crlf

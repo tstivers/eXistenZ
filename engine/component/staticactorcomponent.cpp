@@ -15,7 +15,7 @@ StaticActorComponent::StaticActorComponent(entity::Entity* entity, const string&
 	
 	NxActorDesc actor_desc;
 	actor_desc.shapes.push_back(desc.shape);
-	m_actor = physics::gScene->createActor(actor_desc);
+	m_actor = m_entity->getScene()->getPhysicsManager()->getPhysicsScene()->createActor(actor_desc);
 	
 	if(!m_actor)
 	{

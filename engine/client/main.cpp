@@ -15,6 +15,7 @@
 #include "game/game.h"
 #include "script/jsvector.h"
 #include "script/jsfunction.h"
+#include "scene/scene.h"
 
 script::ScriptEngine* script::gScriptEngine = NULL;
 HINSTANCE gHInstance = 0;
@@ -131,12 +132,13 @@ int mainloop()
 		{
 			timer::doTick();
 			input::doTick();
-			physics::getResults();
+			if(scene::g_scene)
+				scene::g_scene->getPhysicsManager()->getResults();
 			timer::fireTimers();
 			game::doTick();
-			physics::startSimulation();
-			render::render();
-			//jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_tick")();
+			if(scene::g_scene)
+				scene::g_scene->getPhysicsManager()->startSimulation();
+			render::render();			
 			JS_MaybeGC(script::gScriptEngine->GetContext());
 		}
 	}

@@ -73,8 +73,6 @@ namespace render
 	extern unsigned int frame_faces;
 	extern unsigned int frame_drawcalls;
 
-	extern scene::Scene* scene;
-
 	extern texture::DXTexture* current_texture;
 	extern texture::DXTexture* current_lightmap;
 	extern texture::Material* current_material;

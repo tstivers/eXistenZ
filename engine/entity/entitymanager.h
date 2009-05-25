@@ -1,12 +1,13 @@
 #pragma once
 
 #include "script/script.h"
-#include "entity/entity.h"
 #include "scene/scene.h"
 #include "entity/jsentitymanager.h"
 
 namespace entity
 {
+	class Entity;
+
 	class EntityManager : public script::ScriptedObject
 	{
 	protected:

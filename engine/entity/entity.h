@@ -1,16 +1,20 @@
 #pragma once
 
 #include "script/script.h"
+#include "entity/entitymanager.h"
 
 namespace component
 {
 	class Component;
 }
 
-namespace entity
+namespace scene
 {
-	class EntityManager;
+	class Scene;
+}
 
+namespace entity
+{	
 	enum ENTITY_FLAGS
 	{
 		E_STATIC		= (1<<0),
@@ -36,6 +40,7 @@ namespace entity
 		// common entity functions
 		virtual const string& getName() { return m_name; }
 		virtual EntityManager* getManager() { return m_manager; }
+		virtual scene::Scene* getScene() { return m_manager->getScene(); }		
 
 		// component functions
 		template<typename T>

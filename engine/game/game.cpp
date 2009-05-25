@@ -97,8 +97,8 @@ void game::doTick()
 	{
 	case STATE_RUN:
 		processInput();
-		if(render::scene)
-			render::scene->doTick();
+		if(scene::g_scene)
+			scene::g_scene->doTick();
 		break;
 	default:
 		break;
@@ -213,19 +213,20 @@ bool game::startMap(char* name)
 
 	sprintf(bspname, "maps/%s.bsp", name);
 
+	// release the player
+	player->release();
+
 	// load the bsp
-	render::scene = scene::Scene::load(bspname);
-	if (!render::scene)
+	scene::g_scene = scene::Scene::load(bspname);
+	if (!scene::g_scene)
 		return false;
 
-	render::scene->name = name;
+	scene::g_scene->name = name;
 
-	render::scene->init();
+	scene::g_scene->init();
 
-	physics::acquire();
 	player->acquire();
-	render::scene->acquire();
-	//physics::addStaticBSP(name, (scene::SceneBSP*)render::scene);
+	scene::g_scene->acquire();	
 
 	// load the script
 	sprintf(bspname, "scripts/%s.js", name);
