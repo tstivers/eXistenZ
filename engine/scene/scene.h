@@ -13,6 +13,11 @@ namespace sound
 	class SoundManager;
 }
 
+namespace physics
+{
+	class PhysicsManager;
+}
+
 namespace q3shader
 {
 	class Q3ShaderCache;
@@ -70,7 +75,7 @@ namespace scene
 		virtual ~Scene();
 
 		// loading/init
-		static Scene* load(const string& name, SCENE_TYPE type = ST_AUTO);
+		static shared_ptr<Scene> load(const string& name, SCENE_TYPE type = ST_AUTO);
 		virtual void init() = 0;
 		virtual void acquire() = 0;
 		virtual void release() = 0;
@@ -107,12 +112,13 @@ namespace scene
 		bool acquired;
 		bool initialized;
 
+		physics::PhysicsManager* getPhysicsManager() { return m_physicsManager.get(); }
+
 		shared_ptr<entity::EntityManager> m_entityManager;
 		shared_ptr<sound::SoundManager> m_soundManager;
+		shared_ptr<physics::PhysicsManager> m_physicsManager;
 	//	shared_ptr<q3shader::Q3ShaderCache> m_q3shaderCache;
 	};
 
-	void init();
-
-	extern int optimize_bsp;
-};
+	extern shared_ptr<Scene> g_scene;
+}

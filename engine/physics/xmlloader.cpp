@@ -4,6 +4,7 @@
 #include "physics/xmlloader.h"
 #include "vfs/vfs.h"
 #include "rapidxml/rapidxml.hpp"
+#include "scene/scene.h"
 #include "stream.h"
 #include <NxCooking.h>
 
@@ -12,9 +13,6 @@ using namespace physics;
 
 namespace physics
 {
-	extern NxPhysicsSDK* gPhysicsSDK;
-	extern NxCookingInterface *gCooking;
-	extern NxScene* gScene;
 	NxMat34 axis_convert;
 }
 
@@ -156,18 +154,18 @@ NxConvexMesh* xmlloader::parseConvexMeshData( const string& id, xml_document<>* 
 		md.triangleStrideBytes = sizeof(int) * 3;
 		md.flags = 0;
 
-		bool cooked = gCooking->NxCookConvexMesh(md, mwBuf);
+		bool cooked = scene::g_scene->getPhysicsManager()->getCookingInterface()->NxCookConvexMesh(md, mwBuf);
 		ASSERT(cooked);
 	}
 
-	NxConvexMesh* mesh = gPhysicsSDK->createConvexMesh(MemoryReadBuffer(mwBuf.data));
+	NxConvexMesh* mesh = scene::g_scene->getPhysicsManager()->getPhysicsSDK()->createConvexMesh(MemoryReadBuffer(mwBuf.data));
 	ASSERT(mesh);
 
 	//MemoryWriteBuffer buf2;
 	//if(NxScaleCookedConvexMesh(MemoryReadBuffer(mwBuf.data), 0.080693, buf2)) //Resize the mesh by a factor 0.5
 	//{
 	//	NxConvexShapeDesc convexShapeDesc2;
-	//	mesh = gPhysicsSDK->createConvexMesh(MemoryReadBuffer(buf2.data));
+	//	mesh = scene::g_scene->getPhysicsManager()->getPhysicsSDK()->createConvexMesh(MemoryReadBuffer(buf2.data));
 	//}	
 
 	return mesh;

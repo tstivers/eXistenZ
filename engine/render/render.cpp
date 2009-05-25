@@ -65,8 +65,7 @@ namespace render
 
 	unsigned int vertex_buffer_size;
 	unsigned int index_buffer_size;
-
-	scene::Scene* scene = NULL;
+	
 	unsigned int frame;
 	texture::DXTexture* current_texture;
 	texture::DXTexture* current_lightmap;
@@ -202,8 +201,7 @@ void render::init()
 	vertex_buffer_size = 1280 * 1024;
 	index_buffer_size = 1280 * 1024;
 
-	frame = 0;
-	scene = NULL;
+	frame = 0;	
 	windowed_width = xres;
 	windowed_height = yres;
 	model_rot.x = 0;
@@ -272,11 +270,8 @@ void render::render()
 	// draw the skybox TODO: render only if visible in bsp (transparent crap bug)
 	skybox::render();
 
-	if (scene)
-		scene->render();
-
-	if(physics::debugRender)
-		physics::renderDebug();
+	if (scene::g_scene)
+		scene::g_scene->render();			
 
 	// call the on_render js event
 	//jsscript::jsfunction < void(void) > (script::gScriptEngine->GetContext(), "on_render")();

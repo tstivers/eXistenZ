@@ -33,7 +33,7 @@ void DynamicActorComponent::acquire()
 	actordesc.density = 10.0;
 	if(!m_shapesXml.empty())
 	{
-		physics::ShapeEntry shapes = physics::getShapeEntry(m_shapesXml);
+		physics::ShapeEntry shapes = m_entity->getScene()->getPhysicsManager()->getShapeEntry(m_shapesXml);
 		if(!shapes)
 		{
 			INFO("WARNING: unable to acquire shapes \"%s\" for \"%s.%s\"", 
@@ -47,7 +47,7 @@ void DynamicActorComponent::acquire()
 		}
 	}
 
-	m_actor = physics::gScene->createActor(actordesc);
+	m_actor = m_entity->getScene()->getPhysicsManager()->getPhysicsScene()->createActor(actordesc);
 	if(!m_actor)
 	{
 		INFO("WARNING: unable to create actor for \"%s.%s\"", 

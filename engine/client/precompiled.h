@@ -80,6 +80,7 @@
 using namespace std;
 using namespace boost;
 
+#include "common/forwards.h" // forward class declarations;
 #include "common/types.h"
 #include "common/log.h"
 #include "common/mystring.h"

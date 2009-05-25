@@ -3,6 +3,7 @@
 #include "game/physxplayer.h"
 #include "game/game.h"
 #include "physics/physics.h"
+#include "scene/scene.h"
 #include "timer/timer.h"
 #include <NxPhysics.h>
 #include <NxController.h>
@@ -66,13 +67,6 @@ namespace game
 
 }
 
-namespace physics
-{
-	extern NxControllerManager* gManager;
-	extern NxScene* gScene;
-}
-
-
 using namespace game;
 
 PhysXPlayer::PhysXPlayer(D3DXVECTOR3& size)
@@ -91,17 +85,30 @@ void PhysXPlayer::acquire()
 	if (acquired)
 		return;
 
+	ASSERT(scene::g_scene);
+
 	NxBoxControllerDesc desc;
 	desc.upDirection = NX_Y;
 	desc.extents = (NxVec3)size;
 	desc.stepOffset = step_up;
 	//desc.callback = &shapehit;
 
-	nxc = physics::gManager->createController(physics::gScene, desc);
+	nxc = scene::g_scene->getPhysicsManager()->getControllerManager()->createController(scene::g_scene->getPhysicsManager()->getPhysicsScene(), desc);
 	//nxc->setCollision(false);
 	INFO("actor collision group = %i", nxc->getActor()->getShapes()[0]->getGroup());
 
 	acquired = true;
+}
+
+void PhysXPlayer::release()
+{
+	if(!acquired)
+		return;
+
+	ASSERT(scene::g_scene);
+	scene::g_scene->getPhysicsManager()->getControllerManager()->releaseController(*nxc);
+	nxc = NULL;
+	acquired = false;
 }
 
 bool PhysXPlayer::setPos(D3DXVECTOR3& pos)
@@ -160,13 +167,6 @@ bool PhysXPlayer::setSize(D3DXVECTOR3& size)
 	return true;
 }
 
-void PhysXPlayer::release()
-{
-	physics::gManager->releaseController(*nxc);
-	nxc = NULL;
-	acquired = false;
-}
-
 void PhysXPlayer::doMove(t_impulse impulse)
 {
 	moving[impulse] = true;
@@ -204,7 +204,7 @@ void PhysXPlayer::updatePos()
 
 	nxc->move((NxVec3&)dis, collisionGroups, 0.0001f, flags, 1.0);
 
-	physics::gManager->updateControllers();
+	scene::g_scene->getPhysicsManager()->getControllerManager()->updateControllers();
 
 	NxExtendedVec3 newpos = nxc->getPosition();
 

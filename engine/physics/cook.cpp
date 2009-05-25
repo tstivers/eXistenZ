@@ -15,9 +15,6 @@
 
 namespace physics
 {
-	extern NxPhysicsSDK* gPhysicsSDK;
-	extern NxCookingInterface *gCooking;
-	extern NxScene* gScene;
 	shared_ptr<NxTriangleMeshShapeDesc> CookMesh(const std::string& name, vector<D3DXVECTOR3>& vertices, vector<unsigned int>& indices, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
 	void SaveCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
 	void LoadCookedMeshes(vfs::File& file, vector<shared_ptr<MemoryWriteBuffer>>& buffers);
@@ -27,6 +24,8 @@ using namespace physics;
 
 void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, entity::Entity* entity)
 {
+	ASSERT(scene::g_scene);
+
 	string cached_filename = "cooked/" + name + ".physx";
 	vector<shared_ptr<NxTriangleMeshShapeDesc>> meshes;
 	vector<shared_ptr<MemoryWriteBuffer>> buffers;
@@ -36,7 +35,7 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 		LoadCookedMeshes(cooked_bsp, buffers);
 		for(int i = 0; i < buffers.size(); i++)
 		{
-			NxTriangleMesh* mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(buffers[i]->data));
+			NxTriangleMesh* mesh = scene::g_scene->getPhysicsManager()->getPhysicsSDK()->createTriangleMesh(MemoryReadBuffer(buffers[i]->data));
 			ASSERT(mesh);
 			NxTriangleMeshShapeDesc mesh_desc;
 			mesh_desc.meshData = mesh;
@@ -153,12 +152,12 @@ shared_ptr<NxTriangleMeshShapeDesc> physics::CookMesh(const std::string& name, v
 
 	MemoryWriteBuffer* mwBuf = new MemoryWriteBuffer();
 	mwBuf->name = name;
-	bool cooked = gCooking->NxCookTriangleMesh(desc, *mwBuf);
+	bool cooked = scene::g_scene->getPhysicsManager()->getCookingInterface()->NxCookTriangleMesh(desc, *mwBuf);
 	ASSERT(cooked);
 
 	buffers.push_back(shared_ptr<MemoryWriteBuffer>(mwBuf));
 
-	NxTriangleMesh* mesh = gPhysicsSDK->createTriangleMesh(MemoryReadBuffer(mwBuf->data));
+	NxTriangleMesh* mesh = scene::g_scene->getPhysicsManager()->getPhysicsSDK()->createTriangleMesh(MemoryReadBuffer(mwBuf->data));
 	ASSERT(mesh);
 
 	NxTriangleMeshShapeDesc* meshShapeDesc = new NxTriangleMeshShapeDesc();

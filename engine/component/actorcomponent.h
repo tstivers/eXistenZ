@@ -34,7 +34,7 @@ namespace component
 		virtual void setShapesGroup(int group);
 
 		// properties
-
+		
 		// script class
 		static ScriptedObject::ScriptClass m_scriptClass;
 

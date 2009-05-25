@@ -3,12 +3,15 @@
 #include "scene/scenebsp.h"
 #include "settings/settings.h"
 #include "entity/entitymanager.h"
+#include "physics/physics.h"
 #include "sound/sound.h"
 #include "q3shader/q3shadercache.h"
 
 namespace scene
 {
 	int optimize_bsp = 0;
+	shared_ptr<Scene> g_scene; // global scene object
+	void init();
 };
 
 using namespace scene;
@@ -18,6 +21,7 @@ Scene::Scene()
 {
 	m_entityManager = shared_ptr<entity::EntityManager>(new entity::EntityManager(this));
 	m_soundManager = shared_ptr<sound::SoundManager>(new sound::SoundManager(this));
+	m_physicsManager = shared_ptr<physics::PhysicsManager>(new physics::PhysicsManager(this));
 	//m_q3shaderCache = shared_ptr<q3shader::Q3ShaderCache>(new q3shader::Q3ShaderCache(this));
 }
 
@@ -25,9 +29,9 @@ Scene::~Scene()
 {
 }
 
-Scene* Scene::load(const string& name, SCENE_TYPE type)
+shared_ptr<Scene> Scene::load(const string& name, SCENE_TYPE type)
 {
-	return SceneBSP::loadBSP(name);
+	return shared_ptr<Scene>(SceneBSP::loadBSP(name));
 }
 
 void Scene::doTick()

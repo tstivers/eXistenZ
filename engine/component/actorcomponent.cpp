@@ -33,7 +33,7 @@ void ActorComponent::release()
 	if(!m_acquired)
 		return;
 
-	physics::gScene->releaseActor(*m_actor);
+	m_entity->getScene()->getPhysicsManager()->getPhysicsScene()->releaseActor(*m_actor);
 	m_actor = NULL;
 	Component::release();
 }

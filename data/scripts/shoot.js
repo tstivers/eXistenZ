@@ -51,7 +51,7 @@ function probeShoot() {
     var pos = new Vector(direction);
     pos.mul(3);
     pos.add(game.player.getPos());
-    var component = system.physics.getFirstActorInRay(pos, direction, 100.0);
+    var component = system.scene.physics.getFirstActorInRay(pos, direction, 100.0);
     if (component)
         print("hit component " + component.name);
 
@@ -96,14 +96,14 @@ function shootSlice(ham) {
 
 var grenade_slices = 100;
 function hamgrenade(ham) {
-    system.physics.setGroupCollisionFlag(10, 10, false);
-    system.physics.setGroupCollisionFlag(10, 0, true);
+    system.scene.physics.setGroupCollisionFlag(10, 10, false);
+    system.scene.physics.setGroupCollisionFlag(10, 0, true);
     timer.addTimer(ham.name + "_grenade", ham, function() {
         var origin = this.components.pos.getPos();
         system.scene.sound.playSound3d("sound/weapons/rocket/rocklx1a.wav", origin, 1.0);
         this.removeComponent("mesh");
         this.removeComponent("actor");
-        blasted = system.physics.getActorsInSphere(origin, 5);
+        blasted = system.scene.physics.getActorsInSphere(origin, 5);
         for (i in blasted) {
             v = blasted[i].transform.getPos();
             v.sub(origin);

@@ -1,6 +1,7 @@
 #include "precompiled.h"
 #include "entity/entitymanager.h"
 #include "entity/jsentitymanager.h"
+#include "entity/entity.h"
 
 namespace entity
 {

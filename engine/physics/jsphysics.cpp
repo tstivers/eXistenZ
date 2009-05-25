@@ -1,125 +1,124 @@
 #include "precompiled.h"
 #include "physics/jsphysics.h"
-#include "physics/physics.h"
-#include "script/script.h"
-#include "physics/shapecache.h"
-#include "component/dynamicactorcomponent.h"
+#include "scene/scene.h"
+#include "component/component.h"
 
+using namespace jsphysics;
+using namespace physics;
+using namespace script;
+
+namespace jsscript
+{
+	inline jsval to_jsval(JSContext* cx, component::Component* object)
+	{
+		return object ? OBJECT_TO_JSVAL(object->getScriptObject()) : JSVAL_NULL;
+	}
+}
 
 namespace jsphysics
 {
+
+	static JSClass class_ops =
+	{
+		"PhysicsManager",
+		JSCLASS_HAS_RESERVED_SLOTS(1),
+		JS_PropertyStub,  JS_PropertyStub,
+		JS_PropertyStub, JS_PropertyStub,
+		JS_EnumerateStub, JS_ResolveStub,
+		JS_ConvertStub,  JS_FinalizeStub
+	};
+
+	// method declarations
+	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
+
+	// property declarations
+	// static JSBool propGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+
+	static JSPropertySpec class_properties[] =
+	{
+		// {"name", id, flags, getter, setter},
+		JS_PS_END
+	};
+
+	static JSFunctionSpec class_methods[] =
+	{
+		// JS_FN("name", function, nargs, minargs, flags),
+		JS_FN("setParameter", WRAP_NATIVE(PhysicsManager::setParameter), 2, 0),	
+		JS_FN("setGroupCollisionFlag", WRAP_NATIVE(PhysicsManager::setGroupCollisionFlag), 3, 0),
+		JS_FN("getActorsInSphere", WRAP_NATIVE(PhysicsManager::getActorsInSphere), 2, 0),
+		JS_FN("getFirstActorInRay", WRAP_NATIVE(PhysicsManager::getFirstActorInRay), 3, 0),
+		JS_FS_END
+	};
+
 	void init();
 	JSBool loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool setParameter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool setGroupCollisionFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool getActorsInSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool getFirstActorInRay(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 }
 
-using namespace jsphysics;
+ScriptedObject::ScriptClass PhysicsManager::m_scriptClass =
+{
+	&class_ops,
+	class_properties,
+	class_methods,
+	NULL
+};
+
+REGISTER_SCRIPT_INIT(PhysicsManager, initClass, 20);
+
+static void initClass(ScriptEngine* engine)
+{
+	RegisterScriptClass<PhysicsManager, GlobalObject>(engine);
+}
+
 
 REGISTER_STARTUP_FUNCTION(jsphysics, jsphysics::init, 10);
 
 void jsphysics::init()
 {
 	script::gScriptEngine->AddFunction("loadDynamicsXML", 1, loadDynamicsXML);
-	script::gScriptEngine->AddFunction("system.physics.setParameter", 2, setParameter);
-	script::gScriptEngine->AddFunction("system.physics.setGroupCollisionFlag", 3, setGroupCollisionFlag);
-	script::gScriptEngine->AddFunction("system.physics.getActorsInSphere", 2, getActorsInSphere);
-	script::gScriptEngine->AddFunction("system.physics.getFirstActorInRay", 3, getFirstActorInRay);
 }
 
+// is this actually used by anything?
 JSBool jsphysics::loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
 {
 	string filename =  JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
-	NxActor* actor;
-	physics::getShapeEntry(filename);
-
-	return JS_TRUE;
-}
-
-JSBool jsphysics::setParameter(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	int parameter = JSVAL_TO_INT(argv[0]);
-	jsdouble value;
-	JS_ValueToNumber(cx, argv[1], &value);
-
-	physics::setParameter(parameter, value);
-
-	return JS_TRUE;
-}
-
-JSBool jsphysics::setGroupCollisionFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	int group1, group2;
-	bool enable;
-	jsscript::jsval_to_(cx, argv[0], &group1);
-	jsscript::jsval_to_(cx, argv[1], &group2);
-	jsscript::jsval_to_(cx, argv[2], &enable);
-
-	physics::gScene->setGroupCollisionFlag(group1, group2, enable);
-
-	return JS_TRUE;
-}
-
-JSBool jsphysics::getActorsInSphere(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
-{
-	D3DXVECTOR3 origin;
-	float radius;
-
-	jsscript::jsval_to_(cx, argv[0], &origin);
-	jsscript::jsval_to_(cx, argv[1], &radius);
-
-	NxShape* shapes[1000];
-	NxShape** shapeptr = shapes;
-
-	NxSphere bleh;
-	bleh.center = (NxVec3)origin;
-	bleh.radius = radius;
-
-	int nbshapes = physics::gScene->overlapSphereShapes(bleh, NX_DYNAMIC_SHAPES, 1000, shapeptr, NULL);
-
-	JSObject* ret = JS_NewObject(cx, NULL, NULL, NULL);
-	*rval = OBJECT_TO_JSVAL(ret);
 	
-	int index = 0;
-	for(int i = 0; i < nbshapes; i++)
+	if(!scene::g_scene)
 	{
-		component::DynamicActorComponent* actor;
-		component::Component* c = (component::Component*)(shapes[i]->getActor().userData);
-		if(c && (actor = dynamic_cast<component::DynamicActorComponent*>(c)))
-		{
-			jsval v = OBJECT_TO_JSVAL(actor->getScriptObject());
-			JS_SetElement(cx, ret, index++, &v);
-		}
+		JS_ReportError(cx, "unable to load dynamics: no scene loaded");
+		return JS_FALSE;
 	}
+
+	scene::g_scene->getPhysicsManager()->getShapeEntry(filename);
 
 	return JS_TRUE;
 }
 
-JSBool jsphysics::getFirstActorInRay(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSObject* jsphysics::CreatePhysicsManagerObject(PhysicsManager* manager)
 {
-	D3DXVECTOR3 origin;
-	D3DXVECTOR3 direction;
-	float distance;
+	JSContext* cx = script::gScriptEngine->GetContext();
 
-	jsscript::jsval_to_(cx, argv[0], &origin);
-	jsscript::jsval_to_(cx, argv[1], &direction);
-	jsscript::jsval_to_(cx, argv[2], &distance);
+	JS_EnterLocalRootScope(cx);
+	// TODO: get scene object from manager
+	JSObject* scene = script::gScriptEngine->GetObject("system.scene", true);
+	JSObject* obj = JS_DefineObject(
+		cx, 
+		scene, 
+		"physics", 
+		PhysicsManager::m_scriptClass.classDef,
+		PhysicsManager::m_scriptClass.prototype, 
+		JSPROP_READONLY | JSPROP_PERMANENT);
+	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(manager));
+	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
+	return obj;
+}
 
-	NxRay ray((NxVec3)origin, (NxVec3)direction);
-	NxRaycastHit hit;
-	NxShape* shape = physics::gScene->raycastClosestShape(ray, NX_ALL_SHAPES, hit);
-	if(shape)
-	{	
-		component::Component* c;
-		NxActor& actor = shape->getActor();
-		c = (component::Component*)actor.userData;
-		if(c)
-			*rval = OBJECT_TO_JSVAL(c->getScriptObject());
-	}
-	else
-		*rval = JSVAL_NULL;
-
-	return JS_TRUE;
+void jsphysics::DestroyPhysicsManagerObject(PhysicsManager* manager)
+{
+	// todo: get script object as manager->getScene()->getScriptObject()
+	// or just not even bother since the scene should go away in theory
+	JSContext* cx = script::gScriptEngine->GetContext();
+	JSObject* scene = script::gScriptEngine->GetObject("system.scene", true);
+	JSBool found;
+	JS_SetPropertyAttributes(cx, scene, "physics", 0, &found);
+	JS_DeleteProperty(cx, scene, "physics");
 }

@@ -15,6 +15,7 @@
 #include "texture/material.h"
 #include "timer/timer.h"
 #include "physics/cook.h"
+#include "physics/physics.h"
 
 namespace scene
 {
@@ -370,6 +371,7 @@ SceneBSP::SceneBSP()
 SceneBSP::~SceneBSP()
 {
 	// release/delete everything
+	m_entityManager.reset(); // must delete entities before the scene-based managers disappear
 }
 
 void SceneBSP::init()
@@ -741,6 +743,8 @@ void SceneBSP::render()
 	}
 	
 	resetMapping();
+
+	m_physicsManager->renderDebugView();
 }
 
 void SceneBSP::parallel_render()
@@ -873,6 +877,8 @@ void SceneBSP::parallel_render()
 	}
 
 	resetMapping();
+
+	m_physicsManager->renderDebugView();
 }
 
 
