@@ -11,6 +11,7 @@
 #define STATICACTORCOMPONENT	5
 #define CAMERACOMPONENT			6
 #define DYNAMICACTORCOMPONENT	7
+#define TIMERCOMPONENT			8
 
 namespace component
 {

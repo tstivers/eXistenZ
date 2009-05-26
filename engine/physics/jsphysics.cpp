@@ -43,10 +43,10 @@ namespace jsphysics
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("setParameter", WRAP_NATIVE(PhysicsManager::setParameter), 2, 0),	
-		JS_FN("setGroupCollisionFlag", WRAP_NATIVE(PhysicsManager::setGroupCollisionFlag), 3, 0),
-		JS_FN("getActorsInSphere", WRAP_NATIVE(PhysicsManager::getActorsInSphere), 2, 0),
-		JS_FN("getFirstActorInRay", WRAP_NATIVE(PhysicsManager::getFirstActorInRay), 3, 0),
+		JS_FN("setParameter", WRAP_FASTNATIVE(PhysicsManager::setParameter), 2, 0),	
+		JS_FN("setGroupCollisionFlag", WRAP_FASTNATIVE(PhysicsManager::setGroupCollisionFlag), 3, 0),
+		JS_FN("getActorsInSphere", WRAP_FASTNATIVE(PhysicsManager::getActorsInSphere), 2, 0),
+		JS_FN("getFirstActorInRay", WRAP_FASTNATIVE(PhysicsManager::getFirstActorInRay), 3, 0),
 		JS_FS_END
 	};
 

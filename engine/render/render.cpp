@@ -43,6 +43,7 @@ namespace render
 	int transparency;
 	int draw_patches;
 	int draw_entities = 1;
+	int draw_bsp = 1;
 	int wait_vtrace;
 	bool sky_visible;
 	IDirect3DDevice9* device;
@@ -99,6 +100,7 @@ void render::init()
 	settings::addsetting("system.render.wait_vtrace", settings::TYPE_INT, 0, NULL, NULL, &wait_vtrace);
 	settings::addsetting("system.render.bsp_rendermethod", settings::TYPE_INT, 0, NULL, NULL, &bsp_rendermethod);
 	settings::addsetting("system.render.draw_entities", settings::TYPE_INT, 0, NULL, NULL, &draw_entities);
+	settings::addsetting("system.render.draw_bsp", settings::TYPE_INT, 0, NULL, NULL, &draw_bsp);
 	settings::addsetting("system.render.multisampletype", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.render.anisotropylevel", settings::TYPE_INT, 0, NULL, NULL, &maxanisotropy);
 	settings::addsetting("system.render.parallel", settings::TYPE_INT, 0, NULL, NULL, &parallel);

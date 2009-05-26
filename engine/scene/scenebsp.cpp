@@ -466,8 +466,9 @@ void SceneBSP::render()
 void SceneBSP::getEntityLighting(texture::Material* material, IRenderable* renderable)
 {
 	D3DXVECTOR3 origin(renderable->getRenderOrigin());
+	origin /= 0.03f;
 	swap(origin.y, origin.z);
-	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
+	float gridsize[] = { 64.0f, 64.0f, 128.0f };
 	int pos[3];
 	int gridstep[3];
 	D3DXVECTOR3 frac(0, 0, 0), amb(0, 0, 0), color(0, 0, 0), direction(0, 0, 0);
@@ -666,6 +667,7 @@ void BSPTextureGroup::render()
 		}
 		else if(started) // need to dump our current batch
 		{
+			if(render::draw_bsp)
 			render::device->DrawIndexedPrimitive(
 				D3DPT_TRIANGLELIST,
 				0,
@@ -680,6 +682,7 @@ void BSPTextureGroup::render()
 	}
 	if(started) // pick up the last batch
 	{
+		if(render::draw_bsp)
 		render::device->DrawIndexedPrimitive(
 			D3DPT_TRIANGLELIST,
 			0,
@@ -793,6 +796,7 @@ void BSPShaderGroup::render()
 				{
 					if(started) // lightmap changed, draw the current batch
 					{
+						if(render::draw_bsp)
 						render::device->DrawIndexedPrimitive(
 							D3DPT_TRIANGLELIST,
 							0,
@@ -831,6 +835,7 @@ void BSPShaderGroup::render()
 			}
 			else if(started) // need to dump our current batch
 			{
+				if(render::draw_bsp)
 				render::device->DrawIndexedPrimitive(
 					D3DPT_TRIANGLELIST,
 					0,
@@ -845,6 +850,7 @@ void BSPShaderGroup::render()
 		} // faces
 		if(started) // pick up the last batch
 		{
+			if(render::draw_bsp)
 			render::device->DrawIndexedPrimitive(
 				D3DPT_TRIANGLELIST,
 				0,

@@ -14,6 +14,7 @@ data/scripts/shoot.js -text
 data/scripts/simpsons_q3.js -text
 data/scripts/stacks.js -text
 data/scripts/summer.js -text
+data/scripts/timertest.js -text
 data/scripts/winter.js -text
 data/textures/shader_alias.txt eol=crlf
 data/textures/shader_map.txt eol=crlf
@@ -81,12 +82,16 @@ engine/component/jsrendercomponent.cpp -text
 engine/component/jsrendercomponent.h -text
 engine/component/jsstaticactorcomponent.cpp -text
 engine/component/jsstaticactorcomponent.h -text
+engine/component/jstimercomponent.cpp -text
+engine/component/jstimercomponent.h -text
 engine/component/meshcomponent.cpp -text
 engine/component/meshcomponent.h -text
 engine/component/poscomponent.cpp -text
 engine/component/poscomponent.h -text
 engine/component/staticactorcomponent.cpp -text
 engine/component/staticactorcomponent.h -text
+engine/component/timercomponent.cpp -text
+engine/component/timercomponent.h -text
 engine/console/console.cpp eol=crlf
 engine/console/console.h eol=crlf
 engine/console/jsconsole.cpp eol=crlf

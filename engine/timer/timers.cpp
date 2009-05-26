@@ -96,10 +96,7 @@ void timer::fireTimers()
 	{
 		pTimer t = timer_queue.top();
 		timer_queue.pop();
-		if (t->action_f)
-			t->action_f(t->name);
-		else
-			console::processCmd(t->action.c_str());
+
 		if (t->frequency_ms != 0.0f)
 		{
 			t->next_ms += t->frequency_ms;
@@ -111,5 +108,11 @@ void timer::fireTimers()
 		{
 			timer_map.erase(t->name);
 		}
+
+		if (t->action_f)
+			t->action_f(t->name);
+		else
+			console::processCmd(t->action.c_str());		
+
 	}
 }

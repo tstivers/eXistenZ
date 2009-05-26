@@ -48,6 +48,7 @@ namespace render
 	extern int transparency;
 	extern int draw_patches;
 	extern int draw_entities;
+	extern int draw_bsp;
 	extern int wait_vtrace;
 	extern bool sky_visible;
 	extern int diffuse;

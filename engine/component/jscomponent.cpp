@@ -1,11 +1,20 @@
 #include "precompiled.h"
 #include "component/jscomponent.h"
 #include "component/component.h"
+#include "entity/entity.h"
 #include "script/script.h"
 
 using namespace component;
 using namespace script;
 using namespace jscomponent;
+
+namespace jsscript
+{
+	inline jsval to_jsval(JSContext* cx, entity::Entity* object)
+	{
+		return object ? OBJECT_TO_JSVAL(object->getScriptObject()) : JSVAL_NULL;
+	}
+}
 
 namespace jscomponent
 {
@@ -31,14 +40,15 @@ namespace jscomponent
 		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getName>, NULL},
 		{"type", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, int, &Component::getType>, NULL},
 		{"typeName", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getTypeName>, NULL},
+		{"entity", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, entity::Entity*, &Component::getEntity>, NULL},
 		JS_PS_END
 	};
 
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("acquire", WRAP_NATIVE(Component::acquire), 0, 0),
-		JS_FN("release", WRAP_NATIVE(Component::release), 0, 0),
+		JS_FN("acquire", WRAP_FASTNATIVE(Component::acquire), 0, 0),
+		JS_FN("release", WRAP_FASTNATIVE(Component::release), 0, 0),
 		JS_FS_END
 	};
 }
