@@ -1,7 +1,6 @@
 #pragma once
 
 #include "texture/texture.h"
-#include "q3bsp/bspcache.h"
 #include "math/vertex.h"
 #include "vfs/vfs.h"
 #include "q3shader/q3shader.h"

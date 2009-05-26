@@ -1,7 +1,6 @@
 #include "precompiled.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
-#include "texture/shader.h"
 #include "vfs/vfs.h"
 #include "console/console.h"
 #include "settings/settings.h"

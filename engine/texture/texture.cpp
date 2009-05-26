@@ -1,6 +1,5 @@
 #include "precompiled.h"
 #include "texture/texture.h"
-#include "texture/shader.h"
 #include "texture/texturecache.h"
 #include "render/render.h"
 #include "render/rendergroup.h"
