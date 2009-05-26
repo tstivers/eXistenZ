@@ -1,6 +1,5 @@
 #include "precompiled.h"
 #include "texture/material.h"
-#include "texture/shader.h"
 
 namespace texture
 {

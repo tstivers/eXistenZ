@@ -254,14 +254,6 @@
 			Name="script"
 			>
 			<File
-				RelativePath="..\engine\script\JSArgumentList.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\script\JSArgumentList.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\script\jsfunction.h"
 				>
 			</File>

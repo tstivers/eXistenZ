@@ -213,8 +213,6 @@ engine/scene/scene.cpp eol=crlf
 engine/scene/scene.h eol=crlf
 engine/scene/scenebsp.cpp eol=crlf
 engine/scene/scenebsp.h eol=crlf
-engine/script/JSArgumentList.cpp -text
-engine/script/JSArgumentList.h -text
 engine/script/jsfunction.h -text
 engine/script/jsfunctioncall.h -text
 engine/script/jsnativecall.h -text

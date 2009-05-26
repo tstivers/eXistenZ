@@ -2,7 +2,6 @@
 #include "q3bsp/q3bsp.h"
 #include "q3bsp/q3bsptypes.h"
 #include "q3bsp/bsppatch.h"
-#include "q3bsp/bsprender.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
 #include "texture/texturecache.h"
