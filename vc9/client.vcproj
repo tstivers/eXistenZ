@@ -460,6 +460,10 @@
 					RelativePath="..\data\scripts\stacks.js"
 					>
 				</File>
+				<File
+					RelativePath="..\data\scripts\timertest.js"
+					>
+				</File>
 				<Filter
 					Name="maps"
 					>
@@ -1506,6 +1510,26 @@
 				</File>
 				<File
 					RelativePath="..\engine\component\jsdynamicactorcomponent.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timer"
+				>
+				<File
+					RelativePath="..\engine\component\jstimercomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jstimercomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\timercomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\timercomponent.h"
 					>
 				</File>
 			</Filter>

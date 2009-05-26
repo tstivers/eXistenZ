@@ -197,7 +197,7 @@ namespace jsscript
 
 	inline jsval to_jsval(JSContext* cx, bool b)
 	{
-		return b ? JS_TRUE : JS_FALSE;
+		return b ? JSVAL_TRUE : JSVAL_FALSE;
 	}
 
 	inline jsval to_jsval(JSContext* cx, float f)
@@ -237,118 +237,119 @@ namespace jsscript
 
 #pragma region jsval_to_
 
-	inline bool jsval_to_(JSContext* cx, jsval v, void* out)
-	{
-		return true;
+	template <typename T>
+	inline bool jsval_to_(JSContext* cx, jsval v, T out)
+	{		
+		BOOST_STATIC_ASSERT(!"unable to convert jsval to arg");
 	}
 
-		inline bool jsval_to_(JSContext* cx, jsval v, bool* out)
+	inline bool jsval_to_(JSContext* cx, jsval v, bool* out)
+	{
+		if (JSVAL_IS_BOOLEAN(v))
 		{
-			if (JSVAL_IS_BOOLEAN(v))
-			{
-				*out =  (JSVAL_TO_BOOLEAN(v) == JS_TRUE);
-				return true;
-			}
-			else
-			{
-				JSBool boolean;
-				if (JS_ValueToBoolean(cx, v, &boolean))
-				{
-					*out = (boolean == JS_TRUE);
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, string* out)
-		{
-			if (JSVAL_IS_STRING(v))
-			{
-				*out = JS_GetStringBytes(JSVAL_TO_STRING(v));
-				return true;
-			}
-			else if (JSString * s = JS_ValueToString(cx, v))
-			{
-				*out = JS_GetStringBytes(s);
-				return true;
-			}
-
-			return false;
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, float* out)
-		{
-			if (JSVAL_IS_INT(v))
-			{
-				*out = JSVAL_TO_INT(v);
-				return true;
-			}
-			else
-			{
-				jsdouble d;
-				if (JS_ValueToNumber(cx, v, &d))
-				{
-					*out = d;
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, double* out)
-		{
-			if (JSVAL_IS_INT(v))
-			{
-				*out = JSVAL_TO_INT(v);
-				return true;
-			}
-			else
-			{
-				jsdouble d;
-				if (JS_ValueToNumber(cx, v, &d))
-				{
-					*out = d;
-					return true;
-				}
-			}
-			return false;
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, int* out)
-		{
-			if (JSVAL_IS_INT(v))
-			{
-				*out = JSVAL_TO_INT(v);
-				return true;
-			}
-			else
-			{
-				int32 i;
-				if (JS_ValueToInt32(cx, v, &i))
-				{
-					*out = i;
-					return true;
-				}
-			}
-			return false;
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, D3DXVECTOR3* out)
-		{
-			return jsvector::ParseVector(cx, *out, 1, &v);
-		}
-
-		inline bool jsval_to_(JSContext* cx, jsval v, JSObject** out)
-		{
-			if(!JSVAL_IS_OBJECT(v))
-				return false;
-
-			*out = JSVAL_TO_OBJECT(v);
+			*out =  (JSVAL_TO_BOOLEAN(v) == JS_TRUE);
 			return true;
 		}
+		else
+		{
+			JSBool boolean;
+			if (JS_ValueToBoolean(cx, v, &boolean))
+			{
+				*out = (boolean == JS_TRUE);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, string* out)
+	{
+		if (JSVAL_IS_STRING(v))
+		{
+			*out = JS_GetStringBytes(JSVAL_TO_STRING(v));
+			return true;
+		}
+		else if (JSString * s = JS_ValueToString(cx, v))
+		{
+			*out = JS_GetStringBytes(s);
+			return true;
+		}
+
+		return false;
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, float* out)
+	{
+		if (JSVAL_IS_INT(v))
+		{
+			*out = JSVAL_TO_INT(v);
+			return true;
+		}
+		else
+		{
+			jsdouble d;
+			if (JS_ValueToNumber(cx, v, &d))
+			{
+				*out = d;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, double* out)
+	{
+		if (JSVAL_IS_INT(v))
+		{
+			*out = JSVAL_TO_INT(v);
+			return true;
+		}
+		else
+		{
+			jsdouble d;
+			if (JS_ValueToNumber(cx, v, &d))
+			{
+				*out = d;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, int* out)
+	{
+		if (JSVAL_IS_INT(v))
+		{
+			*out = JSVAL_TO_INT(v);
+			return true;
+		}
+		else
+		{
+			int32 i;
+			if (JS_ValueToInt32(cx, v, &i))
+			{
+				*out = i;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, D3DXVECTOR3* out)
+	{
+		return jsvector::ParseVector(cx, *out, 1, &v);
+	}
+
+	inline bool jsval_to_(JSContext* cx, jsval v, JSObject** out)
+	{
+		if(!JSVAL_IS_OBJECT(v))
+			return false;
+
+		*out = JSVAL_TO_OBJECT(v);
+		return true;
+	}
 
 
 #pragma endregion

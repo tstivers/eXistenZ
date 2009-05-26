@@ -43,9 +43,9 @@ namespace jsentity
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, flags, minargs),
-		JS_FN("acquire", WRAP_NATIVE(Entity::acquire), 0, 0),
-		JS_FN("release", WRAP_NATIVE(Entity::release), 0, 0),
-		JS_FN("removeComponent", WRAP_NATIVE(Entity::removeComponent), 1, 0),
+		JS_FN("acquire", WRAP_FASTNATIVE(Entity::acquire), 0, 0),
+		JS_FN("release", WRAP_FASTNATIVE(Entity::release), 0, 0),
+		JS_FN("removeComponent", WRAP_FASTNATIVE(Entity::removeComponent), 1, 0),
 		JS_FS_END
 	};
 

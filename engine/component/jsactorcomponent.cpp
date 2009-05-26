@@ -36,7 +36,7 @@ namespace jscomponent
 	static JSFunctionSpec class_methods[] =
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
-		JS_FN("setShapesGroup", WRAP_NATIVE(ActorComponent::setShapesGroup), 1, 0),
+		JS_FN("setShapesGroup", WRAP_FASTNATIVE(ActorComponent::setShapesGroup), 1, 0),
 		JS_FS_END
 	};
 }

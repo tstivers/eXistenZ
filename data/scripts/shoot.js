@@ -10,7 +10,7 @@ game.player.shoot = function(key, state)
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
 game.player.shootFunction = playerShoot;
-game.player.createProjectile = createHam;
+game.player.createProjectile = createBigDaddy;
 
 
 function shootEntity(entity, pos, direction, speed) {
@@ -41,8 +41,11 @@ function playerShoot()
     
     shootEntity(projectile, pos, game.player.getRot(), shootvelo);
     hamgrenade(projectile);
-    projectile.remove = function(){ system.scene.entities.removeEntity(this.name); };
-    timer.addTimer(projectile.name + "_timer", projectile, projectile.remove, 0, system.time.ms + 18000);
+    projectile.createTimerComponent("remove", { delay: 10000, action: removeEntityByComponent });
+}
+
+function removeEntityByComponent(c) {
+    system.scene.entities.removeEntity(c.entity.name);
 }
 
 function probeShoot() {
@@ -98,29 +101,33 @@ var grenade_slices = 100;
 function hamgrenade(ham) {
     system.scene.physics.setGroupCollisionFlag(10, 10, false);
     system.scene.physics.setGroupCollisionFlag(10, 0, true);
-    timer.addTimer(ham.name + "_grenade", ham, function() {
-        var origin = this.components.pos.getPos();
-        system.scene.sound.playSound3d("sound/weapons/rocket/rocklx1a.wav", origin, 1.0);
-        this.removeComponent("mesh");
-        this.removeComponent("actor");
-        blasted = system.scene.physics.getActorsInSphere(origin, 5);
-        for (i in blasted) {
-            v = blasted[i].transform.getPos();
-            v.sub(origin);
-            distance = v.length() + 1;
-            v.normalize();
-            v.mul(10 / (distance * distance));
-            blasted[i].addForceType(v, NX_IMPULSE);
-        }
+    ham.createTimerComponent("fuse", { delay: 3000, action: doExplosion });
+}
 
-        for (i = 0; i < grenade_slices; i++) {
-            this.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
-            this.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
-            actor = this.createDynamicActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
-            actor.acquire();
-            actor.setShapesGroup(10);
-            actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);
-            actor.setAngularVelocity([Math.random() * 100, Math.random() * 100, Math.random() * 100]);
-        }
-    }, 0, system.time.ms + 3000);
+function doExplosion(c) {
+    var entity = c.entity;
+
+    var origin = entity.components.pos.getPos();
+    system.scene.sound.playSound3d("sound/weapons/rocket/rocklx1a.wav", origin, 1.0);
+    entity.removeComponent("mesh");
+    entity.removeComponent("actor");
+    blasted = system.scene.physics.getActorsInSphere(origin, 5);
+    for (i in blasted) {
+        v = blasted[i].transform.getPos();
+        v.sub(origin);
+        distance = v.length() + 1;
+        v.normalize();
+        v.mul(10 / (distance * distance));
+        blasted[i].addForceType(v, NX_IMPULSE);
+    }
+
+    for (i = 0; i < grenade_slices; i++) {
+        entity.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
+        entity.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
+        actor = entity.createDynamicActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
+        actor.acquire();
+        actor.setShapesGroup(10);
+        actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);
+        actor.setAngularVelocity([Math.random() * 100, Math.random() * 100, Math.random() * 100]);
+    }
 }

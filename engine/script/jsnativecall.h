@@ -244,10 +244,23 @@ namespace script
 		};
 	}
 	
-	#define WRAP_NATIVE(x) (JSNativeCall<BOOST_TYPEOF(x), &x>)
+	#define WRAP_FASTNATIVE(x) (JSFastNativeCall<BOOST_TYPEOF(x), &x>)
+	#define WRAP_NATIVE(x) (JSSlowNativeCall<BOOST_TYPEOF(x), &x>)
 
 	template<typename function_type, typename function_type function_pointer>
-	JSBool JSNativeCall(JSContext *cx, uintN argc, jsval *vp)
+	JSBool JSSlowNativeCall(JSContext* cx, JSObject* obj, int argc, jsval* argv, jsval* rval)
+	{
+		return detail::JSNativeCallSelector<function_type, function_pointer>()(
+			cx, 
+			obj,
+			argc,
+			argv, 
+			rval);
+	}
+
+
+	template<typename function_type, typename function_type function_pointer>
+	JSBool JSFastNativeCall(JSContext *cx, uintN argc, jsval *vp)
 	{
 		jsval ret = JSVAL_VOID;
 		JSBool ok = detail::JSNativeCallSelector<function_type, function_pointer>()(
@@ -265,7 +278,7 @@ namespace script
 
 	template<typename function_type1, typename function_type1 function_pointer1,
 			typename function_type2, typename function_type2 function_pointer2>
-	JSBool JSNativeCall2(JSContext *cx, uintN argc, jsval *vp)
+	JSBool JSFastNativeCall2(JSContext *cx, uintN argc, jsval *vp)
 	{
 		jsval ret = JSVAL_VOID;
 		JSBool ok = detail::JSNativeCallSelector<function_type1, function_pointer1>()(
@@ -301,7 +314,7 @@ namespace script
 		typename function_type2, typename function_type2 function_pointer2,
 		typename function_type3, typename function_type3 function_pointer3>
 
-		JSBool JSNativeCall3(JSContext *cx, uintN argc, jsval *vp)
+		JSBool JSFastNativeCall3(JSContext *cx, uintN argc, jsval *vp)
 	{
 		jsval ret = JSVAL_VOID;
 		JSBool ok = detail::JSNativeCallSelector<function_type1, function_pointer1>()(

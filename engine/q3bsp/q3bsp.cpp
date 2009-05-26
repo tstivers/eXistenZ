@@ -348,15 +348,15 @@ BSP::BSP(const string& filename)
 	file->seek(lumps[kModels].offset, FILE_BEGIN);
 	file->read((void*)models, lumps[kModels].length);
 
-	for (int i = 0; i < num_models; i++)
-	{
-		models[i].min[0] *= 0.03f;
-		models[i].min[1] *= 0.03f;
-		models[i].min[2] *= 0.03f;
-		models[i].max[0] *= 0.03f;
-		models[i].max[1] *= 0.03f;
-		models[i].max[2] *= 0.03f;
-	}
+	//for (int i = 0; i < num_models; i++)
+	//{
+	//	models[i].min[0] *= 0.03f;
+	//	models[i].min[1] *= 0.03f;
+	//	models[i].min[2] *= 0.03f;
+	//	models[i].max[0] *= 0.03f;
+	//	models[i].max[1] *= 0.03f;
+	//	models[i].max[2] *= 0.03f;
+	//}
 
 	// ------------------------- load lights ---------------------------
 	num_lights = lumps[kLightVolumes].length / sizeof(BSPLight);
@@ -366,7 +366,7 @@ BSP::BSP(const string& filename)
 	file->read((void*)lights, lumps[kLightVolumes].length);
 
 	// ------------------------ calc some lightgrid stuffs -------------
-	float gridsize[] = { 64.0f * 0.03f, 64.0f * 0.03f, 128.0f * 0.03f };
+	float gridsize[] = { 64.0f, 64.0f, 128.0f };
 	D3DXVECTOR3 max;
 	for (int i = 0; i < 3; i++)
 	{
