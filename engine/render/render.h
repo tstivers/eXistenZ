@@ -31,6 +31,7 @@ namespace render
 	bool start(void);
 	void stop(void);
 	void render(void);
+	void resetRenderState(void);
 	void resize(int width, int height);
 	void goFullScreen(bool fullscreen);
 	inline extern void drawGroup(const RenderGroup* rg, const D3DXMATRIX* transform = NULL);
@@ -46,6 +47,7 @@ namespace render
 	extern int tesselation;
 	extern int transparency;
 	extern int draw_patches;
+	extern int draw_entities;
 	extern int wait_vtrace;
 	extern bool sky_visible;
 	extern int diffuse;

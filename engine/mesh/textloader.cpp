@@ -4,8 +4,8 @@
 #include "mesh/meshsystem.h"
 #include "mesh/meshcache.h"
 #include "vfs/vfs.h"
-#include "q3bsp/bleh.h"  // for vertex typedef
 #include "texture/texturecache.h"
+#include "math/vertex.h"
 
 namespace mesh
 {

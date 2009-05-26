@@ -156,8 +156,8 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 			return;
 		}
 
-		filename = StripPathFromFileName(file->getFilename());
-		path = StripFileNameFromPath(file->getFilename());
+		filename = StripPathFromFilename(file->getFilename());
+		path = StripFilenameFromPath(file->getFilename());
 
 		if (!IsDirectory(path))
 		{
@@ -180,8 +180,8 @@ void vfs::watchFile(const string& watchfile, WatchCallback callback, void* user)
 	}
 	else // watching a wildcarded directory //TODO: finish this
 	{
-		filename = StripPathFromFileName(watchfile);
-		path = StripFileNameFromPath(watchfile);
+		filename = StripPathFromFilename(watchfile);
+		path = StripFilenameFromPath(watchfile);
 
 		vector<string>& path_list = vfs::getDirectoriesForPath(path);
 		for (vector<string>::iterator it = path_list.begin(); it != path_list.end(); it++)

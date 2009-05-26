@@ -5,8 +5,6 @@
 #include "input/input.h"
 #include "input/bind.h"
 #include "interface/interface.h"
-#include "q3bsp/bleh.h"
-#include "q3bsp/bspcache.h"
 #include "render/render.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
@@ -216,14 +214,14 @@ bool game::startMap(char* name)
 	// release the player
 	player->release();
 
-	// load the bsp
+	// unload the current scene
+	scene::g_scene.reset();
+
+	// load the new scene
 	scene::g_scene = scene::Scene::load(bspname);
+
 	if (!scene::g_scene)
 		return false;
-
-	scene::g_scene->name = name;
-
-	scene::g_scene->init();
 
 	player->acquire();
 	scene::g_scene->acquire();	

@@ -12,6 +12,7 @@
 #include <NxPhysics.h>
 #include <NxCooking.h>
 #include "vfs/vfs.h"
+#include "math/vertex.h"
 
 namespace physics
 {

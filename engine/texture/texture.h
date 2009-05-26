@@ -2,7 +2,6 @@
 
 namespace texture
 {
-	class Shader;
 	extern int debug;
 	extern int use_atlas;
 
@@ -17,7 +16,6 @@ namespace texture
 		bool sky;
 
 		IDirect3DTexture9* texture;
-		Shader* shader;
 
 		DXTexture(const std::string& name);
 		~DXTexture();

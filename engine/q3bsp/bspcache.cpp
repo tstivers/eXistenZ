@@ -1,6 +1,6 @@
 #include "precompiled.h"
 #include "q3bsp/bspcache.h"
-#include "q3bsp/bleh.h"
+#include "q3bsp/q3bsp.h"
 #include "q3bsp/bspconvert.h"
 #include "render/dx.h"
 #include "render/render.h"

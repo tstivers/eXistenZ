@@ -6,7 +6,6 @@
 #include "render/frustrum.h"
 #include "render/marker.h"
 #include "interface/interface.h"
-#include "q3bsp/bleh.h"
 #include "skybox/skybox.h"
 #include "skybox/jsskybox.h"
 #include "scene/scene.h"
@@ -383,5 +382,72 @@ void render::goFullScreen(bool fullscreen)
 	else
 	{
 		resize(windowed_width, windowed_height);
+	}
+}
+
+void render::resetRenderState(void)
+{
+	frame++;
+	frame_faces = 0;
+	frame_polys = 0;
+
+	if (!maxanisotropy)
+	{
+		device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		device->SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+	}
+	else
+	{
+		device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(1, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(1, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(1, D3DSAMP_MIPFILTER, D3DTEXF_ANISOTROPIC);
+		device->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, maxanisotropy);
+		device->SetSamplerState(1, D3DSAMP_MAXANISOTROPY, maxanisotropy);
+	}
+	device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+	device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+	device->SetSamplerState(0, D3DSAMP_ADDRESSW, D3DTADDRESS_WRAP);
+	device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	device->SetRenderState(D3DRS_LIGHTING, FALSE);
+	device->SetRenderState(D3DRS_AMBIENT, 0x00000000);
+	device->SetRenderState(D3DRS_ZENABLE, TRUE);
+	device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	device->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	device->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+	device->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+
+	D3DMATERIAL9 mtrl;
+	ZeroMemory(&mtrl, sizeof(mtrl));
+	mtrl.Ambient.r = 1.0;
+	mtrl.Ambient.g = 1.0;
+	mtrl.Ambient.b = 1.0;
+	mtrl.Ambient.a = 1.0;
+	mtrl.Diffuse.r = 1.0;
+	mtrl.Diffuse.g = 1.0;
+	mtrl.Diffuse.b = 1.0;
+	mtrl.Diffuse.a = 1.0;
+
+	device->SetMaterial(&mtrl);
+	device->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL);
+
+	if (wireframe)
+	{
+		device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+		device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+	}
+	else
+	{
+		device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		device->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	}
 }

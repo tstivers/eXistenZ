@@ -204,7 +204,7 @@ char* strDup(const char* src)
 	return dst;
 }
 
-string StripPathFromFileName(const string& filename)
+string StripPathFromFilename(const string& filename)
 {
 	string::const_iterator it = filename.begin();
 	size_t pos = filename.find_last_of("/\\");
@@ -214,9 +214,16 @@ string StripPathFromFileName(const string& filename)
 	return string(it, filename.end());
 }
 
-string StripFileNameFromPath(const string& filename)
+string StripFilenameFromPath(const string& filename)
 {
 	size_t pos = filename.find_last_of("/\\");
+	ASSERT(pos != string::npos);
+	return string(filename.begin(), filename.begin() + pos);
+}
+
+string StripExtensionFromFilename(const string& filename)
+{
+	size_t pos = filename.find_last_of(".");
 	ASSERT(pos != string::npos);
 	return string(filename.begin(), filename.begin() + pos);
 }

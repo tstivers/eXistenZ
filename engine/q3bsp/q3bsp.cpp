@@ -1,20 +1,87 @@
 #include "precompiled.h"
 #include "q3bsp/q3bsp.h"
-#include "q3bsp/bspcache.h"
 #include "q3bsp/q3bsptypes.h"
-#include "q3bsp/bspconvert.h"
-#include "q3bsp/bspload.h"
-#include "render/render.h" // get rid of this
+#include "q3bsp/bsppatch.h"
+#include "q3bsp/bsprender.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
 #include "texture/texturecache.h"
 #include "texture/texture.h"
+#include "settings/settings.h"
+#include "console/console.h"
+#include "render/render.h"
 #include "q3shader/q3shadercache.h"
+
+namespace q3bsp
+{
+	int debug;
+	int draw;
+	int convert;
+	void con_list_maps(int argc, char* argv[], void* user);
+	void init(void);
+};
 
 using namespace q3bsp;
 
+REGISTER_STARTUP_FUNCTION(q3bsp, q3bsp::init, 10);
+
+void q3bsp::init()
+{	
+	settings::addsetting("system.render.bsp.debug", settings::TYPE_INT, 0, NULL, NULL, &debug);
+	settings::addsetting("system.render.bsp.bsp_path", settings::TYPE_STRING, 0, NULL, NULL, NULL);
+	settings::addsetting("system.render.bsp.draw", settings::TYPE_INT, 0, NULL, NULL, &draw);
+	settings::addsetting("system.render.bsp.convert", settings::TYPE_INT, 0, NULL, NULL, &convert);
+	settings::setstring("system.render.bsp.bsp_path", "/maps");
+	console::addCommand("list_maps", con_list_maps);
+	console::addCommand("toggle_bsp", console::toggle_int, &draw);
+	debug = 0;
+	draw = 1;
+	convert = 1;
+}
+
+void q3bsp::con_list_maps(int argc, char* argv[], void* user)
+{
+	vfs::file_list_t map_list;
+	vfs::getFileList(map_list, settings::getstring("system.render.bsp.bsp_path"), "*.bsp");
+	LOG("Map List:");
+	for (vfs::file_list_t::iterator it = map_list.begin(); it != map_list.end(); ++it)
+		LOG("  %s", (*it).c_str());
+}
+
 BSP::BSP(const string& filename)
 {
+	num_verts = 0;
+	num_indices = 0;
+	num_faces = 0;
+	num_nodes = 0;
+	num_leafs = 0;
+	num_leaffaces = 0;
+	num_leafbrushes = 0;
+	num_brushes = 0;
+	num_brushsides = 0;
+	num_planes = 0;
+	num_clusters = 0;
+	num_textures = 0;
+	num_lightmaps = 0;
+	cluster_size = 0;
+
+	verts = NULL;
+	indices = NULL;
+	faces = NULL;
+	nodes = NULL;
+	leafs = NULL;
+	leaffaces = NULL;
+	leafbrushes = NULL;
+	brushes = NULL;
+	brushsides = NULL;
+	planes = NULL;
+	clusters = NULL;
+	bsptextures = NULL;
+
+	drawn_faces = NULL;
+	sorted_faces = NULL;
+	transparent_faces = NULL;
+
 	vfs::File file = vfs::getFile(filename);
 
 	ASSERT(file);
@@ -330,7 +397,29 @@ BSP::BSP(const string& filename)
 	}
 }
 
-void R_ColorShiftLightingBytes(byte* in, int shift)
+BSP::~BSP()
+{
+	delete [] verts;
+	delete [] indices;
+	delete [] faces;
+	delete [] nodes;
+	delete [] leafs;
+	delete [] leaffaces;
+	delete [] leafbrushes;
+	delete [] brushes;
+	delete [] brushsides;
+	delete [] planes;
+	delete [] clusters;
+	delete [] bsptextures;
+
+	delete [] drawn_faces;
+	delete [] sorted_faces;
+	delete [] transparent_faces;
+
+	//TODO: release textures
+}
+
+void q3bsp::R_ColorShiftLightingBytes(byte* in, int shift)
 {
 	int		r, g, b;
 
@@ -354,4 +443,59 @@ void R_ColorShiftLightingBytes(byte* in, int shift)
 	in[0] = r;
 	in[1] = g;
 	in[2] = b;
+}
+
+static int __cdecl face_compare(const void* f1, const void* f2)
+{
+	face_sort_t* face1 = (face_sort_t*)f1;
+	face_sort_t* face2 = (face_sort_t*)f2;
+
+	if (face1->texture_index != face2->texture_index)
+		return face1->texture_index - face2->texture_index;
+
+	if (face1->lightmap_index != face2->lightmap_index)
+		return face1->lightmap_index - face2->lightmap_index;
+
+	return (int)(face1->face_address - face2->face_address);
+}
+
+void BSP::sortFaces()
+{
+	face_sort_t* sort_array = new face_sort_t[num_faces];
+
+	for (int face_index = 0; face_index < num_faces; face_index++)
+	{
+		sort_array[face_index].face_index = face_index;
+		sort_array[face_index].texture_index = faces[face_index].texture;
+		sort_array[face_index].lightmap_index = faces[face_index].lightmap;
+		sort_array[face_index].face_address = &faces[face_index];
+	}
+
+	qsort(sort_array, num_faces, sizeof(face_sort_t), face_compare);
+
+	for (int face_index = 0; face_index < num_faces; face_index++)
+		sorted_faces[face_index] = sort_array[face_index].face_index;
+
+	delete [] sort_array;
+}
+
+int BSP::leafFromPoint(const D3DXVECTOR3 &point)
+{
+	int node_index = 0;
+
+	while (node_index >= 0)
+	{
+		const BSPNode& node = nodes[node_index];
+		const BSPPlane& plane = planes[node.plane];
+		float distance = plane.nrm.x * point.x +
+						 plane.nrm.y * point.y +
+						 plane.nrm.z * point.z - plane.dst;
+
+		if (distance >= 0)
+			node_index = node.front;
+		else
+			node_index = node.back;
+	}
+
+	return ~node_index;
 }

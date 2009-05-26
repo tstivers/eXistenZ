@@ -1,5 +1,5 @@
 #include "precompiled.h"
-#include "q3bsp/bleh.h"
+#include "q3bsp/q3bsp.h"
 #include "q3bsp/bsppatch.h"
 #include "render/render.h"
 #include "nvtristrip.h"
@@ -121,94 +121,6 @@ void MyBiquadraticPatch::dumpIndices()
 	}
 }
 
-void BSP::generatePatches()
-{
-	for (int face_index = 0; face_index < num_faces; face_index++)
-	{
-		BSPFace& face = faces[face_index];
-
-		// skip non-patches
-		if (face.type != 2)
-			continue;
-
-		int width = face.size[0];
-		int height = face.size[1];
-
-		int numPatchesWide = (width - 1) / 2;
-		int numPatchesHigh = (height - 1) / 2;
-		int total_vertices = 0;
-		int total_indices = 0;
-
-		int numQuadraticPatches = numPatchesWide * numPatchesHigh;
-		MyBiquadraticPatch* quadraticPatches = new MyBiquadraticPatch[numQuadraticPatches];
-
-		//fill in the quadratic patches
-		for (int y = 0; y < numPatchesHigh; ++y)
-		{
-			for (int x = 0; x < numPatchesWide; ++x)
-			{
-				for (int row = 0; row < 3; ++row)
-				{
-					for (int point = 0; point < 3; ++point)
-					{
-						quadraticPatches[y * numPatchesWide + x].controlPoints[row * 3 + point] =
-							verts[face.vertex + (y * 2 * width + x * 2) + row * width + point];
-					}
-				}
-
-				//tesselate the patch
-				quadraticPatches[y*numPatchesWide+x].Tesselate(render::tesselation);
-				quadraticPatches[y*numPatchesWide+x].dumpIndices();
-				total_vertices += quadraticPatches[y * numPatchesWide + x].num_verts;
-				total_indices += quadraticPatches[y * numPatchesWide + x].num_polys * 3;
-			}
-		}
-
-		// we have our tesselated patches now, combine them all into one bigass vert/index array
-		STDVertex* vertices = new STDVertex[total_vertices];
-		int* indices = new int[total_indices];
-		int current_vert = 0;
-		int current_indice = 0;
-
-		for (int i = 0; i < numQuadraticPatches; i++)
-		{
-			memcpy(&(vertices[current_vert]), quadraticPatches[i].vertices, quadraticPatches[i].num_verts * sizeof(STDVertex));
-			for (int indice = 0; indice < quadraticPatches[i].num_polys * 3; indice++)
-			{
-				indices[current_indice + indice] = quadraticPatches[i].list[indice] + current_vert;
-			}
-			current_vert += quadraticPatches[i].num_verts;
-			current_indice += quadraticPatches[i].num_polys * 3;
-		}
-
-		// TODO: optimize mesh here
-
-		// toss onto the end of verts/indices
-		STDVertex* tmp_verts = new STDVertex[num_verts + total_vertices];
-		memcpy(tmp_verts, this->verts, num_verts * sizeof(STDVertex));
-		memcpy(&(tmp_verts[num_verts]), vertices, total_vertices * sizeof(STDVertex));
-
-		int* tmp_indices = new int[num_indices + total_indices];
-		memcpy(tmp_indices, this->indices, num_indices * sizeof(int));
-		memcpy(&(tmp_indices[num_indices]), indices, total_indices * sizeof(int));
-
-		face.vertex = num_verts;
-		face.numverts = total_vertices;
-		face.meshvertex = num_indices;
-		face.nummeshverts = total_indices;
-
-		delete [] this->indices;
-		delete [] this->verts;
-		delete [] indices;
-		delete [] vertices;
-		delete [] quadraticPatches;
-
-		this->indices = tmp_indices;
-		this->verts = tmp_verts;
-		num_verts += total_vertices;
-		num_indices += total_indices;
-	}
-}
 
 void q3bsp::genPatch(scene::BSPFace& face, int width, int height)
 {

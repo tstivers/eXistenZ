@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <q3bsp/bleh.h>
+#include <q3bsp/q3bsp.h>
 
 namespace q3bsp
 {

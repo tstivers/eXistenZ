@@ -163,8 +163,6 @@ engine/physics/stream.cpp -text
 engine/physics/stream.h -text
 engine/physics/xmlloader.cpp -text
 engine/physics/xmlloader.h -text
-engine/q3bsp/bleh.cpp eol=crlf
-engine/q3bsp/bleh.h eol=crlf
 engine/q3bsp/bsp.cpp eol=crlf
 engine/q3bsp/bsp.cpp.bak eol=crlf
 engine/q3bsp/bsp.h eol=crlf
@@ -183,6 +181,8 @@ engine/q3bsp/bsprender.cpp eol=crlf
 engine/q3bsp/bsprender.h eol=crlf
 engine/q3bsp/patch.cpp eol=crlf
 engine/q3bsp/patch.h eol=crlf
+engine/q3bsp/q3bsp.cpp eol=crlf
+engine/q3bsp/q3bsp.h eol=crlf
 engine/q3bsp/q3bsptypes.h eol=crlf
 engine/q3bsp/rendertest.cpp eol=crlf
 engine/q3shader/jsq3shader.cpp -text
@@ -224,14 +224,12 @@ engine/resource/luxiconD.ico -text
 engine/resource/resource.h eol=crlf
 engine/scene/jsscene.cpp eol=crlf
 engine/scene/jsscene.h eol=crlf
+engine/scene/jsscenebsp.cpp -text
+engine/scene/jsscenebsp.h -text
 engine/scene/scene.cpp eol=crlf
 engine/scene/scene.h eol=crlf
 engine/scene/scenebsp.cpp eol=crlf
 engine/scene/scenebsp.h eol=crlf
-engine/scene/sceneportal.cpp eol=crlf
-engine/scene/sceneportal.h eol=crlf
-engine/scene/scenetree.cpp eol=crlf
-engine/scene/scenetree.h eol=crlf
 engine/script/JSArgumentList.cpp -text
 engine/script/JSArgumentList.h -text
 engine/script/jsfunction.h -text

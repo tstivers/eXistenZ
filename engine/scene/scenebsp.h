@@ -1,41 +1,60 @@
 #pragma once
 
-#include "math/aabb.h"
-#include "math/vertex.h"
-#include "entity/interfaces.h"
-
-namespace render
-{
-	class RenderGroup;
-};
-
-namespace q3bsp
-{
-	class BSP;
-}
-
-namespace q3shader
-{
-	class Q3Shader;
-}
-
-namespace entity
-{
-	class Entity;
-	typedef vector<Entity*> EntityList;
-}
-
-namespace texture
-{
-	struct Material;
-	class DXTexture;
-}
+#include "scene/scene.h"
 
 namespace scene
 {
-
 	struct BSPTextureGroup;
 	struct BSPShaderGroup;
+	struct BSPFace;
+	struct BSPCluster;
+
+	class SceneBSP : public Scene
+	{
+	public:
+		// construction
+		SceneBSP(const string& name, q3bsp::BSP* bsp);
+		~SceneBSP();
+
+		// Scene overrides
+		void acquire();
+		void release();
+		void render();
+	
+		// methods
+		static SceneBSP* loadBSP(const string& filename);
+
+		// fields
+		typedef ptr_map<pair<texture::DXTexture*, texture::DXTexture*>, BSPTextureGroup> TextureGroupMap;
+		typedef ptr_map<q3shader::Q3Shader*, BSPShaderGroup> ShaderGroupMap;
+		TextureGroupMap m_textureGroups;
+		ShaderGroupMap m_shaderGroups;
+
+		// for js interface
+		static ScriptClass m_scriptClass;
+
+	protected:
+		// ScriptedObject overrides
+		JSObject* createScriptObject();
+		void destroyScriptObject();		
+
+		void loadFaces();
+		void loadClusters();
+		void adjustFaceLightmapUVs();
+		void addFacesToClusters();
+		bool isValidFace(const BSPFace* face);
+		void markVisibleFaces();
+		
+		void getEntityLighting(texture::Material* material, IRenderable* renderable);
+
+		q3bsp::BSP* m_bsp;
+		unsigned int m_clusterCount;
+		BSPCluster* m_clusters;
+
+		unsigned int m_faceCount;
+		BSPFace* m_faces;
+
+	};
 
 	struct BSPFace
 	{
@@ -51,13 +70,6 @@ namespace scene
 		int indices_start;
 		BSPTextureGroup* texture_group;
 		BSPShaderGroup* shader_group;
-	};
-
-	struct FaceCluster
-	{
-		unsigned int num_vertices;
-		unsigned int num_indices;
-
 	};
 
 	struct BSPTextureGroup
@@ -88,52 +100,4 @@ namespace scene
 		void release();
 		void render();		
 	};
-
-	class BSPCluster
-	{
-	public:
-		AABB aabb;
-		unsigned int num_faces;
-		BSPFace** faces;
-		entity::EntityList entities;
-	};
-
-	class SceneBSP : public Scene
-	{
-	public:
-
-		// construction
-		SceneBSP();
-		~SceneBSP();
-
-		// overloads
-		void init();
-		bool isValidFace(const BSPFace* face);
-		void acquire();
-		void release();
-		void reload(unsigned int flags = 0);
-		void render();
-		void mark();
-		void getEntityLighting(texture::Material* material, IRenderable* renderable);
-		void addEntity(entity::Entity* entity);
-		void removeEntity(entity::Entity* entity);
-
-		// new stuff
-		static SceneBSP* loadBSP(const string& name);
-		void parallel_render();
-		q3bsp::BSP *bsp;
-
-		unsigned int num_clusters;
-		BSPCluster* clusters;
-
-		unsigned int num_faces;
-		BSPFace* faces;
-
-		entity::EntityList entities;
-
-		typedef ptr_map<pair<texture::DXTexture*, texture::DXTexture*>, BSPTextureGroup> TextureGroupMap;
-		typedef ptr_map<q3shader::Q3Shader*, BSPShaderGroup> ShaderGroupMap;
-		TextureGroupMap m_textureGroups;
-		ShaderGroupMap m_shaderGroups;
-	};
-};
+}

@@ -86,6 +86,7 @@ using namespace boost;
 #include "common/mystring.h"
 #include "common/registeredfunctions.h"
 #include "math/math.h"
+#include "math/aabb.h"
 #include "script/wrappedhelpers.hpp"
 #include "script/jsnativecall.h"
 #include "timer/timer.h"
