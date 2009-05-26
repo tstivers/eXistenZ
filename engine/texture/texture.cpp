@@ -13,7 +13,7 @@ namespace texture
 using namespace texture;
 
 DXTexture::DXTexture(const std::string& name)
-: texture(NULL), shader(NULL), name(name), is_transparent(false), use_texture(true), is_lightmap(false), draw(true), sky(false), overbright(NULL)
+: texture(NULL), name(name), is_transparent(false), use_texture(true), is_lightmap(false), draw(true), sky(false), overbright(NULL)
 {
 }
 
@@ -21,11 +21,6 @@ DXTexture::~DXTexture()
 {
 	if (texture)
 		texture->Release();
-
-	if (shader)
-		shader->release();
-
-	delete overbright;
 }
 
 bool DXTexture::activate(bool deactivate_current)

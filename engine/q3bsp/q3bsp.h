@@ -2,16 +2,12 @@
 
 #include "texture/texture.h"
 #include "q3bsp/bspcache.h"
-#include "q3bsp/bspcollide.h"
 #include "math/vertex.h"
 #include "vfs/vfs.h"
 #include "q3shader/q3shader.h"
 
 namespace q3bsp
 {
-
-	class BSPRenderer;
-
 	struct BSPFace
 	{
 		int type;
@@ -99,33 +95,14 @@ namespace q3bsp
 	class BSP
 	{
 	public:
-		BSP();
+		BSP(const string& filename);
 		~BSP();
 
 	public:
-		bool load(vfs::File file);
-		static BSP* load(const string& filename);
-
-		// render functions
-		void initDeviceObjects();
+		int leafFromPoint(const D3DXVECTOR3 &point);
 		void sortFaces();
-		void initRenderState();
-		void render();
-		inline int leafFromPoint(const D3DXVECTOR3 &point);
-		inline bool setTexture(const int face_index, const bool queue_transparent);
-		inline void renderFace(const int face_index);
-
-		// collide functions
-		void collide(D3DXVECTOR3 start, D3DXVECTOR3 end, D3DXVECTOR3 size, collider_t& collider, float fraction = 1.0f);
-		void collideNode(collider_t& collider, float start_fraction, float end_fraction, int node);
-		void collideLeaf(collider_t& collider, int leaf_index);
-
-		// bezier patch functions
-		void generatePatches();
 
 	public:
-		char name[512];
-
 		int num_verts;
 		int num_indices;
 		int num_faces;
@@ -176,8 +153,6 @@ namespace q3bsp
 		int last_texture;
 		int last_lightmap;
 
-		BSPRenderer* renderer;
-
 		// counters
 		int frame_faces;
 		int frame_leafs;
@@ -185,9 +160,7 @@ namespace q3bsp
 		int frame_textureswaps;
 		int frame_lightmapswaps;
 		int frame_transparent;
-
-		// directx handles
-		IDirect3DVertexBuffer9* dxvertbuf;
-		IDirect3DIndexBuffer9* dxindexbuf;
 	};
-};
+
+	void R_ColorShiftLightingBytes(byte* in, int shift = 1);
+}

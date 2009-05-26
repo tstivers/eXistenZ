@@ -4,8 +4,6 @@
 #include "render/render.h"
 #include "render/dx.h"
 #include "render/font.h"
-#include "q3bsp/bleh.h"
-#include "q3bsp/bspcache.h"
 #include "game/game.h"
 #include "game/player.h"
 

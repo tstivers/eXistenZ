@@ -4,16 +4,14 @@
 #include "render/rendergroup.h"
 #include "render/hwbuffer.h"
 #include "render/font.h"
-#include "q3bsp/bleh.h"
 #include "texture/texture.h"
 #include "texture/material.h"
 #include "game/game.h"
 
+#define LINEVERTEXF ( D3DFVF_XYZ | D3DFVF_DIFFUSE )
+
 namespace render
 {
-
-
-#define LINEVERTEXF ( D3DFVF_XYZ | D3DFVF_DIFFUSE )
 	ID3DXLine* D3DXLine = NULL;
 
 	void clipsegments(const D3DXVECTOR3* vertices, int count, D3DCOLOR color);

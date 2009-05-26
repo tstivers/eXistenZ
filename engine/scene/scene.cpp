@@ -8,40 +8,28 @@
 #include "q3shader/q3shadercache.h"
 
 namespace scene
-{
-	int optimize_bsp = 0;
+{	
 	shared_ptr<Scene> g_scene; // global scene object
-	void init();
-};
+}
 
 using namespace scene;
 
-Scene::Scene()
-		: acquired(false), initialized(false), m_current_camera(NULL)
+Scene::Scene(const string& name)
+	: m_currentCamera(NULL), m_name(name), m_acquired(false)
 {
-	m_entityManager = shared_ptr<entity::EntityManager>(new entity::EntityManager(this));
-	m_soundManager = shared_ptr<sound::SoundManager>(new sound::SoundManager(this));
-	m_physicsManager = shared_ptr<physics::PhysicsManager>(new physics::PhysicsManager(this));
-	//m_q3shaderCache = shared_ptr<q3shader::Q3ShaderCache>(new q3shader::Q3ShaderCache(this));
 }
 
 Scene::~Scene()
 {
+	m_entityManager.reset(); // must delete entities before the managers disappear
 }
 
-shared_ptr<Scene> Scene::load(const string& name, SCENE_TYPE type)
+shared_ptr<Scene> Scene::load(const string& filename)
 {
-	return shared_ptr<Scene>(SceneBSP::loadBSP(name));
+	return shared_ptr<Scene>(SceneBSP::loadBSP(filename));
 }
 
 void Scene::doTick()
 {
 	m_soundManager->doTick();
-}
-
-REGISTER_STARTUP_FUNCTION(scene, scene::init, 10);
-
-void scene::init()
-{
-	settings::addsetting("system.scene.optimize_bsp", settings::TYPE_INT, 0, NULL, NULL, &optimize_bsp);
 }

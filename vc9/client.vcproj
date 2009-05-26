@@ -702,38 +702,6 @@
 			Name="q3bsp"
 			>
 			<File
-				RelativePath="..\engine\q3bsp\bleh.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bleh.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspcache.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspcache.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspcollide.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspcollide.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspload.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\q3bsp\bspload.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\q3bsp\bsppatch.cpp"
 				>
 			</File>
@@ -742,11 +710,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\engine\q3bsp\bsprender.cpp"
+				RelativePath="..\engine\q3bsp\q3bsp.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\engine\q3bsp\bsprender.h"
+				RelativePath="..\engine\q3bsp\q3bsp.h"
 				>
 			</File>
 			<File
@@ -771,14 +739,6 @@
 			</File>
 			<File
 				RelativePath="..\engine\texture\material.h"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\texture\shader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\texture\shader.h"
 				>
 			</File>
 			<File
@@ -991,6 +951,14 @@
 			</File>
 			<File
 				RelativePath="..\engine\scene\jsscene.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\scene\jsscenebsp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\scene\jsscenebsp.h"
 				>
 			</File>
 			<File

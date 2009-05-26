@@ -1,102 +1,53 @@
 #include "precompiled.h"
 #include "scene/jsscene.h"
-#include "scene/scene.h"
 #include "script/script.h"
-#include "entity/jsentity.h"
-#include "entity/entity.h"
-#include "render/render.h"
-
-namespace jsscene
-{
-	JSBool addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	//JSBool updateEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-};
 
 using namespace jsscene;
 using namespace scene;
+using namespace script;
 
-REGISTER_STARTUP_FUNCTION(jsscene, jsscene::init, 10);
-
-void jsscene::init()
+namespace jsscene
 {
-	script::gScriptEngine->AddFunction("system.scene.addEntity", 1, jsscene::addEntity);
-	script::gScriptEngine->AddFunction("system.scene.removeEntity", 1, jsscene::removeEntity);
+	static JSClass class_ops =
+	{
+		"Scene",
+		JSCLASS_HAS_RESERVED_SLOTS(1),
+		JS_PropertyStub,  JS_PropertyStub,
+		JS_PropertyStub, JS_PropertyStub,
+		JS_EnumerateStub, JS_ResolveStub,
+		JS_ConvertStub,  JS_FinalizeStub
+	};
+
+	// method declarations
+	// static JSBool classMethod(JSContext *cx, uintN argc, jsval *vp);
+
+	// property declarations
+	// static JSBool propGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+
+	static JSPropertySpec class_properties[] =
+	{
+		// {"name", id, flags, getter, setter},
+		JS_PS_END
+	};
+
+	static JSFunctionSpec class_methods[] =
+	{
+		// JS_FN("name", function, nargs, minargs, flags),
+		JS_FS_END
+	};
 }
 
-JSBool jsscene::addEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+ScriptedObject::ScriptClass Scene::m_scriptClass =
 {
-	*rval = JSVAL_VOID;
+	&class_ops,
+	class_properties,
+	class_methods,
+	NULL
+};
 
-	if (!g_scene)
-	{
-		script::gScriptEngine->ReportError("addEntity(): no scene loaded");
-		return JS_FALSE;
-	}
+REGISTER_SCRIPT_INIT(Scene, initClass, 20);
 
-	if (argc != 1)
-	{
-		script::gScriptEngine->ReportError("usage: addEntity(Entity)");
-		return JS_FALSE;
-	}
-
-	if (!JSVAL_IS_OBJECT(argv[0]))
-	{
-		script::gScriptEngine->ReportError("addEntity(): argument wasn't an object");
-		return JS_FALSE;
-	}
-
-	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	//if (JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE)
-	//{
-	//	script::gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
-	//	return JS_FALSE;
-	//}
-
-	jsval entity_val;
-	JS_GetReservedSlot(cx, entity_obj, 0, &entity_val);
-	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
-	g_scene->addEntity(entity);
-
-	return JS_TRUE;
-}
-
-JSBool jsscene::removeEntity(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+static void initClass(ScriptEngine* engine)
 {
-	*rval = JSVAL_VOID;
-
-	if (!g_scene)
-	{
-		script::gScriptEngine->ReportError("addEntity(): no scene loaded");
-		return JS_FALSE;
-	}
-
-	if (argc != 1)
-	{
-		script::gScriptEngine->ReportError("usage: addEntity(Entity)");
-		return JS_FALSE;
-	}
-
-	if (!JSVAL_IS_OBJECT(argv[0]))
-	{
-		script::gScriptEngine->ReportError("addEntity(): argument wasn't an object");
-		return JS_FALSE;
-	}
-
-	JSObject* entity_obj = JSVAL_TO_OBJECT(argv[0]);
-	//if (JS_InstanceOf(cx, entity_obj, &jsentity::entity_class, NULL) == JS_FALSE)
-	//{
-	//	script::gScriptEngine->ReportError("addEntity(): argument wasn't an entity object");
-	//	return JS_FALSE;
-	//}
-
-	jsval entity_val;
-	JS_GetReservedSlot(cx, entity_obj, 0, &entity_val);
-	entity::Entity* entity = (entity::Entity*)JSVAL_TO_PRIVATE(entity_val);
-	g_scene->removeEntity(entity);
-	//entity::removeEntity(entity);
-	JS_ClearScope(cx, entity_obj);
-	JS_SetReservedSlot(cx, entity_obj, 0, JSVAL_NULL);
-
-	return JS_TRUE;
+	RegisterScriptClass<Scene, GlobalObject>(engine);
 }

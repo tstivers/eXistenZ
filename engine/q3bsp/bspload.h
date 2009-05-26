@@ -1,1 +1,0 @@
-void R_ColorShiftLightingBytes(byte* in, int shift = 1);

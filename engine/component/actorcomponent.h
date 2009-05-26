@@ -42,8 +42,8 @@ namespace component
 		// methods
 
 		// ScriptedObject overrides
-		JSObject* createScriptObject();
-		void destroyScriptObject();
+		JSObject* createScriptObject() = 0;
+		void destroyScriptObject() = 0;
 
 		// members
 		string m_shapesXml;

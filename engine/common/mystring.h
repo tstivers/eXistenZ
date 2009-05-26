@@ -10,8 +10,9 @@ char* sanitizePath(char* out, const char* in);
 char* sanitizepath(char* path);
 char* strDup(const char* src);
 
-string StripPathFromFileName(const string& filename);
-string StripFileNameFromPath(const string& filename);
+string StripPathFromFilename(const string& filename);
+string StripFilenameFromPath(const string& filename);
+string StripExtensionFromFilename(const string& filename);
 
 // class for char* hash_map
 class hash_char_ptr_traits

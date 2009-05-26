@@ -8,7 +8,7 @@
 #include "render/render.h"
 #include "render/dx.h"
 #include "misc/alias.h"
-#include "q3bsp/bspload.h"
+#include "q3bsp/q3bsp.h"
 
 namespace texture
 {
@@ -18,18 +18,13 @@ namespace texture
 	int use_atlas = 1;
 
 	typedef stdext::hash_map<string, DXTexture*> texture_hash_map;
-	typedef stdext::hash_map<string, Shader*> shader_hash_map;
 
 	texture_hash_map texture_cache;
-	shader_hash_map shader_cache;
 	misc::AliasList texture_alias;
-	misc::AliasList shader_alias;
-	misc::AliasList shader_map;
 
 	void load_maps();
 	void init();
 	DXTexture* active_texture;
-	Shader* active_shader;
 
 	DXTexture* genLightmapAtlas(tBSPLightmap* data, float gamma, int boost, DXTexture* overbright = NULL);
 };
@@ -54,7 +49,6 @@ void texture::init()
 	settings::setstring("system.render.texture.shader_alias_file", "textures/shader_alias.txt");
 	settings::setstring("system.render.texture.shader_map_file", "textures/shader_map.txt");
 	active_texture = NULL;
-	active_shader = NULL;
 	console::addCommand("list_textures", con_list_textures, NULL);
 }
 
@@ -69,9 +63,7 @@ void texture::acquire()
 
 void texture::load_maps()
 {
-	shader_map.load(settings::getstring("system.render.texture.shader_map_file"));
 	texture_alias.load(settings::getstring("system.render.texture.texture_alias_file"));
-	shader_alias.load(settings::getstring("system.render.texture.shader_alias_file"));
 }
 
 texture::DXTexture* texture::createTexture(const char* name, int width, int height)
@@ -147,10 +139,19 @@ void texture::flush()
 {
 }
 
+void texture::unloadTexture(const char* name)
+{
+	if(textureExists(name))
+	{
+		DXTexture* texture = getTexture(name);
+		texture_cache.erase(name);
+		delete texture;
+	}
+}
+
 texture::DXTexture* texture::loadTexture(const char* name)
 {
 	IDirect3DTexture9* texture = NULL;
-	Shader* shader = NULL;
 	vfs::File file;
 	char buf[MAX_PATH];
 
@@ -181,7 +182,7 @@ texture::DXTexture* texture::loadTexture(const char* name)
 	file = vfs::getFile(buf);
 	if (file) goto found;
 
-	goto shader;
+	goto done;
 
 found:
 	//HRESULT hr = D3DXCreateTextureFromFile(render::device, file->real_filename, &texture);
@@ -207,30 +208,15 @@ found:
 		LOG("loaded %s", name);
 	}
 
-shader:
-	strcpy(endptr, ".shader");
-	file = vfs::getFile(buf);
-	if (!file)
-	{
-		// check the shader map
-		file = vfs::getFile(shader_map.findAlias(name));
-	}
-
 	if (!file)
 		goto done;
 
-	shader = new Shader(file);
-
 done:
-	if (!texture && !shader)
+	if (!texture)
 		goto err;
 
 	DXTexture* dxtex = new DXTexture(name);
 	dxtex->texture = texture;
-	dxtex->shader = shader;
-	if (shader)
-		shader->init(dxtex);
-
 	return dxtex;
 
 err:
@@ -300,7 +286,7 @@ texture::DXTexture* texture::genLightmap(tBSPLightmap* data, float gamma, int bo
 			color[1] = data->imageBits[row][col][1];
 			color[2] = data->imageBits[row][col][2];
 
-			R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
+			q3bsp::R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
 
 			dstbits[row][col][3] = 0;
 			dstbits[row][col][2] = color[0];
@@ -336,18 +322,14 @@ void texture::con_list_textures(int argc, char* argv[], void* user)
 	for (texture_hash_map::iterator it = texture_cache.begin(); it != texture_cache.end(); ++it)
 	{
 		if ((argc == 1) || ((argc == 2) && wildcmp(argv[1], it->first.c_str())) ||
-				((argc == 3) && wildcmp(argv[1], it->first.c_str()) && it->second->shader && wildcmp(argv[2], it->second->shader->name)))
-			INFO("%s %s%s%s",
-				 it->second->name.c_str(),
-				 it->second->shader ? "(" : "",
-				 it->second->shader ? it->second->shader->name : "",
-				 it->second->shader ? ")" : "");
+				((argc == 3) && wildcmp(argv[1], it->first.c_str())))
+			INFO("%s", it->second->name.c_str());
 	}
 }
 
 texture::DXTexture* texture::genLightmapAtlas(tBSPLightmap* data, float gamma, int boost, DXTexture* overbright)
 {
-	static int count = 0;
+	static int count;
 	DXTexture* lightmap = NULL;
 	if(!textureExists("lightmap_atlas"))
 	{
@@ -355,6 +337,7 @@ texture::DXTexture* texture::genLightmapAtlas(tBSPLightmap* data, float gamma, i
 		lightmap->is_lightmap = true;
 		lightmap->overbright = createTexture("lightmap_atlas_overbright", 2048, 2048);
 		lightmap->overbright->is_lightmap = true;
+		count = 0;
 	}
 	else if(overbright)
 		lightmap = overbright;
@@ -390,7 +373,7 @@ texture::DXTexture* texture::genLightmapAtlas(tBSPLightmap* data, float gamma, i
 			color[1] = data->imageBits[row][col][1];
 			color[2] = data->imageBits[row][col][2];
 
-			R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
+			q3bsp::R_ColorShiftLightingBytes(color, overbright ? 2 : 1);
 
 			dstbits[row][col][3] = 0;
 			dstbits[row][col][2] = color[0];
