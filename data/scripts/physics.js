@@ -8,14 +8,14 @@ toggle_physicsDebug = function() {
         system.scene.physics.setParameter(NX_VISUALIZE_BODY_SLEEP, 1.0);
         system.scene.physics.setParameter(NX_VISUALIZE_WORLD_AXES, 1.0);
         system.scene.physics.setParameter(NX_VISUALIZE_COLLISION_SHAPES, 1.0);
-        system.physics.debugrender = 1;
+        system.physics.render_debug = 1;
         physicsDebug = true;
         print("physics debug enabled");
     }
     else {
         system.scene.physics.setParameter(NX_VISUALIZATION_SCALE, 0.0);
         system.scene.physics.setParameter(NX_VISUALIZE_COLLISION_SHAPES, 0.0);
-        system.scene.physics.debugrender = 0;
+        system.scene.physics.render_debug = 0;
         physicsDebug = false;
     }
 }

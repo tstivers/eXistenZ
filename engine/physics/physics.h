@@ -18,6 +18,7 @@ namespace physics
 	public:
 		PhysicsManager(scene::Scene* scene);
 		~PhysicsManager();
+		static void InitSettings();
 
 		scene::Scene* getScene() { return m_scene; }
 		NxScene* getPhysicsScene() { return m_physicsScene; }
@@ -55,12 +56,21 @@ namespace physics
 		typedef map<string, ShapeEntry> ShapeMap;
 		ShapeMap m_shapeCache;
 
+		// fields
 		scene::Scene* m_scene;
 		NxPhysicsSDK* m_physicsSDK;
 		NxScene* m_physicsScene;
 		NxRemoteDebugger* m_debugger;
 		NxCookingInterface* m_cookingInterface;
 		NxControllerManager* m_controllerManager;
-		const NxDebugRenderable* m_debugRenderable;		
+		const NxDebugRenderable* m_debugRenderable;
+
+		// static settings
+		static int s_attachDebugger;
+		static int s_useHardwarePhysics;
+		static float s_gravity;
+		static float s_maxTimestep;
+		static int s_maxIterations;
+		static int s_renderDebug;
 	};	
 }
