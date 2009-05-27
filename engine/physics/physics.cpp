@@ -18,14 +18,7 @@
 
 namespace physics
 {
-	// settings
-	void init();
-	int debug = 1;
-	int use_hw = 1;	
-	float gravity = -9.8f;
-	float maxtimestep = 1.0 / 60.0;
-	int maxiter = 8;
-	int render_debug = 0;
+
 	namespace details
 	{
 		class PhysicsOutputStream : public NxUserOutputStream
@@ -72,20 +65,28 @@ namespace physics
 	// these classes have to exist during global destruction, hence the 'leak'
 	details::PhysicsOutputStream* g_physicsOutput = new details::PhysicsOutputStream();
 	details::PhysicsAllocator* g_physicsAllocator = new details::PhysicsAllocator();
+	
+	// initialize statics
+	int PhysicsManager::s_attachDebugger = 1;
+	int PhysicsManager::s_useHardwarePhysics = 1;
+	float PhysicsManager::s_gravity = -9.8f;
+	float PhysicsManager::s_maxTimestep = 1.0f / 60.0f;
+	int PhysicsManager::s_maxIterations = 16;
+	int PhysicsManager::s_renderDebug = 0;
 }
 
 using namespace physics;
 
-REGISTER_STARTUP_FUNCTION(physics, physics::init, 10);
+REGISTER_STARTUP_FUNCTION(physics, PhysicsManager::InitSettings, 10);
 
-void physics::init()
+void PhysicsManager::InitSettings()
 {
-	settings::addsetting("system.physics.debug", settings::TYPE_INT, 0, NULL, NULL, &physics::debug);
-	settings::addsetting("system.physics.render_debug", settings::TYPE_INT, 0, NULL, NULL, &physics::render_debug);
-	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::gravity);
-	settings::addsetting("system.physics.maxtimestep", settings::TYPE_FLOAT, 0, NULL, NULL, &physics::maxtimestep);
-	settings::addsetting("system.physics.maxiter", settings::TYPE_INT, 0, NULL, NULL, &physics::maxiter);
-	settings::addsetting("system.physics.use_hw", settings::TYPE_INT, 0, NULL, NULL, &physics::use_hw);
+	settings::addsetting("system.physics.attach_debug", settings::TYPE_INT, 0, NULL, NULL, &PhysicsManager::s_attachDebugger);
+	settings::addsetting("system.physics.render_debug", settings::TYPE_INT, 0, NULL, NULL, &PhysicsManager::s_renderDebug);
+	settings::addsetting("system.physics.gravity", settings::TYPE_FLOAT, 0, NULL, NULL, &PhysicsManager::s_gravity);
+	settings::addsetting("system.physics.s_maxTimestep", settings::TYPE_FLOAT, 0, NULL, NULL, &PhysicsManager::s_maxTimestep);
+	settings::addsetting("system.physics.s_maxIterations", settings::TYPE_INT, 0, NULL, NULL, &PhysicsManager::s_maxIterations);
+	settings::addsetting("system.physics.use_hw", settings::TYPE_INT, 0, NULL, NULL, &PhysicsManager::s_useHardwarePhysics);
 }
 
 void NxMat34ToD3DXMatrix( const NxMat34* in, D3DXMATRIX* out )
@@ -111,7 +112,7 @@ PhysicsManager::PhysicsManager(scene::Scene *scene) :
 	else
 		LOG("physics initialized");
 
-	if (physics::debug)
+	if (s_attachDebugger)
 	{
 		m_debugger = m_physicsSDK->getFoundationSDK().getRemoteDebugger();
 		m_debugger->connect("localhost");
@@ -136,9 +137,9 @@ PhysicsManager::PhysicsManager(scene::Scene *scene) :
 	//gPhysicsSDK->setParameter(NX_VISUALIZATION_SCALE, 0.5*SCALE);
 
 	NxSceneDesc sceneDesc;
-	NxVec3 gDefaultGravity(0, gravity, 0);
+	NxVec3 gDefaultGravity(0, s_gravity, 0);
 	sceneDesc.gravity = gDefaultGravity;
-	if(physics::use_hw && m_physicsSDK->getHWVersion() != NX_HW_VERSION_NONE)
+	if(s_useHardwarePhysics && m_physicsSDK->getHWVersion() != NX_HW_VERSION_NONE)
 	{
 		sceneDesc.simType = NX_SIMULATION_HW;
 		LOG("using hardware physics");
@@ -146,7 +147,7 @@ PhysicsManager::PhysicsManager(scene::Scene *scene) :
 	//sceneDesc.upAxis = 1;
 	//sceneDesc.maxBounds->min.x = render::scene->
 	m_physicsScene = m_physicsSDK->createScene(sceneDesc);
-	m_physicsScene->setTiming(maxtimestep, maxiter);
+	m_physicsScene->setTiming(s_maxTimestep, s_maxIterations);
 
 	// Create the default material
 	NxMaterial* defaultMaterial = m_physicsScene->getMaterialFromIndex(0);
@@ -206,7 +207,7 @@ void PhysicsManager::getResults()
 	
 	m_physicsScene->fetchResults(NX_ALL_FINISHED, true);
 
-	if (render_debug)
+	if (s_renderDebug)
 	{
 		m_debugRenderable = m_physicsScene->getDebugRenderable();
 	}
@@ -216,7 +217,7 @@ void PhysicsManager::getResults()
 
 void PhysicsManager::setGravity(float value)
 {	
-	gravity = value;
+	s_gravity = value;
 	if (m_physicsScene)
 	{
 		m_physicsScene->setGravity(NxVec3(0, value, 0));
@@ -228,16 +229,16 @@ void PhysicsManager::setGravity(float value)
 
 void PhysicsManager::setTimestep(float value)
 {	
-	maxtimestep = value;
+	s_maxTimestep = value;
 	if (m_physicsScene)
-		m_physicsScene->setTiming(maxtimestep, maxiter);
+		m_physicsScene->setTiming(s_maxTimestep, s_maxIterations);
 }
 
 void PhysicsManager::setMaxIter(float value)
 {
-	maxiter = value;	
+	s_maxIterations = value;	
 	if (m_physicsScene)
-		m_physicsScene->setTiming(maxtimestep, maxiter);	
+		m_physicsScene->setTiming(s_maxTimestep, s_maxIterations);	
 }
 
 void PhysicsManager::setParameter(int parameter, float value)
@@ -286,10 +287,7 @@ component::Component* PhysicsManager::getFirstActorInRay(D3DXVECTOR3 origin, D3D
 
 void PhysicsManager::renderDebugView()
 {
-	if (!m_debugRenderable)
-		return;
-
-	if (!render_debug)
+	if (!m_debugRenderable || !s_renderDebug)
 		return;
 
 	NxU32 NbLines = m_debugRenderable->getNbLines();
