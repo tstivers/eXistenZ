@@ -76,3 +76,9 @@ void Entity::destroyScriptObject()
 	jsentity::destroyEntityObject(this);
 	m_scriptObject = NULL;
 }
+
+void Entity::setScriptObject(JSObject* value)
+{
+	ASSERT(!m_scriptObject);
+	m_scriptObject = value;
+}

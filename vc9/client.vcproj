@@ -433,7 +433,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\data\scripts\entitytest.js"
+					>
+				</File>
+				<File
 					RelativePath="..\data\scripts\events.js"
+					>
+				</File>
+				<File
+					RelativePath="..\data\scripts\hamgrenade.js"
 					>
 				</File>
 				<File

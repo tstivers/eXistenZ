@@ -121,6 +121,27 @@ JSObject* jsentity::createEntityObject(Entity* entity)
 	return obj;
 }
 
+JSObject* jsentity::createEntityObject(Entity* entity, JSObject* object)
+{
+	JSContext* cx = script::gScriptEngine->GetContext();
+	JS_EnterLocalRootScope(cx);
+
+	JS_SetReservedSlot(cx, object, 0, PRIVATE_TO_JSVAL(entity));	
+	entity->setScriptObject(object);
+	
+	JSObject* manager = entity->getManager()->getScriptObject();
+	JSBool result = JS_SetPrototype(cx, object, Entity::m_scriptClass.prototype);
+	jsval val = OBJECT_TO_JSVAL(object);
+	result = JS_SetProperty(
+		cx, 
+		manager, 
+		entity->getName().c_str(), 
+		&val);
+
+	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(object));
+	return object;
+}
+
 void jsentity::destroyEntityObject(entity::Entity* entity)
 {
 	JS_DeleteProperty(

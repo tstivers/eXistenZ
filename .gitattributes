@@ -1,7 +1,9 @@
 * text=auto !eol
 bin/config.js eol=crlf
 crimson/eXistenZ.prj -text
+data/scripts/entitytest.js -text
 data/scripts/events.js -text
+data/scripts/hamgrenade.js -text
 data/scripts/house.js eol=crlf
 data/scripts/keys.js eol=crlf
 data/scripts/mesh.js -text

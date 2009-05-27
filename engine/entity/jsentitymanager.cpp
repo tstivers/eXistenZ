@@ -102,6 +102,9 @@ JSBool jsentity::createEntity(JSContext *cx, uintN argc, jsval *vp)
 		return JS_FALSE;
 	}
 
+	if (argc == 2 && JSVAL_IS_OBJECT(JS_ARGV(cx, vp)[1])) // constructing with user-provided base	
+		createEntityObject(entity, JSVAL_TO_OBJECT(JS_ARGV(cx, vp)[1]));
+
 	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(entity->getScriptObject()));
 	return JS_TRUE;
 }

@@ -12,7 +12,9 @@ namespace jscomponent
 		JS_EnterLocalRootScope(cx);
 		JSObject* entity = component->getEntity()->getScriptObject();
 		jsval cval = JSVAL_VOID;
-		JS_GetProperty(cx, entity, "components", &cval);
+		JSBool result = JS_GetProperty(cx, entity, "components", &cval);
+		//JSBool result = JS_LookupPropertyWithFlags(cx, entity, "components", JSRESOLVE_QUALIFIED, &cval);
+		ASSERT(result != JS_FALSE && cval != JSVAL_VOID);
 		JSObject* components = JSVAL_TO_OBJECT(cval);
 		JSObject* obj = JS_DefineObject(
 			cx, 

@@ -30,6 +30,11 @@ namespace script
 			return m_scriptObject;
 		}
 
+		virtual void setScriptObject(JSObject* value)
+		{
+			ASSERT(!"tried to set script object on a non-polymorphic class");
+		}
+
 	protected:
 		virtual JSObject* createScriptObject() { return NULL; }
 		virtual void destroyScriptObject() = 0;
@@ -60,9 +65,13 @@ namespace script
 	{
 		jsval val = JSVAL_VOID;
 		JSBool ret = JS_GetReservedSlot(cx, obj, index, &val);
-		ASSERT(ret == JS_TRUE);
-		ASSERT(val != JSVAL_VOID);
-		ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
+		if(ret == JS_FALSE)
+			return JS_FALSE;
+		if(val == JSVAL_VOID)
+			return JS_FALSE;
+		//ASSERT(ret == JS_TRUE);
+		//ASSERT(val != JSVAL_VOID);
+		//ASSERT(JSVAL_TO_PRIVATE(val) != NULL);
 		return (T*)JSVAL_TO_PRIVATE(val);
 	}
 
@@ -76,26 +85,16 @@ namespace script
 		return false;
 	}
 
-	template<typename T>
-	JSBool NameGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
-	{
-		T* e = GetReserved<T>(cx, obj);
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, e->getName().c_str()));
-		return JS_TRUE;
-	}
-
-	template<typename T, const std::string& (T::* prop)(void)>
-	JSBool StringGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
-	{
-		T* e = GetReserved<T>(cx, obj);
-		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, (e->*prop)().c_str()));
-		return JS_TRUE;
-	}
-
 	template<typename T, typename U, U (T::* prop)(void)>
 	JSBool PropertyGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
+		if(!e)
+		{
+			JS_ReportError(cx, "tried to get property on deleted or non-wrapped object");
+			return JS_FALSE;
+		}
+
 		*vp = jsscript::to_jsval(cx, (e->*prop)());
 		return JS_TRUE;
 	}
@@ -104,6 +103,12 @@ namespace script
 	JSBool PropertySetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
+		if(!e)
+		{
+			JS_ReportError(cx, "tried to get property on deleted or non-wrapped object");
+			return JS_FALSE;
+		}
+
 		remove_const<remove_reference<U>::type>::type val;
 		if(jsscript::jsval_to_(cx, *vp, &val))
 		{

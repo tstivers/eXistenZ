@@ -85,6 +85,7 @@ namespace entity
 
 		// script class
 		static ScriptedObject::ScriptClass m_scriptClass;
+		void setScriptObject(JSObject* value); // for user-defined script class
 
 	protected:
 		// script functions
