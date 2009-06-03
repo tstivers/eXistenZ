@@ -35,6 +35,12 @@ namespace jsscript
 		return object ? OBJECT_TO_JSVAL(object->getScriptObject()) : JSVAL_NULL;
 	}
 
+	inline jsval to_jsval(JSContext* cx, weak_reference<component::Component> object)
+	{
+		return object ? OBJECT_TO_JSVAL(object->getScriptObject()) : JSVAL_NULL;
+	}
+
+
 	inline jsval to_jsval(JSContext* cx, const component::ContactCallbackEventArgs& object)
 	{
 		JS_EnterLocalRootScope(cx);

@@ -934,6 +934,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\common\weak_reference.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\common\wrapped_global.h"
 				>
 			</File>

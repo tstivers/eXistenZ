@@ -62,7 +62,6 @@ SceneBSP::SceneBSP(const string& name, q3bsp::BSP* bsp)
 void SceneBSP::doTick()
 {
 	Scene::doTick();
-	m_entityManager->flushFreeList();
 }
 
 SceneBSP::~SceneBSP()

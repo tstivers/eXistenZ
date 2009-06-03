@@ -55,7 +55,7 @@ namespace physics
 
 		// NxUserContactReport overrides
 		void  onContactNotify(NxContactPair& pair, NxU32 events);
-		vector<pair<component::ActorComponent*, component::ContactCallbackEventArgs>> m_contactBuffer;
+		vector<pair<weak_reference<component::ActorComponent>, component::ContactCallbackEventArgs>> m_contactBuffer;
 
 		// shape cache
 		typedef map<string, ShapeEntry> ShapeMap;
