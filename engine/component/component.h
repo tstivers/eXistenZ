@@ -2,6 +2,7 @@
 
 #include "component/componenttypes.h"
 #include "entity/entity.h"
+#include "common/weak_reference.h"
 
 namespace entity
 {
@@ -19,7 +20,7 @@ namespace component
 		typedef T link_target_type;
 
 		ComponentLink(Component* parent)
-			: m_parent(parent), m_component(NULL)
+			: m_parent(parent)
 		{
 			ASSERT(parent);			
 		}
@@ -46,7 +47,8 @@ namespace component
 		{
 			if(!m_component && !m_name.empty())
 				m_component = m_parent->getEntity()->getComponent<T>(m_name);
-			return m_component;
+			//ASSERT(m_component.get() && dynamic_cast<T*>(m_component.get()));
+			return (T*)m_component.get();
 		}
 
 		inline const string& getName() const
@@ -73,7 +75,7 @@ namespace component
 	protected:
 
 		string m_name;
-		mutable T* m_component;
+		mutable weak_reference<Component> m_component;
 		Component* m_parent;
 	};
 
@@ -81,7 +83,7 @@ namespace component
 	{
 	};
 
-	class Component : public script::ScriptedObject
+	class Component : public script::ScriptedObject, public weak_ref_provider<Component>
 	{
 	public:
 		typedef ComponentDesc desc_type;

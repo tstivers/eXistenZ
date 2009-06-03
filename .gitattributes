@@ -51,6 +51,7 @@ engine/common/smart_ptr.h eol=crlf
 engine/common/types.h -text
 engine/common/utfstring.cpp -text
 engine/common/utfstring.h -text
+engine/common/weak_reference.h -text
 engine/common/wrapped_global.h -text
 engine/component/actorcomponent.cpp -text
 engine/component/actorcomponent.h -text

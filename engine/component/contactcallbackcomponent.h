@@ -7,7 +7,7 @@ namespace component
 {
 	struct ContactCallbackEventArgs
 	{		
-		Component* otherComponent;
+		weak_reference<Component> otherComponent;
 		D3DXVECTOR3 contactForce;
 
 		ContactCallbackEventArgs(Component* otherComponent, D3DXVECTOR3& contactForce)

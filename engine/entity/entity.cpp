@@ -50,8 +50,6 @@ void Entity::removeComponent(const string& name)
 	if(it == m_components.end())
 		return;
 
-	m_manager->addToFreeList((*it).second);
-	it->second->release();
 	m_components.erase(it);
 
 	if(name == "pos")
