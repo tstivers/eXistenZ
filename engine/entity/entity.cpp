@@ -46,7 +46,13 @@ component::Component* Entity::getComponent(const string& name)
 
 void Entity::removeComponent(const string& name)
 {
-	m_components.erase(name);
+	component_map::iterator it = m_components.find(name);
+	if(it == m_components.end())
+		return;
+
+	m_manager->addToFreeList((*it).second);
+	it->second->release();
+	m_components.erase(it);
 
 	if(name == "pos")
 		m_position = NULL;

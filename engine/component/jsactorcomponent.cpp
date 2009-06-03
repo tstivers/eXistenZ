@@ -30,6 +30,7 @@ namespace jscomponent
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
+		WRAPPED_LINK(contactCallback, ActorComponent, ContactCallbackComponent),
 		JS_PS_END
 	};
 
@@ -37,6 +38,7 @@ namespace jscomponent
 	{
 		// JS_FN("name", function, nargs, minargs, flags),
 		JS_FN("setShapesGroup", WRAP_FASTNATIVE(ActorComponent::setShapesGroup), 1, 0),
+		JS_FN("setContactReportFlags", WRAP_FASTNATIVE(ActorComponent::setContactReportFlags), 1, 0),
 		JS_FS_END
 	};
 }

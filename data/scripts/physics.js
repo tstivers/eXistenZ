@@ -1,5 +1,3 @@
-
-
 var physicsDebug = false;
 toggle_physicsDebug = function() {
     if (!physicsDebug) {

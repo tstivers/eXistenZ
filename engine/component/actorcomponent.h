@@ -3,6 +3,7 @@
 #include "component/component.h"
 #include "entity/interfaces.h"
 #include "component/poscomponent.h"
+#include "component/contactcallbackcomponent.h"
 
 namespace component
 {
@@ -32,9 +33,11 @@ namespace component
 
 		// methods
 		virtual void setShapesGroup(int group);
+		virtual void setContactReportFlags(int flags);
 
 		// properties
-		
+		ComponentLink<ContactCallbackComponent> contactCallback;
+
 		// script class
 		static ScriptedObject::ScriptClass m_scriptClass;
 

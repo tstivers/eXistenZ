@@ -10,8 +10,7 @@ game.player.shoot = function(key, state)
 unbind(BUTTON_0);
 bind(BUTTON_0, game.player, game.player.shoot, STATE_DOWN);
 game.player.shootFunction = playerShoot;
-game.player.createProjectile = createBigDaddy;
-
+game.player.createProjectile = createHam;
 
 function shootEntity(entity, pos, direction, speed) {
     entity.components.pos.setPos(pos);
@@ -20,7 +19,26 @@ function shootEntity(entity, pos, direction, speed) {
     var velocity = new Vector(0, 0, 1);
     velocity.rotate(direction);
     entity.components.actor.setLinearVelocity(velocity.mul(speed));
+    entity.components.actor.setContactReportFlags(NX_NOTIFY_ON_START_TOUCH | NX_NOTIFY_FORCES);
+    var cc = entity.createContactCallbackComponent("bounce");
+    entity.components.actor.contactCallback = cc;
+    cc.onContact = grenadeBounce;
+    cc.acquire();
+    
     return entity;
+}
+
+function grenadeBounce(actor) {    
+    system.scene.sound.playSound3d("sound/weapons/grenade/hgrenb1a.wav", actor.transform.getPos(), 0.5);
+}
+
+function sliceBounce(actor, args) {
+    //system.scene.sound.playSound3d("sound/weapons/grenade/hgrenb2a.wav", actor.transform.getPos(), 0.3);
+    var entity = actor.entity;
+    //print("removing " + actor.mesh_component.name);
+    entity.removeComponent(actor.mesh_component.name);
+    entity.removeComponent(actor.pos_component.name);
+    entity.removeComponent(actor.name);
 }
 
 function playerShoot()
@@ -97,11 +115,11 @@ function shootSlice(ham) {
     timer.addTimer(slice.name + "_timer", slice, slice.remove, 0, system.time.ms + 10000);
 }
 
-var grenade_slices = 100;
+var grenade_slices = 50;
 function hamgrenade(ham) {
     system.scene.physics.setGroupCollisionFlag(10, 10, false);
     system.scene.physics.setGroupCollisionFlag(10, 0, true);
-    ham.createTimerComponent("fuse", { delay: 3000, action: doExplosion });
+    ham.createTimerComponent("fuse", { delay: 1500, action: doExplosion });
 }
 
 function doExplosion(c) {
@@ -121,12 +139,22 @@ function doExplosion(c) {
         blasted[i].addForceType(v, NX_IMPULSE);
     }
 
+    entity.components.bounce.onContact = sliceBounce;
+    
     for (i = 0; i < grenade_slices; i++) {
-        entity.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
-        entity.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i }).acquire();
-        actor = entity.createDynamicActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
+        var pos_component = entity.createPosComponent("p" + i, { pos: origin, rot: [Math.random() * 360, Math.random() * 360, Math.random() * 360] });
+        var mesh_component = entity.createMeshComponent("m" + i, { mesh: "meshes/hamslice.fbx#Slice01", transform: "p" + i });
+        var actor = entity.createDynamicActorComponent("a" + i, { shapesXml: "meshes/hamslice_DYNAMIC.xml", transform: "p" + i });
+
+        actor.mesh_component = mesh_component;
+        actor.pos_component = pos_component;
+
         actor.acquire();
+        mesh_component.acquire();
+        
         actor.setShapesGroup(10);
+        actor.setContactReportFlags(NX_NOTIFY_ON_START_TOUCH | NX_NOTIFY_ON_TOUCH | NX_NOTIFY_FORCES);
+        actor.contactCallback = entity.components.bounce;        
         actor.setLinearVelocity([(Math.random() * 10) - 5, (Math.random() * 10), (Math.random() * 10) - 5]);
         actor.setAngularVelocity([Math.random() * 100, Math.random() * 100, Math.random() * 100]);
     }

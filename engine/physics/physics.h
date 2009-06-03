@@ -3,6 +3,7 @@
 #include <NxPhysics.h>
 #include <NxControllerManager.h>
 #include "script/script.h"
+#include "component/contactcallbackcomponent.h"
 
 void NxMat34ToD3DXMatrix(const NxMat34* in, D3DXMATRIX* out);
 void D3DXMatrixToNxMat34(const D3DXMATRIX* in, NxMat34* out);
@@ -13,7 +14,7 @@ namespace physics
 	typedef vector<shared_ptr<NxShapeDesc>> ShapeList;
 	typedef shared_ptr<ShapeList> ShapeEntry;
 
-	class PhysicsManager : public script::ScriptedObject
+	class PhysicsManager : public script::ScriptedObject, public NxUserContactReport
 	{
 	public:
 		PhysicsManager(scene::Scene* scene);
@@ -52,6 +53,10 @@ namespace physics
 		void destroyScriptObject();
 		void initScriptObject();
 
+		// NxUserContactReport overrides
+		void  onContactNotify(NxContactPair& pair, NxU32 events);
+		vector<pair<component::ActorComponent*, component::ContactCallbackEventArgs>> m_contactBuffer;
+
 		// shape cache
 		typedef map<string, ShapeEntry> ShapeMap;
 		ShapeMap m_shapeCache;
@@ -68,9 +73,9 @@ namespace physics
 		// static settings
 		static int s_attachDebugger;
 		static int s_useHardwarePhysics;
-		static float s_gravity;
-		static float s_maxTimestep;
-		static int s_maxIterations;
-		static int s_renderDebug;
+		static float s_gravity;				// TODO: make property
+		static float s_maxTimestep;			// TODO: make property
+		static int s_maxIterations;			// TODO: make property
+		static int s_renderDebug;			// TODO: make property
 	};	
 }

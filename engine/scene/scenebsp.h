@@ -20,6 +20,7 @@ namespace scene
 		void acquire();
 		void release();
 		void render();
+		void doTick();
 	
 		// methods
 		static SceneBSP* loadBSP(const string& filename);

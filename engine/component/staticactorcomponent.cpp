@@ -12,7 +12,6 @@ REGISTER_COMPONENT_TYPE(StaticActorComponent, STATICACTORCOMPONENT);
 StaticActorComponent::StaticActorComponent(entity::Entity* entity, const string& name, const desc_type& desc)
 : ActorComponent(entity, name, desc)
 {
-	
 	NxActorDesc actor_desc;
 	actor_desc.shapes.push_back(desc.shape);
 	m_actor = m_entity->getScene()->getPhysicsManager()->getPhysicsScene()->createActor(actor_desc);

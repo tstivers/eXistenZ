@@ -1533,6 +1533,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="contactcallback"
+				>
+				<File
+					RelativePath="..\engine\component\contactcallbackcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\contactcallbackcomponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscontactcallbackcomponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\engine\component\jscontactcallbackcomponent.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

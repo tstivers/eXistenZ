@@ -1,6 +1,7 @@
 #pragma once
 
 #include "component/componenttypes.h"
+#include "entity/entity.h"
 
 namespace entity
 {
@@ -18,8 +19,9 @@ namespace component
 		typedef T link_target_type;
 
 		ComponentLink(Component* parent)
+			: m_parent(parent), m_component(NULL)
 		{
-			m_parent = parent;
+			ASSERT(parent);			
 		}
 
 		inline bool operator=(const string& name)
@@ -92,7 +94,8 @@ namespace component
 		virtual int getType() = 0;
 		const string& getTypeName() { return getComponentTypeName(getType()); }
 
-		virtual entity::Entity* getEntity() { return m_entity; }
+		entity::Entity* getEntity() { return m_entity; }
+		scene::Scene* getScene() { return m_entity->getManager()->getScene(); }
 
 		virtual void acquire() { m_acquired = true; }
 		virtual void release() { m_acquired = false; }

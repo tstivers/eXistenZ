@@ -202,7 +202,7 @@ FMOD::Channel* SoundManager::playSound3d(const string& name, const D3DXVECTOR3& 
 		return NULL;
 	}
 
-	channel->set3DMinMaxDistance(5.0f, 10000.0f);
+	channel->set3DMinMaxDistance(5.0f, 1000.0f);
 	channel->setVolume(volume);
 	channel->set3DAttributes((FMOD_VECTOR*)&pos, NULL);
 	channel->setPaused(false);

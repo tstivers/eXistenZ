@@ -57,7 +57,6 @@ void JSRenderComponent::render(texture::Material* lighting)
 {
 	ASSERT(m_acquired);
 	ASSERT(transform);
-
 }
 
 JSObject* JSRenderComponent::createScriptObject()
