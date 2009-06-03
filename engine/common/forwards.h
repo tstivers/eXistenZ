@@ -5,6 +5,7 @@
 namespace component
 {
 	class Component;
+	class ActorComponent;
 }
 
 namespace scene

@@ -53,6 +53,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/format.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
+#include <boost/make_shared.hpp>
 
 #include <d3d9.h>
 #include <d3dx9core.h>

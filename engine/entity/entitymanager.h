@@ -13,6 +13,7 @@ namespace entity
 	protected:
 		// typedefs
 		typedef map<string, shared_ptr<Entity>> entity_map;
+		typedef vector<shared_ptr<component::Component>> ComponentList;
 
 	public:
 		// typedefs
@@ -34,6 +35,9 @@ namespace entity
 		virtual void addEntity(shared_ptr<Entity> entity);
 		virtual int getEntityList(vector<string>& names);
 
+		virtual void addToFreeList(shared_ptr<component::Component> component) { m_freeComponentList.push_back(component); }
+		virtual void flushFreeList() { m_freeComponentList.clear(); }
+
 		// iteration functions
 		virtual iterator begin() { return m_entities.begin(); }
 		virtual iterator end() { return m_entities.end(); }
@@ -46,5 +50,6 @@ namespace entity
 		// members
 		entity_map m_entities;
 		scene::Scene* m_scene;
+		ComponentList m_freeComponentList;
 	};
 }

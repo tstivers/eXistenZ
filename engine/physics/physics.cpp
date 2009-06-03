@@ -12,6 +12,9 @@
 #include <NxCooking.h>
 #include <NxCharacter.h>
 #include <NxControllerManager.h>
+#include "component/component.h"
+#include "component/actorcomponent.h"
+#include "entity/entity.h"
 
 #define NX_DBG_EVENTGROUP_MYOBJECTS        0x00100000
 #define NX_DBG_EVENTMASK_MYOBJECTS         0x00100000
@@ -20,12 +23,12 @@ namespace physics
 {
 
 	namespace details
-	{
+	{		
 		class PhysicsOutputStream : public NxUserOutputStream
 		{
 			void reportError(NxErrorCode code, const char* message, const char* file, int line)
 			{
-				//ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
+				ERROR("ERROR %d: \"%s\" (%s:%d)", code, message, file, line);
 			}
 
 			NxAssertResponse reportAssertViolation(const char *message, const char *file, int line)
@@ -65,7 +68,7 @@ namespace physics
 	// these classes have to exist during global destruction, hence the 'leak'
 	details::PhysicsOutputStream* g_physicsOutput = new details::PhysicsOutputStream();
 	details::PhysicsAllocator* g_physicsAllocator = new details::PhysicsAllocator();
-	
+
 	// initialize statics
 	int PhysicsManager::s_attachDebugger = 1;
 	int PhysicsManager::s_useHardwarePhysics = 1;
@@ -149,6 +152,9 @@ PhysicsManager::PhysicsManager(scene::Scene *scene) :
 	m_physicsScene = m_physicsSDK->createScene(sceneDesc);
 	m_physicsScene->setTiming(s_maxTimestep, s_maxIterations);
 
+	// set the contact reporter for collisions
+	m_physicsScene->setUserContactReport(this);
+
 	// Create the default material
 	NxMaterial* defaultMaterial = m_physicsScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.0f);
@@ -213,6 +219,12 @@ void PhysicsManager::getResults()
 	}
 	else
 		m_debugRenderable = NULL;
+
+	// handle any buffered contact callbacks
+	for(vector<pair<component::ActorComponent*, component::ContactCallbackEventArgs>>::iterator it = m_contactBuffer.begin(); it != m_contactBuffer.end(); it++)
+		(*it).first->contactCallback->onContact((*it).first, (*it).second);
+	
+	m_contactBuffer.clear();
 }
 
 void PhysicsManager::setGravity(float value)
@@ -301,7 +313,8 @@ void PhysicsManager::renderDebugView()
 		Lines++;
 	}
 
-	render::drawLineSegments(&verts.front(), verts.size() / 2);
+	if(!verts.empty())
+		render::drawLineSegments(&verts.front(), verts.size() / 2);
 }
 
 ShapeEntry PhysicsManager::getShapeEntry(const string& name)
@@ -322,6 +335,20 @@ ShapeEntry PhysicsManager::getShapeEntry(const string& name)
 
 	return it->second;
 }
+
+void PhysicsManager::onContactNotify(NxContactPair& pair, NxU32 events)
+{
+	component::Component* component1 = (component::Component*)pair.actors[0]->userData;
+	component::Component* component2 = (component::Component*)pair.actors[1]->userData;
+	component::ActorComponent* ac;
+
+	if(component1 && (ac = dynamic_cast<component::ActorComponent*>(component1)) && ac->contactCallback)
+		m_contactBuffer.push_back(make_pair(ac, component::ContactCallbackEventArgs(component2, *((D3DXVECTOR3*)&pair.sumNormalForce))));
+
+	if(component2 && (ac = dynamic_cast<component::ActorComponent*>(component2)) && ac->contactCallback)
+		m_contactBuffer.push_back(make_pair(ac, component::ContactCallbackEventArgs(component1, *((D3DXVECTOR3*)&pair.sumNormalForce))));
+}
+
 
 JSObject* PhysicsManager::createScriptObject()
 {

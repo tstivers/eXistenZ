@@ -26,6 +26,9 @@ DynamicActorComponent::~DynamicActorComponent()
 
 void DynamicActorComponent::acquire()
 {
+	if(m_acquired)
+		return;
+
 	NxActorDesc actordesc;
 	NxBodyDesc bodydesc;
 	actordesc.body = &bodydesc;
@@ -60,6 +63,7 @@ void DynamicActorComponent::acquire()
 
 	transform->setSetFunction(bind(&DynamicActorComponent::setTransform, this, _1, _2));
 	transform->setGetFunction(bind(&DynamicActorComponent::getTransform, this, _1, _2));
+
 	ActorComponent::acquire();
 }
 
@@ -68,9 +72,13 @@ void DynamicActorComponent::release()
 	if(!m_acquired)
 		return;
 
-	transform->setSetFunction(NULL);
-	transform->setGetFunction(NULL);
-	transform.release();
+	if(transform)
+	{
+		transform->setSetFunction(NULL);
+		transform->setGetFunction(NULL);
+		transform.release();
+	}
+
 	ActorComponent::release();
 }
 

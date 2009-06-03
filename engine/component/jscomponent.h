@@ -31,11 +31,11 @@ namespace jscomponent
 	{
 		JSObject* components;
 		script::GetProperty(script::gScriptEngine->GetContext(), component->getEntity()->getScriptObject(), "components", components);
-		JS_SetReservedSlot(script::gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 		JS_DeleteProperty(
 			script::gScriptEngine->GetContext(), 
 			components, 
 			component->getName().c_str());
+		JS_SetReservedSlot(script::gScriptEngine->GetContext(), component->getScriptObject(), 0, PRIVATE_TO_JSVAL(NULL));
 	}
 
 	template<typename T>

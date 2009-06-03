@@ -48,7 +48,7 @@ ScriptEngine::ScriptEngine()
 		ERROR("unable to create context");
 	}
 
-	//JS_SetGCZeal(cx, 2); //debug allocations
+	JS_SetGCZeal(cx, 2); //debug allocations
 
 	m_global.m_scriptObject = JS_NewObject(cx, GlobalObject::m_scriptClass.classDef, NULL, NULL);
 	GlobalObject::m_scriptClass.prototype = JS_GetPrototype(cx, m_global.m_scriptObject);

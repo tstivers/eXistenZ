@@ -60,6 +60,8 @@ engine/component/component.cpp -text
 engine/component/component.h -text
 engine/component/componenttypes.cpp -text
 engine/component/componenttypes.h -text
+engine/component/contactcallbackcomponent.cpp -text
+engine/component/contactcallbackcomponent.h -text
 engine/component/controller.cpp -text
 engine/component/controller.h -text
 engine/component/dynamicactorcomponent.cpp -text
@@ -70,6 +72,8 @@ engine/component/jscameracomponent.cpp -text
 engine/component/jscameracomponent.h -text
 engine/component/jscomponent.cpp -text
 engine/component/jscomponent.h -text
+engine/component/jscontactcallbackcomponent.cpp -text
+engine/component/jscontactcallbackcomponent.h -text
 engine/component/jscontroller.cpp -text
 engine/component/jsdynamicactorcomponent.cpp -text
 engine/component/jsdynamicactorcomponent.h -text
