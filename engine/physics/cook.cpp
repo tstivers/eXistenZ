@@ -54,7 +54,7 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 
 	// not cached, cook it from scratch
 	
-	int i = 0;
+	int count = 0;
 	for (scene::SceneBSP::TextureGroupMap::const_iterator it = scene->m_textureGroups.begin(); 
 		it != scene->m_textureGroups.end(); 
 		++it)
@@ -79,9 +79,8 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 		component::StaticActorComponentDesc actor_desc;
 		actor_desc.shape = mesh_desc.get();
 		component::StaticActorComponent* c;
-		entity->createComponent(string(it->second->texture->name) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+		entity->createComponent(string(it->second->texture->name) + "_" + lexical_cast<string>(count++), actor_desc,  &c);
 		INFO("created actor %s", c->getName().c_str());
-		i++;
 	}
 
 	// process shadergroups
@@ -96,7 +95,7 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 		for(scene::BSPShaderGroup::FaceMap::const_iterator fit = it->second->faces.begin(); fit != it->second->faces.end(); ++fit)
 		{
 			scene::BSPFace* face = fit->second;
-			for(int i =0; i < face->num_vertices; i++)
+			for(int i = 0; i < face->num_vertices; i++)
 				vertices.push_back(face->vertices[i].pos);
 			for(int i = 0; i < face->num_indices; i++)
 				indices.push_back(face->indices[i] + offset_v);
@@ -110,9 +109,8 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 				component::StaticActorComponentDesc actor_desc;
 				actor_desc.shape = mesh_desc.get();
 				component::StaticActorComponent* c;
-				entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+				entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(count++), actor_desc,  &c);
 				INFO("created actor %s", c->getName().c_str());
-				i++;
 				vertices.clear();
 				indices.clear();
 				offset_v = 0;
@@ -127,9 +125,8 @@ void physics::CreateBSPEntity(const string& name, const scene::SceneBSP* scene, 
 			component::StaticActorComponentDesc actor_desc;
 			actor_desc.shape = mesh_desc.get();
 			component::StaticActorComponent* c;
-			entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(i), actor_desc,  &c);
+			entity->createComponent(string(it->second->shader->getName()) + "_" + lexical_cast<string>(count++), actor_desc,  &c);
 			INFO("created actor %s", c->getName().c_str());
-			i++;
 		}
 	}
 
