@@ -3,14 +3,11 @@
 template<typename T>
 class weak_reference
 {
-	template<typename T>
-	friend class weak_ref_provider;
-
 public:	
 	weak_reference()
 	{}
 
-	weak_reference(T* object)
+	explicit weak_reference(T* object)
 		: m_object(object)
 	{
 		if(object)
@@ -22,11 +19,11 @@ public:
 		}
 	}
 
-	inline T* operator->() const { return (m_valid && *m_valid) ? m_object : NULL; }
-	inline operator T* () const { return operator->(); }
-	inline T* get() const { return operator->(); }
+	inline T* get() const { return (m_valid && *m_valid) ? m_object : NULL; }
+	inline T* operator->() const { ASSERT(operator bool()); return get(); }
+	inline operator bool() const { return m_valid && *m_valid && m_object; }
 
-	inline bool operator=(T* object)
+	weak_reference<T>& operator=(T* object)
 	{
 		m_object = object;
 		if(object)
@@ -39,7 +36,7 @@ public:
 		else
 			m_valid.reset();
 		
-		return operator->();
+		return *this;
 	}
 
 private:
@@ -63,5 +60,5 @@ public:
 	}
 
 private:
-	shared_ptr<bool> m_weak_ref_flag;
+	mutable shared_ptr<bool> m_weak_ref_flag;
 };

@@ -138,15 +138,16 @@ bool PhysXPlayer::setMoveMode(t_movemode mode)
 		return false;
 
 	if (acquired)
-	{
-		INFO("setting move movde");
+	{		
 		switch (mode)
 		{
 		case MM_WALK:
+			INFO("setting move mode to WALK");
 			nxc->setStepOffset(this->step_up);
 			((NxBoxController*)nxc)->setExtents((NxVec3)size);
 			break;
 		default:
+			INFO("setting move mode to FLY");
 			nxc->setStepOffset(0.0f);
 			((NxBoxController*)nxc)->setExtents(NxVec3(0, 0, 0));
 			break;
