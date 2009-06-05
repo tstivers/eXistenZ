@@ -26,20 +26,20 @@ Entity::~Entity()
 		destroyScriptObject();
 }
 
-void Entity::addComponent(const string& name, shared_ptr<component::Component> component)
+void Entity::addComponent(const string& name, component::Component* component)
 {
 	ASSERT(getComponent(name) == NULL);
-	m_components.insert(component_map::value_type(name, component));
+	m_components.insert(const_cast<string&>(name), component);
 
 	if(name == "pos")
-		m_position = component.get();
+		m_position = component;
 }
 
 component::Component* Entity::getComponent(const string& name)
 {
 	component_map::iterator it = m_components.find(name);
 	if(it != m_components.end())
-		return it->second.get();
+		return it->second;
 	else
 		return NULL;
 }

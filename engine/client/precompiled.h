@@ -53,6 +53,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/format.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
+#include <boost/ptr_container/ptr_unordered_map.hpp>
 #include <boost/make_shared.hpp>
 
 #include <d3d9.h>
@@ -81,7 +82,7 @@
 using namespace std;
 using namespace boost;
 
-#include "common/forwards.h" // forward class declarations;
+#include "common/forwards.h" // forward class declarations
 #include "common/types.h"
 #include "common/log.h"
 #include "common/mystring.h"

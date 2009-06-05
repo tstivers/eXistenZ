@@ -12,7 +12,7 @@ namespace entity
 	{
 	protected:
 		// typedefs
-		typedef map<string, shared_ptr<Entity>> entity_map;
+		typedef ptr_map<string, Entity> entity_map;
 
 	public:
 		// typedefs
@@ -31,7 +31,7 @@ namespace entity
 		virtual Entity* getEntity(int index);
 		virtual int getEntityCount();
 		virtual void removeEntity(const string& name);
-		virtual void addEntity(shared_ptr<Entity> entity);
+		virtual void addEntity(Entity* entity);
 		virtual int getEntityList(vector<string>& names);
 
 		// iteration functions

@@ -34,7 +34,7 @@ Entity* EntityManager::createEntity(const string& name)
 
 	Entity* entity = new Entity(this, name);
 
-	m_entities.insert(entity_map::value_type(name, shared_ptr<Entity>(entity)));
+	m_entities.insert(const_cast<string&>(name), entity);
 	return entity;
 }
 
@@ -42,7 +42,7 @@ Entity* EntityManager::getEntity(const string& name)
 {
 	entity_map::iterator it = m_entities.find(name);
 	if(it != m_entities.end())
-		return it->second.get();
+		return it->second;
 	else
 		return NULL;
 }
@@ -56,7 +56,7 @@ Entity* EntityManager::getEntity(int index)
 	entity_map::iterator it = m_entities.begin();
 	std::advance(it, index);
 
-	return it->second.get();
+	return it->second;
 }
 
 int EntityManager::getEntityCount()
@@ -79,10 +79,10 @@ void EntityManager::removeEntity(const string& name)
 }
 
 // used for alternate entity types or entities owned by other managers
-void EntityManager::addEntity(shared_ptr<Entity> entity)
+void EntityManager::addEntity(Entity* entity)
 {
 	ASSERT(getEntity(entity->getName()) == NULL);
-	m_entities.insert(entity_map::value_type(entity->getName(), entity));
+	m_entities.insert(const_cast<string&>(entity->getName()), entity);
 }
 
 JSObject* EntityManager::createScriptObject()

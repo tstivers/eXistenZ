@@ -27,7 +27,7 @@ namespace entity
 	{
 	protected:
 		// typedefs
-		typedef map<string, shared_ptr<component::Component>> component_map;
+		typedef ptr_map<string, component::Component> component_map;
 
 	public:
 		// typedefs
@@ -52,13 +52,13 @@ namespace entity
 				return NULL;
 			}
 
-			shared_ptr<T> ptr(new T(this, name, desc));
+			T* ptr = new T(this, name, desc);
 			addComponent(name, ptr);
-			*component = ptr.get();
-			return ptr.get();
+			*component = ptr;
+			return ptr;
 		}
 
-		virtual void addComponent(const string& name, shared_ptr<component::Component> component);
+		virtual void addComponent(const string& name, component::Component* component);
 		virtual component::Component* getComponent(const string& name);
 		template<typename T>
 		T* getComponent(const string& name)

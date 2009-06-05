@@ -34,11 +34,13 @@ function grenadeBounce(actor) {
 
 function sliceBounce(actor, args) {
     //system.scene.sound.playSound3d("sound/weapons/grenade/hgrenb2a.wav", actor.transform.getPos(), 0.3);
-    var entity = actor.entity;
-    //print("removing " + actor.mesh_component.name);
-    entity.removeComponent(actor.mesh_component.name);
-    entity.removeComponent(actor.pos_component.name);
-    entity.removeComponent(actor.name);
+    if (actor.bounced) {
+        var entity = actor.entity;
+        entity.removeComponent(actor.mesh_component.name);
+        entity.removeComponent(actor.pos_component.name);
+        entity.removeComponent(actor.name);
+    } else
+        actor.bounced = true;
 }
 
 function playerShoot()

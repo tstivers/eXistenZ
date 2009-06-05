@@ -223,7 +223,7 @@ void PhysicsManager::getResults()
 	// handle any buffered contact callbacks
 	for(vector<pair<weak_reference<component::ActorComponent>, component::ContactCallbackEventArgs>>::iterator it = m_contactBuffer.begin(); it != m_contactBuffer.end(); it++)
 		if(it->first)
-			(*it).first->contactCallback->onContact((*it).first, (*it).second);
+			it->first->contactCallback->onContact((*it).first.get(), (*it).second);
 	
 	m_contactBuffer.clear();
 }
