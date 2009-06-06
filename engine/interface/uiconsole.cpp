@@ -132,79 +132,83 @@ void Console::clear()
 	sbmutex.unlock();
 }
 
-void Console::keypressed(char key, bool extended)
+void Console::keypressed(const eXistenZ::KeyEventArgs& args)
+{
+	switch (args.key)
+	{
+	case VK_LEFT:
+		if (cursorpos > 0)
+			cursorpos--;
+		break;
+	case VK_RIGHT:
+		if (cursorpos < cmd.size())
+			cursorpos++;
+		break;
+	case VK_UP:
+		if ((history.size() > 0) && (historypos < history.size()))
+		{
+			historypos++;
+			cmd = history[historypos - 1];
+			cursorpos = (unsigned int)cmd.size();
+		}
+		break;
+	case VK_DOWN:
+		if ((history.size() > 0) && (historypos > 0))
+		{
+			historypos--;
+			cmd = history[historypos];
+			cursorpos = (unsigned int)cmd.size();
+		}
+		break;
+	case VK_DELETE:
+		if (cursorpos < cmd.size())
+			cmd.erase(cursorpos, 1);
+		break;
+	case VK_HOME:
+		cursorpos = 0;
+		break;
+	case VK_END:
+		cursorpos = (unsigned int)cmd.size();
+		break;
+	}
+}
+
+
+void Console::charpressed(const eXistenZ::KeyEventArgs& args)
 {
 	//LOG("key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
 
-	if (extended)
-		switch (key)
+	switch (args.key)
+	{
+	case 0x08: // backspace
+		if (cursorpos > 0)
 		{
-		case VK_LEFT:
-			if (cursorpos > 0)
-				cursorpos--;
-			break;
-		case VK_RIGHT:
-			if (cursorpos < cmd.size())
-				cursorpos++;
-			break;
-		case VK_UP:
-			if ((history.size() > 0) && (historypos < history.size()))
-			{
-				historypos++;
-				cmd = history[historypos - 1];
-				cursorpos = (unsigned int)cmd.size();
-			}
-			break;
-		case VK_DOWN:
-			if ((history.size() > 0) && (historypos > 0))
-			{
-				historypos--;
-				cmd = history[historypos];
-				cursorpos = (unsigned int)cmd.size();
-			}
-			break;
-		case VK_DELETE:
-			if (cursorpos < cmd.size())
-				cmd.erase(cursorpos, 1);
-			break;
-		case VK_HOME:
+			cursorpos--;
+			cmd.erase(cursorpos, 1);
+		}
+		break;
+	case 0x0d: // enter
+		if (cmd.size() == 0)
+		{
+			input::acquire();
+			draw = 0;
+		}
+		if (cmd.size() > 0)
+		{
+			if (cmdecho)
+				LOG("> %s", cmd.c_str());
+			console::processCmd((char*)cmd.c_str());
+			history.push_front(cmd);
+			cmd.clear();
 			cursorpos = 0;
-			break;
-		case VK_END:
-			cursorpos = (unsigned int)cmd.size();
-			break;
+			historypos = 0;
 		}
-	else switch (key)
-		{
-		case 0x08: // backspace
-			if (cursorpos > 0)
-			{
-				cursorpos--;
-				cmd.erase(cursorpos, 1);
-			}
-			break;
-		case 0x0d: // enter
-			if (cmd.size() == 0)
-			{
-				input::acquire();
-				draw = 0;
-			}
-			if (cmd.size() > 0)
-			{
-				if (cmdecho)
-					LOG("> %s", cmd.c_str());
-				console::processCmd((char*)cmd.c_str());
-				history.push_front(cmd);
-				cmd.clear();
-				cursorpos = 0;
-				historypos = 0;
-			}
-			break;
-		default:
-			cmd.insert(cursorpos, 1, key);
-			cursorpos++;
-			break;
-		}
+		break;
+	default:
+		cmd.insert(cursorpos, 1, args.key);
+		cursorpos++;
+		break;
+	}
 }
 
 

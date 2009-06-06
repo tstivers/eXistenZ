@@ -2,9 +2,9 @@
 #include "render/render.h"
 #include "render/dx.h"
 #include "settings/settings.h"
-#include "client/appwindow.h"
 #include "interface/interface.h" // hack for fullscreen reset
 #include "render/shapes.h"
+#include "window/appwindow.h"
 
 namespace d3d
 {
@@ -13,7 +13,7 @@ namespace d3d
 
 	D3DPRESENT_PARAMETERS d3dpp;
 	bool resetDevice = false;
-};
+}
 
 using namespace d3d;
 
@@ -90,7 +90,7 @@ bool d3d::init()
 	if (FAILED(d3d->CreateDevice(
 				   adapter,
 				   devicetype,
-				   appwindow::getHwnd(),
+				   eXistenZ::g_appWindow->getHwnd(),
 				   D3DCREATE_HARDWARE_VERTEXPROCESSING,
 				   &d3dpp,
 				   &d3dDevice)))				   
@@ -236,9 +236,9 @@ void d3d::takeScreenShot(const string filename)
 	{
 		width = GetSystemMetrics(SM_CXSCREEN);
 		height = GetSystemMetrics(SM_CYSCREEN);
-		GetClientRect(appwindow::getHwnd(), &rect);
-		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.left);
-		ClientToScreen(appwindow::getHwnd(), (LPPOINT)&rect.right);
+		GetClientRect(eXistenZ::g_appWindow->getHwnd(), &rect);
+		ClientToScreen(eXistenZ::g_appWindow->getHwnd(), (LPPOINT)&rect.left);
+		ClientToScreen(eXistenZ::g_appWindow->getHwnd(), (LPPOINT)&rect.right);
 	}
 	else
 	{

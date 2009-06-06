@@ -1,18 +1,7 @@
 #pragma once
 
-namespace texture
-{
-	class DXTexture;
-};
-
-namespace render
-{
-	class RenderGroup;
-};
-
 namespace mesh
 {
-
 	class Mesh
 	{
 	public:
@@ -41,4 +30,4 @@ namespace mesh
 		D3DXMATRIX mesh_offset;
 	};
 
-};
+}

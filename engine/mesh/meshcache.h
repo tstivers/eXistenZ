@@ -10,4 +10,4 @@ namespace mesh
 	bool delMesh(Mesh* mesh);
 	bool delMesh(string& name);
 	unsigned int clearMeshCache();
-};
+}

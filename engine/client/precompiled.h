@@ -1,6 +1,7 @@
 #define VC_EXTRALEAN
 #define NOMINMAX
 #include <windows.h>
+#include <windowsx.h>
 #include <stdio.h>
 #include <io.h>
 #include <time.h>
@@ -56,6 +57,8 @@
 #include <boost/ptr_container/ptr_unordered_map.hpp>
 #include <boost/make_shared.hpp>
 
+#include "unique_ptr/unique_ptr.hpp"
+
 #include <d3d9.h>
 #include <d3dx9core.h>
 #define DIRECTINPUT_VERSION 0x0800
@@ -93,3 +96,10 @@ using namespace boost;
 #include "script/jsnativecall.h"
 #include "timer/timer.h"
 
+// Raw Input
+#ifndef HID_USAGE_PAGE_GENERIC
+#define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
+#endif
+#ifndef HID_USAGE_GENERIC_MOUSE
+#define HID_USAGE_GENERIC_MOUSE        ((USHORT) 0x02)
+#endif

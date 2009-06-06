@@ -8,7 +8,6 @@
 #include "render/render.h"
 #include "settings/settings.h"
 #include "timer/timer.h"
-#include "client/appwindow.h"
 #include "script/script.h"
 #include "vfs/vfs.h"
 #include "vfs/file.h"
@@ -16,7 +15,7 @@
 #include "scene/scenebsp.h"
 #include "physics/physics.h"
 #include "jsplayer.h"
-
+#include "window/appwindow.h"
 
 namespace game
 {
@@ -42,7 +41,7 @@ namespace game
 	char init_command[MAX_PATH];
 
 	Player* player;
-};
+}
 
 REGISTER_STARTUP_FUNCTION(game, game::init, 10);
 
@@ -119,7 +118,7 @@ void game::processInput()
 	// default key mappings cannot be changed
 	if (KEYPRESSED(DIK_ESCAPE))
 	{
-		PostMessage(appwindow::getHwnd(), WM_QUIT, 0, 0);
+		PostMessage(eXistenZ::g_appWindow->getHwnd(), WM_QUIT, 0, 0);
 	}
 
 	if (KEYDOWN(DIK_GRAVE))
@@ -130,7 +129,16 @@ void game::processInput()
 
 	if ((KEYDOWN(DIK_LALT) || KEYDOWN(DIK_RALT)) && KEYDOWN(DIK_RETURN))
 	{
-		appwindow::toggleFullScreen();
+		if(eXistenZ::g_appWindow->getFullscreen())
+		{
+			render::goFullScreen(false);
+			eXistenZ::g_appWindow->setFullscreen(false);
+		}
+		else
+		{
+			eXistenZ::g_appWindow->setFullscreen(true);
+			render::goFullScreen(true);
+		}
 		input::kbstate[DIK_RETURN] = 0; // eat the enter
 	}
 
@@ -202,7 +210,7 @@ void game::con_map(char* cmd, char* cmdline, void* user)
 
 void game::con_quit()
 {
-	PostMessage(appwindow::getHwnd(), WM_QUIT, 0, 0);
+	PostMessage(eXistenZ::g_appWindow->getHwnd(), WM_QUIT, 0, 0);
 }
 
 bool game::startMap(char* name)

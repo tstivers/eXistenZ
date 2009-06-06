@@ -299,14 +299,6 @@
 			Name="client"
 			>
 			<File
-				RelativePath="..\engine\client\appwindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\engine\client\appwindow.h"
-				>
-			</File>
-			<File
 				RelativePath="..\engine\client\main.cpp"
 				>
 			</File>
@@ -987,7 +979,15 @@
 			Name="common"
 			>
 			<File
+				RelativePath="..\engine\common\event.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\common\forwards.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\common\inputevents.h"
 				>
 			</File>
 			<File
@@ -1686,6 +1686,26 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="window"
+			>
+			<File
+				RelativePath="..\engine\window\appwindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\window\appwindow.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\window\windowmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\window\windowmanager.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

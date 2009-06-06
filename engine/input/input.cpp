@@ -1,10 +1,10 @@
 #include "precompiled.h"
 #include "input/input.h"
 #include "input/bind.h"
-#include "client/appwindow.h"
 #include "console/console.h"
 #include "interface/interface.h"
 #include "settings/settings.h"
+#include "window/appwindow.h"
 
 #define DIKBSIZE 32
 
@@ -59,14 +59,14 @@ void input::init()
 		return;
 	}
 
-	hr = keyboard->SetCooperativeLevel(appwindow::getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	hr = keyboard->SetCooperativeLevel(eXistenZ::g_appWindow->getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(hr))
 	{
 		LOG("failed to set keyboard coop level");
 		return;
 	}
 
-	hr = mouse->SetCooperativeLevel(appwindow::getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	hr = mouse->SetCooperativeLevel(eXistenZ::g_appWindow->getHwnd(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(hr))
 	{
 		LOG("failed to set mouse coop level");

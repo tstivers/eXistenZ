@@ -2,7 +2,7 @@
 #include "game/jsgame.h"
 #include "game/game.h"
 #include "script/script.h"
-#include "client/appwindow.h"
+#include "window/appwindow.h"
 
 namespace jsgame
 {
@@ -39,7 +39,7 @@ JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
 JSBool jsgame::jsquit(JSContext *cx, JSObject *obj, uintN argc,
 					  jsval *argv, jsval *rval)
 {
-	PostMessage(appwindow::getHwnd(), WM_QUIT, 0, 0);
+	PostMessage(eXistenZ::g_appWindow->getHwnd(), WM_QUIT, 0, 0);
 
 	return JS_TRUE;
 }

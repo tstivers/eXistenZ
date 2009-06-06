@@ -4,7 +4,6 @@
 #include "settings/settings.h"
 #include "console/console.h"
 #include "script/script.h"
-#include "client/appwindow.h"
 #include "input/input.h"
 #include "texture/texturecache.h"
 #include "render/render.h"
@@ -16,10 +15,11 @@
 #include "script/jsvector.h"
 #include "script/jsfunction.h"
 #include "scene/scene.h"
+#include "window/appwindow.h"
+#include "interface/interface.h"
 
 script::ScriptEngine* script::gScriptEngine = NULL;
 HINSTANCE gHInstance = 0;
-int gActive = 0;
 
 void addSystemSettings();
 int mainloop();
@@ -52,8 +52,11 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 	// TODO: everything from here on down should be driven by a script
 
 	// open main window and set up interface
-	appwindow::createWindow(hinst);
-	appwindow::showWindow(true);
+	eXistenZ::g_appWindow = unique_ptr<eXistenZ::AppWindow>(new eXistenZ::AppWindow());
+	eXistenZ::g_appWindow->KeyPressed = &ui::charpressed;
+	eXistenZ::g_appWindow->KeyDown = &ui::keypressed;
+	eXistenZ::g_appWindow->OnResize = &render::resize;
+	eXistenZ::g_appWindow->showWindow(true);
 
 	input::init();
 	texture::acquire(); // hack
@@ -65,8 +68,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 	mainloop();
 
 	// shut down the system
-	appwindow::showWindow(false);
-	appwindow::release();
+	eXistenZ::g_appWindow->showWindow(false);
 	//vfs::release();
 	//jssettings::release();
 	//settings::release();
@@ -126,7 +128,7 @@ int mainloop()
 				DispatchMessage(&msg);
 			}
 		}
-		if (!gActive)
+		if (!eXistenZ::g_appWindow->getActive())
 			WaitMessage();
 		else
 		{
