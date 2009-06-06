@@ -13,7 +13,8 @@ namespace ui
 		void render();
 		void chooseFont();
 		void addMessage(const char* message);
-		void keypressed(char key, bool extended = false);
+		void charpressed(const eXistenZ::KeyEventArgs& args);
+		void keypressed(const eXistenZ::KeyEventArgs& args);
 		void clear();
 		void reset();
 

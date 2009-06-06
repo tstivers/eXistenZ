@@ -85,27 +85,32 @@ void ui::render()
 	pos.render();
 }
 
-void ui::keypressed(char key, bool extended)
+void ui::charpressed(const eXistenZ::KeyEventArgs& args)
 {
-	if (key == '`' && !extended)
+	if (args.key == '`')
 	{
 		input::acquire();
 		console.draw = 0;
 		return;
 	}
 
-	if (key == 0x09 && !extended)
+	if (args.key == 0x09)
 	{
 		input::acquire();
 		return;
 	}
 
-	if (key == 0x1b && !extended)
+	if (args.key == 0x1b)
 	{
 		console::executeCommand("quit");
 	}
 
-	console.keypressed(key, extended);
+	console.charpressed(args);
+}
+
+void ui::keypressed(const eXistenZ::KeyEventArgs& args)
+{
+	console.keypressed(args);
 }
 
 void ui::con_focus_console()
@@ -118,7 +123,7 @@ void ui::con_focus_console_slash()
 {
 	input::unacquire();
 	console.draw = 1;
-	console.keypressed('/');
+	console.charpressed(eXistenZ::KeyEventArgs('/', eXistenZ::KS_CHAR, 0));
 }
 
 void ui::consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user)

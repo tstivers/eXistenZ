@@ -2,6 +2,16 @@
 
 namespace game
 {
+	class Game : public script::ScriptedObject
+	{
+	public:
+		Game();
+		~Game();
+
+	protected:
+		unique_ptr<scene::Scene> m_scene; // TODO: SceneManager
+	};
+
 	void init(void);
 	void doTick(void);
 	void release(void);

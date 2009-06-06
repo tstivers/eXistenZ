@@ -50,4 +50,9 @@ namespace texture
 	class DXTexture;
 }
 
+namespace eXistenZ
+{
+	class AppWindow;
+}
+
 struct STDVertex;
