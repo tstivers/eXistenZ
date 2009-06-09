@@ -244,8 +244,8 @@ namespace script
 		};
 	}
 	
-	#define WRAP_FASTNATIVE(x) (JSFastNativeCall<BOOST_TYPEOF(x), &x>)
-	#define WRAP_NATIVE(x) (JSSlowNativeCall<BOOST_TYPEOF(x), &x>)
+	#define WRAP_FASTNATIVE(x) (JSFastNativeCall<BOOST_TYPEOF(&x), &x>)
+	#define WRAP_NATIVE(x) (JSSlowNativeCall<BOOST_TYPEOF(&x), &x>)
 
 	template<typename function_type, typename function_type function_pointer>
 	JSBool JSSlowNativeCall(JSContext* cx, JSObject* obj, int argc, jsval* argv, jsval* rval)
