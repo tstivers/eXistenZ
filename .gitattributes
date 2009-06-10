@@ -126,8 +126,12 @@ engine/input/bind.cpp eol=crlf
 engine/input/bind.h eol=crlf
 engine/input/input.cpp eol=crlf
 engine/input/input.h eol=crlf
+engine/input/inputmanager.cpp -text
+engine/input/inputmanager.h -text
 engine/input/jsinput.cpp eol=crlf
 engine/input/jsinput.h eol=crlf
+engine/input/jsinputmanager.cpp -text
+engine/input/jsinputmanager.h -text
 engine/input/keys.h eol=crlf
 engine/interface/fps.cpp eol=crlf
 engine/interface/fps.h eol=crlf

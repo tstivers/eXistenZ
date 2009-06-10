@@ -50,6 +50,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE hinst_prev, LPSTR cmdline, int cmd
 	console::processCmd(cmdline);
 
 	// TODO: everything from here on down should be driven by a script
+	//eXistenZ::g_inputManager = unique_ptr<eXistenZ::InputManager>(new eXistenZ::InputManager());
 
 	// open main window and set up interface
 	eXistenZ::g_appWindow = unique_ptr<eXistenZ::AppWindow>(new eXistenZ::AppWindow());

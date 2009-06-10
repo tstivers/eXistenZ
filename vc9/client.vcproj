@@ -863,11 +863,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\engine\input\inputmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\input\inputmanager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\engine\input\jsinput.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\engine\input\jsinput.h"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\input\jsinputmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\engine\input\jsinputmanager.h"
 				>
 			</File>
 			<File

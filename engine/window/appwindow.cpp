@@ -5,14 +5,13 @@
 namespace eXistenZ
 {
 	unique_ptr<AppWindow> g_appWindow;
-	void init();
 }
 
 using namespace eXistenZ;
 
-REGISTER_STARTUP_FUNCTION(appwindow, eXistenZ::init, 10);
+REGISTER_STARTUP_FUNCTION(AppWindow, &AppWindow::InitSettings, 10);
 
-void eXistenZ::init()
+void AppWindow::InitSettings()
 {
 	settings::addsetting("system.window.position.x", settings::TYPE_INT, 0, NULL, NULL, NULL);
 	settings::addsetting("system.window.position.y", settings::TYPE_INT, 0, NULL, NULL, NULL);
@@ -166,12 +165,12 @@ LRESULT AppWindow::onKey(UINT msg, WPARAM w, LPARAM l)
 	if ((msg == WM_KEYDOWN) || (msg == WM_SYSKEYDOWN))
 	{
 		if(KeyDown)
-			KeyDown(KeyEventArgs((int)w, KS_PRESSED, l));
+			KeyDown(KeyEventArgs((int)w, BS_PRESSED, l));
 	}
 	else
 	{
 		if(KeyUp)
-			KeyUp(KeyEventArgs((int)w, KS_RELEASED, l));
+			KeyUp(KeyEventArgs((int)w, BS_RELEASED, l));
 	}
 
 	return DefWindowProc(m_hwnd, msg, w, l);
@@ -180,7 +179,7 @@ LRESULT AppWindow::onKey(UINT msg, WPARAM w, LPARAM l)
 LRESULT AppWindow::onChar(UINT msg, WPARAM w, LPARAM l)
 {
 	if(KeyPressed)
-		KeyPressed(KeyEventArgs((int)w, KS_CHAR, l));
+		KeyPressed(KeyEventArgs((int)w, BS_PRESSED, l));
 	return DefWindowProc(m_hwnd, msg, w, l);
 }
 
@@ -193,40 +192,40 @@ LRESULT AppWindow::onMouseMove(UINT msg, WPARAM w, LPARAM l)
 
 LRESULT AppWindow::onMouseButton(UINT msg, WPARAM w, LPARAM l)
 {
-	MouseButtonEventArgs args;
-	args.flags = w;
-	args.xpos = GET_X_LPARAM(l);
-	args.ypos = GET_Y_LPARAM(l);
+	int button;
+	ButtonState state;
+
 
 	switch (msg)
 	{
 	case WM_LBUTTONDOWN:
-		args.button = MB_0;
-		args.state = BS_PRESSED;
+		button = 0;
+		state = BS_PRESSED;
 		break;
 	case WM_LBUTTONUP:
-		args.button = MB_0;
-		args.state = BS_RELEASED;
+		button = 0;
+		state = BS_RELEASED;
 		break;
 	case WM_RBUTTONDOWN:
-		args.button = MB_1;
-		args.state = BS_PRESSED;
+		button = 1;
+		state = BS_PRESSED;
 		break;
 	case WM_RBUTTONUP:
-		args.button = MB_1;
-		args.state = BS_RELEASED;
+		button = 1;
+		state = BS_RELEASED;
 		break;
 	case WM_MBUTTONDOWN:
-		args.button = MB_2;
-		args.state = BS_PRESSED;
+		button = 2;
+		state = BS_PRESSED;
 		break;
 	case WM_MBUTTONUP:
-		args.button = MB_2;
-		args.state = BS_RELEASED;
+		button = 2;
+		state = BS_RELEASED;
 		break;
 	}
 
-	//MouseButton(args);
+	if(MouseButton)
+		MouseButton(MouseButtonEventArgs(button, state, GET_X_LPARAM(l), GET_Y_LPARAM(l), w));
 
 	return DefWindowProc(m_hwnd, msg, w, l);
 }
@@ -255,17 +254,17 @@ LRESULT AppWindow::onRawInput(UINT msg, WPARAM w, LPARAM l)
 	{
 		RawMouseMove(RawMouseMoveEventArgs(raw->data.mouse.lLastX, raw->data.mouse.lLastY, 0));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_LEFT_BUTTON_DOWN)
-			RawMouseButton(MouseButtonEventArgs(MB_0, BS_PRESSED));
+			RawMouseButton(MouseButtonEventArgs(0, BS_PRESSED));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_LEFT_BUTTON_UP)
-			RawMouseButton(MouseButtonEventArgs(MB_0, BS_RELEASED));
+			RawMouseButton(MouseButtonEventArgs(0, BS_RELEASED));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_RIGHT_BUTTON_DOWN)
-			RawMouseButton(MouseButtonEventArgs(MB_1, BS_PRESSED));
+			RawMouseButton(MouseButtonEventArgs(1, BS_PRESSED));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_RIGHT_BUTTON_UP)
-			RawMouseButton(MouseButtonEventArgs(MB_1, BS_RELEASED));
+			RawMouseButton(MouseButtonEventArgs(1, BS_RELEASED));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_MIDDLE_BUTTON_DOWN)
-			RawMouseButton(MouseButtonEventArgs(MB_2, BS_PRESSED));
+			RawMouseButton(MouseButtonEventArgs(2, BS_PRESSED));
 		if (raw->data.mouse.ulButtons & RI_MOUSE_MIDDLE_BUTTON_UP)
-			RawMouseButton(MouseButtonEventArgs(MB_2, BS_RELEASED));
+			RawMouseButton(MouseButtonEventArgs(2, BS_RELEASED));
 	}
 
 	return DefWindowProc(m_hwnd, msg, w, l);

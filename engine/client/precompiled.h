@@ -32,15 +32,14 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/count_if.hpp>
 #include <boost/type_traits.hpp>
+#include <boost/function_types/parameter_types.hpp>
+#include <boost/function_types/is_member_function_pointer.hpp>
+#include <boost/function_types/function_arity.hpp>
+#include <boost/function_types/result_type.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bimap.hpp>
-#include <boost/function_types/parameter_types.hpp>
-#include <boost/function_types/member_function_pointer.hpp>
-#include <boost/function_types/function_pointer.hpp>
-#include <boost/function_types/function_arity.hpp>
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/is_member_function_pointer.hpp>
+#include <boost/bimap/multiset_of.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
@@ -49,13 +48,16 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/placeholders.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/format.hpp>
 #include <boost/ptr_container/ptr_map.hpp>
 #include <boost/ptr_container/ptr_unordered_map.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/foreach.hpp>
+
+#define foreach         BOOST_FOREACH
+#define reverse_foreach BOOST_REVERSE_FOREACH
 
 #include "unique_ptr/unique_ptr.hpp"
 
@@ -84,6 +86,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace boost::bimaps;
 
 #include "common/forwards.h" // forward class declarations
 #include "common/types.h"
@@ -93,6 +96,7 @@ using namespace boost;
 #include "math/math.h"
 #include "math/aabb.h"
 #include "script/wrappedhelpers.hpp"
+#include "script/jsfunctioncall.h"
 #include "script/jsnativecall.h"
 #include "timer/timer.h"
 

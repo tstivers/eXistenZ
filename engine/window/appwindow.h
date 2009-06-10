@@ -15,6 +15,9 @@ namespace eXistenZ
 	public:
 		AppWindow();
 		~AppWindow();
+		
+		// Static Methods
+		static void InitSettings();
 
 		// Methods
 		HWND getHwnd() const { return m_hwnd; }
