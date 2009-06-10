@@ -25,14 +25,3 @@ public:
 
 
 
-class IInputConsumer
-{
-public:
-	virtual bool onImpulse() { return true; }
-	virtual bool onKey() { return true; }
-	virtual bool onMouseMove() {return true; }
-	virtual bool onButton() { return true; }
-
-	virtual void onAttached() {};
-	virtual void onDetached() {};
-};

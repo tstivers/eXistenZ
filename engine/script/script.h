@@ -2,11 +2,11 @@
 
 #include "vfs/vfs.h"
 #include "script/jsfunctioncall.h"
+#include "script/jsfunction.h"
 #include "script/wrappedhelpers.hpp"
 
 namespace script
 {
-
 	class ScriptEngine;
 
 	class GlobalObject : public ScriptedObject

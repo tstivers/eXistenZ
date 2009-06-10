@@ -123,7 +123,7 @@ void ui::con_focus_console_slash()
 {
 	input::unacquire();
 	console.draw = 1;
-	console.charpressed(eXistenZ::KeyEventArgs('/', eXistenZ::KS_CHAR, 0));
+	console.charpressed(eXistenZ::KeyEventArgs('/', eXistenZ::BS_PRESSED, 0));
 }
 
 void ui::consoleMessageCallback(const char* file, unsigned int line, const char* function, unsigned int flags, const char* message, void* user)

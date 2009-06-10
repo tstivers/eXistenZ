@@ -16,6 +16,7 @@
 #include "physics/physics.h"
 #include "jsplayer.h"
 #include "window/appwindow.h"
+#include "input/inputmanager.h"
 
 namespace game
 {

@@ -53,6 +53,13 @@ namespace texture
 namespace eXistenZ
 {
 	class AppWindow;
+	class InputManager;
+	class IInputConsumer;
+}
+
+namespace script
+{
+	class ScriptedObject;
 }
 
 struct STDVertex;
