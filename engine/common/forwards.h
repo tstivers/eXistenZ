@@ -8,6 +8,11 @@ namespace component
 	class ActorComponent;
 }
 
+namespace game
+{
+	class Player;
+}
+
 namespace scene
 {
 	class Scene;
@@ -17,7 +22,7 @@ namespace entity
 {
 	class EntityManager;
 	class Entity;
-};
+}
 
 namespace sound
 {
@@ -32,7 +37,7 @@ namespace physics
 namespace render
 {
 	class RenderGroup;
-};
+}
 
 namespace q3bsp
 {
@@ -55,6 +60,8 @@ namespace eXistenZ
 	class AppWindow;
 	class InputManager;
 	class IInputConsumer;
+	class SettingsManager;
+	class ServiceBase;
 }
 
 namespace script

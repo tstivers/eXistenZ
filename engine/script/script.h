@@ -41,6 +41,8 @@ namespace script
 		bool RunScript(vfs::File file);
 		bool CheckException();
 
+		bool executeFile(const string& filename);
+
 		JSFunction* AddFunction(const char* name, uintN argc, JSNative call);
 		JSFunction* AddFunction(JSObject* obj, const char* name, uintN argc, JSNative call);
 

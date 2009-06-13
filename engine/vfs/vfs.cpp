@@ -21,18 +21,18 @@ void vfs::init()
 	root[0] = 0;
 }
 
-void vfs::setRoot(const char* path)
+void vfs::setRoot(const string& path)
 {
 	char pathbuf[MAX_PATH];
 	char canonpath[MAX_PATH];
 
-	if (PathCanonicalize(canonpath, sanitizePath(pathbuf, path)) != TRUE)
+	if (PathCanonicalize(canonpath, sanitizePath(pathbuf, path.c_str())) != TRUE)
 	{
-		LOG("invalid root! \"%s\"", path);
+		LOG("invalid root! \"%s\"", path.c_str());
 		return;
 	}
 
-	strcpy(root, path);
+	strcpy(root, path.c_str());
 
 	LOG("root set to \"%s\"", root);
 

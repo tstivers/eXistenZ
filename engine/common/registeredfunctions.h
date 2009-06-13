@@ -1,8 +1,8 @@
 #pragma once
 
 #define CONCAT(a,b) a##b
-#define REGISTER_STARTUP_FUNCTION(name,function,order) static registeredfunctions::StartupFunction CONCAT(name,_startup)(#name,function,order)
-#define REGISTER_SHUTDOWN_FUNCTION(name,function,order) static registeredfunctions::ShutdownFunction CONCAT(name,_shutdown)(#name,function,order)
+//#define REGISTER_STARTUP_FUNCTION(name,function,order) static registeredfunctions::StartupFunction CONCAT(name,_startup)(#name,function,order)
+//#define REGISTER_SHUTDOWN_FUNCTION(name,function,order) static registeredfunctions::ShutdownFunction CONCAT(name,_shutdown)(#name,function,order)
 #define REGISTER_SCRIPT_INIT(name,function,order) \
 	static void function (script::ScriptEngine*); \
 	static registeredfunctions::ScriptFunction CONCAT(name,_script)(#name,function,order)

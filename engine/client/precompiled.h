@@ -27,6 +27,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>

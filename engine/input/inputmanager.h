@@ -86,7 +86,6 @@ namespace eXistenZ
 		// ScriptedObject overrides
 		JSObject* createScriptObject();
 		void destroyScriptObject();
-		void initScriptObject();
 
 		// methods
 		void executeBinds(int key, ButtonState state);

@@ -30,7 +30,7 @@ namespace vfs
 
 	void init();
 
-	void setRoot(const char* path);
+	void setRoot(const string& path);
 	const char* getRoot();
 	void addPath(const char* path);
 

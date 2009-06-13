@@ -237,6 +237,8 @@ engine/script/jsvector.h -text
 engine/script/script.cpp eol=crlf
 engine/script/script.h eol=crlf
 engine/script/wrappedhelpers.hpp -text
+engine/service/servicebase.cpp -text
+engine/service/servicebase.h -text
 engine/settings/jssettings.cpp eol=crlf
 engine/settings/jssettings.h eol=crlf
 engine/settings/settings.cpp eol=crlf

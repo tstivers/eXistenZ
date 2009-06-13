@@ -124,6 +124,20 @@ bool ScriptEngine::RunScript(vfs::File file)
 	return retval;
 }
 
+bool ScriptEngine::executeFile(const string& filename)
+{
+	vfs::File file = vfs::getFile(filename);
+	if(!file)
+		return false;
+
+	char *script = (char*)malloc(file->getSize() + 1);
+	file->read(script, file->getSize());
+	script[file->getSize()] = 0;
+	bool retval = RunScript(file->getFilename(), 1, script);
+	free(script);
+	return retval;
+}
+
 JSFunction* ScriptEngine::AddFunction(JSObject* obj, const char* name, uintN argc, JSNative call)
 {
 	return JS_DefineFunction(cx, obj, name, call, argc, 0);
