@@ -77,7 +77,7 @@ namespace script
 	}
 
 	template<typename T>
-	JSBool NameGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool NameGetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, e->getName().c_str()));
@@ -85,7 +85,7 @@ namespace script
 	}
 
 	template<typename T, const std::string& (T::* prop)(void)>
-	JSBool StringGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool StringGetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
 		*vp = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, (e->*prop)().c_str()));
@@ -93,7 +93,7 @@ namespace script
 	}
 
 	template<typename T, typename U, U (T::* prop)(void)>
-	JSBool PropertyGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool PropertyGetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
 		*vp = jsscript::to_jsval(cx, (e->*prop)());
@@ -101,10 +101,10 @@ namespace script
 	}
 
 	template<typename T, typename U, void (T::* prop)(U)>
-	JSBool PropertySetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool PropertySetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		T* e = GetReserved<T>(cx, obj);
-		remove_const<remove_reference<U>::type>::type val;
+		boost::remove_const<boost::remove_reference<U>::type>::type val;
 		if(jsscript::jsval_to_(cx, *vp, &val))
 		{
 			(e->*prop)(val);

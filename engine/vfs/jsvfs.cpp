@@ -54,7 +54,8 @@ JSBool jsvfs::addFileWatch(JSContext *cx, JSObject *obj, uintN argc,
 	// protect closures (wrong way to do this)
 	//JS_AddRoot(cx, callback);
 
-	vfs::watchFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), jsWatchCallback, (void*)argv[1]);
+	//TODO: This leaks
+	vfs::watchFile(JS_GetStringBytes(JS_ValueToString(cx, argv[0])), jsWatchCallback, new jsval(argv[1]));
 
 	return JS_TRUE;
 }
@@ -62,7 +63,7 @@ JSBool jsvfs::addFileWatch(JSContext *cx, JSObject *obj, uintN argc,
 void jsvfs::jsWatchCallback(const string& filename, void* user)
 {
 	JSContext* cx = script::gScriptEngine->GetContext();
-	JSFunction* callback = JS_ValueToFunction(cx, (jsval)user);
+	JSFunction* callback = JS_ValueToFunction(cx, *(jsval*)user);
 	ASSERT(callback);
 	jsval argv, rval;
 	JSString* s = JS_NewStringCopyZ(cx, filename.c_str());

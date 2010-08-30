@@ -12,11 +12,11 @@ namespace jsplayer
 	JSBool setPos(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool getRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setStepUp(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setJumpHeight(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool setGravity(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool setSpeed(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
+	JSBool setStepUp(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
+	JSBool setSize(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
+	JSBool setJumpHeight(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
+	JSBool setGravity(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
 
 	game::Player* getPlayerReserved(JSContext* cx, JSObject* obj);
 
@@ -170,7 +170,7 @@ JSBool jsplayer::setRot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, j
 	return JS_TRUE;
 }
 
-JSBool jsplayer::setSize(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setSize(JSContext* cx, JSObject* obj, jsid id, jsval *vp)
 {
 	D3DXVECTOR3 vec;
 	if (!jsvector::ParseVector(cx, vec, 1, vp))
@@ -191,7 +191,7 @@ error:
 
 
 
-JSBool jsplayer::setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setSpeed(JSContext* cx, JSObject* obj, jsid id, jsval *vp)
 {
 	jsdouble d;
 	if (!JS_ValueToNumber(cx, *vp, &d))
@@ -202,7 +202,7 @@ JSBool jsplayer::setSpeed(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
 	return JS_TRUE;
 }
 
-JSBool jsplayer::setStepUp(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setStepUp(JSContext* cx, JSObject* obj, jsid id, jsval *vp)
 {
 	jsdouble d;
 	if (!JS_ValueToNumber(cx, *vp, &d))
@@ -221,7 +221,7 @@ game::Player* jsplayer::getPlayerReserved(JSContext* cx, JSObject* obj)
 	return (game::Player*)JSVAL_TO_PRIVATE(val);
 }
 
-JSBool jsplayer::setJumpHeight(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setJumpHeight(JSContext* cx, JSObject* obj, jsid id, jsval *vp)
 {
 	jsdouble d;
 	if (!JS_ValueToNumber(cx, *vp, &d))
@@ -232,7 +232,7 @@ JSBool jsplayer::setJumpHeight(JSContext* cx, JSObject* obj, jsval id, jsval *vp
 	return JS_TRUE;
 }
 
-JSBool jsplayer::setGravity(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsplayer::setGravity(JSContext* cx, JSObject* obj, jsid id, jsval *vp)
 {
 	jsdouble d;
 	if (!JS_ValueToNumber(cx, *vp, &d))

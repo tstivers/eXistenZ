@@ -15,7 +15,7 @@ namespace script
 	static JSClass class_ops =
 	{
 		"Global",
-		0,
+		JSCLASS_GLOBAL_FLAGS,
 		JS_PropertyStub,  JS_PropertyStub,
 		JS_PropertyStub, JS_PropertyStub,
 		JS_EnumerateStub, JS_ResolveStub,
@@ -50,7 +50,7 @@ ScriptEngine::ScriptEngine()
 
 	//JS_SetGCZeal(cx, 2); //debug allocations
 
-	m_global.m_scriptObject = JS_NewObject(cx, GlobalObject::m_scriptClass.classDef, NULL, NULL);
+	m_global.m_scriptObject = JS_NewGlobalObject(cx, GlobalObject::m_scriptClass.classDef);
 	GlobalObject::m_scriptClass.prototype = JS_GetPrototype(cx, m_global.m_scriptObject);
 
 	JS_InitStandardClasses(cx, m_global.m_scriptObject);

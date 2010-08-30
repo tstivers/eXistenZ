@@ -269,8 +269,8 @@ void SceneBSP::acquire()
 					group->lightmap = lightmap;
 					group->faces.push_back(m_clusters[i].faces[j]);
 					face.texture_group = group;
-					num_textures++;
-					m_textureGroups.insert(make_pair(texture, lightmap), group);
+					num_textures++;					
+					m_textureGroups.insert(pair<texture::DXTexture*, texture::DXTexture*>(texture, lightmap), group);
 				}
 				else
 				{

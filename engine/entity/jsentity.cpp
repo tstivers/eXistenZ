@@ -18,8 +18,8 @@ namespace jsentity
 	static JSBool removeComponent(JSContext *cx, uintN argc, jsval *vp);
 
 	// class ops
-	static JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
-	static JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool entityResolveOp(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp);
+	static JSBool componentsResolveOp(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp);
 	static JSBool componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
 
 	JSClass class_def =
@@ -144,9 +144,9 @@ JSBool jsentity::removeComponent(JSContext *cx, uintN argc, jsval *vp)
 	return JS_TRUE;
 }
 
-JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp)
+JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp)
 {
-	if(!JSVAL_IS_STRING(id) || obj == Entity::m_scriptClass.prototype)
+	if(!JSID_IS_STRING(id) || obj == Entity::m_scriptClass.prototype)
 	{
 		*objp = NULL;
 		return JS_TRUE;
@@ -154,7 +154,7 @@ JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN f
 
 	Entity* entity = GetReserved<Entity>(cx, obj);
 
-	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
+	string name = JS_GetStringBytes(JSID_TO_STRING(id));
 	if(name == "components")
 	{
 		JSObject* components = JS_DefineObject(cx, obj, "components", &components_class, components_prototype, JSPROP_PERMANENT | JSPROP_READONLY);
@@ -168,9 +168,9 @@ JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN f
 	return JS_TRUE;
 }
 
-JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp)
+JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp)
 {
-	if(!JSVAL_IS_STRING(id) || obj == components_prototype)
+	if(!JSID_IS_STRING(id) || obj == components_prototype)
 	{
 		*objp = NULL;
 		return JS_TRUE;
@@ -179,7 +179,7 @@ JSBool jsentity::componentsResolveOp(JSContext *cx, JSObject *obj, jsval id, uin
 	JSObject* jsentity = JS_GetParent(cx, obj);
 	Entity* entity = GetReserved<Entity>(cx, jsentity);
 
-	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
+	string name = JS_GetStringBytes(JSID_TO_STRING(id));
 	if(component::Component* c = entity->getComponent(name))
 	{
 		c->getScriptObject();
@@ -211,7 +211,7 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 		*it = entity->begin();
 		*statep = PRIVATE_TO_JSVAL(it);
 		if(idp)
-			*idp = INT_TO_JSVAL(entity->getComponentCount());
+			*idp = INT_TO_JSID(entity->getComponentCount());
 		break;
 
 	case JSENUMERATE_NEXT:

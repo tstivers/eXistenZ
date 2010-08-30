@@ -1,0 +1,517 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release - Create PGO Database|Win32">
+      <Configuration>Release - Create PGO Database</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>eXistenZ Engine Client</ProjectName>
+    <ProjectGuid>{C90A2469-27AD-4BF6-94FF-75657AE13D25}</ProjectGuid>
+    <RootNamespace>eXistenZ Engine Client</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\bin\engine_debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\bin\engine_release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include\fbxfilesdk;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\PhysXLoader\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Physics\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\NxCharacter\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Foundation\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Cooking\include;C:\Program Files\boost\boost_1_44;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\inc;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include\fbxfilesdk;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\PhysXLoader\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Physics\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\NxCharacter\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Foundation\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Cooking\include;C:\Program Files\boost\boost_1_44;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\inc;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include\fbxfilesdk;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\PhysXLoader\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Physics\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\NxCharacter\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Foundation\include;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\Cooking\include;C:\Program Files\boost\boost_1_44;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\inc;$(IncludePath)</IncludePath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">client.debug</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">client.release</TargetName>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files\boost\boost_1_44\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\lib;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\lib\Win32;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\lib\vs2010;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files\boost\boost_1_44\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\lib;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\lib\Win32;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\lib\vs2010;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;C:\Program Files\boost\boost_1_44\lib;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Programmers API Win32\api\lib;C:\Program Files %28x86%29\NVIDIA Corporation\NVIDIA PhysX SDK\v2.8.4_win\SDKs\lib\Win32;C:\Program Files\Autodesk\FBX\FbxSdk\2011.3\lib\vs2010;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(SolutionDir)../engine;$(SolutionDir)../engine/client;$(SolutionDir)../lib/js32;$(SolutionDir)../lib/nvtristrip/include;$(SolutionDir)../lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;STATIC_JS_API;DEBUG;D3D_DEBUG_INFO;KFBX_DLLINFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>fbxsdk_20113d.lib;winmm.lib;wininet.lib;shlwapi.lib;PhysXLoader.lib;NxCharacter.lib;PhysXCooking.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)client.debug.exe</OutputFile>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <ProgramDatabaseFile>$(OutDir)client.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>$(SolutionDir)../engine;$(SolutionDir)../engine/client;$(SolutionDir)../lib/js32;$(SolutionDir)../lib/nvtristrip/include;$(SolutionDir)../lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;STATIC_JS_API;K_PLUGIN;K_FBXSDK;K_NODLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;winmm.lib;wininet.lib;shlwapi.lib;PhysXLoader.lib;NxCharacter.lib;NxCooking.lib;fbxsdk_md2008.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)client.release.exe</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)../lib/js32/release;$(SolutionDir)../lib/zlib/release;$(SolutionDir)../lib/nvtristrip/release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">
+    <ClCompile>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)../engine;$(SolutionDir)../engine/client;$(SolutionDir)../lib/js32;$(SolutionDir)../lib/nvtristrip/include;$(SolutionDir)../lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;XP_PC;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_DEPRECATE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;STATIC_JS_API;K_PLUGIN;K_FBXSDK;K_NODLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <OpenMPSupport>true</OpenMPSupport>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precompiled.h</PrecompiledHeaderFile>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;winmm.lib;wininet.lib;shlwapi.lib;PhysXLoader.lib;NxCharacter.lib;NxCooking.lib;fbxsdk_md2008.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)client.release.exe</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)../lib/js32/release;$(SolutionDir)../lib/zlib/release;$(SolutionDir)../lib/nvtristrip/release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\js32\js32.vcxproj">
+      <Project>{d9be4917-efc7-495b-ab71-6f5cfd99b682}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\nvtristrip\nvtristrip.vcxproj">
+      <Project>{4b3a1f6d-aee3-4c47-a34a-531563f91758}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\lib\zlib\zlib.vcxproj">
+      <Project>{f3c7d4d1-49b4-45f4-8192-d2d0c88517ac}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\engine\client\main.cpp" />
+    <ClCompile Include="..\engine\client\precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\engine\script\jsscript.cpp" />
+    <ClCompile Include="..\engine\script\jsvector.cpp" />
+    <ClCompile Include="..\engine\script\script.cpp" />
+    <ClCompile Include="..\engine\misc\alias.cpp" />
+    <ClCompile Include="..\engine\console\console.cpp" />
+    <ClCompile Include="..\engine\console\jsconsole.cpp" />
+    <ClCompile Include="..\engine\settings\jssettings.cpp" />
+    <ClCompile Include="..\engine\settings\settings.cpp" />
+    <ClCompile Include="..\engine\vfs\diskfile.cpp" />
+    <ClCompile Include="..\engine\vfs\diskpath.cpp" />
+    <ClCompile Include="..\engine\vfs\file.cpp" />
+    <ClCompile Include="..\engine\vfs\jsvfs.cpp" />
+    <ClCompile Include="..\engine\vfs\path.cpp" />
+    <ClCompile Include="..\engine\vfs\vfs.cpp" />
+    <ClCompile Include="..\engine\vfs\watchfile.cpp" />
+    <ClCompile Include="..\engine\vfs\zipfile.cpp" />
+    <ClCompile Include="..\engine\vfs\zippath.cpp" />
+    <ClCompile Include="..\engine\render\dx.cpp" />
+    <ClCompile Include="..\engine\render\font.cpp" />
+    <ClCompile Include="..\engine\render\frustrum.cpp" />
+    <ClCompile Include="..\engine\render\hwbuffer.cpp" />
+    <ClCompile Include="..\engine\render\jsrender.cpp" />
+    <ClCompile Include="..\engine\render\marker.cpp" />
+    <ClCompile Include="..\engine\render\meshoptimize.cpp" />
+    <ClCompile Include="..\engine\render\render.cpp" />
+    <ClCompile Include="..\engine\render\rendergroup.cpp" />
+    <ClCompile Include="..\engine\render\shapes.cpp" />
+    <ClCompile Include="..\engine\interface\fps.cpp" />
+    <ClCompile Include="..\engine\interface\interface.cpp" />
+    <ClCompile Include="..\engine\interface\pos.cpp" />
+    <ClCompile Include="..\engine\interface\uiconsole.cpp" />
+    <ClCompile Include="..\engine\timer\jstimers.cpp" />
+    <ClCompile Include="..\engine\timer\timer.cpp" />
+    <ClCompile Include="..\engine\timer\timers.cpp" />
+    <ClCompile Include="..\engine\q3bsp\bsppatch.cpp" />
+    <ClCompile Include="..\engine\q3bsp\q3bsp.cpp" />
+    <ClCompile Include="..\engine\texture\jstexture.cpp" />
+    <ClCompile Include="..\engine\texture\material.cpp" />
+    <ClCompile Include="..\engine\texture\texture.cpp" />
+    <ClCompile Include="..\engine\texture\texturecache.cpp" />
+    <ClCompile Include="..\engine\input\bind.cpp" />
+    <ClCompile Include="..\engine\input\input.cpp" />
+    <ClCompile Include="..\engine\input\inputmanager.cpp" />
+    <ClCompile Include="..\engine\input\jsinput.cpp" />
+    <ClCompile Include="..\engine\input\jsinputmanager.cpp" />
+    <ClCompile Include="..\engine\game\game.cpp" />
+    <ClCompile Include="..\engine\game\jsgame.cpp" />
+    <ClCompile Include="..\engine\game\jsplayer.cpp" />
+    <ClCompile Include="..\engine\game\physxplayer.cpp" />
+    <ClCompile Include="..\engine\game\player.cpp" />
+    <ClCompile Include="..\engine\skybox\jsskybox.cpp" />
+    <ClCompile Include="..\engine\skybox\skybox.cpp" />
+    <ClCompile Include="..\engine\q3shader\jsq3shader.cpp" />
+    <ClCompile Include="..\engine\q3shader\q3shader.cpp" />
+    <ClCompile Include="..\engine\q3shader\q3shadercache.cpp" />
+    <ClCompile Include="..\engine\q3shader\q3shaderpass.cpp" />
+    <ClCompile Include="..\engine\common\log.cpp" />
+    <ClCompile Include="..\engine\common\mystring.cpp" />
+    <ClCompile Include="..\engine\common\registeredfunctions.cpp" />
+    <ClCompile Include="..\engine\common\utfstring.cpp" />
+    <ClCompile Include="..\engine\scene\jsscene.cpp" />
+    <ClCompile Include="..\engine\scene\jsscenebsp.cpp" />
+    <ClCompile Include="..\engine\scene\scene.cpp" />
+    <ClCompile Include="..\engine\scene\scenebsp.cpp" />
+    <ClCompile Include="..\engine\math\aabb.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\engine\math\math.cpp" />
+    <ClCompile Include="..\engine\entity\entity.cpp" />
+    <ClCompile Include="..\engine\entity\entitymanager.cpp" />
+    <ClCompile Include="..\engine\entity\jsentity.cpp" />
+    <ClCompile Include="..\engine\entity\jsentitymanager.cpp" />
+    <ClCompile Include="..\engine\physics\cook.cpp" />
+    <ClCompile Include="..\engine\physics\jsphysics.cpp" />
+    <ClCompile Include="..\engine\physics\physics.cpp" />
+    <ClCompile Include="..\engine\physics\stream.cpp" />
+    <ClCompile Include="..\engine\physics\xmlloader.cpp" />
+    <ClCompile Include="..\engine\shader\shader.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\shadercache.cpp" />
+    <ClCompile Include="..\engine\shader\stdshader\pass.cpp" />
+    <ClCompile Include="..\engine\shader\stdshader\shader.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(IntDir)%(Filename)2.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)2.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\simpleshader\simpleshader.cpp" />
+    <ClCompile Include="..\engine\mesh\fbxloader.cpp" />
+    <ClCompile Include="..\engine\mesh\jsmesh.cpp" />
+    <ClCompile Include="..\engine\mesh\mesh.cpp">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release - Create PGO Database|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\meshcache.cpp" />
+    <ClCompile Include="..\engine\mesh\meshload.cpp" />
+    <ClCompile Include="..\engine\mesh\meshsystem.cpp" />
+    <ClCompile Include="..\engine\mesh\meshsystemcache.cpp" />
+    <ClCompile Include="..\engine\mesh\textloader.cpp" />
+    <ClCompile Include="..\engine\sound\jssoundeffect.cpp" />
+    <ClCompile Include="..\engine\sound\jssoundmanager.cpp" />
+    <ClCompile Include="..\engine\sound\soundeffect.cpp" />
+    <ClCompile Include="..\engine\sound\soundmanager.cpp" />
+    <ClCompile Include="..\engine\component\componenttypes.cpp" />
+    <ClCompile Include="..\engine\component\actorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsactorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsposcomponent.cpp" />
+    <ClCompile Include="..\engine\component\poscomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsmeshcomponent.cpp" />
+    <ClCompile Include="..\engine\component\meshcomponent.cpp" />
+    <ClCompile Include="..\engine\component\component.cpp" />
+    <ClCompile Include="..\engine\component\jscomponent.cpp" />
+    <ClCompile Include="..\engine\component\controller.cpp" />
+    <ClCompile Include="..\engine\component\jscontroller.cpp" />
+    <ClCompile Include="..\engine\component\jsjsrendercomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsrendercomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsstaticactorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\staticactorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\cameracomponent.cpp" />
+    <ClCompile Include="..\engine\component\jscameracomponent.cpp" />
+    <ClCompile Include="..\engine\component\dynamicactorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\jsdynamicactorcomponent.cpp" />
+    <ClCompile Include="..\engine\component\jstimercomponent.cpp" />
+    <ClCompile Include="..\engine\component\timercomponent.cpp" />
+    <ClCompile Include="..\engine\component\contactcallbackcomponent.cpp" />
+    <ClCompile Include="..\engine\component\jscontactcallbackcomponent.cpp" />
+    <ClCompile Include="..\engine\window\appwindow.cpp" />
+    <ClCompile Include="..\engine\window\windowmanager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\engine\client\main.h" />
+    <ClInclude Include="..\engine\client\precompiled.h" />
+    <ClInclude Include="..\engine\script\jsfunction.h" />
+    <ClInclude Include="..\engine\script\jsfunctioncall.h" />
+    <ClInclude Include="..\engine\script\jsnativecall.h" />
+    <ClInclude Include="..\engine\script\jsscript.h" />
+    <ClInclude Include="..\engine\script\jsvector.h" />
+    <ClInclude Include="..\engine\script\script.h" />
+    <ClInclude Include="..\engine\script\wrappedhelpers.hpp" />
+    <ClInclude Include="..\engine\misc\alias.h" />
+    <ClInclude Include="..\engine\console\console.h" />
+    <ClInclude Include="..\engine\console\jsconsole.h" />
+    <ClInclude Include="..\engine\settings\jssettings.h" />
+    <ClInclude Include="..\engine\settings\settings.h" />
+    <ClInclude Include="..\engine\vfs\diskfile.h" />
+    <ClInclude Include="..\engine\vfs\diskpath.h" />
+    <ClInclude Include="..\engine\vfs\file.h" />
+    <ClInclude Include="..\engine\vfs\jsvfs.h" />
+    <ClInclude Include="..\engine\vfs\path.h" />
+    <ClInclude Include="..\engine\vfs\vfs.h" />
+    <ClInclude Include="..\engine\vfs\watchfile.h" />
+    <ClInclude Include="..\engine\vfs\zipfile.h" />
+    <ClInclude Include="..\engine\vfs\zippath.h" />
+    <ClInclude Include="..\engine\render\dx.h" />
+    <ClInclude Include="..\engine\render\font.h" />
+    <ClInclude Include="..\engine\render\frustrum.h" />
+    <ClInclude Include="..\engine\render\hwbuffer.h" />
+    <ClInclude Include="..\engine\render\jsrender.h" />
+    <ClInclude Include="..\engine\render\marker.h" />
+    <ClInclude Include="..\engine\render\meshoptimize.h" />
+    <ClInclude Include="..\engine\render\render.h" />
+    <ClInclude Include="..\engine\render\rendergroup.h" />
+    <ClInclude Include="..\engine\render\shapes.h" />
+    <ClInclude Include="..\engine\interface\fps.h" />
+    <ClInclude Include="..\engine\interface\interface.h" />
+    <ClInclude Include="..\engine\interface\pos.h" />
+    <ClInclude Include="..\engine\interface\uiconsole.h" />
+    <ClInclude Include="..\engine\timer\jstimers.h" />
+    <ClInclude Include="..\engine\timer\timer.h" />
+    <ClInclude Include="..\engine\timer\timers.h" />
+    <ClInclude Include="..\engine\q3bsp\bsppatch.h" />
+    <ClInclude Include="..\engine\q3bsp\q3bsp.h" />
+    <ClInclude Include="..\engine\q3bsp\q3bsptypes.h" />
+    <ClInclude Include="..\engine\texture\jstexture.h" />
+    <ClInclude Include="..\engine\texture\material.h" />
+    <ClInclude Include="..\engine\texture\texture.h" />
+    <ClInclude Include="..\engine\texture\texturecache.h" />
+    <ClInclude Include="..\engine\input\bind.h" />
+    <ClInclude Include="..\engine\input\input.h" />
+    <ClInclude Include="..\engine\input\inputmanager.h" />
+    <ClInclude Include="..\engine\input\jsinput.h" />
+    <ClInclude Include="..\engine\input\jsinputmanager.h" />
+    <ClInclude Include="..\engine\input\keys.h" />
+    <ClInclude Include="..\engine\game\game.h" />
+    <ClInclude Include="..\engine\game\jsgame.h" />
+    <ClInclude Include="..\engine\game\jsplayer.h" />
+    <ClInclude Include="..\engine\game\physxplayer.h" />
+    <ClInclude Include="..\engine\game\player.h" />
+    <ClInclude Include="..\engine\skybox\jsskybox.h" />
+    <ClInclude Include="..\engine\skybox\skybox.h" />
+    <ClInclude Include="..\engine\q3shader\jsq3shader.h" />
+    <ClInclude Include="..\engine\q3shader\q3shader.h" />
+    <ClInclude Include="..\engine\q3shader\q3shadercache.h" />
+    <ClInclude Include="..\engine\q3shader\q3shaderpass.h" />
+    <ClInclude Include="..\engine\common\event.h" />
+    <ClInclude Include="..\engine\common\forwards.h" />
+    <ClInclude Include="..\engine\common\inputevents.h" />
+    <ClInclude Include="..\engine\common\log.h" />
+    <ClInclude Include="..\engine\common\mystring.h" />
+    <ClInclude Include="..\engine\common\registeredfunctions.h" />
+    <ClInclude Include="..\engine\common\safe_bool.h" />
+    <ClInclude Include="..\engine\common\types.h" />
+    <ClInclude Include="..\engine\common\utfstring.h" />
+    <ClInclude Include="..\engine\common\weak_reference.h" />
+    <ClInclude Include="..\engine\common\wrapped_global.h" />
+    <ClInclude Include="..\engine\scene\jsscene.h" />
+    <ClInclude Include="..\engine\scene\jsscenebsp.h" />
+    <ClInclude Include="..\engine\scene\scene.h" />
+    <ClInclude Include="..\engine\scene\scenebsp.h" />
+    <ClInclude Include="..\engine\math\aabb.h" />
+    <ClInclude Include="..\engine\math\math.h" />
+    <ClInclude Include="..\engine\math\vertex.h" />
+    <ClInclude Include="..\engine\resource\resource.h" />
+    <ClInclude Include="..\engine\entity\entity.h" />
+    <ClInclude Include="..\engine\entity\entitymanager.h" />
+    <ClInclude Include="..\engine\entity\interfaces.h" />
+    <ClInclude Include="..\engine\entity\jsentity.h" />
+    <ClInclude Include="..\engine\entity\jsentitymanager.h" />
+    <ClInclude Include="..\engine\physics\cook.h" />
+    <ClInclude Include="..\engine\physics\jsphysics.h" />
+    <ClInclude Include="..\engine\physics\physics.h" />
+    <ClInclude Include="..\engine\physics\stream.h" />
+    <ClInclude Include="..\engine\physics\xmlloader.h" />
+    <ClInclude Include="..\engine\shader\shader.h" />
+    <ClInclude Include="..\engine\shader\shadercache.h" />
+    <ClInclude Include="..\engine\shader\stdshader\pass.h" />
+    <ClInclude Include="..\engine\shader\stdshader\shader.h" />
+    <ClInclude Include="..\engine\shader\simpleshader\simpleshader.h" />
+    <ClInclude Include="..\engine\mesh\fbxloader.h" />
+    <ClInclude Include="..\engine\mesh\jsmesh.h" />
+    <ClInclude Include="..\engine\mesh\mesh.h" />
+    <ClInclude Include="..\engine\mesh\meshcache.h" />
+    <ClInclude Include="..\engine\mesh\meshload.h" />
+    <ClInclude Include="..\engine\mesh\meshsystem.h" />
+    <ClInclude Include="..\engine\mesh\meshsystemcache.h" />
+    <ClInclude Include="..\engine\mesh\textloader.h" />
+    <ClInclude Include="..\engine\sound\jssoundeffect.h" />
+    <ClInclude Include="..\engine\sound\jssoundmanager.h" />
+    <ClInclude Include="..\engine\sound\sound.h" />
+    <ClInclude Include="..\engine\sound\soundeffect.h" />
+    <ClInclude Include="..\engine\sound\soundmanager.h" />
+    <ClInclude Include="..\engine\component\componenttypes.h" />
+    <ClInclude Include="..\engine\component\actorcomponent.h" />
+    <ClInclude Include="..\engine\component\jsactorcomponent.h" />
+    <ClInclude Include="..\engine\component\jsposcomponent.h" />
+    <ClInclude Include="..\engine\component\poscomponent.h" />
+    <ClInclude Include="..\engine\component\jsmeshcomponent.h" />
+    <ClInclude Include="..\engine\component\meshcomponent.h" />
+    <ClInclude Include="..\engine\component\component.h" />
+    <ClInclude Include="..\engine\component\jscomponent.h" />
+    <ClInclude Include="..\engine\component\controller.h" />
+    <ClInclude Include="..\engine\component\jsrendercomponent.h" />
+    <ClInclude Include="..\engine\component\jsstaticactorcomponent.h" />
+    <ClInclude Include="..\engine\component\staticactorcomponent.h" />
+    <ClInclude Include="..\engine\component\cameracomponent.h" />
+    <ClInclude Include="..\engine\component\jscameracomponent.h" />
+    <ClInclude Include="..\engine\component\dynamicactorcomponent.h" />
+    <ClInclude Include="..\engine\component\jsdynamicactorcomponent.h" />
+    <ClInclude Include="..\engine\component\jstimercomponent.h" />
+    <ClInclude Include="..\engine\component\timercomponent.h" />
+    <ClInclude Include="..\engine\component\contactcallbackcomponent.h" />
+    <ClInclude Include="..\engine\component\jscontactcallbackcomponent.h" />
+    <ClInclude Include="..\engine\window\appwindow.h" />
+    <ClInclude Include="..\engine\window\windowmanager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\config.js" />
+    <None Include="..\data\scripts\events.js" />
+    <None Include="..\data\scripts\keys.js" />
+    <None Include="..\data\scripts\mesh.js" />
+    <None Include="..\data\scripts\physics.js" />
+    <None Include="..\data\scripts\screenshot.js" />
+    <None Include="..\data\scripts\shoot.js" />
+    <None Include="..\data\scripts\stacks.js" />
+    <None Include="..\data\scripts\timertest.js" />
+    <None Include="..\data\scripts\house.js" />
+    <None Include="..\data\scripts\q3dm1.js" />
+    <None Include="..\data\scripts\simpsons_q3.js" />
+    <None Include="..\data\scripts\summer.js" />
+    <None Include="..\data\scripts\winter.js" />
+    <None Include="..\data\textures\shader_alias.txt" />
+    <None Include="..\data\textures\shader_map.txt" />
+    <None Include="..\data\textures\texture_alias.txt" />
+    <None Include="..\data\textures\shaders\add_blend.shader" />
+    <None Include="..\data\textures\shaders\alphatest08.shader" />
+    <None Include="..\data\textures\shaders\console.shader" />
+    <None Include="..\data\textures\shaders\fanfx.shader" />
+    <None Include="..\data\textures\shaders\fire1.shader" />
+    <None Include="..\data\textures\shaders\fire_green.shader" />
+    <None Include="..\data\textures\shaders\flare_billboard.shader" />
+    <None Include="..\data\textures\shaders\lightbeam.shader" />
+    <None Include="..\data\textures\shaders\nodraw.shader" />
+    <None Include="..\engine\resource\luxicon.ico" />
+    <None Include="..\engine\resource\luxiconD.ico" />
+    <None Include="..\engine\resource\luxlogo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\engine\resource\eXistenZ Engine Client.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

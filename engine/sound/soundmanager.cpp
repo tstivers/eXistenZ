@@ -84,6 +84,8 @@ SoundManager::SoundManager(scene::Scene* scene)
 		CloseCallback,
 		ReadCallback,
 		SeekCallback,
+		NULL,
+		NULL,
 		-1);
 
 	if (result != FMOD_OK)

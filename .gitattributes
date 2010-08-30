@@ -307,6 +307,12 @@ lib/rapidxml/rapidxml_iterators.hpp -text
 lib/rapidxml/rapidxml_print.hpp -text
 lib/rapidxml/rapidxml_utils.hpp -text
 lib/unique_ptr/unique_ptr.hpp -text
+vc10/client.vcproj -text
+vc10/client.vcproj.Skippy.tstivers.user -text
+vc10/client.vcxproj -text
+vc10/client.vcxproj.filters -text
+vc10/client.vcxproj.user -text
+vc10/eXistenZ[!!-~]Engine.sln -text
 vc8/client.vcproj -text
 vc8/eXistenZ[!!-~]Engine.sln -text
 vc9/client.vcproj eol=crlf

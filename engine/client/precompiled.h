@@ -1,5 +1,6 @@
 #define VC_EXTRALEAN
 #define NOMINMAX
+#define _HAS_CPP0X 0
 #include <windows.h>
 #include <windowsx.h>
 #include <stdio.h>
@@ -9,9 +10,6 @@
 #include <shlwapi.h>
 #include <float.h>
 #include <intrin.h>
-
-// disable the buggy visual studio tr1
-#define _HAS_TR1 0
 
 #include <utility>
 #include <string>
@@ -24,10 +22,6 @@
 #include <map>
 #include <memory>
 
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/count_if.hpp>

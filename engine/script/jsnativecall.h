@@ -16,7 +16,7 @@ namespace script
 		template<typename function_type, typename function_type function_pointer>
 		struct JSNativeCallMemberBase<1, void, function_type, function_pointer>
 		{
-			typedef typename function_types::components<function_type, remove_pointer<add_pointer<mpl::placeholders::_>>> component_types;
+			typedef typename function_types::components<function_type, boost::remove_pointer<boost::add_pointer<mpl::placeholders::_>>> component_types;
 			typedef typename mpl::at<component_types, mpl::int_<0>>::type result_type;
 			typedef typename mpl::at<component_types, mpl::int_<1>>::type wrapped_type;
 			JSBool operator()(JSContext* cx, JSObject* obj, int argc, jsval* argv, jsval* rval)
@@ -31,7 +31,7 @@ namespace script
 		template<typename return_type, typename function_type, typename function_type function_pointer>
 		struct JSNativeCallMemberBase<1, return_type, function_type, function_pointer>
 		{
-			typedef typename function_types::components<function_type, remove_pointer<add_pointer<mpl::placeholders::_>>> component_types;
+			typedef typename function_types::components<function_type, boost::remove_pointer<boost::add_pointer<mpl::placeholders::_>>> component_types;
 			typedef typename mpl::at<component_types, mpl::int_<0>>::type result_type;
 			typedef typename mpl::at<component_types, mpl::int_<1>>::type wrapped_type;
 			JSBool operator()(JSContext* cx, JSObject* obj, int argc, jsval* argv, jsval* rval)
@@ -44,8 +44,8 @@ namespace script
 
 	#define JSNATIVECALLMEMBER_ARG_TYPEDEF(z, n, text) \
 		typedef typename mpl::at<component_types, mpl::int_<n + 2>>::type arg ## n ## _type; \
-		typedef typename remove_reference<arg ## n ## _type>::type arg ## n ## _type2; \
-		typedef typename remove_const<arg## n ## _type2>::type arg ## n ## _type3;
+		typedef typename boost::remove_reference<arg ## n ## _type>::type arg ## n ## _type2; \
+		typedef typename boost::remove_const<arg## n ## _type2>::type arg ## n ## _type3;
 
 	#define JSNATIVECALLMEMBER_ARG_ASSIGN(z, n, text) \
 		arg ## n ## _type3 arg ## n; \
@@ -62,7 +62,7 @@ namespace script
 		template<typename function_type, typename function_type function_pointer> \
 		struct JSNativeCallMemberBase<n + 2, void, function_type, function_pointer> \
 		{ \
-			typedef typename function_types::components<function_type, remove_pointer<add_pointer<mpl::placeholders::_>>> component_types; \
+			typedef typename function_types::components<function_type, boost::remove_pointer<boost::add_pointer<mpl::placeholders::_>>> component_types; \
 			typedef typename mpl::at<component_types, mpl::int_<0>>::type result_type; \
 			typedef typename mpl::at<component_types, mpl::int_<1>>::type wrapped_type; \
 			BOOST_PP_REPEAT_FROM_TO_ ## z(0, BOOST_PP_INC(n), JSNATIVECALLMEMBER_ARG_TYPEDEF, null) \
@@ -89,7 +89,7 @@ namespace script
 		template<typename return_type, typename function_type, typename function_type function_pointer> \
 		struct JSNativeCallMemberBase<n + 2, return_type, function_type, function_pointer> \
 		{ \
-			typedef typename function_types::components<function_type, remove_pointer<add_pointer<mpl::placeholders::_>>> component_types; \
+			typedef typename function_types::components<function_type, boost::remove_pointer<boost::add_pointer<mpl::placeholders::_>>> component_types; \
 			typedef typename mpl::at<component_types, mpl::int_<0>>::type result_type; \
 			typedef typename mpl::at<component_types, mpl::int_<1>>::type wrapped_type; \
 			BOOST_PP_REPEAT_FROM_TO_ ## z(0, BOOST_PP_INC(n), JSNATIVECALLMEMBER_ARG_TYPEDEF, null) \
@@ -147,8 +147,8 @@ namespace script
 
 	#define JSNATIVCECALL_ARG_TYPEDEF(z, n, text) \
 		typedef typename mpl::at<component_types, mpl::int_<n + 1>>::type arg ## n ## _type; \
-		typedef typename remove_reference<arg ## n ## _type>::type arg ## n ## _type2; \
-		typedef typename remove_const<arg## n ## _type2>::type arg ## n ## _type3;
+		typedef typename boost::remove_reference<arg ## n ## _type>::type arg ## n ## _type2; \
+		typedef typename boost::remove_const<arg## n ## _type2>::type arg ## n ## _type3;
 
 	#define JSNATIVCECALL_ARG_ASSIGN(z, n, text) \
 		arg ## n ## _type3 arg ## n; \

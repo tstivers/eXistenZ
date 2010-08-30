@@ -1,6 +1,7 @@
 #include "precompiled.h"
 #include "script/jsvector.h"
 #include "script/script.h"
+#include <js32/src/jscntxt.h>
 
 namespace jsvector
 {
@@ -10,8 +11,8 @@ namespace jsvector
 	JSBool vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
 	JSBool vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
-	JSBool wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp);
+	JSBool wrapped_vector_get(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
+	JSBool wrapped_vector_set(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
 	JSBool setReserved(JSContext* cx, JSObject* obj, D3DXVECTOR3* vec, jsVectorOps* ops, void* user);
 	JSBool getReserved(JSContext* cx, JSObject* obj, D3DXVECTOR3** vec, jsVectorOps** ops, void** user);
 
@@ -90,9 +91,10 @@ JSObject* jsvector::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR
 	return obj;
 }
 
-JSBool jsvector::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsvector::wrapped_vector_get(JSContext* cx, JSObject* obj, jsid tinyid, jsval *vp)
 {
-	ASSERT((JSVAL_TO_INT(id) >= 0) && (JSVAL_TO_INT(id) <= 2));
+	const int& id = (size_t)tinyid.asBits;
+	ASSERT(id >= 0 && id <= 2);
 
 	D3DXVECTOR3 vec;
 	D3DXVECTOR3* wrapped_vec;
@@ -107,7 +109,7 @@ JSBool jsvector::wrapped_vector_get(JSContext* cx, JSObject* obj, jsval id, jsva
 	else
 		vec = *wrapped_vec;
 
-	if (!JS_NewNumberValue(cx, vec[JSVAL_TO_INT(id)], vp))
+	if (!JS_NewNumberValue(cx, vec[id], vp))
 		goto error;
 
 	return JS_TRUE;
@@ -117,9 +119,10 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsval *vp)
+JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsid tinyid, jsval *vp)
 {
-	ASSERT((JSVAL_TO_INT(id) >= 0) && (JSVAL_TO_INT(id) <= 2));
+	const int& id = (size_t)tinyid.asBits;
+	ASSERT(id >= 0 && id <= 2);
 	D3DXVECTOR3 vec;
 
 	jsdouble d;
@@ -138,7 +141,7 @@ JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsval id, jsva
 	else
 		vec = *wrapped_vec;
 
-	vec[JSVAL_TO_INT(id)] = d;
+	vec[id] = d;
 
 	if (ops && ops->set)
 		ops->set(cx, obj, vec, user);
@@ -277,7 +280,7 @@ JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsva
 	D3DXVECTOR3 vec(0, 0, 0);
 
 	/* called as a function */
-	if (!(cx->fp->flags & JSFRAME_CONSTRUCTING))
+	/*if (!(cx->fp->flags & JSFRAME_CONSTRUCTING))
 	{
 		JSObject* new_obj = JS_ConstructObjectWithArguments(
 								cx, &vector_class, vector_prototype, NULL, argc, argv);
@@ -286,7 +289,7 @@ JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsva
 		setReserved(cx, new_obj, NULL, NULL, NULL);
 		*rval = OBJECT_TO_JSVAL(new_obj);
 		return JS_TRUE;
-	}
+	}*/
 
 	/* called with new */
 	if (argc == 0)
