@@ -1,0 +1,994 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="client">
+      <UniqueIdentifier>{26bc10b7-27e8-4873-a813-73b8795e235e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="script">
+      <UniqueIdentifier>{3f697e48-f127-4633-a9e0-054946a04135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{264eae42-f0ae-40f0-af29-2bedfb14e2ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="console">
+      <UniqueIdentifier>{b08bae08-f59f-4c0f-9eee-0887b2d5b018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="settings">
+      <UniqueIdentifier>{8a6c7a3d-6f1b-4015-8dcf-a6b42a4ceff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vfs">
+      <UniqueIdentifier>{4367b7e6-44a4-4a83-86f9-c64f6ec06a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{1e7b6a11-b709-4085-a160-cb0f0fbfbb3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\scripts">
+      <UniqueIdentifier>{93fa3b7e-73d0-429c-b180-d96d4a04280c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\scripts\maps">
+      <UniqueIdentifier>{38f01597-dce4-4ba7-a5a6-ef27500ab9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\alias maps">
+      <UniqueIdentifier>{9969924c-c66d-42c6-aba8-437648d80c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data\shaders">
+      <UniqueIdentifier>{298ef987-e245-4550-8ac8-51f65d673cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{03b8e523-1ae8-4895-a8a2-f4f010ddf2b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{bf8465a8-320b-4926-a11f-740e6f49c0b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="timer">
+      <UniqueIdentifier>{3d50e73c-2cd2-463a-bd84-67854058cf3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="q3bsp">
+      <UniqueIdentifier>{e4d1688b-a75f-420d-83af-2bed6cdc902c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{8a5eba2f-59f2-48c1-aa20-eab3f37c386d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{a3ddc063-33f1-4be3-bfd4-f57c7f544233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{888b4f65-4558-44d1-969a-aeb7f5bd52f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="skybox">
+      <UniqueIdentifier>{ad9462fe-4bcb-413a-9bcf-4acff7a751d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="q3shader">
+      <UniqueIdentifier>{eb947220-9ac6-4056-ac5b-58bca53d9b16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{77fabea7-545b-4726-a573-90c49da4e08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{5ff1ee75-418a-49f6-9590-cbda9d6d9535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{f9e88b92-1a47-4584-923f-8ce8dc75bedd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{57c61172-4c97-49e3-86b4-0b0463c3f02b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entity">
+      <UniqueIdentifier>{1a1b9fa1-9468-467c-b40f-cc712546a582}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{cae31aa5-5368-4e1c-b8e7-921f92ba054c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{9f8ba36e-6dce-431e-b430-3f9e62e60912}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\stdshader">
+      <UniqueIdentifier>{f455fa04-1987-4125-81da-d9ba7f3be430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shader\simpleshader">
+      <UniqueIdentifier>{f233df43-731d-4d87-a3cc-b975515cc18f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{85dfd955-3b87-46c5-999d-3010378ee0d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sound">
+      <UniqueIdentifier>{d1809ec5-6375-4f36-b3ce-3afb213f9b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component">
+      <UniqueIdentifier>{e3442f47-1ad0-4e13-a901-5d295c13d035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\actor">
+      <UniqueIdentifier>{693ed7c4-4c99-46e6-bbe5-4ab810879234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\pos">
+      <UniqueIdentifier>{f062deeb-069b-4f7b-a176-4a29915086d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\mesh">
+      <UniqueIdentifier>{856dfe7b-43a7-48f8-a0c0-f1fb3d546c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\base">
+      <UniqueIdentifier>{eeb9bec6-5023-4e89-8247-f3a246bae0dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\controller">
+      <UniqueIdentifier>{ecbc6949-5faa-48d7-90ad-5ee413ccd3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\jsrender">
+      <UniqueIdentifier>{2f5904fe-5fca-4189-9647-d8e515c097f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\staticactor">
+      <UniqueIdentifier>{92c98af0-4143-468c-93f4-bc2eaa92b005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\camera">
+      <UniqueIdentifier>{6712e92d-9274-478e-985f-bfdc36fa52bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\dynamicactor">
+      <UniqueIdentifier>{771b5ecc-a2a7-4891-a9db-fd086486fd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\timer">
+      <UniqueIdentifier>{5acee4ad-e466-48b4-a6ee-d78012510bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="component\contactcallback">
+      <UniqueIdentifier>{c59ad765-a8a4-40da-b253-342dd909dd76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window">
+      <UniqueIdentifier>{6c034174-301c-461c-b66e-187aa20a32f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\engine\client\main.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\client\precompiled.cpp">
+      <Filter>client</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\script\jsscript.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\script\jsvector.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\script\script.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\misc\alias.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\console\console.cpp">
+      <Filter>console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\console\jsconsole.cpp">
+      <Filter>console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\settings\jssettings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\settings\settings.cpp">
+      <Filter>settings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\diskfile.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\diskpath.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\file.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\jsvfs.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\path.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\vfs.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\watchfile.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\zipfile.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vfs\zippath.cpp">
+      <Filter>vfs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\dx.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\font.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\frustrum.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\hwbuffer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\jsrender.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\marker.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\meshoptimize.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\render.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\rendergroup.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\shapes.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\interface\fps.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\interface\interface.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\interface\pos.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\interface\uiconsole.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\timer\jstimers.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\timer\timer.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\timer\timers.cpp">
+      <Filter>timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3bsp\bsppatch.cpp">
+      <Filter>q3bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3bsp\q3bsp.cpp">
+      <Filter>q3bsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\texture\jstexture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\texture\material.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\texture\texture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\texture\texturecache.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\input\bind.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\input\input.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\input\inputmanager.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\input\jsinput.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\input\jsinputmanager.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\game\game.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\game\jsgame.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\game\jsplayer.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\game\physxplayer.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\game\player.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\skybox\jsskybox.cpp">
+      <Filter>skybox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\skybox\skybox.cpp">
+      <Filter>skybox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3shader\jsq3shader.cpp">
+      <Filter>q3shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3shader\q3shader.cpp">
+      <Filter>q3shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3shader\q3shadercache.cpp">
+      <Filter>q3shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\q3shader\q3shaderpass.cpp">
+      <Filter>q3shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\common\log.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\common\mystring.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\common\registeredfunctions.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\common\utfstring.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\scene\jsscene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\scene\jsscenebsp.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\scene\scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\scene\scenebsp.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\math\aabb.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\math\math.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\entity\entity.cpp">
+      <Filter>entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\entity\entitymanager.cpp">
+      <Filter>entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\entity\jsentity.cpp">
+      <Filter>entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\entity\jsentitymanager.cpp">
+      <Filter>entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\physics\cook.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\physics\jsphysics.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\physics\physics.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\physics\stream.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\physics\xmlloader.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\shader.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\shadercache.cpp">
+      <Filter>shader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\stdshader\pass.cpp">
+      <Filter>shader\stdshader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\stdshader\shader.cpp">
+      <Filter>shader\stdshader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\shader\simpleshader\simpleshader.cpp">
+      <Filter>shader\simpleshader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\fbxloader.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\jsmesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\mesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\meshcache.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\meshload.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\meshsystem.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\meshsystemcache.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\mesh\textloader.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\sound\jssoundeffect.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\sound\jssoundmanager.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\sound\soundeffect.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\sound\soundmanager.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\componenttypes.cpp">
+      <Filter>component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\actorcomponent.cpp">
+      <Filter>component\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsactorcomponent.cpp">
+      <Filter>component\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsposcomponent.cpp">
+      <Filter>component\pos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\poscomponent.cpp">
+      <Filter>component\pos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsmeshcomponent.cpp">
+      <Filter>component\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\meshcomponent.cpp">
+      <Filter>component\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\component.cpp">
+      <Filter>component\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jscomponent.cpp">
+      <Filter>component\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\controller.cpp">
+      <Filter>component\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jscontroller.cpp">
+      <Filter>component\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsjsrendercomponent.cpp">
+      <Filter>component\jsrender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsrendercomponent.cpp">
+      <Filter>component\jsrender</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsstaticactorcomponent.cpp">
+      <Filter>component\staticactor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\staticactorcomponent.cpp">
+      <Filter>component\staticactor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\cameracomponent.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jscameracomponent.cpp">
+      <Filter>component\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\dynamicactorcomponent.cpp">
+      <Filter>component\dynamicactor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jsdynamicactorcomponent.cpp">
+      <Filter>component\dynamicactor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jstimercomponent.cpp">
+      <Filter>component\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\timercomponent.cpp">
+      <Filter>component\timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\contactcallbackcomponent.cpp">
+      <Filter>component\contactcallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\component\jscontactcallbackcomponent.cpp">
+      <Filter>component\contactcallback</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\window\appwindow.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\window\windowmanager.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\engine\client\main.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\client\precompiled.h">
+      <Filter>client</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\jsfunction.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\jsfunctioncall.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\jsnativecall.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\jsscript.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\jsvector.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\script.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\script\wrappedhelpers.hpp">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\misc\alias.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\console\console.h">
+      <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\console\jsconsole.h">
+      <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\settings\jssettings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\settings\settings.h">
+      <Filter>settings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\diskfile.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\diskpath.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\file.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\jsvfs.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\path.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\vfs.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\watchfile.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\zipfile.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\vfs\zippath.h">
+      <Filter>vfs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\dx.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\font.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\frustrum.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\hwbuffer.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\jsrender.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\marker.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\meshoptimize.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\render.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\rendergroup.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\shapes.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\interface\fps.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\interface\interface.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\interface\pos.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\interface\uiconsole.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\timer\jstimers.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\timer\timer.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\timer\timers.h">
+      <Filter>timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3bsp\bsppatch.h">
+      <Filter>q3bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3bsp\q3bsp.h">
+      <Filter>q3bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3bsp\q3bsptypes.h">
+      <Filter>q3bsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\texture\jstexture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\texture\material.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\texture\texture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\texture\texturecache.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\bind.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\input.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\inputmanager.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\jsinput.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\jsinputmanager.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\input\keys.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\game\game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\game\jsgame.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\game\jsplayer.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\game\physxplayer.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\game\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\skybox\jsskybox.h">
+      <Filter>skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\skybox\skybox.h">
+      <Filter>skybox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3shader\jsq3shader.h">
+      <Filter>q3shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3shader\q3shader.h">
+      <Filter>q3shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3shader\q3shadercache.h">
+      <Filter>q3shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\q3shader\q3shaderpass.h">
+      <Filter>q3shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\event.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\forwards.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\inputevents.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\log.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\mystring.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\registeredfunctions.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\safe_bool.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\types.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\utfstring.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\weak_reference.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\common\wrapped_global.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\scene\jsscene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\scene\jsscenebsp.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\scene\scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\scene\scenebsp.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\math\aabb.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\math\math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\math\vertex.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\resource\resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\entity\entity.h">
+      <Filter>entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\entity\entitymanager.h">
+      <Filter>entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\entity\interfaces.h">
+      <Filter>entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\entity\jsentity.h">
+      <Filter>entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\entity\jsentitymanager.h">
+      <Filter>entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\physics\cook.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\physics\jsphysics.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\physics\physics.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\physics\stream.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\physics\xmlloader.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\shader\shader.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\shader\shadercache.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\shader\stdshader\pass.h">
+      <Filter>shader\stdshader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\shader\stdshader\shader.h">
+      <Filter>shader\stdshader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\shader\simpleshader\simpleshader.h">
+      <Filter>shader\simpleshader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\fbxloader.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\jsmesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\mesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\meshcache.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\meshload.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\meshsystem.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\meshsystemcache.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\mesh\textloader.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\sound\jssoundeffect.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\sound\jssoundmanager.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\sound\sound.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\sound\soundeffect.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\sound\soundmanager.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\componenttypes.h">
+      <Filter>component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\actorcomponent.h">
+      <Filter>component\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsactorcomponent.h">
+      <Filter>component\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsposcomponent.h">
+      <Filter>component\pos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\poscomponent.h">
+      <Filter>component\pos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsmeshcomponent.h">
+      <Filter>component\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\meshcomponent.h">
+      <Filter>component\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\component.h">
+      <Filter>component\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jscomponent.h">
+      <Filter>component\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\controller.h">
+      <Filter>component\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsrendercomponent.h">
+      <Filter>component\jsrender</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsstaticactorcomponent.h">
+      <Filter>component\staticactor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\staticactorcomponent.h">
+      <Filter>component\staticactor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\cameracomponent.h">
+      <Filter>component\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jscameracomponent.h">
+      <Filter>component\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\dynamicactorcomponent.h">
+      <Filter>component\dynamicactor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jsdynamicactorcomponent.h">
+      <Filter>component\dynamicactor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jstimercomponent.h">
+      <Filter>component\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\timercomponent.h">
+      <Filter>component\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\contactcallbackcomponent.h">
+      <Filter>component\contactcallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\component\jscontactcallbackcomponent.h">
+      <Filter>component\contactcallback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\window\appwindow.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\window\windowmanager.h">
+      <Filter>window</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\config.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\events.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\keys.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\mesh.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\physics.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\screenshot.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\shoot.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\stacks.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\timertest.js">
+      <Filter>data\scripts</Filter>
+    </None>
+    <None Include="..\data\scripts\house.js">
+      <Filter>data\scripts\maps</Filter>
+    </None>
+    <None Include="..\data\scripts\q3dm1.js">
+      <Filter>data\scripts\maps</Filter>
+    </None>
+    <None Include="..\data\scripts\simpsons_q3.js">
+      <Filter>data\scripts\maps</Filter>
+    </None>
+    <None Include="..\data\scripts\summer.js">
+      <Filter>data\scripts\maps</Filter>
+    </None>
+    <None Include="..\data\scripts\winter.js">
+      <Filter>data\scripts\maps</Filter>
+    </None>
+    <None Include="..\data\textures\shader_alias.txt">
+      <Filter>data\alias maps</Filter>
+    </None>
+    <None Include="..\data\textures\shader_map.txt">
+      <Filter>data\alias maps</Filter>
+    </None>
+    <None Include="..\data\textures\texture_alias.txt">
+      <Filter>data\alias maps</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\add_blend.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\alphatest08.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\console.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\fanfx.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\fire1.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\fire_green.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\flare_billboard.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\lightbeam.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\data\textures\shaders\nodraw.shader">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="..\engine\resource\luxicon.ico">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\engine\resource\luxiconD.ico">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\engine\resource\luxlogo.bmp">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\engine\resource\eXistenZ Engine Client.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

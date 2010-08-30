@@ -60,7 +60,7 @@ namespace jscomponent
 	#define WRAPPED_LINK(name, source, target) {#name, 0, JSPROP_PERMANENT | JSPROP_SHARED, linkGetter<source, target, & ## source ## :: ## name>, linkSetter<source, target, & ## source ## :: ## name>}
 
 	template<typename C, typename T, component::ComponentLink<T> C::* link>
-	JSBool linkGetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool linkGetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		C* c = GetReserved<C>(cx, obj);
 		T* component = c->*link;
@@ -76,7 +76,7 @@ namespace jscomponent
 	}
 
 	template<typename C, typename T, component::ComponentLink<T> C::* link>
-	JSBool linkSetter(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+	JSBool linkSetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
 	{
 		C* c = GetReserved<C>(cx, obj);
 		if(JSVAL_IS_OBJECT(*vp))

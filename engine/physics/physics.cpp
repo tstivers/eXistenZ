@@ -105,11 +105,12 @@ void D3DXMatrixToNxMat34(const D3DXMATRIX* in, NxMat34* out)
 PhysicsManager::PhysicsManager(scene::Scene *scene) :
 	m_scene(scene), m_physicsSDK(NULL), m_physicsScene(NULL)
 {
-	m_physicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, g_physicsOutput);
+	NxSDKCreateError errorCode;
+	m_physicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, g_physicsOutput, NxPhysicsSDKDesc(), &errorCode);
 	
 	if (!m_physicsSDK)
 	{
-		LOG("ERROR: failed to initialize physics sdk");
+		LOG("ERROR: failed to initialize physics sdk: error code %i", errorCode);
 		return;
 	}
 	else

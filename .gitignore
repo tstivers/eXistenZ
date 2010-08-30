@@ -21,6 +21,7 @@ bin/*.png
 bin/*.suo
 bin/BuildLog.htm
 bin/cooked
+bin/cooked/*.physx
 bin/engine_debug
 bin/engine_release
 bin/js32_debug
@@ -30,6 +31,11 @@ bin/maya_release
 data/*
 data/textures/*
 /eXistenZ[!!-~]Engine.ncb
+vc10/*.ReSharper.*
+vc10/*.ncb
+vc10/*.opensdf
+vc10/*.sdf
+vc10/*.suo
 vc8/*.ncb
 vc8/*.suo
 vc8/*.user

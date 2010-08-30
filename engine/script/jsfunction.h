@@ -84,7 +84,7 @@ namespace jsscript
 
 		jsfunction(JSContext* cx, const string& function_name)
 		{
-			this->fun = 0;
+			this->fun = JSVAL_VOID;
 			this->cx = cx;
 			JSObject* fo = script::GetObject(function_name);
 			ASSERT(fo);
@@ -94,22 +94,22 @@ namespace jsscript
 				this->par = JS_GetParent(cx, JSVAL_TO_OBJECT(fun));
 			}
 
-			ASSERT(fun);
+			ASSERT(fun != JSVAL_VOID);
 			acquire_locks();
 		}
 
 		void acquire_locks()
 		{
-			JS_AddRoot(cx, &fun);
+			JS_AddValueRoot(cx, &fun);
 			if (par)
-				JS_AddRoot(cx, &par);
+				JS_AddObjectRoot(cx, &par);
 		}
 
 		~jsfunction()
 		{
-			JS_RemoveRoot(cx, &fun);
+			JS_RemoveValueRoot(cx, &fun);
 			if (par)
-				JS_RemoveRoot(cx, &par);
+				JS_RemoveObjectRoot(cx, &par);
 		}
 	};
 }

@@ -11,7 +11,7 @@ namespace jsentity
 	static JSBool removeEntity(JSContext *cx, uintN argc, jsval *vp);
 
 	static JSBool enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enum_op, jsval *statep, jsid *idp);
-	static JSBool resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp);
+	static JSBool resolveEntity(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp);
 
 	JSObject* manager_prototype = NULL;
 
@@ -137,7 +137,7 @@ JSBool jsentity::enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enu
 		*it = manager->begin();
 		*statep = PRIVATE_TO_JSVAL(it);
 		if(idp)
-			*idp = INT_TO_JSVAL(manager->getEntityCount());
+			*idp = INT_TO_JSID(manager->getEntityCount());
 		break;
 
 	case JSENUMERATE_NEXT:
@@ -159,17 +159,17 @@ JSBool jsentity::enumerateEntities(JSContext *cx, JSObject *obj, JSIterateOp enu
 }
 
 // used for lazily-defined entities (all entities created from c++)
-JSBool jsentity::resolveEntity(JSContext *cx, JSObject *obj, jsval id, uintN flags, JSObject **objp)
+JSBool jsentity::resolveEntity(JSContext *cx, JSObject *obj, jsid id, uintN flags, JSObject **objp)
 {
 	*objp = NULL;
 
-	if(!JSVAL_IS_STRING(id) || obj == manager_prototype)
+	if(!JSID_IS_STRING(id) || obj == manager_prototype)
 		return JS_TRUE;
 
 	EntityManager* manager = getManagerReserved(cx, obj);
 	ASSERT(manager);
 
-	string name = JS_GetStringBytes(JSVAL_TO_STRING(id));
+	string name = JS_GetStringBytes(JSID_TO_STRING(id));
 	if(Entity* entity = manager->getEntity(name))
 	{
 		entity->getScriptObject(); // this defines the entity

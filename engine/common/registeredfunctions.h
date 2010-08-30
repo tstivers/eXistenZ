@@ -26,8 +26,8 @@ namespace registeredfunctions
 	void fireShutdownFunctions();
 	void fireScriptFunctions(script::ScriptEngine* se);
 
-	typedef function < void(void) > voidFunction;
-	typedef function < static void(script::ScriptEngine*) > scriptFunction;
+	typedef boost::function < void(void) > voidFunction;
+	typedef boost::function < void(script::ScriptEngine*) > scriptFunction;
 
 	template <typename T>
 	class OrderedFunction

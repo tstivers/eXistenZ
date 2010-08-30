@@ -13,8 +13,8 @@ namespace jssettings
 	typedef shared_ptr<jssettings::propmap_hash> propmap_ptr;
 	typedef stdext::hash_map<JSObject*, propmap_ptr> objmap_hash;
 
-	JSBool jsgetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
-	JSBool jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp);
+	JSBool jsgetsetting(JSContext *cx, JSObject *obj, jsid tinyid, jsval *vp);
+	JSBool jssetsetting(JSContext *cx, JSObject *obj, jsid tinyid, jsval *vp);
 	objmap_hash object_map;
 }
 
@@ -71,7 +71,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	case settings::TYPE_FLOAT:
 		setting->get(setting, (void**)&float_value);
 		bleh = float_value;
-		JS_NewDoubleValue(script::gScriptEngine->GetContext(), bleh, &value);
+		JS_NewNumberValue(script::gScriptEngine->GetContext(), bleh, &value);
 		break;
 	}
 
@@ -98,11 +98,14 @@ bool jssettings::addsetting(settings::Setting* setting)
 	return true;
 }
 
-JSBool jssettings::jsgetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+JSBool jssettings::jsgetsetting(JSContext *cx, JSObject *obj, jsid tinyid, jsval *vp)
 {
 	objmap_hash::iterator i = object_map.find(obj);
 	ASSERT(i != object_map.end());
 	propmap_ptr props = i->second;
+
+	jsval id;
+	JS_IdToValue(cx, tinyid, &id);
 
 	propmap_iterator iter = props->find(JS_GetStringBytes(JS_ValueToString(cx, id)));
 	ASSERT(iter != props->end());
@@ -133,11 +136,14 @@ JSBool jssettings::jsgetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *v
 	return JS_TRUE;
 }
 
-JSBool jssettings::jssetsetting(JSContext *cx, JSObject *obj, jsval id, jsval *vp)
+JSBool jssettings::jssetsetting(JSContext *cx, JSObject *obj, jsid tinyid, jsval *vp)
 {
 	objmap_hash::iterator i = object_map.find(obj);
 	ASSERT(i != object_map.end());
 	propmap_ptr props = i->second;
+
+	jsval id;
+	JS_IdToValue(cx, tinyid, &id);
 
 	propmap_iterator iter = props->find(JS_GetStringBytes(JS_ValueToString(cx, id)));
 	ASSERT(iter != props->end());
