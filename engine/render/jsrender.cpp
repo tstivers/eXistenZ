@@ -9,11 +9,11 @@
 
 namespace jsrender
 {
-	JSBool drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool drawtext(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool resetdevice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool takescreenshot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool setDebugFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool drawline(JSContext *cx, uintN argc, jsval *vp);
+	JSBool drawtext(JSContext *cx, uintN argc, jsval *vp);
+	JSBool resetdevice(JSContext *cx, uintN argc, jsval *vp);
+	JSBool takescreenshot(JSContext *cx, uintN argc, jsval *vp);
+	JSBool setDebugFlag(JSContext *cx, uintN argc, jsval *vp);
 
 }
 
@@ -31,21 +31,21 @@ void jsrender::init()
 	script::gScriptEngine->AddFunction("system.render.setDebugFlag", 1, jsrender::setDebugFlag);
 }
 
-JSBool jsrender::drawline(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsrender::drawline(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vertices[2], color(1.0, 1.0, 1.0);
 
 	if (argc < 2)
 		goto error;
 
-	if (!jsvector::ParseVector(cx, vertices[0], 1, &argv[0]))
+	if (!jsvector::ParseVector(cx, vertices[0], 1, &JS_ARGV(cx,vp)[0]))
 		goto error;
 
-	if (!jsvector::ParseVector(cx, vertices[1], 1, &argv[1]))
+	if (!jsvector::ParseVector(cx, vertices[1], 1, &JS_ARGV(cx,vp)[1]))
 		goto error;
 
 	if (argc == 3)
-		if (!jsvector::ParseVector(cx, color, 1, &argv[2]))
+		if (!jsvector::ParseVector(cx, color, 1, &JS_ARGV(cx,vp)[2]))
 			goto error;
 
 	render::drawLine(vertices, 2, D3DXCOLOR(color.x, color.y, color.z, 1.0));
@@ -56,26 +56,26 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsrender::resetdevice(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsrender::resetdevice(JSContext *cx, uintN argc, jsval *vp)
 {
 	d3d::setResetDevice();
 	return JS_TRUE;
 }
 
-JSBool jsrender::setDebugFlag(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsrender::setDebugFlag(JSContext *cx, uintN argc, jsval *vp)
 {
-	int flag = JSVAL_TO_INT(argv[0]);
-	if(JSVAL_TO_BOOLEAN(argv[1]))
+	int flag = JSVAL_TO_INT(JS_ARGV(cx,vp)[0]);
+	if(JSVAL_TO_BOOLEAN(JS_ARGV(cx,vp)[1]))
 		render::visualizeFlags |= flag;
 	else
 		render::visualizeFlags &= ~flag;
 	return JS_TRUE;
 }
 
-JSBool jsrender::takescreenshot(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsrender::takescreenshot(JSContext *cx, uintN argc, jsval *vp)
 {
 	char* filename;
-	if (!argc == 1 || !JSVAL_IS_STRING(argv[0]) || !(filename = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]))))
+	if (!argc == 1 || !JSVAL_IS_STRING(JS_ARGV(cx,vp)[0]) || !(filename = JS_GetStringBytes(JSVAL_TO_STRING(JS_ARGV(cx,vp)[0]))))
 		goto error;
 
 	d3d::takeScreenShot(filename);
@@ -87,12 +87,12 @@ error:
 }
 
 // TODO: support 2d text
-JSBool jsrender::drawtext(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsrender::drawtext(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 position;
 
-	char* text = JS_GetStringBytes(JSVAL_TO_STRING(argv[0]));
-	jsvector::ParseVector(cx, position, 1, &argv[1]);
+	char* text = JS_GetStringBytes(JSVAL_TO_STRING(JS_ARGV(cx,vp)[0]));
+	jsvector::ParseVector(cx, position, 1, &JS_ARGV(cx,vp)[1]);
 	render::draw3DText(text, position, D3DFONT_CENTERED_X | D3DFONT_CENTERED_Y | D3DFONT_FILTERED);
 	return JS_TRUE;
 }

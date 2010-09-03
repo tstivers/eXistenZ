@@ -51,7 +51,7 @@ namespace jsphysics
 	};
 
 	void init();
-	JSBool loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool loadDynamicsXML(JSContext *cx, uintN argc, jsval *vp);
 }
 
 ScriptedObject::ScriptClass PhysicsManager::m_scriptClass =
@@ -78,9 +78,9 @@ void jsphysics::init()
 }
 
 // is this actually used by anything?
-JSBool jsphysics::loadDynamicsXML(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsphysics::loadDynamicsXML(JSContext *cx, uintN argc, jsval *vp)
 {
-	string filename =  JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string filename =  JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[0]));
 	
 	if(!scene::g_scene)
 	{

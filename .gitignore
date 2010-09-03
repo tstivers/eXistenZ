@@ -36,6 +36,10 @@ vc10/*.ncb
 vc10/*.opensdf
 vc10/*.sdf
 vc10/*.suo
+vc10/Debug
+vc10/Release
+vc10/_ReSharper.eXistenZ[!!-~]Engine
+vc10/ipch
 vc8/*.ncb
 vc8/*.suo
 vc8/*.user

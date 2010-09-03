@@ -5,8 +5,7 @@
 
 namespace jssettings
 {
-	JSBool dump(JSContext *cx, JSObject *obj, uintN argc,
-				jsval *argv, jsval *rval);
+	JSBool dump(JSContext *cx, uintN argc, jsval *vp);
 
 	typedef stdext::hash_map<char*, settings::Setting*, hash_char_ptr_traits> propmap_hash;
 	typedef propmap_hash::iterator propmap_iterator;
@@ -30,8 +29,7 @@ void jssettings::release()
 	object_map.clear();
 }
 
-JSBool jssettings::dump(JSContext *cx, JSObject *obj, uintN argc,
-						jsval *argv, jsval *rval)
+JSBool jssettings::dump(JSContext *cx, uintN argc, jsval *vp)
 {
 	settings::dump();
 	return JS_TRUE;

@@ -232,7 +232,7 @@ JSBool jsentity::componentsEnumerateOp(JSContext *cx, JSObject *obj, JSIterateOp
 	return JS_TRUE;
 }
 
-JSBool jsentity::RegisterCreateFunction(ScriptEngine* engine, char* name, JSFastNative create)
+JSBool jsentity::RegisterCreateFunction(ScriptEngine* engine, char* name, JSNative create)
 {
 	JSFunctionSpec create_methods[] =
 	{

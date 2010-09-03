@@ -7,7 +7,7 @@
 namespace jsmesh
 {
 	void init();
-	JSBool getMesh(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool getMesh(JSContext *cx, uintN argc, jsval *vp);
 }
 
 using namespace jsmesh;
@@ -19,9 +19,9 @@ void jsmesh::init()
 	script::gScriptEngine->AddFunction("getMesh", 1, getMesh);
 }
 
-JSBool jsmesh::getMesh(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsmesh::getMesh(JSContext *cx, uintN argc, jsval *vp)
 {
-	string name =  JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string name =  JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[0]));
 	mesh::getMesh(name);
 
 	return JS_TRUE;

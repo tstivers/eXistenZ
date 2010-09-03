@@ -6,11 +6,9 @@
 
 namespace jsgame
 {
-	JSBool jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
-					  jsval *argv, jsval *rval);
-	JSBool jsquit(JSContext *cx, JSObject *obj, uintN argc,
-				  jsval *argv, jsval *rval);
-	JSBool jstimestamp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsstartMap(JSContext *cx, uintN argc, jsval *vp);					  
+	JSBool jsquit(JSContext *cx, uintN argc, jsval *vp);
+	JSBool jstimestamp(JSContext *cx, uintN argc, jsval *vp);
 }
 
 REGISTER_STARTUP_FUNCTION(jsgame, jsgame::init, 10);
@@ -22,8 +20,7 @@ void jsgame::init()
 	script::gScriptEngine->AddFunction("timestamp", 0, jsgame::jstimestamp);
 }
 
-JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
-						  jsval *argv, jsval *rval)
+JSBool jsgame::jsstartMap(JSContext *cx, uintN argc, jsval *vp)
 {
 	if (argc != 1)
 	{
@@ -31,20 +28,19 @@ JSBool jsgame::jsstartMap(JSContext *cx, JSObject *obj, uintN argc,
 		return JS_FALSE;
 	}
 
-	game::startMap(JS_GetStringBytes(JS_ValueToString(cx, argv[0])));
+	game::startMap(JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[0])));
 
 	return JS_TRUE;
 }
 
-JSBool jsgame::jsquit(JSContext *cx, JSObject *obj, uintN argc,
-					  jsval *argv, jsval *rval)
+JSBool jsgame::jsquit(JSContext *cx, uintN argc, jsval *vp)
 {
 	PostMessage(eXistenZ::g_appWindow->getHwnd(), WM_QUIT, 0, 0);
 
 	return JS_TRUE;
 }
 
-JSBool jsgame::jstimestamp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsgame::jstimestamp(JSContext *cx, uintN argc, jsval *vp)
 {
 	SYSTEMTIME now;
 	GetLocalTime(&now);
@@ -58,6 +54,6 @@ JSBool jsgame::jstimestamp(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 			now.wSecond,
 			now.wMilliseconds);
 
-	*rval = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, timestamp));
+	JS_RVAL(cx,vp) = STRING_TO_JSVAL(JS_NewStringCopyZ(cx, timestamp));
 	return JS_TRUE;
 }

@@ -7,7 +7,7 @@
 namespace jsq3shader
 {
 	void init();
-	JSBool loadShadersFromFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool loadShadersFromFile(JSContext *cx, uintN argc, jsval *vp);
 }
 
 using namespace jsq3shader;
@@ -19,10 +19,10 @@ void jsq3shader::init()
 	script::gScriptEngine->AddFunction("loadShadersFromFile", 1, loadShadersFromFile);
 }
 
-JSBool jsq3shader::loadShadersFromFile(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsq3shader::loadShadersFromFile(JSContext *cx, uintN argc, jsval *vp)
 {
 	string name;
-	jsscript::jsval_to_(cx, argv[0], &name);
+	jsscript::jsval_to_(cx, JS_ARGV(cx,vp)[0], &name);
 	render::gQ3ShaderCache.loadShaders(vfs::getFile(name));
 
 	return JS_TRUE;
