@@ -7,8 +7,8 @@
 
 namespace jstimer
 {
-	JSBool jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool jsAddTimer(JSContext *cx, uintN argc, jsval *vp);
+	JSBool jsRemoveTimer(JSContext *cx, uintN argc, jsval *vp);
 
 	typedef jsscript::jsfunction<void(string)> JSTimerFunctionCall;
 }
@@ -21,9 +21,9 @@ void jstimer::init()
 	script::gScriptEngine->AddFunction("timer.removeTimer", 1, jstimer::jsRemoveTimer);
 }
 
-JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jstimer::jsAddTimer(JSContext *cx, uintN argc, jsval *vp)
 {
-	*rval = JSVAL_VOID;
+	JS_RVAL(cx,vp) = JSVAL_VOID;
 
 	if (argc < 2)
 	{
@@ -33,45 +33,45 @@ JSBool jstimer::jsAddTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv
 
 	jsdouble frequency = 0.0, start = 0.0;
 	int opt_start = 2;
-	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[0]));
 
-	if ((argc >= 3) && JSVAL_IS_OBJECT(argv[1]) && JSVAL_IS_OBJECT(argv[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[2])))
+	if ((argc >= 3) && JSVAL_IS_OBJECT(JS_ARGV(cx,vp)[1]) && JSVAL_IS_OBJECT(JS_ARGV(cx,vp)[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(JS_ARGV(cx,vp)[2])))
 		opt_start = 3;
 
-	if ((argc >= opt_start + 1) && (JS_ValueToNumber(cx, argv[opt_start], &frequency) == JS_FALSE))
+	if ((argc >= opt_start + 1) && (JS_ValueToNumber(cx, JS_ARGV(cx,vp)[opt_start], &frequency) == JS_FALSE))
 	{
 		script::gScriptEngine->ReportError("frequency must be double");
 		return JS_FALSE;
 	}
 
-	if ((argc >= opt_start + 2) && (JS_ValueToNumber(cx, argv[opt_start + 1], &start) == JS_FALSE))
+	if ((argc >= opt_start + 2) && (JS_ValueToNumber(cx, JS_ARGV(cx,vp)[opt_start + 1], &start) == JS_FALSE))
 	{
 		script::gScriptEngine->ReportError("start must be double");
 		return JS_FALSE;
 	}
 
-	if (JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[1])))
+	if (JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(JS_ARGV(cx,vp)[1])))
 	{
-		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, NULL, argv[1]));
+		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, NULL, JS_ARGV(cx,vp)[1]));
 		timer::addTimer(name, bind(&JSTimerFunctionCall::operator(), call, _1), frequency, start);
 	}
-	else if ((argc >= 3) && JSVAL_IS_OBJECT(argv[1]) && JSVAL_IS_OBJECT(argv[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(argv[2])))
+	else if ((argc >= 3) && JSVAL_IS_OBJECT(JS_ARGV(cx,vp)[1]) && JSVAL_IS_OBJECT(JS_ARGV(cx,vp)[2]) && JS_ObjectIsFunction(cx, JSVAL_TO_OBJECT(JS_ARGV(cx,vp)[2])))
 	{
-		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, JSVAL_TO_OBJECT(argv[1]), argv[2]));
+		shared_ptr<JSTimerFunctionCall> call(new JSTimerFunctionCall(cx, JSVAL_TO_OBJECT(JS_ARGV(cx,vp)[1]), JS_ARGV(cx,vp)[2]));
 		timer::addTimer(name, bind(&JSTimerFunctionCall::operator(), call, _1), frequency, start);
 	}
 	else
 	{
-		string action = JS_GetStringBytes(JS_ValueToString(cx, argv[1]));
+		string action = JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[1]));
 		timer::addTimer(name, action, frequency, start);
 	}
 
 	return JS_TRUE;
 }
 
-JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jstimer::jsRemoveTimer(JSContext *cx, uintN argc, jsval *vp)
 {
-	*rval = JSVAL_VOID;
+	JS_RVAL(cx,vp) = JSVAL_VOID;
 
 	if (argc < 1)
 	{
@@ -79,7 +79,7 @@ JSBool jstimer::jsRemoveTimer(JSContext *cx, JSObject *obj, uintN argc, jsval *a
 		return JS_FALSE;
 	}
 
-	string name = JS_GetStringBytes(JS_ValueToString(cx, argv[0]));
+	string name = JS_GetStringBytes(JS_ValueToString(cx, JS_ARGV(cx,vp)[0]));
 
 	timer::removeTimer(name);
 

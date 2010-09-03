@@ -2,7 +2,5 @@
 
 namespace jstexture
 {
-	void init();
-	JSBool jsflush(JSContext *cx, JSObject *obj, uintN argc,
-				   jsval *argv, jsval *rval);
+	void init();	
 }

@@ -4,13 +4,17 @@
 
 REGISTER_STARTUP_FUNCTION(jscon, jscon::init, 10);
 
+namespace jscon
+{
+	JSBool jslog(JSContext *cx, uintN argc, jsval *vp);
+}
+
 void jscon::init()
 {
 	script::gScriptEngine->AddFunction("log", 1, jscon::jslog);
 }
 
-JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
-					jsval *argv, jsval *rval)
+JSBool jscon::jslog(JSContext *cx, uintN argc, jsval *vp)
 {
 	if (argc != 1)
 	{
@@ -18,7 +22,7 @@ JSBool jscon::jslog(JSContext *cx, JSObject *obj, uintN argc,
 		return JS_FALSE;
 	}
 
-	JSString* s = JS_ValueToString(cx, argv[0]);
+	JSString* s = JS_ValueToString(cx, JS_ARGV(cx, vp)[0]);
 	if (!s)
 		return JS_FALSE;
 

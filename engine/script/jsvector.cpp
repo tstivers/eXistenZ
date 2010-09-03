@@ -7,10 +7,10 @@ namespace jsvector
 {
 	JSObject* vector_prototype = NULL;
 
-	JSBool vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
-	JSBool vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval);
+	JSBool vector_normalize(JSContext *cx, uintN argc, jsval *vp);
+	JSBool vector_length(JSContext *cx, uintN argc, jsval *vp);
+	JSBool vector_rotate(JSContext *cx, uintN argc, jsval *vp);
+	JSBool vector_construct(JSContext *cx, uintN argc, jsval *vp);
 	JSBool wrapped_vector_get(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
 	JSBool wrapped_vector_set(JSContext* cx, JSObject* obj, jsid id, jsval *vp);
 	JSBool setReserved(JSContext* cx, JSObject* obj, D3DXVECTOR3* vec, jsVectorOps* ops, void* user);
@@ -27,9 +27,9 @@ namespace jsvector
 
 	JSFunctionSpec vector_methods[] =
 	{
-		{"normalize",	vector_normalize,	0, 0, 0},
-		{"length",		vector_length,		0, 0, 0},
-		{"rotate",		vector_rotate,		3, 0, 0},
+		{"normalize",	vector_normalize,	0, 0},
+		{"length",		vector_length,		0, 0},
+		{"rotate",		vector_rotate,		3, 0},
 //		{"toString",	vector_toString,	0, 0, 0},
 		JS_FS_END
 	};
@@ -120,7 +120,7 @@ error:
 }
 
 JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsid tinyid, jsval *vp)
-{
+{	
 	const int& id = (size_t)tinyid.asBits;
 	ASSERT(id >= 0 && id <= 2);
 	D3DXVECTOR3 vec;
@@ -275,34 +275,35 @@ JSBool jsvector::getReserved(JSContext* cx, JSObject* obj, D3DXVECTOR3** vec, js
 	return JS_TRUE;
 }
 
-JSBool jsvector::vector_construct(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_construct(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vec(0, 0, 0);
+	JSObject* thisobj;
 
 	/* called as a function */
-	/*if (!(cx->fp->flags & JSFRAME_CONSTRUCTING))
+	if (JS_IsConstructing(cx, vp))
 	{
-		JSObject* new_obj = JS_ConstructObjectWithArguments(
-								cx, &vector_class, vector_prototype, NULL, argc, argv);
-		if (!new_obj)
+		thisobj = JS_NewObject(cx, &vector_class, vector_prototype, NULL);
+		if (!thisobj)
 			goto error;
-		setReserved(cx, new_obj, NULL, NULL, NULL);
-		*rval = OBJECT_TO_JSVAL(new_obj);
-		return JS_TRUE;
-	}*/
-
+		setReserved(cx, thisobj, NULL, NULL, NULL);
+		JS_RVAL(cx,vp) = OBJECT_TO_JSVAL(thisobj);
+	}
+	else
+		thisobj = JS_THIS_OBJECT(cx, vp);
+	
 	/* called with new */
 	if (argc == 0)
 	{
-		setReserved(cx, obj, NULL, NULL, NULL);
-		if (!SetVector(cx, obj, vec))
+		setReserved(cx, thisobj, NULL, NULL, NULL);
+		if (!SetVector(cx, thisobj, vec))
 			goto error;
 		return JS_TRUE;
 	}
-	else if (ParseVector(cx, vec, argc, argv))
+	else if (ParseVector(cx, vec, argc, JS_ARGV(cx,vp)))
 	{
-		setReserved(cx, obj, NULL, NULL, NULL);
-		if (!SetVector(cx, obj, vec))
+		setReserved(cx, thisobj, NULL, NULL, NULL);
+		if (!SetVector(cx, thisobj, vec))
 			goto error;
 		return JS_TRUE;
 	}
@@ -312,15 +313,15 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsvector::vector_normalize(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_normalize(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vec;
-	if (!GetVector(cx, obj, vec))
+	if (!GetVector(cx, JS_THIS_OBJECT(cx,vp), vec))
 		goto error;
 
 	D3DXVec3Normalize(&vec, &vec);
 
-	if (!SetVector(cx, obj, vec))
+	if (!SetVector(cx, JS_THIS_OBJECT(cx,vp), vec))
 		goto error;
 
 	return JS_TRUE;
@@ -330,13 +331,13 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsvector::vector_length(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_length(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vec;
-	if (!GetVector(cx, obj, vec))
+	if (!GetVector(cx, JS_THIS_OBJECT(cx,vp), vec))
 		goto error;
 
-	JS_NewNumberValue(cx, D3DXVec3Length(&vec), rval);
+	JS_NewNumberValue(cx, D3DXVec3Length(&vec), &JS_RVAL(cx, vp));
 
 	return JS_TRUE;
 
@@ -345,18 +346,18 @@ error:
 	return JS_FALSE;
 }
 
-JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *argv, jsval *rval)
+JSBool jsvector::vector_rotate(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vec;
 	D3DXVECTOR3 rot;
 	D3DXMATRIX mat;
 
-	if (!GetVector(cx, obj, vec))
+	if (!GetVector(cx, JS_THIS_OBJECT(cx,vp), vec))
 		goto error;
 
 	if (argc == 1)
 	{
-		if (!GetVector(cx, JSVAL_TO_OBJECT(argv[0]), rot))
+		if (!GetVector(cx, JSVAL_TO_OBJECT(JS_ARGV(cx,vp)[0]), rot))
 			goto error;
 	}
 	else if (argc == 3)
@@ -364,7 +365,7 @@ JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *
 		for (int i = 0; i < 3; i++)
 		{
 			jsdouble d;
-			if (!JS_ValueToNumber(cx, argv[i], &d))
+			if (!JS_ValueToNumber(cx, JS_ARGV(cx,vp)[i], &d))
 				goto error;
 			rot[i] = d;
 		}
@@ -375,7 +376,7 @@ JSBool jsvector::vector_rotate(JSContext *cx, JSObject *obj, uintN argc, jsval *
 	D3DXMatrixRotationYawPitchRoll(&mat, D3DXToRadian(rot.y), D3DXToRadian(rot.x), D3DXToRadian(rot.z));
 	D3DXVec3TransformCoord(&vec, &vec, &mat);
 
-	if (!SetVector(cx, obj, vec))
+	if (!SetVector(cx, JS_THIS_OBJECT(cx,vp), vec))
 		goto error;
 
 	return JS_TRUE;
