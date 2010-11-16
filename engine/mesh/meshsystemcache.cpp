@@ -5,17 +5,16 @@
 
 namespace mesh
 {
-
 	typedef stdext::hash_map<string, MeshSystem*> MeshSystemCache;
 	MeshSystemCache cache;
-};
+}
 
 using namespace mesh;
 
 MeshSystem* mesh::getMeshSystem(string& name)
 {
 	// see if it's in the cache
-	MeshSystemCache::iterator it = cache.find(name);
+	auto it = cache.find(name);
 	if (it != cache.end())
 		return it->second;
 

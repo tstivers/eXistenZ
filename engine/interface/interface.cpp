@@ -94,9 +94,10 @@ void ui::charpressed(const eXistenZ::KeyEventArgs& args)
 		return;
 	}
 
+	// ignore tabs (for tab completion)
 	if (args.key == 0x09)
 	{
-		input::acquire();
+		//input::acquire();
 		return;
 	}
 
@@ -131,11 +132,11 @@ void ui::consoleMessageCallback(const char* file, unsigned int line, const char*
 	if (!(((Console*)user)->filter & flags))
 		return;
 
-	char buffer[512];
+	string buffer;
 	if (function && *function & printFunctionNames)
-		sprintf(buffer, "[%s] %s", function, message);
+		buffer = string("[") + function + "] " + message;
 	else
-		strcpy(buffer, message);
+		buffer = message;
 
 	((Console*)user)->addMessage(buffer);
 }

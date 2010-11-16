@@ -59,12 +59,12 @@ namespace jscomponent
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
-		{"started", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<TimerComponent, bool, &TimerComponent::isStarted>, NULL},
-		{"delay", 2, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<TimerComponent, float, &TimerComponent::getDelay>, 
+		{"started", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<TimerComponent, bool, &TimerComponent::isStarted>, NULL},
+		{"delay", 2, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, PropertyGetter<TimerComponent, float, &TimerComponent::getDelay>, 
 			PropertySetter<TimerComponent, float, &TimerComponent::setDelay>},
-		{"frequency", 3, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<TimerComponent, float, &TimerComponent::getFrequency>, 
+		{"frequency", 3, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, PropertyGetter<TimerComponent, float, &TimerComponent::getFrequency>, 
 			PropertySetter<TimerComponent, float, &TimerComponent::setFrequency>},
-		{"action", 4, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<TimerComponent, function<void(Component*)>, &TimerComponent::getAction>, 
+		{"action", 4, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, PropertyGetter<TimerComponent, function<void(Component*)>, &TimerComponent::getAction>, 
 			PropertySetter<TimerComponent, function<void(Component*)>, &TimerComponent::setAction>},
 		JS_PS_END 
 	};

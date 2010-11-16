@@ -9,7 +9,7 @@ namespace mesh
 {
 	const static string EXTENSION_TEXTMESH = ".tm";
 	const static string EXTENSION_TEXTMESHSYSTEM = ".tms";
-};
+}
 
 using namespace mesh;
 
@@ -35,11 +35,8 @@ Mesh* mesh::loadMesh(const string& name)
 
 MeshSystem* mesh::loadMeshSystem(const string& name)
 {
-	string filename;
-	MeshSystem* meshsys;
-
 	// try to load a text mesh;
-	meshsys = loadTextMeshSystem(name + EXTENSION_TEXTMESHSYSTEM);
+	auto meshsys = loadTextMeshSystem(name + EXTENSION_TEXTMESHSYSTEM);
 	if (meshsys)
 	{
 		meshsys->name = name;

@@ -8,6 +8,7 @@
 #include "input/input.h"
 #include "render/font.h"
 #include "timer/timer.h"
+#include "script/script.h"
 
 using namespace ui;
 
@@ -17,9 +18,7 @@ Console::Console()
 {
 	while (scrollback.size() < 64)
 	{
-		char* bleh = new char[512];
-		bleh[0] = 0;
-		scrollback.push_back(bleh);
+		scrollback.push_back(string(""));
 	}
 
 	cursorpos = 0;
@@ -95,10 +94,10 @@ void Console::render()
 	float curr_y = (float)(ypos + height - 25);
 
 	sbmutex.lock();
-	scrollback_iter line = scrollback.begin();
+	auto line = scrollback.begin();
 	while ((curr_y > top) && (line != scrollback.end()))
 	{
-		d3dfont->DrawText(x, curr_y, color, *line, wireframe ? D3DFONT_WIREFRAME : 0);
+		d3dfont->DrawText(x, curr_y, color, line->c_str(), wireframe ? D3DFONT_WIREFRAME : 0);
 		line++;
 		curr_y -= 12;
 	}
@@ -114,21 +113,24 @@ void Console::render()
 		cmd.erase(cursorpos, 1);
 }
 
-void Console::addMessage(const char* message)
+void Console::addMessage(const string& message)
 {
 	sbmutex.lock();
-	char* line = scrollback.back();
-	strcpy(line, message);
 	scrollback.pop_back();
-	scrollback.push_front(line);
+	scrollback.push_front(message);
 	sbmutex.unlock();
+}
+
+void Console::addMessage(const char* message)
+{
+	return addMessage(string(message));
 }
 
 void Console::clear()
 {
 	sbmutex.lock();
-	for (scrollback_iter line = scrollback.begin(); line != scrollback.end(); line++)
-		(*line)[0] = 0;
+	for (auto line = scrollback.begin(); line != scrollback.end(); line++)
+		line->clear();
 	sbmutex.unlock();
 }
 
@@ -170,13 +172,24 @@ void Console::keypressed(const eXistenZ::KeyEventArgs& args)
 	case VK_END:
 		cursorpos = (unsigned int)cmd.size();
 		break;
+	case VK_TAB:
+		auto s = script::gScriptEngine->TabComplete(cmd);
+		cmd += s.first;
+		cursorpos += s.first.size();
+		if(s.second.size() > 1)
+		{
+			addMessage(string("> ") + cmd);
+			for(auto i = s.second.begin(); i != s.second.end(); i++)
+				addMessage(*i);
+		}
+		break;
 	}
 }
 
 
 void Console::charpressed(const eXistenZ::KeyEventArgs& args)
 {
-	//LOG("key pressed '0x%02x' %s", key, extended ? "<extended>" : "");
+	//LOG("key pressed '0x%02x'", args.key);
 
 	switch (args.key)
 	{

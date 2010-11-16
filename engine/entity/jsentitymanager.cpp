@@ -66,7 +66,7 @@ JSObject* jsentity::createEntityManager(entity::EntityManager* manager)
 	JS_EnterLocalRootScope(cx);
 	// TODO: get scene object from manager
 	JSObject* scene = script::gScriptEngine->GetObject("system.scene", true);
-	JSObject* obj = JS_DefineObject(cx, scene, "entities", &manager_class, manager_prototype, JSPROP_READONLY | JSPROP_PERMANENT);
+	JSObject* obj = JS_DefineObject(cx, scene, "entities", &manager_class, manager_prototype, JSPROP_READONLY | JSPROP_PERMANENT | JSPROP_ENUMERATE);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(manager));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;

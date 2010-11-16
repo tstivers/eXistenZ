@@ -106,7 +106,7 @@ JSObject* jsphysics::CreatePhysicsManagerObject(PhysicsManager* manager)
 		"physics", 
 		PhysicsManager::m_scriptClass.classDef,
 		PhysicsManager::m_scriptClass.prototype, 
-		JSPROP_READONLY | JSPROP_PERMANENT);
+		JSPROP_READONLY | JSPROP_PERMANENT | JSPROP_ENUMERATE);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(manager));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;

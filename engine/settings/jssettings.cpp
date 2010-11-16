@@ -74,7 +74,7 @@ bool jssettings::addsetting(settings::Setting* setting)
 	}
 
 	// currobj points to the object for the property, curr = prop name
-	int flags = JSPROP_ENUMERATE | JSPROP_PERMANENT;
+	int flags = JSPROP_ENUMERATE | JSPROP_PERMANENT | JSPROP_ENUMERATE;
 	if (setting->flags & settings::FLAG_READONLY)
 		flags |= JSPROP_READONLY;
 	script::gScriptEngine->AddProperty(obj, propname, value, jsgetsetting, jssetsetting, flags);

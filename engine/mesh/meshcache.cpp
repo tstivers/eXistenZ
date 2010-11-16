@@ -5,22 +5,21 @@
 
 namespace mesh
 {
-
 	typedef stdext::hash_map<string, Mesh*> MeshCache;
 	MeshCache cache;
-};
+}
 
 using namespace mesh;
 
 Mesh* mesh::getMesh(string& name)
 {
 	// see if it's in the cache
-	MeshCache::iterator it = cache.find(name);
+	auto it = cache.find(name);
 	if (it != cache.end())
 		return it->second;
 
 	// nope, try to load it
-	Mesh* mesh = loadMesh(name);
+	auto mesh = loadMesh(name);
 	if (mesh)
 		return mesh;
 

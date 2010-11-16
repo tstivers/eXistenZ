@@ -37,10 +37,10 @@ namespace jscomponent
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
-		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getName>, NULL},
-		{"type", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, int, &Component::getType>, NULL},
-		{"typeName", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getTypeName>, NULL},
-		{"entity", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, entity::Entity*, &Component::getEntity>, NULL},
+		{"name", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getName>, NULL},
+		{"type", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, int, &Component::getType>, NULL},
+		{"typeName", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, const string&, &Component::getTypeName>, NULL},
+		{"entity", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Component, entity::Entity*, &Component::getEntity>, NULL},
 		JS_PS_END
 	};
 

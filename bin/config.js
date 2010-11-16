@@ -14,7 +14,8 @@ system.render.fullscreenres.y = 1200;
 //system.render.resolution.x = 1280;
 //system.render.resolution.y = 1024;
 //system.render.fullscreen = 1;
-//system.render.wait_vtrace = 1;
+system.render.wait_vtrace = 1;
+system.render.max_fps = 500;
 
 system.render.refdevice = 0;
 system.render.multisampletype = 4; // 2 = 2x antialiasing, 4 = 4x, etc.
@@ -94,7 +95,7 @@ bind(KEY_T, "toggle_transparency");
 //bind(KEY_P, "toggle_patches");
 bind(KEY_P, "toggle_parallel");
 bind(KEY_C, "toggle_clipping");
-bind(KEY_TAB, "toggle_console");
+//bind(KEY_TAB, "toggle_console");
 bind(KEY_RETURN, "focus_console");
 bind(KEY_SLASH, "focus_console_slash");
 bind(KEY_M, "add_marker");
