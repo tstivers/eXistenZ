@@ -55,7 +55,7 @@ namespace script
 		const char* GetClassName(JSObject* obj);
 
 		void DumpObject(JSObject* obj, bool recurse = false, const char* objname = "", const char* name = "");
-
+		pair<string, vector<string>> TabComplete(const std::string& command);
 	};
 
 	// hack, replace with getScriptEngine()

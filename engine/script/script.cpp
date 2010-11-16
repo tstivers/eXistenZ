@@ -2,6 +2,7 @@
 #include "script/script.h"
 #include "console/console.h"
 #include "vfs/file.h"
+#include <regex>
 
 #pragma warning( disable : 4311 4312 )
 
@@ -321,6 +322,74 @@ bool ScriptEngine::CheckException()
 	return false;
 }
 
+static string find_common_start(const string& str1, const string& str2)
+{
+	string str3;
+	for(int i = 0; i < str1.size() && i < str2.size() && str1[i] == str2[i]; i++)
+		str3.push_back(str1[i]);
+
+	return str3;
+}
+
+pair<string, vector<string>> ScriptEngine::TabComplete(const std::string& command)
+{
+	using namespace std::tr1;
+	using namespace boost::algorithm;
+
+	vector<string> found;
+
+	regex r("((?:[\\w]+\\.)*)([\\w]+)?$", regex_constants::ECMAScript);
+	smatch match;
+	if(!regex_search(command, match, r))
+		return make_pair(string(""), found);
+
+	//INFO("match: \"%s\"", match.str().c_str());
+	//for(int i = 0; i < match.size(); i++)
+	//	INFO("match[%d]: \"%s\"", i, match[i].str().c_str());
+
+	JSObject* obj = NULL;
+	if(match[1].matched)
+	{
+		obj = GetObject(match[1].str().c_str());
+		if(!obj)
+			return make_pair(string(""), found);
+	}
+	else
+		obj = GetGlobal();
+
+	JSIdArray* props = JS_Enumerate(cx, obj);
+	string propstart = match[2].str();
+	string predicate = "";
+	bool predicateStarted = false;
+	for(int i = 0; i< props->length; i++)
+	{
+		jsval v;
+		JS_IdToValue(cx, props->vector[i], &v);
+		string name = JS_GetStringBytes(JS_ValueToString(cx, v));
+		
+		if(match[2].matched) // skip it if it doesn't start with what's already typed
+			if(!starts_with(name, propstart))
+				continue;		
+
+		found.push_back(name);
+		if(!predicateStarted)
+		{
+			predicate = name;
+			predicateStarted = true;
+		}
+		else
+			predicate = find_common_start(predicate, name);
+
+		//INFO("prop[%d] = \"%s\"", i, name.c_str());
+	}
+	erase_head(predicate, propstart.size());
+
+	//INFO("predciate = \"%s\"", predicate.c_str());
+	return make_pair(predicate, found);
+}
+
+
+
 void script::errorreporter(JSContext *cx, const char *message, JSErrorReport *report)
 {
 	if (report->linebuf)
@@ -346,3 +415,4 @@ void script::exec(char* cmd, char* cmdline, void* user)
 
 	script::gScriptEngine->RunScript(cmdline);
 }
+

@@ -78,7 +78,7 @@ JSObject* jsvector::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR
 	JSObject* obj = JS_NewObject(cx, &vector_class, vector_prototype, parent);
 	ASSERT(obj);
 
-	uintN attrs = 0;
+	uintN attrs = JSPROP_ENUMERATE;
 	if (readonly)
 		attrs |= JSPROP_READONLY;
 
@@ -93,7 +93,10 @@ JSObject* jsvector::NewWrappedVector(JSContext* cx, JSObject* parent, D3DXVECTOR
 
 JSBool jsvector::wrapped_vector_get(JSContext* cx, JSObject* obj, jsid tinyid, jsval *vp)
 {
-	const int& id = (size_t)tinyid.asBits;
+	jsval idval;
+	JS_IdToValue(cx, tinyid, &idval);	
+	int id = JSVAL_TO_INT(idval);
+
 	ASSERT(id >= 0 && id <= 2);
 
 	D3DXVECTOR3 vec;
@@ -121,7 +124,10 @@ error:
 
 JSBool jsvector::wrapped_vector_set(JSContext* cx, JSObject* obj, jsid tinyid, jsval *vp)
 {	
-	const int& id = (size_t)tinyid.asBits;
+	jsval idval;
+	JS_IdToValue(cx, tinyid, &idval);	
+	int id = JSVAL_TO_INT(idval);
+
 	ASSERT(id >= 0 && id <= 2);
 	D3DXVECTOR3 vec;
 
@@ -279,9 +285,8 @@ JSBool jsvector::vector_construct(JSContext *cx, uintN argc, jsval *vp)
 {
 	D3DXVECTOR3 vec(0, 0, 0);
 	JSObject* thisobj;
-
-	/* called as a function */
-	if (JS_IsConstructing(cx, vp))
+	
+	if (JS_IsConstructing(cx, vp)) // need to create a new object
 	{
 		thisobj = JS_NewObject(cx, &vector_class, vector_prototype, NULL);
 		if (!thisobj)
@@ -292,8 +297,7 @@ JSBool jsvector::vector_construct(JSContext *cx, uintN argc, jsval *vp)
 	else
 		thisobj = JS_THIS_OBJECT(cx, vp);
 	
-	/* called with new */
-	if (argc == 0)
+	if (argc == 0) // empty vector
 	{
 		setReserved(cx, thisobj, NULL, NULL, NULL);
 		if (!SetVector(cx, thisobj, vec))

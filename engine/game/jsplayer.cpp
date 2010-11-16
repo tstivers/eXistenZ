@@ -58,7 +58,7 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 	if (!JS_SetReservedSlot(cx, pobj, 0, PRIVATE_TO_JSVAL(player)))
 		goto error;
 
-	if (!JS_DefineProperty(cx, parent, name, OBJECT_TO_JSVAL(pobj), NULL, NULL, JSPROP_READONLY | JSPROP_PERMANENT))
+	if (!JS_DefineProperty(cx, parent, name, OBJECT_TO_JSVAL(pobj), NULL, NULL, JSPROP_READONLY | JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_ENUMERATE))
 		goto error;
 	JS_ForgetLocalRoot(cx, pobj);
 
@@ -66,24 +66,24 @@ JSBool jsplayer::createPlayerObject(JSContext* cx, JSObject* parent, const char*
 		goto error;
 
 	JSObject* size = jsvector::NewWrappedVector(cx, pobj, &player->size, false);
-	JS_DefineProperty(cx, pobj, "size", OBJECT_TO_JSVAL(size), NULL, setSize, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "size", OBJECT_TO_JSVAL(size), NULL, setSize, JSPROP_PERMANENT | JSPROP_ENUMERATE);
 	JS_ForgetLocalRoot(cx, size);
 
 	jsval speed;
 	JS_NewNumberValue(cx, player->getSpeed(), &speed);
-	JS_DefineProperty(cx, pobj, "speed", speed, NULL, setSpeed, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "speed", speed, NULL, setSpeed, JSPROP_PERMANENT | JSPROP_ENUMERATE);
 
 	jsval step_up;
 	JS_NewNumberValue(cx, player->getStepUp(), &step_up);
-	JS_DefineProperty(cx, pobj, "step_up", step_up, NULL, setStepUp, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "step_up", step_up, NULL, setStepUp, JSPROP_PERMANENT | JSPROP_ENUMERATE);
 
 	jsval jump_height;
 	JS_NewNumberValue(cx, player->jump_height, &jump_height);
-	JS_DefineProperty(cx, pobj, "jump_height", jump_height, NULL, setJumpHeight, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "jump_height", jump_height, NULL, setJumpHeight, JSPROP_PERMANENT | JSPROP_ENUMERATE);
 
 	jsval gravity;
 	JS_NewNumberValue(cx, player->gravity, &gravity);
-	JS_DefineProperty(cx, pobj, "gravity", gravity, NULL, setGravity, JSPROP_PERMANENT);
+	JS_DefineProperty(cx, pobj, "gravity", gravity, NULL, setGravity, JSPROP_PERMANENT | JSPROP_ENUMERATE);
 
 	JS_LeaveLocalRootScope(cx);
 	return JS_TRUE;

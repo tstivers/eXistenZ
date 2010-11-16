@@ -4,7 +4,7 @@
 
 namespace mesh
 {
-};
+}
 
 using namespace mesh;
 

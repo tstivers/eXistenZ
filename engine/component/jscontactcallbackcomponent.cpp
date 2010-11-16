@@ -77,7 +77,7 @@ namespace jscomponent
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
-		{"onContact", 4, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<ContactCallbackComponent, function<void(Component*, const ContactCallbackEventArgs&)>, &ContactCallbackComponent::getCallback>, 
+		{"onContact", 4, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, PropertyGetter<ContactCallbackComponent, function<void(Component*, const ContactCallbackEventArgs&)>, &ContactCallbackComponent::getCallback>, 
 			PropertySetter<ContactCallbackComponent, function<void(Component*, const ContactCallbackEventArgs&)>, &ContactCallbackComponent::setCallback>},
 		JS_PS_END 
 	};

@@ -64,7 +64,7 @@ JSObject* jsscenebsp::CreateSceneBSPObject(scene::SceneBSP* scene)
 		"scene", 
 		SceneBSP::m_scriptClass.classDef,
 		SceneBSP::m_scriptClass.prototype, 
-		JSPROP_READONLY | JSPROP_PERMANENT);
+		JSPROP_READONLY | JSPROP_PERMANENT | JSPROP_ENUMERATE);
 	JS_SetReservedSlot(cx, obj, 0, PRIVATE_TO_JSVAL(scene));
 	JS_LeaveLocalRootScopeWithResult(cx, OBJECT_TO_JSVAL(obj));
 	return obj;

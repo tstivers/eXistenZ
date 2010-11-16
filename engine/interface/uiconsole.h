@@ -13,6 +13,7 @@ namespace ui
 		void render();
 		void chooseFont();
 		void addMessage(const char* message);
+		void addMessage(const string& message);
 		void charpressed(const eXistenZ::KeyEventArgs& args);
 		void keypressed(const eXistenZ::KeyEventArgs& args);
 		void clear();
@@ -27,7 +28,7 @@ namespace ui
 		U32 filter;
 		CD3DFont* d3dfont;
 
-		deque<char*> scrollback;
+		deque<string> scrollback;
 		deque<string> history;
 		string cmd;
 		unsigned int cursorpos;

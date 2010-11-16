@@ -35,8 +35,8 @@ namespace jsentity
 	static JSPropertySpec class_properties[] =
 	{
 		// {"name", id, flags, getter, setter},
-		{"name", 1, JSPROP_PERMANENT | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Entity, const string&, &Entity::getName>, NULL},
-		{"flags", 1, JSPROP_PERMANENT | JSPROP_SHARED, PropertyGetter<Entity, int, &Entity::getFlags>, PropertySetter<Entity, int, &Entity::setFlags>},
+		{"name", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED | JSPROP_READONLY, PropertyGetter<Entity, const string&, &Entity::getName>, NULL},
+		{"flags", 1, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, PropertyGetter<Entity, int, &Entity::getFlags>, PropertySetter<Entity, int, &Entity::setFlags>},
 		{0,0,0,0,0}
 	};
 
@@ -157,7 +157,7 @@ JSBool jsentity::entityResolveOp(JSContext *cx, JSObject *obj, jsid id, uintN fl
 	string name = JS_GetStringBytes(JSID_TO_STRING(id));
 	if(name == "components")
 	{
-		JSObject* components = JS_DefineObject(cx, obj, "components", &components_class, components_prototype, JSPROP_PERMANENT | JSPROP_READONLY);
+		JSObject* components = JS_DefineObject(cx, obj, "components", &components_class, components_prototype, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_READONLY);
 		JS_SetReservedSlot(cx, components, 0, PRIVATE_TO_JSVAL(entity));
 		ASSERT(components);
 		*objp = obj;

@@ -57,7 +57,7 @@ namespace jscomponent
 		return JS_TRUE;
 	}
 
-	#define WRAPPED_LINK(name, source, target) {#name, 0, JSPROP_PERMANENT | JSPROP_SHARED, linkGetter<source, target, & ## source ## :: ## name>, linkSetter<source, target, & ## source ## :: ## name>}
+	#define WRAPPED_LINK(name, source, target) {#name, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE | JSPROP_SHARED, linkGetter<source, target, & ## source ## :: ## name>, linkSetter<source, target, & ## source ## :: ## name>}
 
 	template<typename C, typename T, component::ComponentLink<T> C::* link>
 	JSBool linkGetter(JSContext *cx, JSObject *obj, jsid id, jsval *vp)
